@@ -15,6 +15,7 @@ import com.android.volley.toolbox.Volley
 import org.json.JSONObject
 
 class LoginActivity : AppCompatActivity() {
+    //declaramos
     internal lateinit var queue: RequestQueue
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
