@@ -161,17 +161,26 @@ class MainActivity : AppCompatActivity() {
                 LinearLayout_operadorModal.setBackgroundResource(R.color.modalPerfilesBlanco)
 
             }
-
             btn_cerrarModalPerfiles.setOnClickListener {
                 dialog.dismiss()
             }
 
         }
-        //boton filtro de la derecha --- no funciona aca
+        //inicio de boton filtro de la derecha
         binding.appBarMain.btnFiltroRight.setOnClickListener {
-            Toast.makeText(this, "botn filtro right presionado", Toast.LENGTH_SHORT).show()
-            //binding.appBarMain.includeFiltroRight.idPruebaFiltroRight.isVisible = true introducir aca layout filtro right
+            var click_filtro: Boolean = false
+
+            if (click_filtro == false){
+                binding.appBarMain.includeFiltroRight.LinearLayoutActivityFiltroRight.isVisible = true
+                //binding.appBarMain.includeFiltroRight.filtroRight.isVisible = true
+                click_filtro = true
+            }
         }
+        binding.appBarMain.includeFiltroRight.LinearLayoutActivityFiltroRight.setOnClickListener {
+            binding.appBarMain.includeFiltroRight.LinearLayoutActivityFiltroRight.isVisible = false
+            //binding.appBarMain.includeFiltroRight.filtroRight.isVisible = false
+        }
+        //fin de boton filtro de la derecha
     }
 
     /*override fun onCreateOptionsMenu(menu: Menu): Boolean {
