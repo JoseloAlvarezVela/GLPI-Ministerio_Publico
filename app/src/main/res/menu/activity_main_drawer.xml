@@ -7,26 +7,26 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_mis_peticiones"
-            android:icon="@drawable/ic_menu_camera"
+            android:icon="@drawable/ic_peticiones_asignadas"
             android:title="@string/menu_mis_peticiones" />
         <item
             android:id="@+id/nav_gallery"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="@string/menu_gallery" />
+            android:icon="@drawable/ic_fab_herramienta"
+            android:title="@string/menu_MisIncidencias" />
         <item
             android:id="@+id/nav_slideshow"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="@string/menu_slideshow" />
+            android:icon="@drawable/ic_solicitud"
+            android:title="@string/menu_MisSolicitudes" />
     </group>
     <item android:title="Opciones"/>
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_mis_ajustes"
-            android:icon="@drawable/ic_menu_camera"
+            android:icon="@drawable/ic_configuraciones"
             android:title="Ajustes" />
         <item
             android:id="@+id/nav_logOut"
-            android:icon="@drawable/ic_menu_gallery"
+            android:icon="@drawable/ic_cerrar_sesion"
             android:title="Cerrar Sesión" />
     </group>
 

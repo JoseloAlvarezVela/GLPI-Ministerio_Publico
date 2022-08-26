@@ -168,19 +168,23 @@ class MainActivity : AppCompatActivity() {
         }
         //inicio de boton filtro de la derecha
         binding.appBarMain.btnFiltroRight.setOnClickListener {
-            var click_filtro: Boolean = false
-
-            if (click_filtro == false){
-                binding.appBarMain.includeFiltroRight.LinearLayoutActivityFiltroRight.isVisible = true
-                //binding.appBarMain.includeFiltroRight.filtroRight.isVisible = true
-                click_filtro = true
-            }
+            binding.appBarMain.includeFiltroRight.LinearLayoutActivityFiltroRight.isVisible = true
         }
         binding.appBarMain.includeFiltroRight.LinearLayoutActivityFiltroRight.setOnClickListener {
             binding.appBarMain.includeFiltroRight.LinearLayoutActivityFiltroRight.isVisible = false
-            //binding.appBarMain.includeFiltroRight.filtroRight.isVisible = false
         }
+
+        //boton que abre modal filtro por fecha
+        binding.appBarMain.includeFiltroRight.filtroCalendario.setOnClickListener {
+            binding.appBarMain.includeModalCalendario.LinearLayoutFiltroCalendario.isVisible = true
+        }
+        binding.appBarMain.includeModalCalendario.LinearLayoutFiltroCalendario.setOnClickListener {
+            binding.appBarMain.includeModalCalendario.LinearLayoutFiltroCalendario.isVisible = false
+        }
+
         //fin de boton filtro de la derecha
+
+
     }
 
     /*override fun onCreateOptionsMenu(menu: Menu): Boolean {

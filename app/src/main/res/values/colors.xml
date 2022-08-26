@@ -18,7 +18,11 @@
     <color name="fondo2">#014477</color>
     <color name="fondo3">#0481E1</color>
 
-    //
+    //modal perfiles
     <color name="modalPerfiles">#C5A83F</color>
     <color name="modalPerfilesBlanco">#F3F1F1</color>
+
+    //activity tickets
+    <color name="ticketsGris">#A3A3A3</color>
+    <color name="ticketsBlanco">#FFFFFF</color>
 </resources>

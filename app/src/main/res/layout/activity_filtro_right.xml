@@ -190,7 +190,7 @@
                     android:textSize="16sp" />
 
                 <Button
-                    android:id="@+id/button11"
+                    android:id="@+id/filtro_calendario"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="?android:attr/selectableItemBackground"

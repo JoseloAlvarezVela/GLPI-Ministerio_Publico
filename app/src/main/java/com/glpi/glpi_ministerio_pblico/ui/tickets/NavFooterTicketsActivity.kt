@@ -27,6 +27,8 @@ class NavFooterTicketsActivity : AppCompatActivity() {
             if(clickTickets == false){
                 binding.includeTickets.includeTicketsLayout.isVisible = true //se muestra
                 binding.includeTicketsHistorico.includeTicketsHistoricoLayout.isVisible = false //se esconde
+                binding.btnTicketsFooterCOLOR.setBackgroundResource(R.color.ticketsGris)
+                binding.btnConversacionFooterCOLOR.setBackgroundResource(R.color.ticketsBlanco)
                 clickTickets = true
                 clickConvezaciones = false
             }
@@ -36,6 +38,8 @@ class NavFooterTicketsActivity : AppCompatActivity() {
             if(clickConvezaciones == false){
                 binding.includeTicketsHistorico.includeTicketsHistoricoLayout.isVisible = true
                 binding.includeTickets.includeTicketsLayout.isVisible = false
+                binding.btnTicketsFooterCOLOR.setBackgroundResource(R.color.ticketsBlanco)
+                binding.btnConversacionFooterCOLOR.setBackgroundResource(R.color.ticketsGris)
                 clickConvezaciones = true
                 clickTickets = false
             }
