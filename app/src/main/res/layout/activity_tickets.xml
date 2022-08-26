@@ -1,0 +1,528 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/includeTicketsLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="595sp"
+        android:visibility="visible">
+
+        <LinearLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            tools:context=".ui.tickets.TicketsActivity">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:visibility="visible">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/esq_redondeada_blanco"
+                    android:orientation="vertical"
+                    android:visibility="visible"
+                    app:cardCornerRadius="1dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5sp"
+                        android:layout_marginLeft="5sp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/label_descr_general"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginStart="5sp"
+                            android:layout_marginLeft="5sp"
+                            android:layout_weight="1.2"
+                            android:drawableLeft="@drawable/ic_grado_imp"
+                            android:drawablePadding="5dp"
+                            android:ems="10"
+                            android:gravity="left|center_vertical"
+                            android:minHeight="48dp"
+                            android:text="Media"
+                            android:textColor="#000000"
+                            android:textSize="18sp" />
+
+                        <TextView
+                            android:id="@+id/label_solicitud_incidencia"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_weight="1"
+                            android:backgroundTint="@android:color/transparent"
+                            android:drawableLeft="@drawable/ic_interrogacion"
+                            android:drawablePadding="5dp"
+                            android:ems="10"
+                            android:gravity="left|center_vertical"
+                            android:minHeight="48dp"
+                            android:text="Solicitud/Incidente"
+                            android:textColor="#000000"
+                            android:textSize="18sp" />
+
+                        <Button
+                            android:id="@+id/btn_desplegar_general"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginEnd="5sp"
+                            android:layout_marginRight="5sp"
+                            android:layout_weight="1.5"
+                            app:icon="@drawable/ic_desplegar"
+                            android:background="?android:attr/selectableItemBackground"
+                            app:iconGravity="textStart"
+                            app:iconPadding="0sp"
+                            app:iconSize="50sp"
+                            app:iconTint="#000000" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/general"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5sp"
+                        android:layout_marginLeft="5sp"
+                        android:orientation="vertical"
+                        android:visibility="visible">
+
+                        <TextView
+                            android:id="@+id/label_fecha_operador_apertura"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5sp"
+                            android:backgroundTint="@android:color/transparent"
+                            android:drawableLeft="@drawable/ic_reloj"
+                            android:drawablePadding="5dp"
+                            android:ems="10"
+                            android:gravity="left|center_vertical"
+                            android:text="26 de jul. 2022 - 10:08 am - NOMBRE DEL OPERADOR"
+                            android:textColor="#000000"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:id="@+id/lable_fechaMAX_cierre"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5sp"
+                            android:backgroundTint="@android:color/transparent"
+                            android:drawableLeft="@drawable/ic_reloj_cronometro"
+                            android:drawablePadding="5dp"
+                            android:ems="10"
+                            android:gravity="left|center_vertical"
+                            android:text="26 de jul. 2022 - 5:00 pm - SLA Prioridad Media"
+                            android:textColor="#000000"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:id="@+id/label_peticion"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5sp"
+                            android:backgroundTint="@android:color/transparent"
+                            android:drawableLeft="@drawable/ic_etiqueta"
+                            android:drawablePadding="5dp"
+                            android:ems="10"
+                            android:gravity="left|center_vertical"
+                            android:text="REQUERIMIENTOS DE USUARIO FINAL > CASO FISCALES > ELIMINAR"
+                            android:textColor="#000000"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:id="@+id/label_ubicacion"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5sp"
+                            android:backgroundTint="@android:color/transparent"
+                            android:drawableLeft="@drawable/ic_ubicacion"
+                            android:drawablePadding="5dp"
+                            android:ems="10"
+                            android:gravity="left|center_vertical"
+                            android:text="SEDE CENTRAL > FISCALIA PRONCIAL PENAL CORPORATIVA"
+                            android:textColor="#000000"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:id="@+id/label_email"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5sp"
+                            android:layout_marginBottom="5sp"
+                            android:backgroundTint="@android:color/transparent"
+                            android:drawableLeft="@drawable/ic_email"
+                            android:drawablePadding="5dp"
+                            android:ems="10"
+                            android:gravity="left|center_vertical"
+                            android:text="CORREO ELECTRÓNICO"
+                            android:textColor="#000000"
+                            android:textSize="12sp" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/esq_redondeada_blanco"
+                    android:orientation="vertical"
+                    android:visibility="visible">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5sp"
+                        android:layout_marginLeft="5sp"
+                        android:orientation="horizontal"
+                        android:visibility="visible">
+
+                        <TextView
+                            android:id="@+id/label_desc_solicitud"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginStart="5sp"
+                            android:layout_marginLeft="5sp"
+                            android:layout_weight="0.34"
+                            android:drawableLeft="@drawable/ic_fab_documento"
+                            android:drawablePadding="5dp"
+                            android:ems="10"
+                            android:gravity="left|center_vertical"
+                            android:minHeight="48dp"
+                            android:text="Descripción de Solicitud/Incidente"
+                            android:textColor="#000000"
+                            android:textSize="18sp" />
+
+                        <Button
+                            android:id="@+id/btn_desplegar_decripcion"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginEnd="5sp"
+                            android:layout_marginRight="5sp"
+                            android:layout_weight="1.5"
+                            android:background="?android:attr/selectableItemBackground"
+                            app:icon="@drawable/ic_desplegar"
+                            app:iconGravity="textStart"
+                            app:iconPadding="0sp"
+                            app:iconSize="50sp"
+                            app:iconTint="#000000" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/decripcion"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="5sp"
+                        android:layout_marginLeft="5sp"
+                        android:layout_marginEnd="5dp"
+                        android:layout_marginRight="5dp"
+                        android:layout_marginBottom="5dp"
+                        android:orientation="vertical"
+                        android:visibility="visible">
+
+                        <TextView
+                            android:id="@+id/label_asuntoTitulo"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5sp"
+                            android:ems="10"
+                            android:paddingLeft="5dp"
+                            android:text="Asunto Titulo:"
+                            android:textColor="#000000"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:id="@+id/label_asunto"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:ems="10"
+                            android:paddingLeft="5dp"
+                            android:paddingTop="8dp"
+                            android:text="Asunto:"
+                            android:textColor="#000000"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:id="@+id/label_descr_ticket"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="5sp"
+                            android:ems="10"
+                            android:paddingLeft="5dp"
+                            android:paddingTop="8dp"
+                            android:text="Descripción completa del ticket,Descripción completa del ticket,Descripción completa del ticket     Descripción completa del ticket,Descripción completa del ticket,Descripción completa del ticket,Descripción completa del ticket     Descripción completa del ticketDescripción completa"
+                            android:textColor="#000000"
+                            android:textSize="12sp" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="10sp"
+                    android:background="@drawable/esq_redondeada_blanco"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5sp"
+                        android:layout_marginLeft="5sp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/label_actor"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginStart="5sp"
+                            android:layout_marginLeft="5sp"
+                            android:layout_weight="0.34"
+                            android:drawableLeft="@drawable/ic_actor"
+                            android:drawablePadding="5dp"
+                            android:ems="10"
+                            android:gravity="left|center_vertical"
+                            android:minHeight="48dp"
+                            android:text="ACTORES"
+                            android:textColor="#000000"
+                            android:textSize="18sp" />
+
+                        <Button
+                            android:id="@+id/btn_desplegar_actor"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginEnd="5sp"
+                            android:layout_marginRight="5sp"
+                            android:layout_weight="1.5"
+                            android:background="?android:attr/selectableItemBackground"
+                            app:icon="@drawable/ic_desplegar"
+                            app:iconGravity="textStart"
+                            app:iconPadding="0sp"
+                            app:iconSize="50sp"
+                            app:iconTint="#000000" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/actor"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5sp"
+                        android:layout_marginLeft="5sp"
+                        android:orientation="vertical"
+                        android:visibility="visible">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:visibility="visible">
+
+                            <TextView
+                                android:id="@+id/label_solicitante"
+                                android:layout_width="match_parent"
+                                android:layout_height="50dp"
+                                android:layout_marginEnd="5sp"
+                                android:layout_marginRight="5sp"
+                                android:background="@drawable/esq_redondeada_tickets"
+                                android:ems="10"
+                                android:gravity="center|left"
+                                android:text=" Solicitante"
+                                android:textColor="#000000"
+                                android:textSize="18sp" />
+
+                            <TextView
+                                android:id="@+id/label_solicitante_nombre"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="5dp"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginTop="5sp"
+                                android:backgroundTint="@android:color/transparent"
+                                android:ems="10"
+                                android:gravity="center|left"
+                                android:text="Nombre del Solicitante"
+                                android:textColor="#000000"
+                                android:textSize="12sp" />
+
+                            <TextView
+                                android:id="@+id/label_solicitante_cargo"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="5dp"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginTop="5sp"
+                                android:backgroundTint="@android:color/transparent"
+                                android:ems="10"
+                                android:gravity="center|left"
+                                android:text="Cargo del solicitante"
+                                android:textColor="#000000"
+                                android:textSize="12sp" />
+
+                            <TextView
+                                android:id="@+id/label_solicitante_celular"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="5dp"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginTop="5sp"
+                                android:layout_marginBottom="5sp"
+                                android:backgroundTint="@android:color/transparent"
+                                android:ems="10"
+                                android:gravity="center|left"
+                                android:text="932713859"
+                                android:textColor="#000000"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/label_asignado"
+                                android:layout_width="match_parent"
+                                android:layout_height="50dp"
+                                android:layout_marginEnd="5sp"
+                                android:layout_marginRight="5sp"
+                                android:background="@drawable/esq_redondeada_tickets"
+                                android:ems="10"
+                                android:gravity="center|left"
+                                android:text=" Asignado a "
+                                android:textColor="#000000"
+                                android:textSize="18sp" />
+
+                            <TextView
+                                android:id="@+id/label_asignado_nombre"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="5dp"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginTop="5sp"
+                                android:backgroundTint="@android:color/transparent"
+                                android:ems="10"
+                                android:gravity="center|left"
+                                android:text="Nombrel del tecnico asignado"
+                                android:textColor="#000000"
+                                android:textSize="12sp" />
+
+                            <TextView
+                                android:id="@+id/label_asignado_celular"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="5dp"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginTop="5sp"
+                                android:layout_marginBottom="5sp"
+                                android:backgroundTint="@android:color/transparent"
+                                android:ems="10"
+                                android:gravity="center|left"
+                                android:text="Celular del tecnico asignado"
+                                android:textColor="#000000"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/label_grupo_tecnico"
+                                android:layout_width="match_parent"
+                                android:layout_height="50dp"
+                                android:layout_marginEnd="5sp"
+                                android:layout_marginRight="5sp"
+                                android:background="@drawable/esq_redondeada_tickets"
+                                android:ems="10"
+                                android:gravity="center|left"
+                                android:text=" Grupo técnico asignado"
+                                android:textColor="#000000"
+                                android:textSize="18sp" />
+
+                            <TextView
+                                android:id="@+id/label_grupo_tecnico_nombre"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="5dp"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginTop="5sp"
+                                android:layout_marginBottom="5sp"
+                                android:backgroundTint="@android:color/transparent"
+                                android:ems="10"
+                                android:gravity="center|left"
+                                android:text="Nombre del grupo técnico asignado"
+                                android:textColor="#000000"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/label_observador"
+                                android:layout_width="match_parent"
+                                android:layout_height="50dp"
+                                android:layout_marginEnd="5sp"
+                                android:layout_marginRight="5sp"
+                                android:background="@drawable/esq_redondeada_tickets"
+                                android:ems="10"
+                                android:gravity="center|left"
+                                android:text=" Observador"
+                                android:textColor="#000000"
+                                android:textSize="18sp" />
+
+                            <TextView
+                                android:id="@+id/label_observador_nombre"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="5dp"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginTop="5sp"
+                                android:layout_marginBottom="5sp"
+                                android:backgroundTint="@android:color/transparent"
+                                android:ems="10"
+                                android:gravity="center|left"
+                                android:text="Nombre del observador"
+                                android:textColor="#000000"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+    <!--<include
+        android:id="@+id/include_nav_footer"
+        layout="@layout/activity_nav_footer_tickets"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />-->
+
+</LinearLayout>

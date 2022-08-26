@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ui.modals.Modal_Perfiles_Activity">
+
+    <LinearLayout
+        android:id="@+id/linearLayout_prueba"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="448dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/txt_perfiles_modal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#5999D1"
+            android:drawableLeft="@drawable/ic_actor"
+            android:drawableRight="@drawable/ic_lupa"
+            android:drawablePadding="29sp"
+            android:gravity="center_vertical"
+            android:padding="15sp"
+            android:text="Perfiles"
+            android:textColor="#FFFFFF"
+            android:textSize="20sp"
+            app:drawableTint="#FFFFFF" />
+
+        <LinearLayout
+            android:id="@+id/LinearLayout_hardwareGestor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#F3F1F1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="78sp"
+                android:paddingTop="15sp"
+                android:paddingRight="15sp"
+                android:paddingBottom="15sp"
+                android:text="Hardware - Gestor"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/LinearLayout_cobertura2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#C5A83F"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textView9"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="78sp"
+                android:paddingTop="15sp"
+                android:paddingRight="15sp"
+                android:paddingBottom="15sp"
+                android:text="Operador"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/LinearLayout_ticketsEscalados"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#F3F1F1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textView17"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="78sp"
+                android:paddingTop="15sp"
+                android:paddingRight="15sp"
+                android:paddingBottom="15sp"
+                android:text="Tickets Escalados (DF)"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#5999D1"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <Button
+            android:id="@+id/btn_cerrarModalPerfiles"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/selectableItemBackground"
+            android:text="Salir" />
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
