@@ -10,8 +10,10 @@
 
 
     <ScrollView
+        android:id="@+id/id_pruebaFiltroRight"
         android:layout_width="match_parent"
-        android:layout_height="595sp">
+        android:layout_height="595sp"
+        android:visibility="visible">
 
         <LinearLayout
             android:layout_width="match_parent"

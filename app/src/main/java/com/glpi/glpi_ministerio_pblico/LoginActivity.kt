@@ -103,8 +103,10 @@ class LoginActivity : AppCompatActivity() {
                     val params = HashMap<String, String>()
                     params["PATH"] = "login"
 
-                    params["USER"] = loginUserName.text.toString().trim { it <= ' ' }
-                    params["PASSWORD"] = loginUserPassword.text.toString().trim { it <= ' ' }
+                    params["USER"] = "glpi"
+                    params["PASSWORD"] = "12345678"
+                    /*params["USER"] = loginUserName.text.toString().trim { it <= ' ' }
+                    params["PASSWORD"] = loginUserPassword.text.toString().trim { it <= ' ' }*/
 
                     return params
                 }

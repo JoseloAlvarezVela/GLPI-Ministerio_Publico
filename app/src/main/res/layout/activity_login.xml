@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#014477"
+    android:background="@drawable/degradado_azul"
     android:gravity="center_horizontal"
     android:orientation="vertical"
     tools:context=".LoginActivity">
@@ -14,30 +13,39 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="150sp"
-        android:background="#FFFFFF"
-        android:orientation="horizontal">
+        android:background="@drawable/esq_redondeada_blanco"
+        android:orientation="horizontal"
+        android:paddingBottom="5sp">
 
         <TextView
             android:id="@+id/textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="5sp"
-            android:layout_marginLeft="5sp"
+            android:layout_gravity="center"
+            android:layout_marginStart="8sp"
+            android:layout_marginLeft="8sp"
             android:layout_marginBottom="5sp"
+            android:paddingLeft="5sp"
+            android:rotationX="29"
             android:text="["
-            android:textSize="100sp" />
+            android:textColor="#014477"
+            android:textSize="130sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
             android:layout_marginStart="10sp"
             android:layout_marginLeft="10sp"
             android:layout_marginBottom="5sp"
             android:text="G"
-            android:textSize="100sp" />
+            android:textColor="#014477"
+            android:textSize="100sp"
+            android:textStyle="bold" />
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginBottom="5sp"
@@ -45,29 +53,35 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/textView4"
+                android:id="@+id/textView3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:layout_marginBottom="13sp"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:paddingLeft="13sp"
+                android:rotationX="29"
+                android:text="]"
+                android:textColor="#014477"
+                android:textSize="130sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="-85dp"
                 android:layout_weight="0"
+                android:paddingLeft="5sp"
                 android:rotation="-90"
                 android:text="LPI"
-                android:textSize="30sp"
-                android:textStyle="bold" />
+                android:textColor="#0D7ACD"
+                android:textSize="40sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="parent" />
 
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/textView3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="5sp"
-            android:layout_marginRight="5sp"
-            android:layout_marginBottom="5sp"
-            android:layout_weight="1"
-            android:text="]"
-            android:textSize="100sp" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </LinearLayout>
 
@@ -76,7 +90,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="100sp"
 
-        android:background="#FFFFFF"
+        android:background="@drawable/esq_redondeada_blanco"
         android:orientation="vertical">
 
         <com.google.android.material.textfield.TextInputLayout
@@ -85,7 +99,9 @@
             android:layout_marginStart="10sp"
             android:layout_marginLeft="10sp"
             android:layout_marginEnd="5sp"
-            android:layout_marginRight="5sp">
+            android:layout_marginRight="5sp"
+            app:boxStrokeColor="#000000"
+            app:hintTextColor="#000000">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/login_user"
@@ -103,7 +119,9 @@
             android:layout_marginLeft="10sp"
             android:layout_marginEnd="5sp"
             android:layout_marginRight="5sp"
-            app:endIconMode="password_toggle">
+            app:boxStrokeColor="#000000"
+            app:endIconMode="password_toggle"
+            app:hintTextColor="#000000">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/login_password"

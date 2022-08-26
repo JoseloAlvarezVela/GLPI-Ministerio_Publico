@@ -9,7 +9,7 @@
 
     <!--    string para contenido de fragment MIS PETICIONES-->
     <string name="fragment_mispet_tipo">Solicitud/Incidencia</string>
-    <string name="fragment_mispet_desc">SOLICITA LA ELIMINACION DE TRAMITE EN EL SISTEMA DE GES.</string>
+    <string name="fragment_mispet_desc">SOLICITA LA ELIMINACION DE TRAMITE EN EL SISTEMA DE GESTIOS</string>
     <string name="fragment_mispet_user">Solicitante</string>
     <string name="fragment_mispet_cat">Categoria</string>
     <string name="fragment_mispet_fecha">26 de jul. 2022 – 6:14 pm</string>

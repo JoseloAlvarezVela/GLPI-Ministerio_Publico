@@ -1,5 +1,6 @@
 package com.glpi.glpi_ministerio_pblico
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.Menu
 import android.view.View
@@ -17,9 +18,6 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.glpi.glpi_ministerio_pblico.databinding.ActivityMainBinding
-import com.glpi.glpi_ministerio_pblico.databinding.ModalDfBinding
-import com.glpi.glpi_ministerio_pblico.databinding.ModalPerfilesBinding
-import com.glpi.glpi_ministerio_pblico.databinding.NavHeaderMainBinding
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 
@@ -33,10 +31,10 @@ class MainActivity : AppCompatActivity() {
 
         setSupportActionBar(binding.appBarMain.toolbar)
 
-        binding.appBarMain.fab.setOnClickListener { view ->
+        /*binding.appBarMain.fab.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 .setAction("Action", null).show()
-        }
+        }*/
         val drawerLayout: DrawerLayout = binding.drawerLayout
         val navView: NavigationView = binding.navView
         val navController = findNavController(R.id.nav_host_fragment_content_main)
@@ -137,14 +135,50 @@ class MainActivity : AppCompatActivity() {
             val dialog = biulder.create()
             dialog.show()
 
+            //obtenemos los id's de modal_df
+            val LinearLayout_hardwareGestor: LinearLayout = vistaOp.findViewById(R.id.LinearLayout_hardwareGestor)
+                val btn_hardwareModalPerfil: Button = vistaOp.findViewById(R.id.btn_hardwareModalPerfil)
+            val LinearLayout_operadorModal: LinearLayout = vistaOp.findViewById(R.id.LinearLayout_operadorModal)
+                val btn_operadorModalPerfiles: Button = vistaOp.findViewById(R.id.btn_operadorModalPerfiles)
+            val LinearLayout_ticketsEscalados: LinearLayout = vistaOp.findViewById(R.id.LinearLayout_ticketsEscalados)
+                val btn_escaladosModalPerfiles: Button = vistaOp.findViewById(R.id.btn_escaladosModalPerfiles)
+            val btn_cerrarModalPerfiles: Button = vistaOp.findViewById(R.id.btn_cerrarModalPerfiles)
+
+            //iniciamos los eventos click - introducir codigo necesario aca
+            btn_hardwareModalPerfil.setOnClickListener {
+                LinearLayout_hardwareGestor.setBackgroundResource(R.color.modalPerfiles)
+                LinearLayout_operadorModal.setBackgroundResource(R.color.modalPerfilesBlanco)
+                LinearLayout_ticketsEscalados.setBackgroundResource(R.color.modalPerfilesBlanco)
+            }
+            btn_operadorModalPerfiles.setOnClickListener {
+                LinearLayout_operadorModal.setBackgroundResource(R.color.modalPerfiles)
+                LinearLayout_hardwareGestor.setBackgroundResource(R.color.modalPerfilesBlanco)
+                LinearLayout_ticketsEscalados.setBackgroundResource(R.color.modalPerfilesBlanco)
+            }
+            btn_escaladosModalPerfiles.setOnClickListener {
+                LinearLayout_ticketsEscalados.setBackgroundResource(R.color.modalPerfiles)
+                LinearLayout_hardwareGestor.setBackgroundResource(R.color.modalPerfilesBlanco)
+                LinearLayout_operadorModal.setBackgroundResource(R.color.modalPerfilesBlanco)
+
+            }
+
+            btn_cerrarModalPerfiles.setOnClickListener {
+                dialog.dismiss()
+            }
+
+        }
+        //boton filtro de la derecha --- no funciona aca
+        binding.appBarMain.btnFiltroRight.setOnClickListener {
+            Toast.makeText(this, "botn filtro right presionado", Toast.LENGTH_SHORT).show()
+            //binding.appBarMain.includeFiltroRight.idPruebaFiltroRight.isVisible = true introducir aca layout filtro right
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+    /*override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.main, menu)
         return true
-    }
+    }*/
 
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment_content_main)

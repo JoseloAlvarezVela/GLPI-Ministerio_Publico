@@ -17,4 +17,8 @@
     <color name="fondo">#175381</color>
     <color name="fondo2">#014477</color>
     <color name="fondo3">#0481E1</color>
+
+    //
+    <color name="modalPerfiles">#C5A83F</color>
+    <color name="modalPerfilesBlanco">#F3F1F1</color>
 </resources>

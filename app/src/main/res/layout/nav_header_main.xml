@@ -69,7 +69,8 @@
             android:clickable="true"
             android:orientation="horizontal"
             android:paddingTop="5sp"
-            android:paddingBottom="5sp">
+            android:paddingBottom="5sp"
+            android:background="?selectableItemBackground">
 
             <TextView
                 android:id="@+id/textView14"
@@ -103,6 +104,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:paddingTop="5sp"
+            android:background="?selectableItemBackground"
             android:paddingBottom="5sp">
 
             <TextView

@@ -10,9 +10,9 @@
         android:id="@+id/linearLayout_prueba"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="448dp"
         android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
@@ -37,57 +37,54 @@
             android:background="#F3F1F1"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/textView4"
+            <Button
+                android:id="@+id/btn_hardwareModalPerfil"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingLeft="78sp"
+                android:background="?android:attr/selectableItemBackground"
                 android:paddingTop="15sp"
-                android:paddingRight="15sp"
                 android:paddingBottom="15sp"
                 android:text="Hardware - Gestor"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+                android:textColor="#6C6464"
+                android:textSize="15sp" />
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/LinearLayout_cobertura2"
+            android:id="@+id/LinearLayout_operadorModal"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:background="#C5A83F"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/textView9"
+            <Button
+                android:id="@+id/btn_operadorModalPerfiles"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingLeft="78sp"
+                android:background="?android:attr/selectableItemBackground"
                 android:paddingTop="15sp"
-                android:paddingRight="15sp"
                 android:paddingBottom="15sp"
                 android:text="Operador"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+                android:textColor="#6C6464"
+                android:textSize="15sp" />
         </LinearLayout>
 
         <LinearLayout
             android:id="@+id/LinearLayout_ticketsEscalados"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:background="#F3F1F1"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/textView17"
+            <Button
+                android:id="@+id/btn_escaladosModalPerfiles"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingLeft="78sp"
+                android:background="?android:attr/selectableItemBackground"
                 android:paddingTop="15sp"
-                android:paddingRight="15sp"
                 android:paddingBottom="15sp"
                 android:text="Tickets Escalados (DF)"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+                android:textColor="#6C6464"
+                android:textSize="15sp" />
         </LinearLayout>
     </LinearLayout>
 
@@ -95,9 +92,13 @@
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="434dp"
         android:background="#5999D1"
         android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout_prueba">
 
         <Button
             android:id="@+id/btn_cerrarModalPerfiles"
