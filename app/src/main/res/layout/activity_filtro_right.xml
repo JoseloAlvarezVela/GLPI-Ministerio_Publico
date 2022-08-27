@@ -13,7 +13,7 @@
         android:layout_height="match_parent"
         android:background="#75575757"
         android:orientation="vertical"
-        android:visibility="gone">
+        android:visibility="visible">
 
         <LinearLayout
             android:id="@+id/filtroRight_"
@@ -38,7 +38,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:ems="10"
-                    android:hint="Buscar"
+                    android:hint="Buscar por ID"
                     android:inputType="textPersonName" />
 
                 <Button
