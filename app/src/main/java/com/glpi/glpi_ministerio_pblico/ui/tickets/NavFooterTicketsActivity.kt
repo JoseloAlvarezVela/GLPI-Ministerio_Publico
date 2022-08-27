@@ -156,7 +156,12 @@ class NavFooterTicketsActivity : AppCompatActivity() {
             startActivity(intent_agregar_tarea)
         }
         binding.includeTicketsHistorico.btnFabSeguimiento.setOnClickListener {
-            val intent_agregar_seguimiento = Intent(this@NavFooterTicketsActivity, TicketsAgregarTareaActivity::class.java)
+            val intent_agregar_seguimiento = Intent(this@NavFooterTicketsActivity, TicketsAgregarSeguimientoActivity::class.java)
+            intent_agregar_seguimiento.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            startActivity(intent_agregar_seguimiento)
+        }
+        binding.includeTicketsHistorico.btnFabSolucion.setOnClickListener {
+            val intent_agregar_seguimiento = Intent(this@NavFooterTicketsActivity, TicketsAgregarSolucionActivity::class.java)
             intent_agregar_seguimiento.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             startActivity(intent_agregar_seguimiento)
         }
