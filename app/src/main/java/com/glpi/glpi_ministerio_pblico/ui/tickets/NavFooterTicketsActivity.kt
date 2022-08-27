@@ -19,9 +19,10 @@ class NavFooterTicketsActivity : AppCompatActivity() {
         binding = ActivityNavFooterTicketsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        //inicio toogle buton tickets
+        //INICIO toogle buton tickets
         var clickTickets: Boolean = false
         var clickConvezaciones: Boolean = false
+        var click_fab:Boolean = false //fab_opciones de layout activity_tickets_historico
 
         binding.btnTicketsFooter.setOnClickListener {
             if(clickTickets == false){
@@ -29,6 +30,20 @@ class NavFooterTicketsActivity : AppCompatActivity() {
                 binding.includeTicketsHistorico.includeTicketsHistoricoLayout.isVisible = false //se esconde
                 binding.btnTicketsFooterCOLOR.setBackgroundResource(R.color.ticketsGris)
                 binding.btnConversacionFooterCOLOR.setBackgroundResource(R.color.ticketsBlanco)
+
+                //************INICIO DE SETEO LOS FAB'S DE LAYOUT activity_tickets_historico.xml************
+                binding.includeTicketsHistorico.fabSolucion.isVisible = false
+                    binding.includeTicketsHistorico.btnFabSolucion.isVisible = false
+                binding.includeTicketsHistorico.fabDocumentos.isVisible = false
+                    binding.includeTicketsHistorico.btnFabDocumentos.isVisible = false
+                binding.includeTicketsHistorico.fabTareas.isVisible = false
+                    binding.includeTicketsHistorico.btnFabTareas.isVisible = false
+                binding.includeTicketsHistorico.fabSeguimiento.isVisible = false
+                    binding.includeTicketsHistorico.btnFabSeguimiento.isVisible = false
+                binding.includeTicketsHistorico.fabBackgroud.isVisible = false
+                click_fab = false
+                //************FIN DE SETEO DE LOS FAB'S DE LAYOUT activity_tickets_historico.xml************
+
                 clickTickets = true
                 clickConvezaciones = false
             }
@@ -44,17 +59,17 @@ class NavFooterTicketsActivity : AppCompatActivity() {
                 clickTickets = false
             }
         }
-        //fin toogle buton
+        //FIN toogle buton
 
         //boton atras -- include de nav_header_tickets.xml
         binding.includeNavHeaderTickets.btnAtrasTickets.setOnClickListener {
             val intent_header_tickets = Intent(this@NavFooterTicketsActivity, MainActivity::class.java)
             intent_header_tickets.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            Toast.makeText(this, "boton atras presionado", Toast.LENGTH_LONG ).show()
             startActivity(intent_header_tickets)
+            //Toast.makeText(this, "boton atras presionado", Toast.LENGTH_LONG ).show()
         }
 
-        //botones para desplegar y plegar descripciones
+        //INICIO botones para desplegar y plegar descripciones
         var clickG: Boolean = false
         var clickD: Boolean = false
         var clickA: Boolean = false
@@ -88,6 +103,58 @@ class NavFooterTicketsActivity : AppCompatActivity() {
                 clickA = false
             }
         }
+        //FIN botones para desplegar y plegar descripciones
 
+        //INICIO fab_opciones de layout activity_tickets_historico
+        //var click_fab:Boolean = false
+        binding.includeTicketsHistorico.fabDesplegarOpciones.setOnClickListener {
+            if (click_fab == false){
+                binding.includeTicketsHistorico.fabSolucion.isVisible = true
+                    binding.includeTicketsHistorico.btnFabSolucion.isVisible = true
+                binding.includeTicketsHistorico.fabDocumentos.isVisible = true
+                    binding.includeTicketsHistorico.btnFabDocumentos.isVisible = true
+                binding.includeTicketsHistorico.fabTareas.isVisible = true
+                    binding.includeTicketsHistorico.btnFabTareas.isVisible = true
+                binding.includeTicketsHistorico.fabSeguimiento.isVisible = true
+                    binding.includeTicketsHistorico.btnFabSeguimiento.isVisible = true
+                binding.includeTicketsHistorico.fabBackgroud.isVisible = true
+
+                click_fab = true
+            }else{
+                binding.includeTicketsHistorico.fabSolucion.isVisible = false
+                    binding.includeTicketsHistorico.btnFabSolucion.isVisible = false
+                binding.includeTicketsHistorico.fabDocumentos.isVisible = false
+                    binding.includeTicketsHistorico.btnFabDocumentos.isVisible = false
+                binding.includeTicketsHistorico.fabTareas.isVisible = false
+                    binding.includeTicketsHistorico.btnFabTareas.isVisible = false
+                binding.includeTicketsHistorico.fabSeguimiento.isVisible = false
+                    binding.includeTicketsHistorico.btnFabSeguimiento.isVisible = false
+                binding.includeTicketsHistorico.fabBackgroud.isVisible = false
+
+                click_fab = false
+            }
+        }
+        binding.includeTicketsHistorico.fabBackgroud.setOnClickListener {
+            binding.includeTicketsHistorico.fabSolucion.isVisible = false
+                binding.includeTicketsHistorico.btnFabSolucion.isVisible = false
+            binding.includeTicketsHistorico.fabDocumentos.isVisible = false
+                binding.includeTicketsHistorico.btnFabDocumentos.isVisible = false
+            binding.includeTicketsHistorico.fabTareas.isVisible = false
+                binding.includeTicketsHistorico.btnFabTareas.isVisible = false
+            binding.includeTicketsHistorico.fabSeguimiento.isVisible = false
+                binding.includeTicketsHistorico.btnFabSeguimiento.isVisible = false
+            binding.includeTicketsHistorico.fabBackgroud.isVisible = false
+            binding.includeTicketsHistorico.fabDesplegarOpciones.isVisible = true
+
+            click_fab = false
+        }
+        //FIN fab_opciones de layout activity_tickets_historico
+        //INICIO eventos click de fab_opciones
+        binding.includeTicketsHistorico.btnFabTareas.setOnClickListener {
+            val intent_agregar_tarea = Intent(this@NavFooterTicketsActivity, TicketsAgregarTareaActivity::class.java)
+            intent_agregar_tarea.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            startActivity(intent_agregar_tarea)
+        }
+        //fin eventos click de fab_opciones
     }
 }

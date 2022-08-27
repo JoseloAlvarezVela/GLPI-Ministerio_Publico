@@ -13,7 +13,7 @@
         android:layout_height="match_parent"
         android:background="#75575757"
         android:orientation="vertical"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <LinearLayout
             android:id="@+id/filtroRight_"
