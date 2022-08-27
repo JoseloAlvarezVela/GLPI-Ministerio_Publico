@@ -31,7 +31,7 @@
             android:layout_height="match_parent"
             android:layout_weight="0.5"
             android:drawableRight="@android:drawable/ic_menu_search"
-            android:fontFamily="@font/averia_sans_libre_light"
+            android:fontFamily="@font/averia_libre_light"
             android:gravity="center_vertical"
             android:paddingLeft="10sp"
             android:text="Plantilla"
@@ -45,38 +45,55 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/textView63"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:fontFamily="@font/averia_libre_light"
-            android:paddingLeft="40sp"
-            android:paddingTop="20sp"
-            android:paddingBottom="20sp"
-            android:text="Acompañamiento"
-            android:textColor="#000000" />
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/textView64"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fontFamily="@font/averia_libre_light"
-            android:paddingLeft="40sp"
-            android:paddingTop="20sp"
-            android:paddingBottom="20sp"
-            android:text="Asesoramiento"
-            android:textColor="#000000" />
+            <Button
+                android:id="@+id/button15"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?android:attr/selectableItemBackground"
+                android:fontFamily="@font/averia_sans_libre_light"
+                android:padding="10sp"
+                android:text="Acompañamiento"
+                android:textColor="#000000" />
+        </LinearLayout>
 
-        <TextView
-            android:id="@+id/textView65"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:fontFamily="@font/averia_libre_light"
-            android:paddingLeft="40sp"
-            android:paddingTop="20sp"
-            android:paddingBottom="20sp"
-            android:text="Habilitación de punto de red"
-            android:textColor="#000000" />
+            android:background="#D5D5D5"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/button16"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?android:attr/selectableItemBackground"
+                android:fontFamily="@font/averia_sans_libre_light"
+                android:padding="10sp"
+                android:text="Asesoramiento"
+                android:textColor="#000000" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/button17"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?android:attr/selectableItemBackground"
+                android:fontFamily="@font/averia_sans_libre_light"
+                android:padding="10sp"
+                android:text="Habilitación de punto de red"
+                android:textColor="#000000" />
+        </LinearLayout>
+
     </LinearLayout>
 
     <LinearLayout

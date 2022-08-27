@@ -229,7 +229,7 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
                     <TextView
@@ -251,12 +251,12 @@
                         android:ems="10"
                         android:fontFamily="@font/averia_libre_light"
                         android:hint="ingrese lo indicado"
-                        android:inputType="textPersonName" />
+                        android:inputType="textMultiLine|textPersonName" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:orientation="horizontal">
 
                     <TextView
@@ -276,9 +276,9 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:ems="10"
+                        android:fontFamily="@font/averia_libre_light"
                         android:hint="ingrese lo indicado"
-                        android:inputType="textPersonName"
-                        android:fontFamily="@font/averia_libre_light" />
+                        android:inputType="textMultiLine|textPersonName" />
                 </LinearLayout>
 
             </LinearLayout>
@@ -293,16 +293,18 @@
         app:layout_constraintBottom_toBottomOf="parent" />
 
     <LinearLayout
-        android:id="@+id/fab_backgroud_addTarea"
+        android:id="@+id/LayoutBackgroud_agregarTarea"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:background="#75575757"
         android:orientation="horizontal"
+        android:visibility="gone"
         tools:layout_editor_absoluteX="287dp"
-        tools:layout_editor_absoluteY="453dp"/>
+        tools:layout_editor_absoluteY="453dp" />
 
     <LinearLayout
+        android:id="@+id/LayoutFab_agregarTarea"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="15sp"
@@ -319,7 +321,8 @@
             android:layout_marginTop="10sp"
             android:layout_weight="1"
             android:gravity="center_vertical|end"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/textView23"
@@ -352,7 +355,8 @@
             android:layout_marginTop="10sp"
             android:layout_weight="1"
             android:gravity="center_vertical|end"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/textView25"
@@ -384,7 +388,8 @@
             android:layout_marginTop="10sp"
             android:layout_weight="1"
             android:gravity="center_vertical|end"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/textView53"
