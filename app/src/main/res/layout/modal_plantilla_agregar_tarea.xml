@@ -1,6 +1,97 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/modal_plantilla_agregar_tarea"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    android:orientation="vertical"
+    android:visibility="gone">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#5999D1">
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="4"
+            android:background="?android:attr/selectableItemBackground"
+            android:fontFamily="@font/averia_libre_light"
+            android:textColor="#FFFFFF"
+            app:icon="@drawable/ic_atras"
+            app:iconGravity="textStart"
+            app:iconTint="#FFFFFF" />
+
+        <TextView
+            android:id="@+id/textView62"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:drawableRight="@android:drawable/ic_menu_search"
+            android:fontFamily="@font/averia_sans_libre_light"
+            android:gravity="center_vertical"
+            android:paddingLeft="10sp"
+            android:text="Plantilla"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            app:drawableTint="#000000" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textView63"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fontFamily="@font/averia_libre_light"
+            android:paddingLeft="40sp"
+            android:paddingTop="20sp"
+            android:paddingBottom="20sp"
+            android:text="Acompañamiento"
+            android:textColor="#000000" />
+
+        <TextView
+            android:id="@+id/textView64"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fontFamily="@font/averia_libre_light"
+            android:paddingLeft="40sp"
+            android:paddingTop="20sp"
+            android:paddingBottom="20sp"
+            android:text="Asesoramiento"
+            android:textColor="#000000" />
+
+        <TextView
+            android:id="@+id/textView65"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fontFamily="@font/averia_libre_light"
+            android:paddingLeft="40sp"
+            android:paddingTop="20sp"
+            android:paddingBottom="20sp"
+            android:text="Habilitación de punto de red"
+            android:textColor="#000000" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#5999D1"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/button11"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="?android:attr/selectableItemBackground"
+            android:fontFamily="@font/averia_libre_light"
+            android:text="Salir"
+            android:textColor="#FFFFFF" />
+    </LinearLayout>
+</LinearLayout>

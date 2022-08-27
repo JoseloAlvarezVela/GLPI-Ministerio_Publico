@@ -430,4 +430,14 @@
 
     </LinearLayout>
 
+    <include
+        android:id="@+id/include_modal_plantilla_tarea"
+        layout="@layout/modal_plantilla_agregar_tarea"
+        android:layout_width="350sp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
