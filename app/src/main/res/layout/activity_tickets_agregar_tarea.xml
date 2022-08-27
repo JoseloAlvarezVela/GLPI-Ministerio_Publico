@@ -276,58 +276,145 @@
         </LinearLayout>
     </LinearLayout>
 
+    <include
+        layout="@layout/activity_nav_footer_fab"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/fab_backgroud_addTarea"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="#75575757"
+        android:orientation="horizontal"
+        tools:layout_editor_absoluteX="287dp"
+        tools:layout_editor_absoluteY="453dp"></LinearLayout>
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="bottom"
+        android:layout_marginBottom="15sp"
+        android:gravity="end"
         android:orientation="vertical"
+        android:paddingRight="10sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/floatingActionButton3"
+        <LinearLayout
+            android:id="@+id/fab_archivo"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="5sp"
-            android:layout_marginRight="5sp"
-            android:layout_marginBottom="10sp"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10sp"
             android:layout_weight="1"
-            android:clickable="true"
-            android:src="@drawable/ic_fab_documento"
-            app:backgroundTint="#84D563" />
+            android:gravity="center_vertical|end"
+            android:orientation="horizontal">
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/floatingActionButton2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="5sp"
-            android:layout_marginRight="5sp"
-            android:layout_marginBottom="10sp"
-            android:clickable="true"
-            android:src="@drawable/ic_fab_camar"
-            app:backgroundTint="#71A35D" />
+            <TextView
+                android:id="@+id/textView23"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5sp"
+                android:layout_marginRight="5sp"
+                android:layout_weight="1"
+                android:background="@drawable/esq_redondeada_blanco"
+                android:padding="5sp"
+                android:text="Archivo"
+                android:textColor="#636363"
+                android:textSize="12sp" />
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/floatingActionButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="5sp"
-            android:layout_marginRight="5sp"
-            android:layout_marginBottom="10sp"
-            android:clickable="true"
-            android:src="@drawable/ic_fab_plantilla"
-            app:backgroundTint="#E4C529" />
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/btn_fab_archivo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:src="@drawable/ic_fab_documento"
+                app:backgroundTint="#84D563" />
+        </LinearLayout>
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/floatingActionButton4"
+        <LinearLayout
+            android:id="@+id/fab_foto"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal|center_vertical"
-            android:layout_marginBottom="10sp"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10sp"
             android:layout_weight="1"
-            android:clickable="true"
-            android:src="@drawable/ic_fab_desplegar"
-            app:backgroundTint="#E68080" />
+            android:gravity="center_vertical|end"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textView25"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5sp"
+                android:layout_marginRight="5sp"
+                android:layout_weight="1"
+                android:background="@drawable/esq_redondeada_blanco"
+                android:padding="5sp"
+                android:text="Foto"
+                android:textColor="#636363"
+                android:textSize="12sp" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/btn_fab_foto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:src="@drawable/ic_fab_camar"
+                app:backgroundTint="#71A35D" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/fab_plantilla"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10sp"
+            android:layout_weight="1"
+            android:gravity="center_vertical|end"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textView53"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5sp"
+                android:layout_marginRight="5sp"
+                android:layout_weight="1"
+                android:background="@drawable/esq_redondeada_blanco"
+                android:padding="5sp"
+                android:text="Plantilla"
+                android:textColor="#636363"
+                android:textSize="12sp" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/btn_fab_plantilla"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:src="@drawable/ic_fab_plantilla"
+                app:backgroundTint="#E4C529" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10sp"
+            android:layout_weight="1"
+            android:gravity="center_vertical|end"
+            android:orientation="horizontal">
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fab_desplegar_addTarea"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal|center_vertical"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:src="@drawable/ic_fab_desplegar"
+                app:backgroundTint="#E68080" />
+        </LinearLayout>
+
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

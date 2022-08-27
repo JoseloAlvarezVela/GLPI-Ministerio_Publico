@@ -17,6 +17,12 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".TicketsAgregarSeguimientoActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.tickets.NavFooterFabActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.tickets.TicketsAgregarTareaActivity"
             android:exported="false" />
         <activity

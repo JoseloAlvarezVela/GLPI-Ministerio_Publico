@@ -155,6 +155,11 @@ class NavFooterTicketsActivity : AppCompatActivity() {
             intent_agregar_tarea.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             startActivity(intent_agregar_tarea)
         }
+        binding.includeTicketsHistorico.btnFabSeguimiento.setOnClickListener {
+            val intent_agregar_seguimiento = Intent(this@NavFooterTicketsActivity, TicketsAgregarTareaActivity::class.java)
+            intent_agregar_seguimiento.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            startActivity(intent_agregar_seguimiento)
+        }
         //fin eventos click de fab_opciones
     }
 }
