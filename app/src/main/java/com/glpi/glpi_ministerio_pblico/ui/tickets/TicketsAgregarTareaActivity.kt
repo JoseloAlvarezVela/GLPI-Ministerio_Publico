@@ -68,6 +68,7 @@ class TicketsAgregarTareaActivity : AppCompatActivity() {
             layout_archivo.isVisible = false
             backGround.isVisible = false
             binding.LayoutFabAgregarTarea.isVisible = true
+            click = false
         }
         //FIN de eventos de click de los FAB's
     }

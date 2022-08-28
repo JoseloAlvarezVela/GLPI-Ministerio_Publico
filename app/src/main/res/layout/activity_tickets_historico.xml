@@ -86,6 +86,7 @@
                                     android:id="@+id/textView33"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
+                                    android:fontFamily="@font/averia_sans_libre_light"
                                     android:text="12345678"
                                     android:textColor="#000000"
                                     android:textSize="12sp" />
@@ -94,6 +95,7 @@
                                     android:id="@+id/textView34"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
+                                    android:fontFamily="@font/averia_sans_libre_light"
                                     android:text="25 jul.  2022 10:32 a.m."
                                     android:textColor="#000000"
                                     android:textSize="12sp" />
@@ -112,6 +114,7 @@
                                 android:layout_marginEnd="10dp"
                                 android:layout_marginRight="10dp"
                                 android:layout_marginBottom="20dp"
+                                android:fontFamily="@font/averia_sans_libre_light"
                                 android:text="TextView TextView TextView TextView TextView TextView TextView TextView TextView TextView TextView TextView TextView TextView TextView TextView TextView TextView TextView TextView TextView TextView TextView"
                                 android:textColor="#000000"
                                 android:textSize="12sp" />
@@ -155,6 +158,7 @@
                                 android:id="@+id/textView37"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:fontFamily="@font/averia_sans_libre_light"
                                 android:text="12345678"
                                 android:textColor="#000000"
                                 android:textSize="12sp" />
@@ -163,6 +167,7 @@
                                 android:id="@+id/textView38"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:fontFamily="@font/averia_sans_libre_light"
                                 android:text="25 jul.  2022 10:32 a.m."
                                 android:textColor="#000000"
                                 android:textSize="12sp" />
@@ -207,6 +212,7 @@
                             android:layout_height="wrap_content"
                             android:background="@drawable/esq_redondeada_crema"
                             android:drawableLeft="@drawable/ic_tecnico"
+                            android:fontFamily="@font/averia_sans_libre_light"
                             android:gravity="center_vertical"
                             android:paddingLeft="25dp"
                             android:paddingTop="5dp"
@@ -228,19 +234,22 @@
                             android:id="@+id/textView41"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:fontFamily="@font/averia_sans_libre_light"
                             android:gravity="center_horizontal"
                             android:text=" Extracción de BackUp "
                             android:textColor="#1E4FE4"
-                            android:textSize="18sp" />
+                            android:textSize="12sp" />
 
                         <TextView
                             android:id="@+id/textView42"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="5dp"
+                            android:fontFamily="@font/averia_sans_libre_light"
                             android:gravity="center_horizontal"
                             android:text="Sistema o Aplicación : PC - Sistemas Operativos"
-                            android:textColor="#FF1E4FE4" />
+                            android:textColor="#FF1E4FE4"
+                            android:textSize="12sp" />
 
                         <TextView
                             android:id="@+id/textView43"
@@ -252,6 +261,7 @@
                             android:layout_marginEnd="16dp"
                             android:layout_marginRight="16dp"
                             android:drawableLeft="@drawable/ic_fecha"
+                            android:fontFamily="@font/averia_sans_libre_light"
                             android:gravity="right|center_vertical"
                             android:text="26 de jul. 2022 | 11:00 am. -> 12:00 pm."
                             android:textColor="#000000"
@@ -267,6 +277,7 @@
                             android:layout_marginEnd="16dp"
                             android:layout_marginRight="16dp"
                             android:drawableLeft="@drawable/ic_reloj"
+                            android:fontFamily="@font/averia_sans_libre_light"
                             android:gravity="right|center_vertical"
                             android:text="1 h. 0 min."
                             android:textColor="#000000"
@@ -282,6 +293,7 @@
                             android:layout_marginEnd="16dp"
                             android:layout_marginRight="16dp"
                             android:drawableLeft="@drawable/ic_reloj_cronometro"
+                            android:fontFamily="@font/averia_sans_libre_light"
                             android:gravity="right|center_vertical"
                             android:text="1 h. 0 min."
                             android:textColor="#000000"
@@ -326,6 +338,7 @@
                                 android:id="@+id/textView47"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:fontFamily="@font/averia_sans_libre_light"
                                 android:text="mau - operador 5"
                                 android:textColor="#000000"
                                 android:textSize="12sp" />
@@ -335,6 +348,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:drawableLeft="@drawable/ic_reloj"
+                                android:fontFamily="@font/averia_sans_libre_light"
                                 android:gravity="center_vertical"
                                 android:text="25 de agosto  10:30am"
                                 android:textColor="#000000"
@@ -355,6 +369,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
+                            android:fontFamily="@font/averia_sans_libre_light"
                             android:text="Soporte al esquipo de computo UML  Huanta"
                             android:textColor="#000000"
                             android:textSize="12sp" />
@@ -363,6 +378,7 @@
                             android:id="@+id/textView54"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:fontFamily="@font/averia_sans_libre_light"
                             android:text="Nombre y Apellidos : "
                             android:textColor="#000000"
                             android:textSize="12sp" />
@@ -372,6 +388,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
+                            android:fontFamily="@font/averia_sans_libre_light"
                             android:text="Soporte al equipo de computo UNL Huanta"
                             android:textColor="#000000"
                             android:textSize="12sp" />
@@ -381,6 +398,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
+                            android:fontFamily="@font/averia_sans_libre_light"
                             android:text="Nombre y Apellidos : "
                             android:textColor="#000000"
                             android:textSize="12sp" />
@@ -390,6 +408,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
+                            android:fontFamily="@font/averia_sans_libre_light"
                             android:text="DNI : "
                             android:textColor="#000000"
                             android:textSize="12sp" />
@@ -398,6 +417,7 @@
                             android:id="@+id/textView52"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:fontFamily="@font/averia_sans_libre_light"
                             android:text="Cargo : "
                             android:textColor="#000000"
                             android:textSize="12sp" />

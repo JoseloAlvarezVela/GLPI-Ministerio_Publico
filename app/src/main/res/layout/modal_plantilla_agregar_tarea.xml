@@ -58,7 +58,8 @@
                 android:fontFamily="@font/averia_sans_libre_light"
                 android:padding="10sp"
                 android:text="Acompañamiento"
-                android:textColor="#000000" />
+                android:textColor="#000000"
+                android:textSize="12sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -75,7 +76,8 @@
                 android:fontFamily="@font/averia_sans_libre_light"
                 android:padding="10sp"
                 android:text="Asesoramiento"
-                android:textColor="#000000" />
+                android:textColor="#000000"
+                android:textSize="12sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -91,7 +93,8 @@
                 android:fontFamily="@font/averia_sans_libre_light"
                 android:padding="10sp"
                 android:text="Habilitación de punto de red"
-                android:textColor="#000000" />
+                android:textColor="#000000"
+                android:textSize="12sp" />
         </LinearLayout>
 
     </LinearLayout>
@@ -107,8 +110,9 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="?android:attr/selectableItemBackground"
-            android:fontFamily="@font/averia_libre_light"
+            android:fontFamily="@font/averia_sans_libre_light"
             android:text="Salir"
-            android:textColor="#FFFFFF" />
+            android:textColor="#FFFFFF"
+            android:textSize="12sp" />
     </LinearLayout>
 </LinearLayout>

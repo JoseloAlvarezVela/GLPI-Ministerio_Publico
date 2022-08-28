@@ -23,6 +23,7 @@
             android:drawableLeft="@drawable/ic_actor"
             android:drawableRight="@drawable/ic_lupa"
             android:drawablePadding="29sp"
+            android:fontFamily="@font/averia_libre_light"
             android:gravity="center_vertical"
             android:padding="15sp"
             android:text="Perfiles"
@@ -42,11 +43,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="?android:attr/selectableItemBackground"
+                android:fontFamily="@font/averia_sans_libre_light"
                 android:paddingTop="15sp"
                 android:paddingBottom="15sp"
                 android:text="Hardware - Gestor"
                 android:textColor="#6C6464"
-                android:textSize="15sp" />
+                android:textSize="12sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -61,11 +63,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="?android:attr/selectableItemBackground"
+                android:fontFamily="@font/averia_sans_libre_light"
                 android:paddingTop="15sp"
                 android:paddingBottom="15sp"
                 android:text="Operador"
                 android:textColor="#6C6464"
-                android:textSize="15sp" />
+                android:textSize="12sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -80,11 +83,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="?android:attr/selectableItemBackground"
+                android:fontFamily="@font/averia_sans_libre_light"
                 android:paddingTop="15sp"
                 android:paddingBottom="15sp"
                 android:text="Tickets Escalados (DF)"
                 android:textColor="#6C6464"
-                android:textSize="15sp" />
+                android:textSize="12sp" />
         </LinearLayout>
     </LinearLayout>
 
@@ -105,6 +109,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?android:attr/selectableItemBackground"
-            android:text="Salir" />
+            android:fontFamily="@font/averia_sans_libre_light"
+            android:text="Salir"
+            android:textSize="12sp" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

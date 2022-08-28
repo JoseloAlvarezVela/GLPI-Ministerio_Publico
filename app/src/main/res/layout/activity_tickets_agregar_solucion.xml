@@ -41,18 +41,20 @@
                     android:id="@+id/textView11"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/averia_libre_light"
                     android:text="Añadir Solución"
                     android:textColor="#FFFFFF"
-                    android:textSize="12sp"
+                    android:textSize="15sp"
                     android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/textView16"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/averia_libre_light"
                     android:text="Petición #123456"
                     android:textColor="#FFFFFF"
-                    android:textSize="12sp" />
+                    android:textSize="15sp" />
             </LinearLayout>
 
             <TextView
@@ -145,6 +147,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="20dp"
+                android:fontFamily="@font/averia_sans_libre_light"
                 android:text="Descripción" />
 
             <EditText
@@ -154,8 +157,10 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="10dp"
                 android:ems="10"
+                android:fontFamily="@font/averia_sans_libre_light"
                 android:hint="se tramitó el CD ..."
-                android:inputType="textPersonName" />
+                android:inputType="textPersonName"
+                android:textSize="12sp" />
 
         </LinearLayout>
 
@@ -203,6 +208,7 @@
                 android:layout_marginRight="5sp"
                 android:layout_weight="1"
                 android:background="@drawable/esq_redondeada_blanco"
+                android:fontFamily="@font/averia_sans_libre_light"
                 android:padding="5sp"
                 android:text="Archivo"
                 android:textSize="12sp" />
@@ -233,6 +239,7 @@
                 android:layout_marginRight="5sp"
                 android:layout_weight="1"
                 android:background="@drawable/esq_redondeada_blanco"
+                android:fontFamily="@font/averia_sans_libre_light"
                 android:padding="5sp"
                 android:text="Foto"
                 android:textSize="12sp" />
@@ -262,6 +269,7 @@
                 android:layout_marginRight="5sp"
                 android:layout_weight="1"
                 android:background="@drawable/esq_redondeada_blanco"
+                android:fontFamily="@font/averia_sans_libre_light"
                 android:padding="5sp"
                 android:text="Plantilla"
                 android:textSize="12sp" />

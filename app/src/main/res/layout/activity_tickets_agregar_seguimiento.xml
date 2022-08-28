@@ -43,18 +43,20 @@
                     android:id="@+id/textView11"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/averia_sans_libre_light"
                     android:text="Añadir Tarea"
                     android:textColor="#FFFFFF"
-                    android:textSize="12sp"
+                    android:textSize="16sp"
                     android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/textView16"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/averia_sans_libre_light"
                     android:text="Petición #123456"
                     android:textColor="#FFFFFF"
-                    android:textSize="12sp" />
+                    android:textSize="16sp" />
 
             </LinearLayout>
 
@@ -171,7 +173,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="20dp"
-                android:text="Agregar Descripción" />
+                android:fontFamily="@font/averia_sans_libre_light"
+                android:text="Agregar Descripción"
+                android:textSize="12sp" />
 
             <EditText
                 android:id="@+id/editTextTextPersonName"
@@ -181,8 +185,10 @@
                 android:layout_marginLeft="20dp"
                 android:layout_weight="1"
                 android:ems="10"
+                android:fontFamily="@font/averia_sans_libre_light"
                 android:hint="indicque la descripción"
-                android:inputType="textPersonName" />
+                android:inputType="textPersonName"
+                android:textSize="12sp" />
 
         </LinearLayout>
 
@@ -231,6 +237,7 @@
                 android:layout_marginRight="5sp"
                 android:layout_weight="1"
                 android:background="@drawable/esq_redondeada_blanco"
+                android:fontFamily="@font/averia_sans_libre_light"
                 android:padding="5sp"
                 android:text="Archivo"
                 android:textColor="#636363"
@@ -262,6 +269,7 @@
                 android:layout_marginRight="5sp"
                 android:layout_weight="1"
                 android:background="@drawable/esq_redondeada_blanco"
+                android:fontFamily="@font/averia_sans_libre_light"
                 android:padding="5sp"
                 android:text="Foto"
                 android:textColor="#636363"
@@ -292,6 +300,7 @@
                 android:layout_marginRight="5sp"
                 android:layout_weight="1"
                 android:background="@drawable/esq_redondeada_blanco"
+                android:fontFamily="@font/averia_sans_libre_light"
                 android:padding="5sp"
                 android:text="Plantilla"
                 android:textColor="#636363"

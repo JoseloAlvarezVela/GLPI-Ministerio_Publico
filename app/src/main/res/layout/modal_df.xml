@@ -25,11 +25,12 @@
             android:drawableLeft="@drawable/ic_entidades"
             android:drawableRight="@drawable/ic_lupa"
             android:drawablePadding="29sp"
+            android:fontFamily="@font/averia_libre_light"
             android:gravity="center_vertical"
             android:padding="15sp"
             android:text="Entidades"
             android:textColor="#FFFFFF"
-            android:textSize="20sp" />
+            android:textSize="16sp" />
 
         <LinearLayout
             android:id="@+id/contenedor_mpfn"
@@ -46,6 +47,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="6.3"
                 android:background="?android:attr/selectableItemBackground"
+                android:fontFamily="@font/averia_sans_libre_light"
                 app:icon="@drawable/ic_fab_desplegar"
                 app:iconGravity="textStart"
                 app:iconPadding="0sp"
@@ -58,11 +60,11 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:drawablePadding="10sp"
+                android:fontFamily="@font/averia_sans_libre_light"
                 android:gravity="center_vertical"
                 android:hint="MPFN"
                 android:padding="15sp"
-                android:textColor="#FFFFFF"
-                android:textSize="20sp" />
+                android:textColor="#FFFFFF" />
         </LinearLayout>
 
         <LinearLayout
@@ -81,6 +83,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="6.3"
                 android:background="?android:attr/selectableItemBackground"
+                android:fontFamily="@font/averia_sans_libre_light"
                 app:icon="@drawable/ic_mpfn_modal"
                 app:iconGravity="textEnd" />
 
@@ -89,13 +92,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:fontFamily="@font/averia_sans_libre_light"
                 android:gravity="center_vertical"
                 android:paddingLeft="15sp"
                 android:paddingTop="15sp"
                 android:paddingBottom="15sp"
                 android:text="MPFN"
                 android:textColor="#FFFFFF"
-                android:textSize="20sp"
                 android:visibility="visible" />
 
         </LinearLayout>
@@ -115,6 +118,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="6.3"
                 android:background="?android:attr/selectableItemBackground"
+                android:fontFamily="@font/averia_sans_libre_light"
                 app:icon="@drawable/ic_fab_desplegar"
                 app:iconGravity="textStart"
                 app:iconPadding="0sp"
@@ -127,11 +131,11 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:drawablePadding="10sp"
+                android:fontFamily="@font/averia_sans_libre_light"
                 android:gravity="center_vertical"
                 android:hint="Cobertura Nacional"
                 android:padding="15sp"
-                android:textColor="#FFFFFF"
-                android:textSize="20sp" />
+                android:textColor="#FFFFFF" />
         </LinearLayout>
 
         <LinearLayout
@@ -150,6 +154,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="6.3"
                 android:background="?android:attr/selectableItemBackground"
+                android:fontFamily="@font/averia_sans_libre_light"
                 app:icon="@drawable/ic_mpfn_modal"
                 app:iconGravity="textEnd" />
 
@@ -158,13 +163,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:fontFamily="@font/averia_sans_libre_light"
                 android:gravity="center_vertical"
                 android:paddingLeft="15sp"
                 android:paddingTop="15sp"
                 android:paddingBottom="15sp"
                 android:text="Cobertura Nacional"
                 android:textColor="#FFFFFF"
-                android:textSize="20sp"
                 android:visibility="visible" />
         </LinearLayout>
 
@@ -183,6 +188,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="6.3"
                 android:background="?android:attr/selectableItemBackground"
+                android:fontFamily="@font/averia_sans_libre_light"
                 app:icon="@drawable/ic_fab_desplegar"
                 app:iconGravity="textStart"
                 app:iconPadding="0sp"
@@ -195,11 +201,11 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:drawablePadding="10sp"
+                android:fontFamily="@font/averia_sans_libre_light"
                 android:gravity="center_vertical"
                 android:hint="Distritos Fiscales"
                 android:padding="15sp"
-                android:textColor="#FFFFFF"
-                android:textSize="20sp" />
+                android:textColor="#FFFFFF" />
         </LinearLayout>
 
 
@@ -219,6 +225,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="6.3"
                 android:background="?android:attr/selectableItemBackground"
+                android:fontFamily="@font/averia_sans_libre_light"
                 app:icon="@drawable/ic_mpfn_modal"
                 app:iconGravity="textEnd" />
 
@@ -227,13 +234,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:fontFamily="@font/averia_sans_libre_light"
                 android:gravity="center_vertical"
                 android:paddingLeft="15sp"
                 android:paddingTop="15sp"
                 android:paddingBottom="15sp"
                 android:text="Distritos Fiscales"
                 android:textColor="#FFFFFF"
-                android:textSize="20sp"
                 android:visibility="visible" />
         </LinearLayout>
 
@@ -252,6 +259,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="6.3"
                 android:background="?android:attr/selectableItemBackground"
+                android:fontFamily="@font/averia_sans_libre_light"
                 app:icon="@drawable/ic_fab_desplegar"
                 app:iconGravity="textStart"
                 app:iconPadding="0sp"
@@ -264,11 +272,11 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:drawablePadding="10sp"
+                android:fontFamily="@font/averia_sans_libre_light"
                 android:gravity="center_vertical"
                 android:hint="D.F. Madre de Dios"
                 android:padding="15sp"
-                android:textColor="#FFFFFF"
-                android:textSize="20sp" />
+                android:textColor="#FFFFFF" />
         </LinearLayout>
 
         <LinearLayout
@@ -285,11 +293,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:fontFamily="@font/averia_sans_libre_light"
                 android:gravity="center_vertical"
                 android:hint="D.F. Madre de Dios"
                 android:padding="15sp"
-                android:textColor="#FFFFFF"
-                android:textSize="20sp" />
+                android:textColor="#FFFFFF" />
 
             <Button
                 android:id="@+id/button4"
@@ -297,6 +305,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="6.3"
                 android:background="?android:attr/selectableItemBackground"
+                android:fontFamily="@font/averia_sans_libre_light"
                 android:visibility="gone"
                 app:icon="@android:drawable/ic_menu_more"
                 app:iconGravity="textStart"
@@ -323,6 +332,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?android:attr/selectableItemBackground"
+            android:fontFamily="@font/averia_sans_libre_light"
             android:gravity="center"
             android:text="Salir"
             android:textColor="#FFFFFF" />

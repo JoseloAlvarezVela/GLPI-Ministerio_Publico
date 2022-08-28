@@ -130,7 +130,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/averia_sans_libre_light"
                     android:paddingTop="10sp"
-                    android:text="Ultima Modificación"
+                    android:text="Busqueda por fecha"
                     android:textSize="16sp" />
 
             </LinearLayout>
@@ -232,7 +232,8 @@
                     android:fontFamily="@font/averia_sans_libre_light"
                     android:paddingTop="10sp"
                     android:text="Ultima Modificación"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:visibility="gone" />
 
             </LinearLayout>
 

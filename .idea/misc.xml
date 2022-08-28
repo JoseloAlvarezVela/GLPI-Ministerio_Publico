@@ -15,16 +15,16 @@
         <entry key="..\:/Users/JOSELO/AndroidStudioProjects/GLPIMinisterio_Pblico/app/src/main/res/drawable/ic_interrogacion.xml" value="0.1265" />
         <entry key="..\:/Users/JOSELO/AndroidStudioProjects/GLPIMinisterio_Pblico/app/src/main/res/font/averia_libre_light.xml" value="0.20989583333333334" />
         <entry key="..\:/Users/JOSELO/AndroidStudioProjects/GLPIMinisterio_Pblico/app/src/main/res/layout/activity_filtro_right.xml" value="0.22" />
-        <entry key="..\:/Users/JOSELO/AndroidStudioProjects/GLPIMinisterio_Pblico/app/src/main/res/layout/activity_login.xml" value="0.22" />
+        <entry key="..\:/Users/JOSELO/AndroidStudioProjects/GLPIMinisterio_Pblico/app/src/main/res/layout/activity_login.xml" value="0.3333333333333333" />
         <entry key="..\:/Users/JOSELO/AndroidStudioProjects/GLPIMinisterio_Pblico/app/src/main/res/layout/activity_main.xml" value="0.22" />
-        <entry key="..\:/Users/JOSELO/AndroidStudioProjects/GLPIMinisterio_Pblico/app/src/main/res/layout/activity_nav_footer_fab.xml" value="0.12228260869565218" />
-        <entry key="..\:/Users/JOSELO/AndroidStudioProjects/GLPIMinisterio_Pblico/app/src/main/res/layout/activity_nav_footer_tickets.xml" value="0.14855072463768115" />
-        <entry key="..\:/Users/JOSELO/AndroidStudioProjects/GLPIMinisterio_Pblico/app/src/main/res/layout/activity_nav_header_tickets.xml" value="0.14855072463768115" />
+        <entry key="..\:/Users/JOSELO/AndroidStudioProjects/GLPIMinisterio_Pblico/app/src/main/res/layout/activity_nav_footer_fab.xml" value="0.22" />
+        <entry key="..\:/Users/JOSELO/AndroidStudioProjects/GLPIMinisterio_Pblico/app/src/main/res/layout/activity_nav_footer_tickets.xml" value="0.16666666666666666" />
+        <entry key="..\:/Users/JOSELO/AndroidStudioProjects/GLPIMinisterio_Pblico/app/src/main/res/layout/activity_nav_header_tickets.xml" value="0.22" />
         <entry key="..\:/Users/JOSELO/AndroidStudioProjects/GLPIMinisterio_Pblico/app/src/main/res/layout/activity_tickets.xml" value="0.22" />
         <entry key="..\:/Users/JOSELO/AndroidStudioProjects/GLPIMinisterio_Pblico/app/src/main/res/layout/activity_tickets_agregar_seguimiento.xml" value="0.22" />
-        <entry key="..\:/Users/JOSELO/AndroidStudioProjects/GLPIMinisterio_Pblico/app/src/main/res/layout/activity_tickets_agregar_solucion.xml" value="0.3333333333333333" />
+        <entry key="..\:/Users/JOSELO/AndroidStudioProjects/GLPIMinisterio_Pblico/app/src/main/res/layout/activity_tickets_agregar_solucion.xml" value="0.22" />
         <entry key="..\:/Users/JOSELO/AndroidStudioProjects/GLPIMinisterio_Pblico/app/src/main/res/layout/activity_tickets_agregar_tarea.xml" value="0.22" />
-        <entry key="..\:/Users/JOSELO/AndroidStudioProjects/GLPIMinisterio_Pblico/app/src/main/res/layout/activity_tickets_historico.xml" value="0.14666666666666667" />
+        <entry key="..\:/Users/JOSELO/AndroidStudioProjects/GLPIMinisterio_Pblico/app/src/main/res/layout/activity_tickets_historico.xml" value="0.22" />
         <entry key="..\:/Users/JOSELO/AndroidStudioProjects/GLPIMinisterio_Pblico/app/src/main/res/layout/app_bar_main.xml" value="0.16666666666666666" />
         <entry key="..\:/Users/JOSELO/AndroidStudioProjects/GLPIMinisterio_Pblico/app/src/main/res/layout/content_main.xml" value="0.1796875" />
         <entry key="..\:/Users/JOSELO/AndroidStudioProjects/GLPIMinisterio_Pblico/app/src/main/res/layout/fragment_home.xml" value="0.14764492753623187" />

@@ -45,6 +45,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
                     android:layout_marginLeft="10dp"
+                    android:fontFamily="@font/averia_sans_libre_light"
                     android:text="Usuario:"
                     android:textColor="#FFFFFF"
                     android:textSize="12sp" />
@@ -55,6 +56,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
                     android:layout_marginLeft="10dp"
+                    android:fontFamily="@font/averia_sans_libre_light"
                     android:text="Nombre de Usuario Login"
                     android:textColor="#FFFFFF"
                     android:textSize="12sp" />
@@ -78,6 +80,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:drawableRight="@drawable/ic_desplegar"
+                android:fontFamily="@font/averia_sans_libre_light"
                 android:gravity="center_vertical"
                 android:paddingLeft="2sp"
                 android:text="D.F. Madre de Dios"
@@ -113,6 +116,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:drawableRight="@drawable/ic_desplegar"
+                android:fontFamily="@font/averia_sans_libre_light"
                 android:gravity="center_vertical"
                 android:paddingLeft="2sp"
                 android:text="Operador"

@@ -49,8 +49,10 @@
                     android:layout_marginLeft="30dp"
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="10dp"
+                    android:fontFamily="@font/averia_sans_libre_light"
                     android:gravity="center_horizontal|center_vertical"
-                    android:text="0" />
+                    android:text="0"
+                    android:textSize="12sp" />
 
                 <TextView
                     android:id="@+id/textView22"
@@ -60,8 +62,10 @@
                     android:layout_marginBottom="10dp"
                     android:layout_weight="1"
                     android:drawableLeft="@drawable/ic_planificado"
+                    android:fontFamily="@font/averia_sans_libre_light"
                     android:gravity="center_vertical"
-                    android:text="Documentos" />
+                    android:text="Documentos"
+                    android:textSize="12sp" />
             </LinearLayout>
 
             <LinearLayout
@@ -73,8 +77,10 @@
                     android:id="@+id/textView24"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/averia_sans_libre_light"
                     android:gravity="center_horizontal"
-                    android:text="Tamaño Max: Desconocido" />
+                    android:text="Tamaño Max: Desconocido"
+                    android:textSize="12sp" />
             </LinearLayout>
         </LinearLayout>
 

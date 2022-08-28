@@ -37,6 +37,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="?android:attr/selectableItemBackground"
+                android:fontFamily="@font/averia_sans_libre_light"
                 android:text="Aceptar"
                 android:textColor="#000000" />
         </LinearLayout>

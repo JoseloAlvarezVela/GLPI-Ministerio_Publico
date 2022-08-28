@@ -52,7 +52,7 @@
                         android:fontFamily="@font/averia_libre_light"
                         android:text="Añadir Tarea"
                         android:textColor="#FFFFFF"
-                        android:textSize="12sp"
+                        android:textSize="15sp"
                         android:textStyle="bold" />
 
                     <TextView
@@ -62,7 +62,7 @@
                         android:fontFamily="@font/averia_libre_light"
                         android:text="Petición #123456"
                         android:textColor="#FFFFFF"
-                        android:textSize="12sp" />
+                        android:textSize="15sp" />
                 </LinearLayout>
 
                 <TextView
@@ -142,10 +142,10 @@
                         android:layout_height="35dp"
                         android:background="@drawable/esq_redondeada_gris"
                         android:drawableLeft="@drawable/ic_reloj"
-                        android:fontFamily="@font/averia_libre_light"
+                        android:fontFamily="@font/averia_sans_libre_light"
                         android:text="12:15 pm."
                         android:textColor="#5E5959"
-                        android:textSize="14sp"
+                        android:textSize="12sp"
                         app:backgroundTint="#ECECEC" />
                 </LinearLayout>
 
@@ -179,8 +179,9 @@
                     android:layout_marginStart="5dp"
                     android:layout_marginLeft="5dp"
                     android:drawableLeft="@drawable/ic_etiqueta"
-                    android:fontFamily="@font/averia_libre_light"
-                    android:text=" Asesoramiento   " />
+                    android:fontFamily="@font/averia_sans_libre_light"
+                    android:text=" Asesoramiento   "
+                    android:textSize="12sp" />
 
                 <TextView
                     android:id="@+id/textView27"
@@ -213,14 +214,15 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
                     android:layout_marginTop="20dp"
-                    android:fontFamily="@font/averia_libre_light"
-                    android:text="Descripción" />
+                    android:fontFamily="@font/averia_sans_libre_light"
+                    android:text="Descripción"
+                    android:textSize="12sp" />
 
                 <TextView
                     android:id="@+id/textView28"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/averia_libre_light"
+                    android:fontFamily="@font/averia_sans_libre_light"
                     android:gravity="center_horizontal"
                     android:text="Asesoramiento"
                     android:textColor="#1D20DD"
@@ -241,7 +243,7 @@
                         android:fontFamily="@font/averia_sans_libre_light"
                         android:text="Sistema o equip. infor. :"
                         android:textColor="#1D20DD"
-                        android:textSize="16sp" />
+                        android:textSize="12sp" />
 
                     <EditText
                         android:id="@+id/editTextTextPersonName"
@@ -249,9 +251,10 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:ems="10"
-                        android:fontFamily="@font/averia_libre_light"
+                        android:fontFamily="@font/averia_sans_libre_light"
                         android:hint="ingrese lo indicado"
-                        android:inputType="textMultiLine|textPersonName" />
+                        android:inputType="textMultiLine|textPersonName"
+                        android:textSize="12sp" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -276,9 +279,10 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:ems="10"
-                        android:fontFamily="@font/averia_libre_light"
+                        android:fontFamily="@font/averia_sans_libre_light"
                         android:hint="ingrese lo indicado"
-                        android:inputType="textMultiLine|textPersonName" />
+                        android:inputType="textMultiLine|textPersonName"
+                        android:textSize="12sp" />
                 </LinearLayout>
 
             </LinearLayout>

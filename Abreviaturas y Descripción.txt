@@ -1,0 +1,25 @@
+averia_libre_light.ttf	-> text títulos: tamaño de letra 16sp - 14sp
+
+averia_sans_libre_light.ttf	-> text normal: tamaño de letra 12sp
+
+formato de id's:
+	componente(abreviado)+accionDelComponete+nombreLayout
+	lly_background_mdfaptfr
+	inc_mdfaptfr
+
+*componentes*
+LinearLayout		->	lly
+include			->	inc
+boton			->	btn
+TextView		->	txt
+
+*otros*
+modal			->	md
+fecha			->	f
+apertura		->	apt
+filtroRight		->	fr
+app_bar_main		->	abm
+background		->	bg
+buscar_solicitantes	->	bs
+activity		->	act
+
