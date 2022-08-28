@@ -89,7 +89,7 @@
                 android:background="@drawable/ic_circulo" />
 
             <Button
-                android:id="@+id/button6"
+                android:id="@+id/btnDesplegarFecha_FiltroRight"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_marginStart="20dp"

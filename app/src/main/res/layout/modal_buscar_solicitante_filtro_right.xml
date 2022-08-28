@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/lly_mdbsfr"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal"
+    android:background="#FFFFFF"
+    android:orientation="vertical"
+    android:padding="5sp"
+    android:visibility="gone">
+
+    <TextView
+        android:id="@+id/textView63"
+        android:layout_width="350sp"
+        android:layout_height="wrap_content"
+        android:background="#0481E1"
+        android:paddingLeft="10sp"
+        android:paddingTop="10sp"
+        android:paddingBottom="10sp"
+        android:text="Buscar Solicitante por Apellido"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp" />
+
+    <SearchView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:iconifiedByDefault="false"
+        android:orientation="vertical"
+        android:queryHint="Buscar por apellidos" />
+
+</LinearLayout>

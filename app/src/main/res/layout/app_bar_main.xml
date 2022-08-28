@@ -63,4 +63,34 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
+    <LinearLayout
+        android:id="@+id/lly_backgroud_abm"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#75575757"
+        android:orientation="vertical"
+        android:visibility="gone"></LinearLayout>
+
+    <include
+        android:id="@+id/inc_mdfaptfr"
+        layout="@layout/modal_fecha_apertura_filtro_right"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center" />
+
+    <include
+        android:id="@+id/inc_mdfcfr"
+        layout="@layout/modal_fecha_cierre_filtro_right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center" />
+
+    <include
+        android:id="@+id/inc_mdbsfr"
+        layout="@layout/modal_buscar_solicitante_filtro_right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|top"
+        android:layout_marginTop="30sp" />
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

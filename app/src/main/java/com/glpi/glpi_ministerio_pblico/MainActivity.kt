@@ -166,23 +166,67 @@ class MainActivity : AppCompatActivity() {
             }
 
         }
-        //inicio de boton filtro de la derecha
+        //INICIO - boton filtro de la derecha - activity_filtro_right.xml
         binding.appBarMain.btnFiltroRight.setOnClickListener {
             binding.appBarMain.includeFiltroRight.LinearLayoutActivityFiltroRight.isVisible = true
         }
         binding.appBarMain.includeFiltroRight.LinearLayoutActivityFiltroRight.setOnClickListener {
             binding.appBarMain.includeFiltroRight.LinearLayoutActivityFiltroRight.isVisible = false
         }
-
-        //boton que abre modal filtro por fecha
-        binding.appBarMain.includeFiltroRight.filtroCalendario.setOnClickListener {
+        //boton que despliega menu de filtro por fechas
+        var click_desplegar = false
+        binding.appBarMain.includeFiltroRight.btnDesplegarFechaFiltroRight.setOnClickListener {
+            if (click_desplegar == false){
+                binding.appBarMain.includeFiltroRight.btnUltModificacionFiltroRight.isVisible = true
+                binding.appBarMain.includeFiltroRight.btnFechaAperturaFiltroRight.isVisible = true
+                binding.appBarMain.includeFiltroRight.btnFechaCierreFiltroRight.isVisible = true
+                click_desplegar = true
+            }else{
+                binding.appBarMain.includeFiltroRight.btnUltModificacionFiltroRight.isVisible = false
+                binding.appBarMain.includeFiltroRight.btnFechaAperturaFiltroRight.isVisible = false
+                binding.appBarMain.includeFiltroRight.btnFechaCierreFiltroRight.isVisible = false
+                click_desplegar = false
+            }
+        }
+        //boton que abre calendario modal filtro por ultima modificación
+        binding.appBarMain.includeFiltroRight.btnUltModificacionFiltroRight.setOnClickListener {
             binding.appBarMain.includeModalCalendario.LinearLayoutFiltroCalendario.isVisible = true
         }
         binding.appBarMain.includeModalCalendario.LinearLayoutFiltroCalendario.setOnClickListener {
             binding.appBarMain.includeModalCalendario.LinearLayoutFiltroCalendario.isVisible = false
         }
+        //boton que abre calendario modal filtro por fecha de apertura
+        binding.appBarMain.includeFiltroRight.btnFechaAperturaFiltroRight.setOnClickListener {
+            binding.appBarMain.llyBackgroudAbm.isVisible = true
+            binding.appBarMain.incMdfaptfr.llyBackgroundMdfaptfr.isVisible = true
+        }
+        //boton que abre calendario modal filtro por fecha de cierre
+        binding.appBarMain.includeFiltroRight.btnFechaCierreFiltroRight.setOnClickListener {
+            binding.appBarMain.llyBackgroudAbm.isVisible = true
+            binding.appBarMain.incMdfcfr.llyBgMdfcfr.isVisible = true
+        }
+        //boton que abre buscador modal filtro por apellidos
+        binding.appBarMain.includeFiltroRight.btnBsActfr.setOnClickListener {
+            binding.appBarMain.incMdbsfr.llyMdbsfr.isVisible = true
+            binding.appBarMain.llyBackgroudAbm.isVisible = true
+        }
+        //
 
-        //fin de boton filtro de la derecha
+
+        //fondo gris transparente que se muestra atras de los modals
+        binding.appBarMain.llyBackgroudAbm.setOnClickListener {
+            if(binding.appBarMain.incMdfaptfr.llyBackgroundMdfaptfr.isVisible){
+                binding.appBarMain.incMdfaptfr.llyBackgroundMdfaptfr.isVisible = false
+            }
+            else if(binding.appBarMain.incMdfcfr.llyBgMdfcfr.isVisible){
+                binding.appBarMain.incMdfcfr.llyBgMdfcfr.isVisible = false
+            }
+            else if(binding.appBarMain.incMdbsfr.llyMdbsfr.isVisible){
+                binding.appBarMain.incMdbsfr.llyMdbsfr.isVisible = false
+            }
+            binding.appBarMain.llyBackgroudAbm.isVisible = false
+        }
+        //FIN - boton filtro de la derecha - activity_filtro_right.xml
 
 
     }

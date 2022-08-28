@@ -61,6 +61,9 @@ class NavFooterTicketsActivity : AppCompatActivity() {
         }
         //FIN toogle buton
 
+        //INICIO - codigo de prueba
+
+        //FIN - codigo de prueba
         //boton atras -- include de nav_header_tickets.xml
         binding.includeNavHeaderTickets.btnAtrasTickets.setOnClickListener {
             val intent_header_tickets = Intent(this@NavFooterTicketsActivity, MainActivity::class.java)
