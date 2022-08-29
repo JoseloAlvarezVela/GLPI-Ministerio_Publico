@@ -29,10 +29,11 @@
                 android:orientation="horizontal">
 
                 <Button
-                    android:id="@+id/button5"
+                    android:id="@+id/btn_atras_acttaddt"
                     android:layout_width="50dp"
-                    android:layout_height="50dp"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
+                    android:background="?android:attr/selectableItemBackground"
                     app:backgroundTint="#28B6F6"
                     app:icon="@drawable/ic_atras"
                     app:iconGravity="textStart" />
@@ -85,12 +86,13 @@
                     android:background="@drawable/ic_circulo" />
 
                 <Button
-                    android:id="@+id/btnDesplegarFecha_FiltroRight"
+                    android:id="@+id/btn_addt_acttaddt"
                     android:layout_width="50dp"
-                    android:layout_height="50dp"
+                    android:layout_height="match_parent"
                     android:layout_marginStart="20dp"
                     android:layout_marginLeft="20dp"
                     android:layout_weight="1"
+                    android:background="?android:attr/selectableItemBackground"
                     app:backgroundTint="#28B6F6"
                     app:icon="@drawable/ic_enviar"
                     app:iconGravity="textStart" />
@@ -167,29 +169,38 @@
 
             <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="35sp"
                 android:layout_margin="5dp"
                 android:layout_marginBottom="5dp"
                 android:background="@drawable/esq_redondeada_gris">
 
-                <TextView
-                    android:id="@+id/textView26"
-                    android:layout_width="match_parent"
+                <Button
+                    android:id="@+id/button5"
+                    android:layout_width="140sp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="5dp"
-                    android:layout_marginLeft="5dp"
+                    android:background="?android:attr/selectableItemBackground"
                     android:drawableLeft="@drawable/ic_etiqueta"
                     android:fontFamily="@font/averia_sans_libre_light"
-                    android:text=" Asesoramiento   "
-                    android:textSize="12sp" />
+                    android:gravity="left|center_vertical"
+                    android:padding="0sp"
+                    android:text="Agregar Categoria"
+                    android:textColor="#5E5959"
+                    android:textSize="10sp"
+                    app:iconPadding="0sp" />
 
-                <TextView
-                    android:id="@+id/textView27"
-                    android:layout_width="match_parent"
+                <Button
+                    android:id="@+id/button8"
+                    android:layout_width="25sp"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="5dp"
-                    android:layout_marginRight="5dp"
-                    android:drawableLeft="@drawable/ic_cerrar" />
+                    android:layout_marginStart="5sp"
+                    android:layout_marginLeft="5sp"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:fontFamily="@font/averia_sans_libre_light"
+                    android:textSize="10sp"
+                    app:icon="@drawable/ic_cerrar"
+                    app:iconGravity="textStart"
+                    app:iconPadding="0sp"
+                    app:iconTint="#000000" />
 
             </LinearLayout>
 
@@ -271,7 +282,7 @@
                         android:fontFamily="@font/averia_sans_libre_light"
                         android:text="Tema : "
                         android:textColor="#1D20DD"
-                        android:textSize="16sp" />
+                        android:textSize="12sp" />
 
                     <EditText
                         android:id="@+id/editTextTextPersonName2"

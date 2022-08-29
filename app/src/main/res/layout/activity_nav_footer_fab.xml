@@ -21,9 +21,10 @@
             android:orientation="vertical">
 
             <Button
-                android:id="@+id/button7"
                 android:layout_width="match_parent"
                 android:layout_height="80dp"
+                android:background="?android:attr/selectableItemBackground"
+                android:clickable="false"
                 app:backgroundTint="#ECECEC"
                 app:icon="@drawable/ic_desplegar_arriba"
                 app:iconGravity="textStart"
@@ -34,6 +35,7 @@
         <LinearLayout
             android:layout_width="250dp"
             android:layout_height="match_parent"
+            android:gravity="center"
             android:orientation="vertical">
 
             <LinearLayout
@@ -50,7 +52,7 @@
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="10dp"
                     android:fontFamily="@font/averia_sans_libre_light"
-                    android:gravity="center_horizontal|center_vertical"
+                    android:gravity="center"
                     android:text="0"
                     android:textSize="12sp" />
 
@@ -78,7 +80,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/averia_sans_libre_light"
-                    android:gravity="center_horizontal"
+                    android:gravity="center"
                     android:text="Tamaño Max: Desconocido"
                     android:textSize="12sp" />
             </LinearLayout>

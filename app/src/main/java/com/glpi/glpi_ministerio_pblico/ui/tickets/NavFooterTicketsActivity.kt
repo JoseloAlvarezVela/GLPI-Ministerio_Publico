@@ -28,8 +28,8 @@ class NavFooterTicketsActivity : AppCompatActivity() {
             if(clickTickets == false){
                 binding.includeTickets.includeTicketsLayout.isVisible = true //se muestra
                 binding.includeTicketsHistorico.includeTicketsHistoricoLayout.isVisible = false //se esconde
-                binding.btnTicketsFooterCOLOR.setBackgroundResource(R.color.ticketsGris)
-                binding.btnConversacionFooterCOLOR.setBackgroundResource(R.color.ticketsBlanco)
+                binding.btnTicketsFooterCOLOR.setBackgroundResource(R.color.ticketsBlanco)
+                binding.btnConversacionFooterCOLOR.setBackgroundResource(R.color.ticketsGris)
 
                 //************INICIO DE SETEO LOS FAB'S DE LAYOUT activity_tickets_historico.xml************
                 binding.includeTicketsHistorico.fabSolucion.isVisible = false
@@ -53,8 +53,8 @@ class NavFooterTicketsActivity : AppCompatActivity() {
             if(clickConvezaciones == false){
                 binding.includeTicketsHistorico.includeTicketsHistoricoLayout.isVisible = true
                 binding.includeTickets.includeTicketsLayout.isVisible = false
-                binding.btnTicketsFooterCOLOR.setBackgroundResource(R.color.ticketsBlanco)
-                binding.btnConversacionFooterCOLOR.setBackgroundResource(R.color.ticketsGris)
+                binding.btnTicketsFooterCOLOR.setBackgroundResource(R.color.ticketsGris)
+                binding.btnConversacionFooterCOLOR.setBackgroundResource(R.color.ticketsBlanco)
                 clickConvezaciones = true
                 clickTickets = false
             }
@@ -64,7 +64,7 @@ class NavFooterTicketsActivity : AppCompatActivity() {
         //INICIO - codigo de prueba
 
         //FIN - codigo de prueba
-        //boton atras -- include de nav_header_tickets.xml
+        //boton atras -- include de nav_header_tickets.xml - id boton: btn_atras_ticke
         binding.includeNavHeaderTickets.btnAtrasTickets.setOnClickListener {
             val intent_header_tickets = Intent(this@NavFooterTicketsActivity, MainActivity::class.java)
             intent_header_tickets.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)

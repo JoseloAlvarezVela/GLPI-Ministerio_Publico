@@ -18,14 +18,14 @@
         layout="@layout/activity_tickets_historico"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone" />
+        android:visibility="visible" />
 
     <include
         android:id="@+id/include_tickets_"
         layout="@layout/activity_tickets"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="visible" />
+        android:visibility="gone" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -36,8 +36,8 @@
             android:id="@+id/btn_conversacion_footerCOLOR"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="0.5"
-            android:background="#FFFFFF"
+            android:layout_weight="1"
+            android:background="#A3A3A3"
             android:orientation="vertical">
 
             <Button
@@ -56,8 +56,8 @@
             android:id="@+id/btn_tickets_footerCOLOR"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="0.5"
-            android:background="#A3A3A3"
+            android:layout_weight="1"
+            android:background="#FFFFFF"
             android:orientation="vertical">
 
             <Button

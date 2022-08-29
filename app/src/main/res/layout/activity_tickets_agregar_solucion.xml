@@ -21,7 +21,7 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/button5"
+                android:id="@+id/btn_atras_acttaddt"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_weight="1"
@@ -91,7 +91,7 @@
                 android:background="@drawable/ic_circulo" />
 
             <Button
-                android:id="@+id/btnDesplegarFecha_FiltroRight"
+                android:id="@+id/btnDesplegarFecha_FiltroRightEditado"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_marginStart="20dp"

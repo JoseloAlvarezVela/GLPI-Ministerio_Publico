@@ -1,9 +1,11 @@
 package com.glpi.glpi_ministerio_pblico.ui.tickets
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import androidx.core.view.isVisible
+import com.glpi.glpi_ministerio_pblico.MainActivity
 import com.glpi.glpi_ministerio_pblico.R
 import com.glpi.glpi_ministerio_pblico.databinding.ActivityTicketsAgregarTareaBinding
 
@@ -15,10 +17,29 @@ class TicketsAgregarTareaActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         btn_fabs()
-
+        btn_atras()
+        btn_agregarTarea()
 
     }
+    //función que añade la tarea y te devuelve al menu principal
+    private fun btn_agregarTarea() {
+        binding.btnAddtActtaddt.setOnClickListener {
+            Toast.makeText(this, "tarea añadida", Toast.LENGTH_LONG).show()
+            val intent_agregarTarea = Intent(this, MainActivity::class.java)
+            intent_agregarTarea.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            startActivity(intent_agregarTarea)
+        }
+    }
+    //funcion que regresa a la vista anterior: activity_nav_footer_tickets.xml
+    private fun btn_atras() {
+       binding.btnAtrasActtaddt.setOnClickListener {
+           val intent_atras = Intent(this, NavFooterTicketsActivity::class.java)
+           intent_atras.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+           startActivity(intent_atras)
+       }
+    }
 
+    //funcion que muestra los FAB's
     private fun btn_fabs(){
         var click: Boolean = false
 
