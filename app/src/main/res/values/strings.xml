@@ -20,7 +20,7 @@
     <string name="menu_MisIncidencias">Mis Incidencias</string>
 
 
-<!--    strign para navigation drawer-->
+    <!--    strign para navigation drawer-->
     <string name="menu_home">Home</string>
     <string name="menu_gallery">Mis Solicitudes</string>
     <string name="menu_slideshow">Slideshow</string>

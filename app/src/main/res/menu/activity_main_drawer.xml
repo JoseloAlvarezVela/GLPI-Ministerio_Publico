@@ -3,31 +3,34 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
-    <item android:title="Soporte"/>
-    <group android:checkableBehavior="single">
-        <item
-            android:id="@+id/nav_mis_peticiones"
-            android:icon="@drawable/ic_peticiones_asignadas"
-            android:title="@string/menu_mis_peticiones" />
-        <item
-            android:id="@+id/nav_gallery"
-            android:icon="@drawable/ic_fab_herramienta"
-            android:title="@string/menu_MisIncidencias" />
-        <item
-            android:id="@+id/nav_slideshow"
-            android:icon="@drawable/ic_solicitud"
-            android:title="@string/menu_MisSolicitudes" />
-    </group>
-    <item android:title="Opciones"/>
+
+    <item android:title="Operador">
+        <menu>
+            <item
+                android:id="@+id/nav_mis_peticiones"
+                android:icon="@drawable/ic_peticiones_asignadas"
+                android:title="@string/menu_mis_peticiones" />
+            <item
+                android:id="@+id/nav_gallery"
+                android:icon="@drawable/ic_fab_herramienta"
+                android:title="@string/menu_MisIncidencias" />
+            <item
+                android:id="@+id/nav_slideshow"
+                android:icon="@drawable/ic_solicitud"
+                android:title="@string/menu_MisSolicitudes" />
+        </menu>
+    </item>
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_mis_ajustes"
             android:icon="@drawable/ic_configuraciones"
-            android:title="Ajustes" />
+            android:title="Ajustes"/>
         <item
             android:id="@+id/nav_logOut"
             android:icon="@drawable/ic_cerrar_sesion"
-            android:title="Cerrar Sesión" />
+            android:title="Cerrar Sesión"/>
+        <item
+            android:id="@+id/nav_home"
+            android:title="nav home"/>
     </group>
-
 </menu>

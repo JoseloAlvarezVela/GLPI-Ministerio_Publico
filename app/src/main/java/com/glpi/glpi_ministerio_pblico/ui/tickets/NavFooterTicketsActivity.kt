@@ -165,6 +165,11 @@ class NavFooterTicketsActivity : AppCompatActivity() {
             intent_agregar_seguimiento.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             startActivity(intent_agregar_seguimiento)
         }
+        binding.includeTicketsHistorico.btnFabDocumentos.setOnClickListener {
+            val intent_agregar_documento = Intent(this@NavFooterTicketsActivity, TicketsAgregarDocumentosActivity::class.java)
+            intent_agregar_documento.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            startActivity(intent_agregar_documento)
+        }
         //fin eventos click de fab_opciones
     }
 }
