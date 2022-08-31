@@ -19,8 +19,22 @@ class TicketsAgregarTareaActivity : AppCompatActivity() {
         btn_fabs()
         btn_atras()
         btn_agregarTarea()
+        btn_agregarCat()
 
     }
+
+    private fun btn_agregarCat() {
+        binding.btnAddcatActtaddt.setOnClickListener {
+            binding.LayoutBackgroudAgregarTarea.isVisible = true
+            binding.includeModalPlantillaAddcat.modalPlantillaAgregarCategoria.isVisible = true
+        }
+
+        binding.includeModalPlantillaAddcat.btnSalirModalAddcat.setOnClickListener {
+            binding.includeModalPlantillaAddcat.modalPlantillaAgregarCategoria.isVisible = false
+            binding.LayoutBackgroudAgregarTarea.isVisible = false
+        }
+    }
+
     //función que añade la tarea y te devuelve al menu principal
     private fun btn_agregarTarea() {
         binding.btnAddtActtaddt.setOnClickListener {
@@ -84,6 +98,7 @@ class TicketsAgregarTareaActivity : AppCompatActivity() {
         }
         backGround.setOnClickListener {
             binding.includeModalPlantillaTarea.modalPlantillaAgregarTarea.isVisible = false
+            binding.includeModalPlantillaAddcat.modalPlantillaAgregarCategoria.isVisible = false
             layout_plantilla.isVisible = false
             layout_camara.isVisible = false
             layout_archivo.isVisible = false

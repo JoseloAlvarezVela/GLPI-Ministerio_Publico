@@ -13,7 +13,7 @@
         android:id="@+id/textView63"
         android:layout_width="350sp"
         android:layout_height="wrap_content"
-        android:background="#0481E1"
+        android:background="@drawable/degradado_azul"
         android:fontFamily="@font/averia_sans_libre_light"
         android:paddingLeft="10sp"
         android:paddingTop="10sp"

@@ -22,4 +22,6 @@ app_bar_main		->	abm
 background		->	bg
 buscar_solicitantes	->	bs
 activity		->	act
+tickets			->	t
+agregar_tarea		->	addt
 

@@ -19,7 +19,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:background="#28B6F6"
+            android:background="@drawable/degradado_azul"
             android:orientation="vertical">
 
             <LinearLayout
@@ -167,36 +167,42 @@
 
             </LinearLayout>
 
+            <Button
+                android:id="@+id/button10"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:drawableLeft="@drawable/ic_etiqueta"
+                android:text="Button"
+                android:visibility="gone" />
+
             <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="35sp"
+                android:layout_height="45sp"
                 android:layout_margin="5dp"
                 android:layout_marginBottom="5dp"
-                android:background="@drawable/esq_redondeada_gris">
+                android:visibility="visible">
 
                 <Button
-                    android:id="@+id/button5"
+                    android:id="@+id/btn_addcat_acttaddt"
                     android:layout_width="140sp"
                     android:layout_height="wrap_content"
-                    android:background="?android:attr/selectableItemBackground"
                     android:drawableLeft="@drawable/ic_etiqueta"
                     android:fontFamily="@font/averia_sans_libre_light"
                     android:gravity="left|center_vertical"
-                    android:padding="0sp"
+                    android:padding="2sp"
                     android:text="Agregar Categoria"
                     android:textColor="#5E5959"
                     android:textSize="10sp"
+                    app:backgroundTint="#ECECEC"
                     app:iconPadding="0sp" />
 
                 <Button
                     android:id="@+id/button8"
                     android:layout_width="25sp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="5sp"
-                    android:layout_marginLeft="5sp"
-                    android:background="?android:attr/selectableItemBackground"
                     android:fontFamily="@font/averia_sans_libre_light"
                     android:textSize="10sp"
+                    app:backgroundTint="#ECECEC"
                     app:icon="@drawable/ic_cerrar"
                     app:iconGravity="textStart"
                     app:iconPadding="0sp"
@@ -302,6 +308,7 @@
     </LinearLayout>
 
     <include
+        android:id="@+id/include"
         layout="@layout/activity_nav_footer_fab"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -459,5 +466,21 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <include
+        android:id="@+id/include_modal_plantilla_addcat"
+        layout="@layout/modal_agregar_cat_tickets"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginRight="32dp"
+        android:layout_marginBottom="20dp"
+        app:layout_constraintBottom_toBottomOf="@+id/include"
+        app:layout_constraintEnd_toEndOf="@+id/linearLayout4"
+        app:layout_constraintStart_toStartOf="@+id/linearLayout4"
+        app:layout_constraintTop_toTopOf="@+id/linearLayout4" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

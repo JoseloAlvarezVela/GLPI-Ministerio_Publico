@@ -65,21 +65,26 @@
                 android:textSize="130sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
+                android:id="@+id/textView65"
                 android:layout_width="57dp"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="40dp"
+                android:layout_marginTop="55dp"
                 android:layout_weight="0"
                 android:gravity="center"
                 android:rotation="-90"
                 android:text="LPI"
                 android:textColor="#0D7ACD"
-                android:textSize="38sp"
+                android:textSize="35sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/textView3" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -29,7 +29,7 @@
             android:layout_marginEnd="10sp"
             android:layout_marginRight="10sp"
             android:layout_marginBottom="20sp"
-            android:background="#0481E1"
+            android:background="@drawable/degradado_azul"
             android:orientation="vertical">
 
             <Button

@@ -20,7 +20,7 @@
         android:layout_height="match_parent"
         android:layout_marginTop="5sp"
         android:layout_marginBottom="10sp"
-        android:background="#0481E1"
+        android:background="@drawable/degradado_azul"
         android:orientation="vertical">
 
         <Button

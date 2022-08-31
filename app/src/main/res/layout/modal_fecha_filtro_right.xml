@@ -39,38 +39,63 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:gravity="center"
                 android:orientation="horizontal"
                 android:paddingTop="10sp"
                 android:paddingBottom="10sp">
 
-                <Button
-                    android:id="@+id/button12"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="5sp"
-                    android:layout_weight="1"
-                    android:fontFamily="@font/averia_sans_libre_light"
-                    android:text="Dia Inicio"
-                    app:backgroundTint="#0481E1" />
+                    android:background="@drawable/degradado_azul"
+                    android:orientation="vertical">
 
-                <Button
-                    android:id="@+id/button13"
+                    <Button
+                        android:id="@+id/button12"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5sp"
+                        android:layout_weight="1"
+                        android:background="?android:attr/selectableItemBackground"
+                        android:fontFamily="@font/averia_sans_libre_light"
+                        android:text="Dia Inicio" />
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="5sp"
-                    android:layout_weight="1"
-                    android:fontFamily="@font/averia_sans_libre_light"
-                    android:text="Dia Fin"
-                    app:backgroundTint="#0481E1" />
+                    android:layout_marginStart="10sp"
+                    android:layout_marginLeft="10sp"
+                    android:background="@drawable/degradado_azul"
+                    android:orientation="vertical">
+
+                    <Button
+                        android:id="@+id/button13"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5sp"
+                        android:layout_weight="1"
+                        android:background="?android:attr/selectableItemBackground"
+                        android:fontFamily="@font/averia_sans_libre_light"
+                        android:text="Dia Fin" />
+                </LinearLayout>
+
             </LinearLayout>
 
-            <Button
-                android:id="@+id/button14"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/averia_sans_libre_light"
-                android:text="Aceptar"
-                app:backgroundTint="#0481E1" />
+                android:layout_height="match_parent"
+                android:background="@drawable/degradado_azul"
+                android:orientation="vertical">
+
+                <Button
+                    android:id="@+id/button14"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:fontFamily="@font/averia_sans_libre_light"
+                    android:text="Aceptar" />
+            </LinearLayout>
 
         </LinearLayout>
 

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:background="#FF2EA8E3"
+    android:background="@drawable/degradado_azul"
     android:gravity="bottom"
     android:orientation="vertical"
     android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -68,11 +68,11 @@
             android:id="@+id/linear_layout_DF"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="?selectableItemBackground"
             android:clickable="true"
             android:orientation="horizontal"
             android:paddingTop="5sp"
-            android:paddingBottom="5sp"
-            android:background="?selectableItemBackground">
+            android:paddingBottom="5sp">
 
             <TextView
                 android:id="@+id/textView14"
@@ -105,9 +105,9 @@
             android:id="@+id/linear_layout_Operador"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="?selectableItemBackground"
             android:orientation="horizontal"
             android:paddingTop="5sp"
-            android:background="?selectableItemBackground"
             android:paddingBottom="5sp">
 
             <TextView

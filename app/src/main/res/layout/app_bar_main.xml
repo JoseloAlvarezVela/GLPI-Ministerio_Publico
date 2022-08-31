@@ -15,19 +15,20 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/degradado_azul"
             android:orientation="horizontal">
 
             <com.google.android.material.appbar.AppBarLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:background="@drawable/degradado_azul"
                 android:theme="@style/Theme.GLPIMinisterio_Público.AppBarOverlay">
 
                 <androidx.appcompat.widget.Toolbar
                     android:id="@+id/toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize"
-                    android:background="?attr/colorPrimary"
                     app:popupTheme="@style/Theme.GLPIMinisterio_Público.PopupOverlay" />
 
             </com.google.android.material.appbar.AppBarLayout>
@@ -36,7 +37,7 @@
                 android:id="@+id/btn_filtroRight"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:background="@color/design_default_color_primary"
+                android:background="?android:attr/selectableItemBackground"
                 app:icon="@drawable/ic_filtro"
                 app:iconGravity="textStart" />
         </LinearLayout>

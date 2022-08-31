@@ -22,13 +22,12 @@
             android:layout_gravity="end"
             android:background="#FFFFFF"
             android:clickable="true"
-            android:orientation="vertical"
-            android:visibility="visible">
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#FF0190FB"
+                android:background="@drawable/degradado_azul"
                 android:orientation="horizontal"
                 android:padding="5sp">
 
@@ -40,7 +39,8 @@
                     android:ems="10"
                     android:fontFamily="@font/averia_sans_libre_light"
                     android:hint="Buscar por ID"
-                    android:inputType="textPersonName" />
+                    android:inputType="textPersonName"
+                    android:textColorHint="#FFFFFF" />
 
                 <Button
                     android:id="@+id/button3"
