@@ -23,11 +23,11 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/btn_atras_acttaddt"
+                android:id="@+id/btn_atras_acttaddseg"
                 android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
-                app:backgroundTint="#28B6F6"
+                android:background="?android:attr/selectableItemBackground"
                 app:icon="@drawable/ic_atras"
                 app:iconGravity="textStart" />
 
@@ -44,9 +44,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/averia_sans_libre_light"
-                    android:text="Añadir Tarea"
+                    android:text="Añadir Seguimiento"
                     android:textColor="#FFFFFF"
-                    android:textSize="16sp"
+                    android:textSize="12sp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -61,26 +61,25 @@
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="50dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/textView17"
-                    android:layout_width="wrap_content"
-                    android:layout_height="30dp"
+                    android:layout_width="30sp"
+                    android:layout_height="30sp"
                     android:layout_gravity="center_horizontal|center_vertical"
                     android:layout_margin="10dp"
                     android:layout_weight="1"
-                    android:background="#FFFFFF"
-                    android:drawableLeft="@drawable/ic_interrogacion"
+                    android:background="@drawable/ic_interrogacion"
                     app:drawableTint="#28B6F6" />
             </LinearLayout>
 
             <Button
                 android:id="@+id/button13"
-                android:layout_width="25dp"
-                android:layout_height="wrap_content"
+                android:layout_width="1sp"
+                android:layout_height="30sp"
                 android:layout_marginStart="10dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginEnd="10dp"
@@ -92,13 +91,13 @@
                 app:buttonTint="#67D392" />
 
             <Button
-                android:id="@+id/btnDesplegarFecha_FiltroRightEditado"
+                android:id="@+id/btn_addseg_acttaddseg"
                 android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_height="match_parent"
                 android:layout_marginStart="20dp"
                 android:layout_marginLeft="20dp"
                 android:layout_weight="1"
-                app:backgroundTint="#28B6F6"
+                android:background="?android:attr/selectableItemBackground"
                 app:icon="@drawable/ic_enviar"
                 app:iconGravity="textStart" />
 
@@ -118,7 +117,8 @@
 
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_marginTop="5sp">
 
 
             <Button
@@ -153,7 +153,6 @@
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="531dp"
-        android:layout_marginTop="10dp"
         android:background="#FFFEFE"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -179,15 +178,17 @@
 
             <EditText
                 android:id="@+id/editTextTextPersonName"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:layout_marginLeft="20dp"
+                android:layout_marginEnd="20sp"
+                android:layout_marginRight="20sp"
                 android:layout_weight="1"
                 android:ems="10"
                 android:fontFamily="@font/averia_sans_libre_light"
                 android:hint="indicque la descripción"
-                android:inputType="textPersonName"
+                android:inputType="textMultiLine|textPersonName"
                 android:textSize="12sp" />
 
         </LinearLayout>
@@ -202,12 +203,11 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <LinearLayout
-        android:id="@+id/fab_backgroud_addSeguimiento"
+    <include
+        android:id="@+id/include_backgroundgris_atctaddseg"
+        layout="@layout/background_gris"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#75575757"
-        android:orientation="vertical"></LinearLayout>
+        android:layout_height="match_parent" />
 
     <LinearLayout
         android:id="@+id/linearLayout6"
@@ -222,97 +222,107 @@
         app:layout_constraintEnd_toEndOf="parent">
 
         <LinearLayout
+            android:id="@+id/ly_fabs_acttaddseg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10sp"
-            android:clickable="true"
-            android:gravity="center_vertical|end"
-            android:orientation="horizontal">
+            android:gravity="end"
+            android:orientation="vertical"
+            android:visibility="gone">
 
-            <TextView
-                android:id="@+id/textView56"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="5sp"
-                android:layout_marginRight="5sp"
-                android:layout_weight="1"
-                android:background="@drawable/esq_redondeada_blanco"
-                android:fontFamily="@font/averia_sans_libre_light"
-                android:padding="5sp"
-                android:text="Archivo"
-                android:textColor="#636363"
-                android:textSize="12sp" />
-
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/floatingActionButton3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_marginTop="10sp"
                 android:clickable="true"
-                android:src="@drawable/ic_fab_documento"
-                app:backgroundTint="#84D563" />
-        </LinearLayout>
+                android:gravity="center_vertical|end"
+                android:orientation="horizontal">
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10sp"
-            android:clickable="true"
-            android:gravity="center_vertical|end"
-            android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/textView56"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5sp"
+                    android:layout_marginRight="5sp"
+                    android:layout_weight="1"
+                    android:background="@drawable/esq_redondeada_blanco"
+                    android:fontFamily="@font/averia_sans_libre_light"
+                    android:padding="5sp"
+                    android:text="Archivo"
+                    android:textColor="#636363"
+                    android:textSize="12sp" />
 
-            <TextView
-                android:id="@+id/textView57"
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/fab_archivo_acttaddseg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:clickable="true"
+                    android:src="@drawable/ic_fab_documento"
+                    app:backgroundTint="#84D563" />
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="5sp"
-                android:layout_marginRight="5sp"
-                android:layout_weight="1"
-                android:background="@drawable/esq_redondeada_blanco"
-                android:fontFamily="@font/averia_sans_libre_light"
-                android:padding="5sp"
-                android:text="Foto"
-                android:textColor="#636363"
-                android:textSize="12sp" />
-
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/floatingActionButton2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_marginTop="10sp"
                 android:clickable="true"
-                android:src="@drawable/ic_fab_camar"
-                app:backgroundTint="#71A35D" />
-        </LinearLayout>
+                android:gravity="center_vertical|end"
+                android:orientation="horizontal">
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10sp"
-            android:clickable="true"
-            android:gravity="center_vertical|end"
-            android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/textView57"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5sp"
+                    android:layout_marginRight="5sp"
+                    android:layout_weight="1"
+                    android:background="@drawable/esq_redondeada_blanco"
+                    android:fontFamily="@font/averia_sans_libre_light"
+                    android:padding="5sp"
+                    android:text="Foto"
+                    android:textColor="#636363"
+                    android:textSize="12sp" />
 
-            <TextView
-                android:id="@+id/textView58"
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/fab_foto_acttaddseg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:src="@drawable/ic_fab_camar"
+                    app:backgroundTint="#71A35D" />
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="5sp"
-                android:layout_marginRight="5sp"
-                android:layout_weight="1"
-                android:background="@drawable/esq_redondeada_blanco"
-                android:fontFamily="@font/averia_sans_libre_light"
-                android:padding="5sp"
-                android:text="Plantilla"
-                android:textColor="#636363"
-                android:textSize="12sp" />
-
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/floatingActionButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_marginTop="10sp"
                 android:clickable="true"
-                android:src="@drawable/ic_fab_plantilla"
-                app:backgroundTint="#E4C529" />
+                android:gravity="center_vertical|end"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/textView58"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5sp"
+                    android:layout_marginRight="5sp"
+                    android:layout_weight="1"
+                    android:background="@drawable/esq_redondeada_blanco"
+                    android:fontFamily="@font/averia_sans_libre_light"
+                    android:padding="5sp"
+                    android:text="Plantilla"
+                    android:textColor="#636363"
+                    android:textSize="12sp" />
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/floatingActionButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:src="@drawable/ic_fab_plantilla"
+                    app:backgroundTint="#E4C529" />
+            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
@@ -324,7 +334,7 @@
             android:orientation="horizontal">
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/floatingActionButton4"
+                android:id="@+id/fab_desplegar_addseg"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal|center_vertical"

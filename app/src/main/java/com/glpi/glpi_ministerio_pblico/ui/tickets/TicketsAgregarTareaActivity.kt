@@ -10,7 +10,7 @@ import com.glpi.glpi_ministerio_pblico.R
 import com.glpi.glpi_ministerio_pblico.databinding.ActivityTicketsAgregarTareaBinding
 
 class TicketsAgregarTareaActivity : AppCompatActivity() {
-    lateinit var binding: ActivityTicketsAgregarTareaBinding //declaramos binding
+    lateinit var binding: ActivityTicketsAgregarTareaBinding //declaramos binding para acceder variables
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityTicketsAgregarTareaBinding.inflate(layoutInflater)
@@ -22,20 +22,22 @@ class TicketsAgregarTareaActivity : AppCompatActivity() {
         btn_agregarCat()
 
     }
-
+    //INICIO - funcion que abre modal para escoger una tarea
     private fun btn_agregarCat() {
+        //INICO - boton que abre modal_agregar_cat_tickets.xml
         binding.btnAddcatActtaddt.setOnClickListener {
-            binding.LayoutBackgroudAgregarTarea.isVisible = true
-            binding.includeModalPlantillaAddcat.modalPlantillaAgregarCategoria.isVisible = true
+            binding.LayoutBackgroudAgregarTarea.isVisible = true //fondo gris casi transparente
+            binding.includeModalPlantillaAddcat.modalPlantillaAgregarCategoria.isVisible = true //modal
         }
 
+        //INICIO - boton que cierra modal_agregar_cat_tickets.xml
         binding.includeModalPlantillaAddcat.btnSalirModalAddcat.setOnClickListener {
             binding.includeModalPlantillaAddcat.modalPlantillaAgregarCategoria.isVisible = false
             binding.LayoutBackgroudAgregarTarea.isVisible = false
         }
     }
 
-    //función que añade la tarea y te devuelve al menu principal
+    //INICIO - función que añade la tarea y te devuelve al menu principal
     private fun btn_agregarTarea() {
         binding.btnAddtActtaddt.setOnClickListener {
             Toast.makeText(this, "tarea añadida", Toast.LENGTH_LONG).show()
@@ -44,7 +46,8 @@ class TicketsAgregarTareaActivity : AppCompatActivity() {
             startActivity(intent_agregarTarea)
         }
     }
-    //funcion que regresa a la vista anterior: activity_nav_footer_tickets.xml
+
+    //INICIO - funcion que regresa a la vista anterior: activity_nav_footer_tickets.xml
     private fun btn_atras() {
        binding.btnAtrasActtaddt.setOnClickListener {
            val intent_atras = Intent(this, NavFooterTicketsActivity::class.java)
@@ -53,7 +56,7 @@ class TicketsAgregarTareaActivity : AppCompatActivity() {
        }
     }
 
-    //funcion que muestra los FAB's
+    //INICIO - funcion que despliega los FAB's
     private fun btn_fabs(){
         var click: Boolean = false
 
@@ -66,10 +69,10 @@ class TicketsAgregarTareaActivity : AppCompatActivity() {
         val abrir_archivo = binding.btnFabArchivo
             val layout_archivo = binding.fabArchivo
         val hide_fab = binding.LayoutFabAgregarTarea
-        val backGround = binding.LayoutBackgroudAgregarTarea
-        //FIN DE inicialización de variables
+        val backGround = binding.LayoutBackgroudAgregarTarea //layout gris casitransparente para modals
+        val cerrar_plantilla = binding.includeModalPlantillaTarea.btnCerrarMdplaaddt
 
-        //INICIO de eventos de click de los FAB's
+        //INICIO - eventos de click de los FAB's
         desplegar_fabs.setOnClickListener {
             if (click == false){
                 layout_plantilla.isVisible = true
@@ -86,16 +89,36 @@ class TicketsAgregarTareaActivity : AppCompatActivity() {
             }
 
         }
+
+        //INICIO - evento de click que abre modal_plantilla_agreegar_tarea.xml
         abrir_plantilla.setOnClickListener {
             binding.includeModalPlantillaTarea.modalPlantillaAgregarTarea.isVisible = true
             hide_fab.isVisible = false
         }
+
+        //INICIO - evento de click que cierra modal_plantilla_agreegar_tarea.xml
+        cerrar_plantilla.setOnClickListener {
+            binding.includeModalPlantillaTarea.modalPlantillaAgregarTarea.isVisible = false
+            backGround.isVisible = false
+            layout_plantilla.isVisible = false
+            layout_camara.isVisible = false
+            layout_archivo.isVisible = false
+            backGround.isVisible = false
+            binding.LayoutFabAgregarTarea.isVisible = true
+            click = false
+        }
+
+        //INICIO - evento de click que abre camara del celular
         abrir_camara.setOnClickListener {
             Toast.makeText(this, "introduce código que abre la camara del celular", Toast.LENGTH_SHORT).show()
         }
+
+        //INICIO - evento de click que abre archivos del celular
         abrir_archivo.setOnClickListener {
             Toast.makeText(this, "Abrir Archivos", Toast.LENGTH_SHORT).show()
         }
+
+        //INICIO - evento click que cierra modals
         backGround.setOnClickListener {
             binding.includeModalPlantillaTarea.modalPlantillaAgregarTarea.isVisible = false
             binding.includeModalPlantillaAddcat.modalPlantillaAgregarCategoria.isVisible = false
@@ -108,4 +131,5 @@ class TicketsAgregarTareaActivity : AppCompatActivity() {
         }
         //FIN de eventos de click de los FAB's
     }
+    //FIN - funcion que despliega los FAB's
 }

@@ -22,7 +22,8 @@ class NavFooterTicketsActivity : AppCompatActivity() {
         //INICIO toogle buton tickets
         var clickTickets: Boolean = false
         var clickConvezaciones: Boolean = false
-        var click_fab:Boolean = false //fab_opciones de layout activity_tickets_historico
+        var click_fab:Boolean = false //fab_opciones de layout activity_tickets_historico.xml
+
 
         binding.btnTicketsFooter.setOnClickListener {
             if(clickTickets == false){
@@ -61,15 +62,11 @@ class NavFooterTicketsActivity : AppCompatActivity() {
         }
         //FIN toogle buton
 
-        //INICIO - codigo de prueba
-
-        //FIN - codigo de prueba
-        //boton atras -- include de nav_header_tickets.xml - id boton: btn_atras_ticke
+        //boton atras - include de nav_header_tickets.xml
         binding.includeNavHeaderTickets.btnAtrasTickets.setOnClickListener {
             val intent_header_tickets = Intent(this@NavFooterTicketsActivity, MainActivity::class.java)
             intent_header_tickets.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             startActivity(intent_header_tickets)
-            //Toast.makeText(this, "boton atras presionado", Toast.LENGTH_LONG ).show()
         }
 
         //INICIO botones para desplegar y plegar descripciones
@@ -108,8 +105,7 @@ class NavFooterTicketsActivity : AppCompatActivity() {
         }
         //FIN botones para desplegar y plegar descripciones
 
-        //INICIO fab_opciones de layout activity_tickets_historico
-        //var click_fab:Boolean = false
+        //INICIO fab_opciones de layout activity_tickets_historico.xml
         binding.includeTicketsHistorico.fabDesplegarOpciones.setOnClickListener {
             if (click_fab == false){
                 binding.includeTicketsHistorico.fabSolucion.isVisible = true
@@ -152,6 +148,7 @@ class NavFooterTicketsActivity : AppCompatActivity() {
             click_fab = false
         }
         //FIN fab_opciones de layout activity_tickets_historico
+
         //INICIO eventos click de fab_opciones
         binding.includeTicketsHistorico.btnFabTareas.setOnClickListener {
             val intent_agregar_tarea = Intent(this@NavFooterTicketsActivity, TicketsAgregarTareaActivity::class.java)
