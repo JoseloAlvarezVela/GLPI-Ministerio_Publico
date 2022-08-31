@@ -23,5 +23,10 @@ background		->	bg
 buscar_solicitantes	->	bs
 activity		->	act
 tickets			->	t
+categoria		->	cat	
+plantilla		->	pla
+agrega_seguimiento	->	addseg
 agregar_tarea		->	addt
+agregar_categoria	->	addcat
+agrega_solución		->	addsol
 
