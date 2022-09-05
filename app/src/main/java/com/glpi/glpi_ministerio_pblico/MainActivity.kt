@@ -1,10 +1,13 @@
 package com.glpi.glpi_ministerio_pblico
 
+import android.content.Intent
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
@@ -15,6 +18,7 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.glpi.glpi_ministerio_pblico.databinding.ActivityMainBinding
+import com.glpi.glpi_ministerio_pblico.ui.shared.token.Companion.prefer
 import com.google.android.material.navigation.NavigationView
 
 
@@ -39,7 +43,8 @@ class MainActivity : AppCompatActivity() {
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.nav_mis_peticiones,R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow, R.id.acttivity_misIncidencias
+                R.id.nav_mis_peticiones,R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow,
+                R.id.acttivity_misIncidencias
             ), drawerLayout
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
@@ -226,7 +231,7 @@ class MainActivity : AppCompatActivity() {
             binding.appBarMain.llyBackgroudAbm.isVisible = false
         }
         //FIN - boton filtro de la derecha - activity_filtro_right.xml
-
+        Toast.makeText(this, "token: "+prefer.getToken(), Toast.LENGTH_LONG).show()//mostramos el token guardado
 
     }
 
@@ -242,6 +247,14 @@ class MainActivity : AppCompatActivity() {
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
 
+    //controlamos la pulsación del boton atras por defecto del celular para que cierre la app
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        val intent = Intent(Intent.ACTION_MAIN)
+        intent.addCategory(Intent.CATEGORY_HOME)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        startActivity(intent)
+        return super.onKeyDown(keyCode, event)
+    }
 }
 
 

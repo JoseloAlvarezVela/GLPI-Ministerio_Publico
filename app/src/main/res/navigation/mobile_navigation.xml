@@ -20,7 +20,7 @@
     <fragment
         android:id="@+id/nav_gallery"
         android:name="com.glpi.glpi_ministerio_pblico.ui.gallery.GalleryFragment"
-        android:label="@string/menu_gallery"
+        android:label="@string/menu_MisIncidencias"
         tools:layout="@layout/fragment_gallery" />
 
     <fragment
@@ -33,4 +33,11 @@
         android:name="com.glpi.glpi_ministerio_pblico.ui.misIncidencias.MisIncidenciasActivity"
         android:label="Mis Incidencias"
         tools:layout="@layout/activity_mis_incidencias"/>
+
+    <activity
+        android:id="@+id/activity_logout"
+        android:name="com.glpi.glpi_ministerio_pblico.ui.LogoutActivity"
+        android:label="Cerrando Seción"
+        tools:layout="@layout/activity_logout"/>
+
 </navigation>

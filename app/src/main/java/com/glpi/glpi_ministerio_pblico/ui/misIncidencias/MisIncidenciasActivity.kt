@@ -10,5 +10,7 @@ class MisIncidenciasActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMisIncidenciasBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+
     }
 }

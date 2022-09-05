@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.glpi.glpi_ministerio_pblico.LoginActivity
 import com.glpi.glpi_ministerio_pblico.MainActivity
 import com.glpi.glpi_ministerio_pblico.databinding.FragmentGalleryBinding
+import com.glpi.glpi_ministerio_pblico.ui.shared.token.Companion.prefer
 import com.glpi.glpi_ministerio_pblico.ui.tickets.NavFooterTicketsActivity
 
 class GalleryFragment : Fragment() {
@@ -26,11 +27,12 @@ class GalleryFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        //inicio cerrar sesion
-        val intent_tickets = Intent(activity, LoginActivity::class.java)
-        intent_tickets.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        startActivity(intent_tickets)
-        // fin cerrar sesion
+        /*inicio cerrar sesion
+        prefer.delToken()
+        val intent = Intent(activity, LoginActivity::class.java)
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        startActivity(intent)
+        // fin cerrar sesion*/
 
         val galleryViewModel =
             ViewModelProvider(this).get(GalleryViewModel::class.java)
