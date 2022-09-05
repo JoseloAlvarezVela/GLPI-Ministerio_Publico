@@ -3,6 +3,7 @@ package com.glpi.glpi_ministerio_pblico
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
@@ -13,6 +14,7 @@ import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import org.json.JSONObject
+import java.util.prefs.Preferences
 
 class LoginActivity : AppCompatActivity() {
     //declaramos
@@ -75,6 +77,9 @@ class LoginActivity : AppCompatActivity() {
         //fin inicio volley validar token*/
 
 
+        //obtenemos el preferenceManager
+        //recuperar PreferenceManager -> val tokenPrefer = prefer.getString(token,"token inválido")
+
         //inicio boton login volley iniciar sesion
         LoginUserValidate.setOnClickListener {
 
@@ -84,13 +89,14 @@ class LoginActivity : AppCompatActivity() {
                     try {
                         val jsonObject = JSONObject(response)
                         val token_ = jsonObject.getString("session_token")
-                        Toast.makeText(this@LoginActivity, "toast 1: $token_", Toast.LENGTH_LONG).show()
                         val i = Intent(this@LoginActivity, MainActivity::class.java)
+                        //i.putExtra("token",token_)
+                        Toast.makeText(this@LoginActivity, "toast 1: $token_", Toast.LENGTH_LONG).show()
                         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                         startActivity(i)
 
                     } catch (e: Exception) {
-                        Toast.makeText(this@LoginActivity, "USUARIO O CONTRASEÑA INCORRECTA."+e, Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this@LoginActivity, "USUARIO O CONTRASEÑA INCORRECTA. "+e, Toast.LENGTH_SHORT).show()
                         e.printStackTrace()
                     }
                 }, Response.ErrorListener {
@@ -103,10 +109,8 @@ class LoginActivity : AppCompatActivity() {
                     val params = HashMap<String, String>()
                     params["PATH"] = "login"
 
-                    params["USER"] = "glpi"
-                    params["PASSWORD"] = "12345678"
-                    /*params["USER"] = loginUserName.text.toString().trim { it <= ' ' }
-                    params["PASSWORD"] = loginUserPassword.text.toString().trim { it <= ' ' }*/
+                    params["USER"] = loginUserName.text.toString().trim { it <= ' ' }
+                    params["PASSWORD"] = loginUserPassword.text.toString().trim { it <= ' ' }
 
                     return params
                 }

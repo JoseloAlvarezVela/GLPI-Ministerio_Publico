@@ -1,13 +1,10 @@
 package com.glpi.glpi_ministerio_pblico
 
-import android.graphics.Color
 import android.os.Bundle
-import android.view.Menu
 import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
@@ -19,7 +16,7 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.glpi.glpi_ministerio_pblico.databinding.ActivityMainBinding
 import com.google.android.material.navigation.NavigationView
-import com.google.android.material.snackbar.Snackbar
+
 
 class MainActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
@@ -47,6 +44,8 @@ class MainActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+
+
 
         //accedemos a los elementos "id" del headerLayout con getHeaderView y lo guardamos en una variable
         val headerView: View = binding.navView.getHeaderView(0).findViewById(R.id.linear_layout_DF)

@@ -88,7 +88,8 @@
                 android:layout_height="30dp"
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
-                android:background="@drawable/ic_circulo" />
+                android:drawableLeft="@drawable/ic_circulo"
+                app:drawableTint="#000000" />
 
             <Button
                 android:id="@+id/btn_addsol_acttaddsol"

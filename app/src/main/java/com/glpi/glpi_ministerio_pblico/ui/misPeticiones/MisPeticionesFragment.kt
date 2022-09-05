@@ -46,7 +46,6 @@ class MisPeticionesFragment : Fragment() {
             val intent_tickets = Intent(activity, NavFooterTicketsActivity::class.java)
             startActivity(intent_tickets)
         }
-
     }
 
     override fun onDestroyView() {

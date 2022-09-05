@@ -42,7 +42,9 @@
                 app:iconGravity="textStart" />
         </LinearLayout>
 
-        <include layout="@layout/content_main" />
+        <include
+            android:id="@+id/include_content_main"
+            layout="@layout/content_main" />
 
     </LinearLayout>
 
