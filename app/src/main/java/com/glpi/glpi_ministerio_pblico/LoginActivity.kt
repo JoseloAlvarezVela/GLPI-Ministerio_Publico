@@ -15,17 +15,20 @@ import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.glpi.glpi_ministerio_pblico.ui.shared.token.Companion.prefer
+import org.json.JSONArray
 import org.json.JSONObject
 import java.util.prefs.Preferences
 
 class LoginActivity : AppCompatActivity() {
     //declaramos
     internal lateinit var queue: RequestQueue
+    //internal lateinit var queueUser: RequestQueue
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
         queue = Volley.newRequestQueue(this@LoginActivity)
+        //queueUser = Volley.newRequestQueue(this)
 
         val loginUserName = findViewById<EditText>(R.id.login_user)
         val loginUserPassword = findViewById<EditText>(R.id.login_password)
@@ -87,7 +90,7 @@ class LoginActivity : AppCompatActivity() {
 
             val stringRequest = object : StringRequest(Request.Method.POST,
                 url, Response.Listener { response ->
-                    Toast.makeText(this@LoginActivity, "toast 0", Toast.LENGTH_LONG).show()
+                    //Toast.makeText(this@LoginActivity, "toast 0", Toast.LENGTH_LONG).show()
                     try {
                         val jsonObject = JSONObject(response)
                         val token_ = jsonObject.getString("session_token")
@@ -120,9 +123,13 @@ class LoginActivity : AppCompatActivity() {
                 }
             }
             queue.add(stringRequest)
-        }//fin boton login volley iniciar sesion
+            //fin boton login volley iniciar sesion
+
+            //*******************volley para obtener perfil***********************************
+            //*******************volley para obtener perfil***********************************
+        }
         CheckUserLogin() //verificamos si existe usuario logeado
-        Toast.makeText(this, prefer.getToken(), Toast.LENGTH_SHORT).show()
+        //Toast.makeText(this, prefer.getToken(), Toast.LENGTH_SHORT).show()
     }
 
     //verificamos si tenemos guardado el token

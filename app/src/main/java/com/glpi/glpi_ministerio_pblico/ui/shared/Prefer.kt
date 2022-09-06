@@ -6,6 +6,7 @@ class Prefer(val context: Context) {
 
     val SHARED_DB = "Mydb"
     val TOKEN_DB = "noToken"
+    val USER = "noUser"
 
     val storage = context.getSharedPreferences(SHARED_DB,0)
 
@@ -14,10 +15,17 @@ class Prefer(val context: Context) {
         //editamos el sharedPreference y le pasamos parametro
         storage.edit().putString(TOKEN_DB,name).apply()
     }
+    fun SaveUser(name: String){
+        storage.edit().putString(USER,name).apply()
+    }
 
     //metodo que recupera los datos del sharedPreference
     fun getToken():String{
         return storage.getString(TOKEN_DB,"noToken")!!
+    }
+
+    fun getUser():String{
+        return storage.getString(USER,"noUser")!!
     }
 
     //metodo que borra all content del sharedPreference

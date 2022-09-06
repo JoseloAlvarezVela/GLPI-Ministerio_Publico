@@ -17,18 +17,29 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.android.volley.AuthFailureError
+import com.android.volley.Request
+import com.android.volley.RequestQueue
+import com.android.volley.Response
+import com.android.volley.toolbox.StringRequest
+import com.android.volley.toolbox.Volley
 import com.glpi.glpi_ministerio_pblico.databinding.ActivityMainBinding
 import com.glpi.glpi_ministerio_pblico.ui.shared.token.Companion.prefer
 import com.google.android.material.navigation.NavigationView
+import org.json.JSONObject
 
 
 class MainActivity : AppCompatActivity() {
+    internal lateinit var queueUser: RequestQueue // variable que se usa con volley
+
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+
 
         setSupportActionBar(binding.appBarMain.toolbar)
 
@@ -50,6 +61,42 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
+        //INICIO obtenemos perfil de usuario
+        val user = binding.navView.getHeaderView(0).findViewById<TextView>(R.id.txt_nameUser)
+        queueUser = Volley.newRequestQueue(this)
+        val url = "http://192.168.0.5/glpi/api_glpi.php" // en casa
+        val stringRequestPerfil = object : StringRequest(Request.Method.POST,
+            url, Response.Listener {
+                    response ->
+                //val jsonArrayPefil = JSONArray(response)
+                //val perfilUser = jsonArrayPefil[0]
+                try {
+                    val jsonObject_ = JSONObject(response)
+                    val profile = jsonObject_.getJSONArray("myprofiles")
+                    val item = profile.getJSONObject(0)
+                    /*val valorNombre: String = item.getString("name") //obtiene valor
+                    prefer.SaveUser(item.getString("name"))*/
+                    //asignamo el nombre del usuario logeado
+                    user.setText(item.getString("name"))
+                    //Toast.makeText(this, "Usuario "+prefer.getUser(), Toast.LENGTH_LONG).show()
+                }catch (e:Exception){
+                    e.printStackTrace()
+                    Toast.makeText(this, "error $e", Toast.LENGTH_LONG).show()
+                }
+            }, Response.ErrorListener {
+                Toast.makeText(this, "problemas al obtener nombre de usuario", Toast.LENGTH_SHORT).show()
+            }){
+            @Throws(AuthFailureError::class)
+            override fun getHeaders(): Map<String, String> {
+                val params = HashMap<String, String>()
+                params["PATH"] = "profile"
+
+                params["SESSIONTOKEN"] = prefer.getToken()
+                return params
+            }
+        }
+        queueUser.add(stringRequestPerfil)
+        //FIN obtenemos perfil de usuario
 
 
         //accedemos a los elementos "id" del headerLayout con getHeaderView y lo guardamos en una variable
@@ -170,6 +217,8 @@ class MainActivity : AppCompatActivity() {
             }
 
         }
+
+
         //INICIO - boton filtro de la derecha - activity_filtro_right.xml
         binding.appBarMain.btnFiltroRight.setOnClickListener {
             binding.appBarMain.includeFiltroRight.LinearLayoutActivityFiltroRight.isVisible = true
@@ -231,7 +280,7 @@ class MainActivity : AppCompatActivity() {
             binding.appBarMain.llyBackgroudAbm.isVisible = false
         }
         //FIN - boton filtro de la derecha - activity_filtro_right.xml
-        Toast.makeText(this, "token: "+prefer.getToken(), Toast.LENGTH_LONG).show()//mostramos el token guardado
+        //Toast.makeText(this, "token: "+prefer.getToken(), Toast.LENGTH_LONG).show()//mostramos el token guardado
 
     }
 
