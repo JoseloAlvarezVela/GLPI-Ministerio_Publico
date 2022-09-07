@@ -63,8 +63,10 @@ class MainActivity : AppCompatActivity() {
 
         //INICIO obtenemos perfil de usuario
         val user = binding.navView.getHeaderView(0).findViewById<TextView>(R.id.txt_nameUser)
+        user.setText(prefer.getToken())
         queueUser = Volley.newRequestQueue(this)
-        val url = "http://192.168.0.5/glpi/api_glpi.php" // en casa
+        //val url = "http://192.168.0.5/glpi/api_glpi.php" // en casa
+        val url = "http://10.26.100.14/glpi/api_glpi.php" // en digitalizacion
         val stringRequestPerfil = object : StringRequest(Request.Method.POST,
             url, Response.Listener {
                     response ->
@@ -81,10 +83,10 @@ class MainActivity : AppCompatActivity() {
                     //Toast.makeText(this, "Usuario "+prefer.getUser(), Toast.LENGTH_LONG).show()
                 }catch (e:Exception){
                     e.printStackTrace()
-                    Toast.makeText(this, "error $e", Toast.LENGTH_LONG).show()
+                    //Toast.makeText(this, "error $e", Toast.LENGTH_LONG).show()
                 }
             }, Response.ErrorListener {
-                Toast.makeText(this, "problemas al obtener nombre de usuario", Toast.LENGTH_SHORT).show()
+                //Toast.makeText(this, "problemas al obtener nombre de usuario", Toast.LENGTH_SHORT).show()
             }){
             @Throws(AuthFailureError::class)
             override fun getHeaders(): Map<String, String> {

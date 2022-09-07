@@ -1,23 +1,22 @@
 package com.glpi.glpi_ministerio_pblico
 
+import android.R.attr.password
+import android.accounts.AccountManager.KEY_PASSWORD
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.preference.PreferenceManager
 import android.view.KeyEvent
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
-import com.android.volley.AuthFailureError
+import androidx.appcompat.app.AppCompatActivity
 import com.android.volley.Request
 import com.android.volley.RequestQueue
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.glpi.glpi_ministerio_pblico.ui.shared.token.Companion.prefer
-import org.json.JSONArray
 import org.json.JSONObject
-import java.util.prefs.Preferences
+
 
 class LoginActivity : AppCompatActivity() {
     //declaramos
@@ -33,7 +32,10 @@ class LoginActivity : AppCompatActivity() {
         val loginUserName = findViewById<EditText>(R.id.login_user)
         val loginUserPassword = findViewById<EditText>(R.id.login_password)
         val LoginUserValidate = findViewById<Button>(R.id.login_validate)
-        val url = "http://192.168.0.5/glpi/api_glpi.php" // en casa
+        val edt_prueba_ = findViewById<EditText>(R.id.edt_prubas)
+        val url = "http://181.176.145.174:8080/api/user_login" //online
+        //val url = "http://192.168.0.5/glpi/api_glpi.php" // en casa
+        //val url = "https://10.26.100.14/glpi/api_glpi.php" // en digitalizacion
         //var url = "http://192.168.47.55/glpi/api_glpi.php" // wifi de hasmin
         //var url = "http://192.168.43.75/glpi/api_glpi.php" // mi wifi phone
         //val url = "http://192.168.3.54/glpi/api_glpi.php" //en ofc. redes
@@ -95,34 +97,33 @@ class LoginActivity : AppCompatActivity() {
                         val jsonObject = JSONObject(response)
                         val token_ = jsonObject.getString("session_token")
                         val i = Intent(this@LoginActivity, MainActivity::class.java)
-                        //i.putExtra("token",token_)
                         prefer.SaveToken(token_)//guardamos el token en el sharedPreference
                         //
-                        //Toast.makeText(this@LoginActivity, "toast 1: $token_", Toast.LENGTH_LONG).show()
+                        Toast.makeText(this@LoginActivity, "toast 1: $token_", Toast.LENGTH_LONG).show()
                         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                         startActivity(i)
 
                     } catch (e: Exception) {
                         Toast.makeText(this@LoginActivity, "USUARIO O CONTRASEÑA INCORRECTA.", Toast.LENGTH_SHORT).show()
                         e.printStackTrace()
+                        //Log.i("mensaje:",""+e) para mostrar mensaje por consola
                     }
                 }, Response.ErrorListener {
                     Toast.makeText(this@LoginActivity,
                         "PROBLEMAS CON EL SERVIDOR"+ Response.ErrorListener{},
                         Toast.LENGTH_LONG).show()
                 }) {
-                @Throws(AuthFailureError::class)
-                override fun getHeaders(): Map<String, String> {
-                    val params = HashMap<String, String>()
-                    params["PATH"] = "login"
-
-                    params["USER"] = loginUserName.text.toString().trim { it <= ' ' }
-                    params["PASSWORD"] = loginUserPassword.text.toString().trim { it <= ' ' }
-
+                override fun getParams(): Map<String, String>? {
+                    val params: MutableMap<String, String> = HashMap()
+                    params.put("username",loginUserName.text.toString().trim { it <= ' ' })
+                    params.put("password",loginUserPassword.text.toString().trim { it <= ' ' })
                     return params
                 }
             }
-            queue.add(stringRequest)
+            //queue.add(stringRequest)
+            VolleySingleton.getInstance(this).addToRequestQueue(stringRequest)
+            //edt_prueba_.setText(prefer.getToken())
+            edt_prueba_.setText(prefer.getToken())
             //fin boton login volley iniciar sesion
 
             //*******************volley para obtener perfil***********************************
