@@ -29,7 +29,7 @@ class Prefer(val context: Context) {
     }
 
     //metodo que borra all content del sharedPreference
-    fun delToken(){
+    fun deleteToken(){
         storage.edit().clear().apply()
     }
 }

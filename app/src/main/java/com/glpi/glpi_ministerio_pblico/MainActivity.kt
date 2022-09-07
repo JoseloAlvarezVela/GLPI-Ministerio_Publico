@@ -2,6 +2,7 @@ package com.glpi.glpi_ministerio_pblico
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import android.widget.Button
@@ -63,10 +64,11 @@ class MainActivity : AppCompatActivity() {
 
         //INICIO obtenemos perfil de usuario
         val user = binding.navView.getHeaderView(0).findViewById<TextView>(R.id.txt_nameUser)
-        user.setText(prefer.getToken())
+        //user.setText(prefer.getToken())
         queueUser = Volley.newRequestQueue(this)
         //val url = "http://192.168.0.5/glpi/api_glpi.php" // en casa
-        val url = "http://10.26.100.14/glpi/api_glpi.php" // en digitalizacion
+        //val url = "http://10.26.100.14/glpi/api_glpi.php" // en digitalizacion
+        val url = "http://181.176.145.174:8080/api/user_id" //online
         val stringRequestPerfil = object : StringRequest(Request.Method.POST,
             url, Response.Listener {
                     response ->
@@ -74,12 +76,13 @@ class MainActivity : AppCompatActivity() {
                 //val perfilUser = jsonArrayPefil[0]
                 try {
                     val jsonObject_ = JSONObject(response)
-                    val profile = jsonObject_.getJSONArray("myprofiles")
+                    val profile = jsonObject_.getJSONArray("session")
                     val item = profile.getJSONObject(0)
-                    /*val valorNombre: String = item.getString("name") //obtiene valor
-                    prefer.SaveUser(item.getString("name"))*/
+                    val valorNombre: String = item.getString("glpiID") //obtiene valor
+                    prefer.SaveUser(item.getString("glpiID"))
                     //asignamo el nombre del usuario logeado
-                    user.setText(item.getString("name"))
+                    user.setText(item.getString("glpiID"))
+                    Log.i("MAINACTIVITY: ","mainactivity: "+ valorNombre)
                     //Toast.makeText(this, "Usuario "+prefer.getUser(), Toast.LENGTH_LONG).show()
                 }catch (e:Exception){
                     e.printStackTrace()
@@ -88,16 +91,14 @@ class MainActivity : AppCompatActivity() {
             }, Response.ErrorListener {
                 //Toast.makeText(this, "problemas al obtener nombre de usuario", Toast.LENGTH_SHORT).show()
             }){
-            @Throws(AuthFailureError::class)
-            override fun getHeaders(): Map<String, String> {
-                val params = HashMap<String, String>()
-                params["PATH"] = "profile"
-
-                params["SESSIONTOKEN"] = prefer.getToken()
+            override fun getParams(): Map<String, String>? {
+                val params: MutableMap<String, String> = HashMap()
+                params.put("session_token",prefer.getUser())
                 return params
             }
         }
-        queueUser.add(stringRequestPerfil)
+        VolleySingleton.getInstance(this).addToRequestQueue(stringRequestPerfil)
+        //queueUser.add(stringRequestPerfil)
         //FIN obtenemos perfil de usuario
 
 

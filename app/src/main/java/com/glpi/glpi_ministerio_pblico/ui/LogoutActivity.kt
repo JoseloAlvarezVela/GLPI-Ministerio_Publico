@@ -36,6 +36,8 @@ class LogoutActivity : AppCompatActivity() {
     }
 
     private fun deleteToken() {
+        val auxiliar = prefer.getToken()
+        prefer.deleteToken()
         //INICIO - volley para invalidar toke creado
         //val url = "http://192.168.0.5/glpi/api_glpi.php" // en casa
         //val url = "http://10.26.100.14/glpi/api_glpi.php" // en digitalizacion
@@ -48,7 +50,8 @@ class LogoutActivity : AppCompatActivity() {
                     val succes_ = response.toString()
 
                     //Toast.makeText(this, "Cerrando Sesión: $succes_", Toast.LENGTH_LONG).show()
-                    Log.i("mensaje: ",""+ succes_)
+                    Log.i("mensaje: ","logout: "+ succes_)
+
                 }catch (e:Exception){
                     e.printStackTrace()
                     Toast.makeText(this, "error en el servidor", Toast.LENGTH_SHORT).show()
@@ -58,15 +61,14 @@ class LogoutActivity : AppCompatActivity() {
             }){
             override fun getParams(): Map<String, String>? {
                 val params: MutableMap<String, String> = HashMap()
-                val tokenDel = prefer.delToken().toString()
-                params.put("session_token","ei8f3hspqv2rtk5kank3in2lra")
+                params.put("session_token",auxiliar)
                 return params
             }
         }
         //queueLogout.add(stringRequest)
         VolleySingleton.getInstance(this).addToRequestQueue(stringRequest)
         //FIN - volley para invalidar toke creado
-        prefer.delToken()
+
     }
 
     override fun onBackPressed(){
