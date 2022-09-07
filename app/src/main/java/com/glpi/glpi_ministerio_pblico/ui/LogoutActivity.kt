@@ -20,8 +20,6 @@ import com.glpi.glpi_ministerio_pblico.ui.shared.token.Companion.prefer
 import org.json.JSONObject
 
 class LogoutActivity : AppCompatActivity() {
-    lateinit var queueLogout : RequestQueue
-
     lateinit var binding:ActivityLogoutBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,10 +37,7 @@ class LogoutActivity : AppCompatActivity() {
         val auxiliar = prefer.getToken()
         prefer.deleteToken()
         //INICIO - volley para invalidar toke creado
-        //val url = "http://192.168.0.5/glpi/api_glpi.php" // en casa
-        //val url = "http://10.26.100.14/glpi/api_glpi.php" // en digitalizacion
         val url = "http://181.176.145.174:8080/api/user_logout" //online
-        //queueLogout = Volley.newRequestQueue(this)
         Log.i("mensaje: ",""+ prefer.getToken())
         val stringRequest = object : StringRequest(Request.Method.POST,
             url, Response.Listener { response ->
@@ -50,7 +45,7 @@ class LogoutActivity : AppCompatActivity() {
                     val succes_ = response.toString()
 
                     //Toast.makeText(this, "Cerrando Sesión: $succes_", Toast.LENGTH_LONG).show()
-                    Log.i("mensaje: ","logout: "+ succes_)
+                    Log.i("mensaje logout: ","logout: "+ succes_)
 
                 }catch (e:Exception){
                     e.printStackTrace()
@@ -65,7 +60,6 @@ class LogoutActivity : AppCompatActivity() {
                 return params
             }
         }
-        //queueLogout.add(stringRequest)
         VolleySingleton.getInstance(this).addToRequestQueue(stringRequest)
         //FIN - volley para invalidar toke creado
 

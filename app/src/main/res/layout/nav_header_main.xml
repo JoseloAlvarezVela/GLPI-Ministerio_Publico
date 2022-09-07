@@ -111,7 +111,7 @@
             android:paddingBottom="5sp">
 
             <TextView
-                android:id="@+id/textView15"
+                android:id="@+id/txt_perfil_user"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"

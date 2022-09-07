@@ -18,12 +18,10 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import com.android.volley.AuthFailureError
 import com.android.volley.Request
 import com.android.volley.RequestQueue
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
-import com.android.volley.toolbox.Volley
 import com.glpi.glpi_ministerio_pblico.databinding.ActivityMainBinding
 import com.glpi.glpi_ministerio_pblico.ui.shared.token.Companion.prefer
 import com.google.android.material.navigation.NavigationView
@@ -31,16 +29,12 @@ import org.json.JSONObject
 
 
 class MainActivity : AppCompatActivity() {
-    internal lateinit var queueUser: RequestQueue // variable que se usa con volley
-
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-
 
         setSupportActionBar(binding.appBarMain.toolbar)
 
@@ -62,45 +56,7 @@ class MainActivity : AppCompatActivity() {
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
-        //INICIO obtenemos perfil de usuario
-        val user = binding.navView.getHeaderView(0).findViewById<TextView>(R.id.txt_nameUser)
-        //user.setText(prefer.getToken())
-        queueUser = Volley.newRequestQueue(this)
-        //val url = "http://192.168.0.5/glpi/api_glpi.php" // en casa
-        //val url = "http://10.26.100.14/glpi/api_glpi.php" // en digitalizacion
-        val url = "http://181.176.145.174:8080/api/user_id" //online
-        val stringRequestPerfil = object : StringRequest(Request.Method.POST,
-            url, Response.Listener {
-                    response ->
-                //val jsonArrayPefil = JSONArray(response)
-                //val perfilUser = jsonArrayPefil[0]
-                try {
-                    val jsonObject_ = JSONObject(response)
-                    val profile = jsonObject_.getJSONArray("session")
-                    val item = profile.getJSONObject(0)
-                    val valorNombre: String = item.getString("glpiID") //obtiene valor
-                    prefer.SaveUser(item.getString("glpiID"))
-                    //asignamo el nombre del usuario logeado
-                    user.setText(item.getString("glpiID"))
-                    Log.i("MAINACTIVITY: ","mainactivity: "+ valorNombre)
-                    //Toast.makeText(this, "Usuario "+prefer.getUser(), Toast.LENGTH_LONG).show()
-                }catch (e:Exception){
-                    e.printStackTrace()
-                    //Toast.makeText(this, "error $e", Toast.LENGTH_LONG).show()
-                }
-            }, Response.ErrorListener {
-                //Toast.makeText(this, "problemas al obtener nombre de usuario", Toast.LENGTH_SHORT).show()
-            }){
-            override fun getParams(): Map<String, String>? {
-                val params: MutableMap<String, String> = HashMap()
-                params.put("session_token",prefer.getUser())
-                return params
-            }
-        }
-        VolleySingleton.getInstance(this).addToRequestQueue(stringRequestPerfil)
-        //queueUser.add(stringRequestPerfil)
-        //FIN obtenemos perfil de usuario
-
+        getUserID() //metodo que nos devuelve el id del usuario logeado con volley
 
         //accedemos a los elementos "id" del headerLayout con getHeaderView y lo guardamos en una variable
         val headerView: View = binding.navView.getHeaderView(0).findViewById(R.id.linear_layout_DF)
@@ -178,6 +134,9 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        var click_btnHardware = false
+        var click_escalados = false
+        //modal perfiles del usuario
         val headerView_operador: View = binding.navView.getHeaderView(0).findViewById(R.id.linear_layout_Operador)
         headerView_operador.setOnClickListener{
             // mostramos el modal con el siguiente código
@@ -199,26 +158,55 @@ class MainActivity : AppCompatActivity() {
             val btn_cerrarModalPerfiles: Button = vistaOp.findViewById(R.id.btn_cerrarModalPerfiles)
 
             //iniciamos los eventos click - introducir codigo necesario aca
-            btn_hardwareModalPerfil.setOnClickListener {
+
+            if (click_btnHardware){
                 LinearLayout_hardwareGestor.setBackgroundResource(R.color.modalPerfiles)
                 LinearLayout_operadorModal.setBackgroundResource(R.color.modalPerfilesBlanco)
                 LinearLayout_ticketsEscalados.setBackgroundResource(R.color.modalPerfilesBlanco)
-            }
-            btn_operadorModalPerfiles.setOnClickListener {
+            }else if (click_escalados){
+                LinearLayout_ticketsEscalados.setBackgroundResource(R.color.modalPerfiles)
+                LinearLayout_hardwareGestor.setBackgroundResource(R.color.modalPerfilesBlanco)
+                LinearLayout_operadorModal.setBackgroundResource(R.color.modalPerfilesBlanco)
+            }else{
                 LinearLayout_operadorModal.setBackgroundResource(R.color.modalPerfiles)
                 LinearLayout_hardwareGestor.setBackgroundResource(R.color.modalPerfilesBlanco)
                 LinearLayout_ticketsEscalados.setBackgroundResource(R.color.modalPerfilesBlanco)
             }
+
+            btn_hardwareModalPerfil.setOnClickListener {
+                click_btnHardware = true
+                click_escalados = false
+                LinearLayout_hardwareGestor.setBackgroundResource(R.color.modalPerfiles)
+                LinearLayout_operadorModal.setBackgroundResource(R.color.modalPerfilesBlanco)
+                LinearLayout_ticketsEscalados.setBackgroundResource(R.color.modalPerfilesBlanco)
+
+                binding.navView.getHeaderView(0).findViewById<TextView>(R.id.txt_perfil_user).setText("Hardware - Gestor")
+                dialog.dismiss()
+            }
+            btn_operadorModalPerfiles.setOnClickListener {
+                click_btnHardware = false
+                click_escalados = false
+                LinearLayout_operadorModal.setBackgroundResource(R.color.modalPerfiles)
+                LinearLayout_hardwareGestor.setBackgroundResource(R.color.modalPerfilesBlanco)
+                LinearLayout_ticketsEscalados.setBackgroundResource(R.color.modalPerfilesBlanco)
+
+                binding.navView.getHeaderView(0).findViewById<TextView>(R.id.txt_perfil_user).setText("Operador")
+                dialog.dismiss()
+            }
             btn_escaladosModalPerfiles.setOnClickListener {
+                click_escalados = true
+                click_btnHardware = false
                 LinearLayout_ticketsEscalados.setBackgroundResource(R.color.modalPerfiles)
                 LinearLayout_hardwareGestor.setBackgroundResource(R.color.modalPerfilesBlanco)
                 LinearLayout_operadorModal.setBackgroundResource(R.color.modalPerfilesBlanco)
+
+                binding.navView.getHeaderView(0).findViewById<TextView>(R.id.txt_perfil_user).setText("Tickets escalados (DF)")
+                dialog.dismiss()
 
             }
             btn_cerrarModalPerfiles.setOnClickListener {
                 dialog.dismiss()
             }
-
         }
 
 
@@ -283,8 +271,43 @@ class MainActivity : AppCompatActivity() {
             binding.appBarMain.llyBackgroudAbm.isVisible = false
         }
         //FIN - boton filtro de la derecha - activity_filtro_right.xml
-        //Toast.makeText(this, "token: "+prefer.getToken(), Toast.LENGTH_LONG).show()//mostramos el token guardado
+    }
 
+    //metodo que nos devuelve el id del usuario logeado
+    private fun getUserID() {
+        //INICIO obtenemos perfil de usuario con volley
+        val userID = binding.navView.getHeaderView(0).findViewById<TextView>(R.id.txt_nameUser)
+        //val url = "http://192.168.0.5/glpi/api_glpi.php" // en casa
+        val url_userID = "http://181.176.145.174:8080/api/user_id" //online
+        val stringRequestPerfil = object : StringRequest(Request.Method.POST,
+            url_userID, Response.Listener { response ->
+                try {
+                    val jsonjObject_session = JSONObject(response) //obtenemos el objeto json
+                    val valorLlave: JSONObject = jsonjObject_session.getJSONObject("session")//extraemos el objeto session
+                    val itemUserID = valorLlave.getString("glpiID")//y luego extraemos uno de sus atributos
+                    val userName = valorLlave.getJSONObject("glpiprofiles")
+                    val itemUserName = userName.getJSONObject("4")
+                    val itemUserName_ = itemUserName.getString("name")
+                    prefer.SaveUserID(itemUserID)
+                    prefer.SaveUserName(itemUserName_)
+                    userID.setText(itemUserName_+" -> ID: "+prefer.getUserID())
+                    Log.i("mensaje main ok: ","main activity: "+ itemUserID)
+                }catch (e:Exception){
+                    e.printStackTrace()
+                    Toast.makeText(this, "token expirado: $e", Toast.LENGTH_SHORT).show()
+                    Log.i("mensaje main error: ","main activity ERROR: "+e)
+                }
+            }, Response.ErrorListener {
+                Toast.makeText(this, "ERROR CON EL SERVIDOR", Toast.LENGTH_SHORT).show()
+            }){
+            override fun getParams(): Map<String, String>? {
+                val params: MutableMap<String, String> = HashMap()
+                params.put("session_token", prefer.getToken())
+                return params
+            }
+        }
+        VolleySingleton.getInstance(this).addToRequestQueue(stringRequestPerfil)
+        //FIN obtenemos perfil de usuario
     }
 
     /*override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -292,7 +315,6 @@ class MainActivity : AppCompatActivity() {
         menuInflater.inflate(R.menu.main, menu)
         return true
     }*/
-
 
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment_content_main)
