@@ -27,8 +27,8 @@
             android:id="@+id/activity_logout"
             android:icon="@drawable/ic_cerrar_sesion"
             android:title="Cerrar Sesión"/>
-        <item
+        <!--<item
             android:id="@+id/nav_home"
-            android:title="nav home"/>
+            android:title="nav home"/>-->
     </group>
 </menu>

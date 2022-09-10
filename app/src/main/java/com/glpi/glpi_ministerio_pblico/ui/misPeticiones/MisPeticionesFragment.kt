@@ -41,11 +41,13 @@ class MisPeticionesFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         //val Item = requireActivity().intent.extras!!.getString("session_token")
 
+
+        /* este evento entra en el ticket para ver mas info
         binding.tickets.setOnClickListener{
             //Toast.makeText(activity, "abriendo tickets", Toast.LENGTH_LONG ).show()
             val intent_tickets = Intent(activity, NavFooterTicketsActivity::class.java)
             startActivity(intent_tickets)
-        }
+        }*/
     }
 
     override fun onDestroyView() {

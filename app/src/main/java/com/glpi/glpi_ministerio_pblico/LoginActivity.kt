@@ -70,10 +70,6 @@ class LoginActivity : AppCompatActivity() {
             }
             VolleySingleton.getInstance(this).addToRequestQueue(stringRequest)
             //fin boton login volley iniciar sesion
-
-            //*******************volley para obtener perfil***********************************
-
-            //*******************volley para obtener perfil***********************************
         }
         CheckUserLogin() //verificamos si existe usuario logeado
         //Toast.makeText(this, prefer.getToken(), Toast.LENGTH_SHORT).show()

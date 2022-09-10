@@ -30,3 +30,34 @@ agregar_tarea		->	addt
 agregar_categoria	->	addcat
 agrega_solución		->	addsol
 
+****************************************************
+datos a consultar para tickets(apartado conversación):
+    numero de ticket / numero de petición
+    fecha y hora de creación/apertura
+    estado del ticket
+    solicitud/incidente: Detalle
+    nombre y apellidos del solicitante
+    cargo del solicitante
+    dependencia/fiscalía->despacho del solicitante
+
+    *fab flotantes(SOLUCIÓN):
+        documentos añadidos a ticket
+    *fab flotantes(SEGUIMIENTO):
+        documentos añadidos a ticket
+
+datos a consultar para tickets(apartado petición):
+    *info del ticket:
+        prioridad del ticket - tipo de ticket (solicitud/incidencia)
+        fecha y hora de creación/apertura - nombre del usuario
+        fecha de escalado  - prioridad del ticket
+        etiqueta de requerimiento del solicitante
+        ubicación de donde el ticket fue solicitado (observar)
+        numero de cel del solicitante
+    *actores
+        nombre y dni del solicitante
+        nombre del usuario logeado
+        nivel del usuario logeado
+
+DATOS A CONSULTAR DEL USUARIO LOGEADO:
+    nombres y apellidos del usuario logeado.
+****************************************************
