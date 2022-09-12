@@ -26,4 +26,36 @@
     <string name="menu_slideshow">Slideshow</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!--    string para categoria general de tikects-->
+    <string name="cat_1">PROBLEMAS DE ACCESO</string>
+    <string name="cat_2">PROBLEMAS DE FUNCIONAMIENTO DE HARDWARE</string>
+    <string name="cat_3">PROBLEMAS DE FUNCIONAMIENTO DE SOFTWAREE</string>
+    <string name="cat_4">PROBLEMAS DE MALWARE</string>
+    <string name="cat_5">PROBLEMAS DE RED</string>
+    <string name="cat_6">PROBLEMAS PARA ESCANEAR</string>
+    <string name="cat_7">PROBLEMAS PARA IMPRIMIR</string>
+    <!--    string para categoria carpeta electrónica de tikects BANDEJA FISCAL-->
+    <string name="cat_8">FUERA DE SERVICIO (EL SERVIDOR NO RESPONDE)</string>
+    <string name="cat_9">NO SE PUEDE INICIAR SESIÓN</string>
+    <string name="cat_10">NO SE VISUALIZA CARÁTULA</string>
+    <string name="cat_11">NO SE VISUALIZA DENUNCIA</string>
+    <string name="cat_12">NO SE VISUALIZA CARGO</string>
+    <string name="cat_13">NO SUBE ARCHIVO</string>
+    <!--    string para categoria carpeta electrónica de tikects CENTRAL DE NOTIFICACIONES-->
+    <string name="cat_14">DEMASIADA LENTITUD DEL SISTEMA</string>
+    <string name="cat_15">ERROR AL CARGAR PDF</string>
+    <string name="cat_16">ERROR AL GENERAR LOS PDF</string>
+    <string name="cat_17">MENSAJE DE ERROR "X"</string>
+    <string name="cat_18">NO SE VISUALIZA CÉDULA</string>
+    <!--    string para categoria carpeta electrónica de tikects GENERADOR DE NOTIFICACIONES-->
+    <string name="cat_19">DEMASIADA LENTITUD DEL SISTEMA</string>
+    <string name="cat_20">DEMORA EN LA ENTREGA DE CARGO</string>
+    <string name="cat_21">ERROR AL MOMENTO DE ENVIAR</string>
+    <string name="cat_22">ERROR AL SUBIR ARCHIVO</string>
+    <string name="cat_23">ERROR AL VISUALIZAR EL DOCUMENTO CARGADO</string>
+
+<!--    string para los 2 botones de la barra inferior de activity_nav_footer_tickets.xml-->
+    <string name="peticiones">Petición</string>
+    <string name="conversacion">Conversación</string>
 </resources>

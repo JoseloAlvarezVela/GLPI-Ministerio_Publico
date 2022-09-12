@@ -37,18 +37,21 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="#A3A3A3"
             android:orientation="vertical">
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_conversacion_footer"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="?android:attr/selectableItemBackground"
                 android:focusableInTouchMode="false"
+                android:text="@string/conversacion"
+                android:textAllCaps="false"
+                android:textColor="#676161"
                 app:icon="@drawable/ic_conversacion"
-                app:iconGravity="textEnd"
-                app:iconSize="25sp"
+                app:iconGravity="top"
+                app:iconPadding="0sp"
+                app:iconSize="20sp"
                 app:iconTint="#676161" />
         </LinearLayout>
 
@@ -57,18 +60,21 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="#FFFFFF"
             android:orientation="vertical">
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_tickets_footer"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="?android:attr/selectableItemBackground"
                 android:focusableInTouchMode="false"
+                android:text="@string/peticiones"
+                android:textAllCaps="false"
+                android:textColor="#676161"
                 app:icon="@drawable/ic_fab_documento"
-                app:iconGravity="textEnd"
-                app:iconSize="25sp"
+                app:iconGravity="top"
+                app:iconPadding="0sp"
+                app:iconSize="20sp"
                 app:iconTint="#676161" />
         </LinearLayout>
 

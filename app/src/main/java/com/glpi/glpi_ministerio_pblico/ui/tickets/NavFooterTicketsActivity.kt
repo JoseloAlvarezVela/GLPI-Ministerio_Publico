@@ -6,6 +6,7 @@ import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import com.glpi.glpi_ministerio_pblico.MainActivity
 import com.glpi.glpi_ministerio_pblico.R
@@ -24,13 +25,21 @@ class NavFooterTicketsActivity : AppCompatActivity() {
         var clickConvezaciones: Boolean = false
         var click_fab:Boolean = false //fab_opciones de layout activity_tickets_historico.xml
 
+        binding.btnConversacionFooter.iconTint = ContextCompat.getColorStateList(this, R.color.textColor)
+        binding.btnConversacionFooter.setTextColor(Color.parseColor("#175381"))
 
         binding.btnTicketsFooter.setOnClickListener {
             if(clickTickets == false){
+                binding.btnTicketsFooter.iconTint = ContextCompat.getColorStateList(this, R.color.textColor)
+                binding.btnTicketsFooter.setTextColor(Color.parseColor("#175381"))
+
+                binding.btnConversacionFooter.iconTint = ContextCompat.getColorStateList(this, R.color.ticketsGris)
+                binding.btnConversacionFooter.setTextColor(Color.parseColor("#676161"))
+
                 binding.includeTickets.includeTicketsLayout.isVisible = true //se muestra
                 binding.includeTicketsHistorico.includeTicketsHistoricoLayout.isVisible = false //se esconde
-                binding.btnTicketsFooterCOLOR.setBackgroundResource(R.color.ticketsBlanco)
-                binding.btnConversacionFooterCOLOR.setBackgroundResource(R.color.ticketsGris)
+                //binding.btnTicketsFooterCOLOR.setBackgroundResource(R.color.ticketsGris)
+                binding.btnConversacionFooterCOLOR.setBackgroundResource(R.color.ticketsBlanco)
 
                 //************INICIO DE SETEO LOS FAB'S DE LAYOUT activity_tickets_historico.xml************
                 binding.includeTicketsHistorico.fabSolucion.isVisible = false
@@ -52,10 +61,16 @@ class NavFooterTicketsActivity : AppCompatActivity() {
 
         binding.btnConversacionFooter.setOnClickListener {
             if(clickConvezaciones == false){
+                binding.btnTicketsFooter.iconTint = ContextCompat.getColorStateList(this, R.color.ticketsGris)
+                binding.btnTicketsFooter.setTextColor(Color.parseColor("#676161"))
+
+                binding.btnConversacionFooter.iconTint = ContextCompat.getColorStateList(this, R.color.textColor)
+                binding.btnConversacionFooter.setTextColor(Color.parseColor("#175381"))
+
                 binding.includeTicketsHistorico.includeTicketsHistoricoLayout.isVisible = true
                 binding.includeTickets.includeTicketsLayout.isVisible = false
-                binding.btnTicketsFooterCOLOR.setBackgroundResource(R.color.ticketsGris)
-                binding.btnConversacionFooterCOLOR.setBackgroundResource(R.color.ticketsBlanco)
+                binding.btnTicketsFooterCOLOR.setBackgroundResource(R.color.ticketsBlanco)
+                //binding.btnConversacionFooterCOLOR.setBackgroundResource(R.color.ticketsGris)
                 clickConvezaciones = true
                 clickTickets = false
             }

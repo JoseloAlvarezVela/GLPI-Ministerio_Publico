@@ -25,4 +25,7 @@
     //activity tickets
     <color name="ticketsGris">#A3A3A3</color>
     <color name="ticketsBlanco">#FFFFFF</color>
+
+    //activity_nav_footer_tickets.xml
+    <color name="textColor">#175381</color>
 </resources>

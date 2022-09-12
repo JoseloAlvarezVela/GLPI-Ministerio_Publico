@@ -9,13 +9,6 @@ class Data_Tickets {
     var glpi_currenttime_: String? = null
     var glpiname_: String? = null
 
-    /*inicializamos constructor
-    fun Usuario(glpi_currenttime: String?, glpiID: String?,glpiname: String? ) {
-        this.glpi_currenttime_ = glpi_currenttime
-        this.glpiID_ = glpiID
-        this.glpiname_ = glpiname
-    }*/
-
     /*Estos métodos getter y setter nos ayudarán a mantener los datos mientras
     llenamos la vista Recycler en la clase Adapter.*/
     fun getGlpiID(): String {

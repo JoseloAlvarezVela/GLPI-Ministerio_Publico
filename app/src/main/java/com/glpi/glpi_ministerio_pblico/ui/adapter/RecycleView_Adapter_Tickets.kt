@@ -7,13 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
-import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
-import com.glpi.glpi_ministerio_pblico.MainActivity
 import com.glpi.glpi_ministerio_pblico.R
 import com.glpi.glpi_ministerio_pblico.ui.tickets.NavFooterTicketsActivity
-import java.util.ArrayList
+
 
 /*adaptador que obtendrá los datos del archivo de actividad principal
 y llenará la vista del reciclador*/
@@ -23,15 +20,20 @@ class RecycleView_Adapter_Tickets(context:Context, private val dataModelArrayLis
     private val inflater: LayoutInflater
 
     init {
-
         inflater = LayoutInflater.from(context)
     }
 
     /*Dentro del método onCreateViewHolder, el compilador inflará el archivo
     fragment_mis_peticiones.xml para que pueda desarrollar el diseño de cada fila
     de la vista del reciclador*/
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecycleView_Adapter_Tickets.MyViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int):
+            RecycleView_Adapter_Tickets.MyViewHolder {
+
+        //val inflater_ = LayoutInflater.from(parent.getContext())
         val view = inflater.inflate(R.layout.recycleview_tickets, parent, false)
+        //val view = LayoutInflater.from(parent.context).inflate(R.layout.recycleview_tickets,
+        //parent,false)
+
 
         return MyViewHolder(view)
     }
@@ -43,9 +45,9 @@ class RecycleView_Adapter_Tickets(context:Context, private val dataModelArrayLis
         holder.txt_distritosFiscales.setText(dataModelArrayList[position].getGlpiName())
         holder.txt_descripcionTicket.setText(dataModelArrayList[position].getGlpiDescripcion())
 
-        // onClick Listener para los elementos
+        //onClick Listener para los elementos
         holder.tickets.setOnClickListener {
-            val context=holder.tickets.context
+            val context = holder.tickets.context
             val intent = Intent( context, NavFooterTicketsActivity::class.java)
             context.startActivity(intent)
         }
@@ -72,6 +74,4 @@ class RecycleView_Adapter_Tickets(context:Context, private val dataModelArrayLis
             txt_descripcionTicket = itemView.findViewById(R.id.txt_descripcionTicket) as TextView
         }
     }
-
-
 }

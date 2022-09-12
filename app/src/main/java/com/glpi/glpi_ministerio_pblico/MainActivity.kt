@@ -13,6 +13,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
@@ -23,31 +24,30 @@ import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
-import com.android.volley.toolbox.Volley
 import com.glpi.glpi_ministerio_pblico.databinding.ActivityMainBinding
 import com.glpi.glpi_ministerio_pblico.ui.adapter.Data_Tickets
 import com.glpi.glpi_ministerio_pblico.ui.adapter.RecycleView_Adapter_Tickets
+import com.glpi.glpi_ministerio_pblico.ui.misPeticiones.MisPeticionesFragment
 import com.glpi.glpi_ministerio_pblico.ui.shared.token.Companion.prefer
-import com.glpi.glpi_ministerio_pblico.ui.tickets.NavFooterTicketsActivity
 import com.google.android.material.navigation.NavigationView
 import org.json.JSONArray
-import org.json.JSONException
-import org.json.JSONObject
 
 
 class MainActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
 
+
+
     /*creamos la lista de arreglos que tendrá los objetos de la clase Data_Tickets
     esta lista de arreglos (dataModelArrayList) funcionará como fuente de datos*/
-    internal lateinit var dataModelArrayList: ArrayList<Data_Tickets>
+    /*internal lateinit var dataModelArrayList: ArrayList<Data_Tickets>
 
     //creamos el objeto de la clase RecycleView_Adapter_Tickets
     private var recycleView_Adapter_Tickets: RecycleView_Adapter_Tickets? = null
 
     //creamos el objeto de la clase recyclerView
-    private var recyclerView: RecyclerView? = null
+    private var recyclerView: RecyclerView? = null*/
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,9 +75,10 @@ class MainActivity : AppCompatActivity() {
         navView.setupWithNavController(navController)
 
 
-        recyclerView = findViewById(R.id.recycler)//asignamos el recycleview de recycleview_tickets.xml
 
-        fetchingJSON() //metodo que nos devuelve los datos de los tickets
+        //recyclerView = findViewById(R.id.recycler)//asignamos el recycleview de recycleview_tickets.xml
+
+        //fetchingJSON() //metodo que nos devuelve los datos de los tickets
 
         getUserID() //metodo que nos devuelve el id del usuario logeado con volley
 
@@ -296,17 +297,17 @@ class MainActivity : AppCompatActivity() {
         //FIN - boton filtro de la derecha - activity_filtro_right.xml
     }
 
-    //metodo que nos devuelve los datos para los tickets
+    /*metodo que nos devuelve los datos para los tickets
     private fun fetchingJSON() {
+
         //INICIO obtenemos perfil de usuario con volley
+
         val url_DataTickets = "http://181.176.145.174:8080/api/user_tickets" //online
         val stringRequestDataTickets = object : StringRequest(Request.Method.POST,
             url_DataTickets, Response.Listener { response ->
                 try {
                     val JS_DataTickets = JSONArray(response) //obtenemos el objeto json
                     dataModelArrayList = ArrayList()
-
-
 
                     for (i in 0 until JS_DataTickets.length()){
 
@@ -319,9 +320,9 @@ class MainActivity : AppCompatActivity() {
                         playerModel.setGlpiName(DataTickets.getString("TECNICO"))
 
                         dataModelArrayList.add(playerModel)
+
                         Log.i("mensaje recycler ok: ","main activity: "+ playerModel)
                     }
-
                     setupRecycler()
 
                 }catch (e:Exception){
@@ -344,41 +345,12 @@ class MainActivity : AppCompatActivity() {
 
     //Este método vinculará el objeto del adaptador a la vista del reciclador
     private fun setupRecycler() {
-        recycleView_Adapter_Tickets = RecycleView_Adapter_Tickets(this,dataModelArrayList)
-        recyclerView!!.adapter = recycleView_Adapter_Tickets
-        recyclerView!!.layoutManager = LinearLayoutManager(applicationContext, LinearLayoutManager.VERTICAL, false)
-    }
+        recyclerView!!.layoutManager = LinearLayoutManager(applicationContext,
+            LinearLayoutManager.VERTICAL, false)
 
-    //metodo que nos devolverá los tickets con volley
-    private fun getDataTickets() {
-        //INICIO obtenemos perfil de usuario con volley
-        //val url = "http://192.168.0.5/glpi/api_glpi.php" // en casa
-        val url_infoTickets = "https://randomuser.me/api/" //online
-        val stringRequestPerfil = object : StringRequest(Request.Method.POST,
-            url_infoTickets, Response.Listener { response ->
-                try {
-                    val jsonjObject_session = JSONArray(response) //obtenemos el objeto json
-                    val user = jsonjObject_session.getJSONObject(0)
-                    val userID = user.getString("ID")
-                    val userPerfil = user.getString("PERFIL")
-                    Log.i("mensaje main ok: ","main activity: "+ userID)
-                }catch (e:Exception){
-                    e.printStackTrace()
-                    Toast.makeText(this, "token expirado: $e", Toast.LENGTH_LONG).show()
-                    Log.i("mensaje main error: ","main activity ERROR: "+e)
-                }
-            }, Response.ErrorListener {
-                Toast.makeText(this, "ERROR CON EL SERVIDOR", Toast.LENGTH_SHORT).show()
-            }){
-            override fun getParams(): Map<String, String>? {
-                val params: MutableMap<String, String> = HashMap()
-                params.put("session_token", prefer.getToken())
-                return params
-            }
-        }
-        VolleySingleton.getInstance(this).addToRequestQueue(stringRequestPerfil)
-        //FIN obtenemos perfil de usuario
-    }
+        recycleView_Adapter_Tickets = RecycleView_Adapter_Tickets(this@MainActivity,dataModelArrayList)
+        recyclerView!!.adapter = recycleView_Adapter_Tickets
+    }*/
 
     //metodo que nos devuelve el id del usuario logeado
     private fun getUserID() {

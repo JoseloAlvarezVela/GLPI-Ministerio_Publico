@@ -44,7 +44,7 @@
             android:paddingTop="15sp"
             android:paddingRight="15sp"
             android:paddingBottom="15sp"
-            android:text="Acompañamiento técnico"
+            android:text="@string/cat_1"
             android:textSize="12sp" />
 
         <TextView
@@ -55,7 +55,7 @@
             android:paddingTop="15sp"
             android:paddingRight="15sp"
             android:paddingBottom="15sp"
-            android:text="Acesoramiento"
+            android:text="@string/cat_2"
             android:textSize="12sp" />
 
         <TextView
@@ -67,7 +67,7 @@
             android:paddingTop="15sp"
             android:paddingRight="15sp"
             android:paddingBottom="15sp"
-            android:text="Cableado estructurado"
+            android:text="@string/cat_3"
             android:textSize="12sp" />
 
     </LinearLayout>
