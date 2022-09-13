@@ -38,17 +38,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 
 
-
-    /*creamos la lista de arreglos que tendrá los objetos de la clase Data_Tickets
-    esta lista de arreglos (dataModelArrayList) funcionará como fuente de datos*/
-    /*internal lateinit var dataModelArrayList: ArrayList<Data_Tickets>
-
-    //creamos el objeto de la clase RecycleView_Adapter_Tickets
-    private var recycleView_Adapter_Tickets: RecycleView_Adapter_Tickets? = null
-
-    //creamos el objeto de la clase recyclerView
-    private var recyclerView: RecyclerView? = null*/
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -64,7 +53,7 @@ class MainActivity : AppCompatActivity() {
         val navView: NavigationView = binding.navView
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
+        /* menu should be considered as top level destinations.*/
         appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.nav_mis_peticiones,R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow,
@@ -73,12 +62,6 @@ class MainActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
-
-
-
-        //recyclerView = findViewById(R.id.recycler)//asignamos el recycleview de recycleview_tickets.xml
-
-        //fetchingJSON() //metodo que nos devuelve los datos de los tickets
 
         getUserID() //metodo que nos devuelve el id del usuario logeado con volley
 
@@ -233,7 +216,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-
         //INICIO - boton filtro de la derecha - activity_filtro_right.xml
         binding.appBarMain.btnFiltroRight.setOnClickListener {
             binding.appBarMain.includeFiltroRight.LinearLayoutActivityFiltroRight.isVisible = true
@@ -297,66 +279,10 @@ class MainActivity : AppCompatActivity() {
         //FIN - boton filtro de la derecha - activity_filtro_right.xml
     }
 
-    /*metodo que nos devuelve los datos para los tickets
-    private fun fetchingJSON() {
-
-        //INICIO obtenemos perfil de usuario con volley
-
-        val url_DataTickets = "http://181.176.145.174:8080/api/user_tickets" //online
-        val stringRequestDataTickets = object : StringRequest(Request.Method.POST,
-            url_DataTickets, Response.Listener { response ->
-                try {
-                    val JS_DataTickets = JSONArray(response) //obtenemos el objeto json
-                    dataModelArrayList = ArrayList()
-
-                    for (i in 0 until JS_DataTickets.length()){
-
-                        val DataTickets = JS_DataTickets.getJSONObject(i)
-
-                        val playerModel = Data_Tickets()
-                        playerModel.setGlpiID(DataTickets.getString("ID"))
-                        playerModel.setGlpiDescripcion(DataTickets.getString("DESCRIPCION"))
-                        playerModel.setCurrentTime(DataTickets.getString("FECHA"))
-                        playerModel.setGlpiName(DataTickets.getString("TECNICO"))
-
-                        dataModelArrayList.add(playerModel)
-
-                        Log.i("mensaje recycler ok: ","main activity: "+ playerModel)
-                    }
-                    setupRecycler()
-
-                }catch (e:Exception){
-                    e.printStackTrace()
-                    Toast.makeText(this, "token expirado: $e", Toast.LENGTH_LONG).show()
-                    Log.i("mensaje recycler e: ","recycler ERROR: "+e)
-                }
-            }, Response.ErrorListener {
-                Toast.makeText(this, "ERROR CON EL SERVIDOR", Toast.LENGTH_SHORT).show()
-            }){
-            override fun getParams(): Map<String, String>? {
-                val params: MutableMap<String, String> = HashMap()
-                params.put("session_token", prefer.getToken())
-                return params
-            }
-        }
-        VolleySingleton.getInstance(this).addToRequestQueue(stringRequestDataTickets)
-        //FIN obtenemos perfil de usuario
-    }
-
-    //Este método vinculará el objeto del adaptador a la vista del reciclador
-    private fun setupRecycler() {
-        recyclerView!!.layoutManager = LinearLayoutManager(applicationContext,
-            LinearLayoutManager.VERTICAL, false)
-
-        recycleView_Adapter_Tickets = RecycleView_Adapter_Tickets(this@MainActivity,dataModelArrayList)
-        recyclerView!!.adapter = recycleView_Adapter_Tickets
-    }*/
-
     //metodo que nos devuelve el id del usuario logeado
     private fun getUserID() {
         //INICIO obtenemos perfil de usuario con volley
         val userPERFIL_ID = binding.navView.getHeaderView(0).findViewById<TextView>(R.id.txt_nameUser)
-        //val url = "http://192.168.0.5/glpi/api_glpi.php" // en casa
         val url_userID = "http://181.176.145.174:8080/api/user_profiles" //online
         val stringRequestPerfil = object : StringRequest(Request.Method.POST,
             url_userID, Response.Listener { response ->
@@ -396,7 +322,7 @@ class MainActivity : AppCompatActivity() {
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
 
-    //controlamos la pulsación del boton atras por defecto del celular para que cierre la app
+    //onKeyDown controlamos la pulsación del boton atras por defecto del celular para que cierre la app
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         val intent = Intent(Intent.ACTION_MAIN)
         intent.addCategory(Intent.CATEGORY_HOME)

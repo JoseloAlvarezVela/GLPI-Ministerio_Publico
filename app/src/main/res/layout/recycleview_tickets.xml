@@ -32,7 +32,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:paddingTop="5sp"
+                android:paddingBottom="5sp">
 
                 <TextView
                     android:id="@+id/txt_numero_ticket"
@@ -61,15 +63,25 @@
                     android:textSize="12sp" />
 
                 <TextView
-                    android:id="@+id/textView5"
+                    android:id="@+id/txt_tipo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
                     android:layout_weight="1"
                     android:fontFamily="@font/averia_sans_libre_light"
+                    android:gravity="center"
                     android:text="@string/fragment_mispet_tipo"
                     android:textColor="#3FC3FF"
-                    android:textSize="12sp" />
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:id="@+id/imageView2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:tint="#49bf4d"
+                    app:srcCompat="@drawable/ic_circulo" />
 
                 <RadioButton
                     android:id="@+id/radioButton"
@@ -77,6 +89,8 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="5dp"
                     android:layout_weight="1"
+                    android:clickable="false"
+                    android:visibility="gone"
                     app:buttonTint="#49bf4d" />
                 <!--                app:buttonTint="#49bf4d"-->
 
@@ -105,17 +119,27 @@
                 android:layout_marginStart="5dp"
                 android:layout_marginLeft="5dp"
                 android:layout_marginTop="5dp"
-                android:layout_weight="1"
-                android:orientation="vertical">
+                android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/txt_distritosFiscales"
+                    android:id="@+id/txt_requester_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/averia_sans_libre_light"
                     android:text="@string/fragment_mispet_user"
                     android:textColor="#000000"
                     android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/txt_requester_apellido"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/averia_sans_libre_light"
+                    android:gravity="start"
+                    android:text="@string/fragment_mispet_user"
+                    android:textColor="#000000"
+                    android:textSize="12sp"
+                    android:visibility="gone" />
             </LinearLayout>
 
             <LinearLayout

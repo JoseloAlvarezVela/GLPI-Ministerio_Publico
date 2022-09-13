@@ -19,6 +19,7 @@ import com.glpi.glpi_ministerio_pblico.ui.adapter.Data_Tickets
 import com.glpi.glpi_ministerio_pblico.ui.adapter.RecycleView_Adapter_Tickets
 import com.glpi.glpi_ministerio_pblico.ui.shared.token
 import org.json.JSONArray
+import org.json.JSONObject
 
 class MisPeticionesFragment : Fragment() {
 
@@ -55,6 +56,7 @@ class MisPeticionesFragment : Fragment() {
 
         recyclerView = binding.recycler//asignamos el recycleview de recycleview_tickets.xml
 
+        /*Este método vinculará el objeto del adaptador a la vista del reciclador*/
         fun setupRecycler() {
             recyclerView!!.layoutManager = LinearLayoutManager(getContext(),
                 LinearLayoutManager.VERTICAL, false)
@@ -80,13 +82,25 @@ class MisPeticionesFragment : Fragment() {
 
                         val playerModel = Data_Tickets()
                         playerModel.setGlpiID(DataTickets.getString("ID"))
+                        playerModel.setGlpiTipo(DataTickets.getString("TIPO"))
                         playerModel.setGlpiDescripcion(DataTickets.getString("DESCRIPCION"))
+                        playerModel.setGlpiEstado(DataTickets.getString("ESTADO"))
                         playerModel.setCurrentTime(DataTickets.getString("FECHA"))
-                        playerModel.setGlpiName(DataTickets.getString("TECNICO"))
+
+                        val JS_RequesterObjet = DataTickets.getJSONArray("REQUESTER")
+                        val DataRequester = JS_RequesterObjet.getJSONObject(0)
+                        val DataRequesterName = DataRequester.getString("NOMBRE")
+                        val DataRequesterApellido = DataRequester.getString("APELLIDO")
+                        playerModel.setGlpiRequestreName(DataRequesterName+" "+DataRequesterApellido)
+                        //playerModel.setGlpiRequestreApellido(DataRequesterApellido)
+
+
+                        //playerModel.setGlpiName(DataTickets.getString("TECNICO"))
 
                         dataModelArrayList.add(playerModel)
 
                         Log.i("mensaje recycler ok: ","main activity: "+ playerModel)
+                        Log.i("mensaje recycler JSON: ","recycler: "+DataRequesterApellido)
                     }
                     setupRecycler()
 
@@ -107,16 +121,6 @@ class MisPeticionesFragment : Fragment() {
         context?.let { VolleySingleton.getInstance(it).addToRequestQueue(stringRequestDataTickets) }
         //FIN obtenemos perfil de usuario
 
-        /*Este método vinculará el objeto del adaptador a la vista del reciclador
-        fun setupRecycler() {
-            recyclerView!!.layoutManager = LinearLayoutManager(getContext(),
-                LinearLayoutManager.VERTICAL, false)
-
-            recycleView_Adapter_Tickets = RecycleView_Adapter_Tickets(this,dataModelArrayList)
-            recyclerView!!.adapter = recycleView_Adapter_Tickets
-
-
-        }*/
 
         val root = binding.root
 

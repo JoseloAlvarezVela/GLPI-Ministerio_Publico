@@ -28,4 +28,8 @@
 
     //activity_nav_footer_tickets.xml
     <color name="textColor">#175381</color>
+
+    //recycleview_tickets.xml
+    <color name="tipoSolicitud">#3FC3FF</color>
+    <color name="tipoIncidentes">#C5A83F</color>
 </resources>
