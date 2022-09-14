@@ -60,6 +60,9 @@ class RecycleView_Adapter_Tickets(context:Context, private val dataModelArrayLis
         if(dataModelArrayList[position].getGlpiEstado() == "EN CURSO (Asignada)"){
             holder.txt_EstadoColor.setBackgroundResource(R.drawable.esq_redondeada_amarillo)
         }
+        else if(dataModelArrayList[position].getGlpiEstado() == "URGENTE"){
+            holder.txt_EstadoColor.setBackgroundResource(R.drawable.esq_redondeada_rojo)
+        }
         else{
             holder.txt_EstadoColor.setBackgroundResource(R.drawable.esq_redondeada_gris)
         }
@@ -71,7 +74,8 @@ class RecycleView_Adapter_Tickets(context:Context, private val dataModelArrayLis
         }
 
         holder.txt_Requester_Name.setText("Solicitante: "+dataModelArrayList[position].getGlpiRequesterName())
-        //holder.txt_Requester_Apellido.setText(dataModelArrayList[position].getGlpiRequesterApellido())
+        holder.txt_Requester_Cargo.setText(dataModelArrayList[position].getGlpiRequesterCargo())
+
     }
 
     //retornamos el tamaño de los datos obtenidos para mostrar en el recycleview
@@ -86,7 +90,7 @@ class RecycleView_Adapter_Tickets(context:Context, private val dataModelArrayLis
         var txt_tipo : TextView
         var txt_glpi_currenttime: TextView
         var txt_Requester_Name: TextView
-        //var txt_Requester_Apellido: TextView
+        var txt_Requester_Cargo: TextView
 
         //var txt_distritosFiscales: TextView
         var txt_descripcionTicket: TextView
@@ -99,7 +103,7 @@ class RecycleView_Adapter_Tickets(context:Context, private val dataModelArrayLis
             txt_tipo = itemView.findViewById(R.id.txt_tipo) as TextView
             txt_glpi_currenttime = itemView.findViewById(R.id.txt_fecha_apertura) as TextView
             txt_Requester_Name = itemView.findViewById(R.id.txt_requester_name) as TextView
-            //txt_Requester_Apellido = itemView.findViewById(R.id.txt_requester_apellido) as TextView
+            txt_Requester_Cargo = itemView.findViewById(R.id.txt_requester_cargo) as TextView
 
             //txt_distritosFiscales = itemView.findViewById(R.id.txt_distritosFiscales) as TextView
             txt_descripcionTicket = itemView.findViewById(R.id.txt_descripcionTicket) as TextView

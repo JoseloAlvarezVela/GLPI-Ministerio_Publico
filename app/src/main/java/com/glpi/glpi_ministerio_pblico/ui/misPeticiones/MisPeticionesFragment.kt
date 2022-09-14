@@ -39,6 +39,11 @@ class MisPeticionesFragment : Fragment() {
     // onDestroyView.
     private val binding get() = _binding!!
 
+    companion object{
+        var nombreLogin:String? = null
+        var CurrentTime:String? = null
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -82,20 +87,25 @@ class MisPeticionesFragment : Fragment() {
 
                         val playerModel = Data_Tickets()
                         playerModel.setGlpiID(DataTickets.getString("ID"))
+
                         playerModel.setGlpiTipo(DataTickets.getString("TIPO"))
                         playerModel.setGlpiDescripcion(DataTickets.getString("DESCRIPCION"))
                         playerModel.setGlpiEstado(DataTickets.getString("ESTADO"))
                         playerModel.setCurrentTime(DataTickets.getString("FECHA"))
+                        CurrentTime = DataTickets.getString("FECHA")
+                        playerModel.setGlpiNameLogin(DataTickets.getString("NOMBRE"))
+                        playerModel.setGlpiApellidoLogin(DataTickets.getString("APELLIDO"))
+                        val nombreLogin_ = DataTickets.getString("NOMBRE")
+                        val apellidoLogin_ = DataTickets.getString("APELLIDO")
+                        nombreLogin = "$nombreLogin_ $apellidoLogin_"
 
                         val JS_RequesterObjet = DataTickets.getJSONArray("REQUESTER")
                         val DataRequester = JS_RequesterObjet.getJSONObject(0)
                         val DataRequesterName = DataRequester.getString("NOMBRE")
                         val DataRequesterApellido = DataRequester.getString("APELLIDO")
-                        playerModel.setGlpiRequestreName(DataRequesterName+" "+DataRequesterApellido)
-                        //playerModel.setGlpiRequestreApellido(DataRequesterApellido)
-
-
-                        //playerModel.setGlpiName(DataTickets.getString("TECNICO"))
+                        val DataRequesterCargo = DataRequester.getString("CARGO")
+                        playerModel.setGlpiRequestreName("$DataRequesterName $DataRequesterApellido")
+                        playerModel.setGlpiRequestreCargo(DataRequesterCargo)
 
                         dataModelArrayList.add(playerModel)
 

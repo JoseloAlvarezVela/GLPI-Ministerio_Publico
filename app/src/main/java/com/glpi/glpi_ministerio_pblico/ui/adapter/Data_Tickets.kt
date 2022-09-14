@@ -9,9 +9,10 @@ class Data_Tickets {
     var glpiEstado_ : String? = null
     var glpi_currenttime_: String? = null
     var GlpiSolReq_: String? = null
-    var glpiname_: String? = null
+    var glpiNameLogin_: String? = null
+    var glpiApellidoLogin_: String? = null
     var glpiRequester_Name_: String? = null
-    var glpiRequester_Apellido_: String? = null
+    var glpiRequester_Cargo_: String? = null
 
 
     /*Estos métodos getter y setter nos ayudarán a mantener los datos mientras
@@ -28,13 +29,6 @@ class Data_Tickets {
     }
     fun setGlpiTipo(GlpiTipo: String){
         this.glpiTipo_ = GlpiTipo
-    }
-
-    fun getGlpiSolReq(): String {
-        return GlpiSolReq_.toString()
-    }
-    fun setGlpiSolReq(GlpiID: String) {
-        this.GlpiSolReq_ = GlpiID
     }
 
     fun getGlpiDescripcion(): String{
@@ -58,11 +52,18 @@ class Data_Tickets {
         this.glpi_currenttime_ = CurrentTime
     }
 
-    fun getGlpiName(): String {
-        return glpiname_.toString()
+    fun getGlpiNameLogin(): String {
+        return glpiNameLogin_.toString()
     }
-    fun setGlpiName(GlpiName: String) {
-        this.glpiname_ = GlpiName
+    fun setGlpiNameLogin(GlpiNameLogin: String) {
+        this.glpiNameLogin_ = GlpiNameLogin
+    }
+
+    fun getGlpiApellidoLogin(): String {
+        return glpiApellidoLogin_.toString()
+    }
+    fun setGlpiApellidoLogin(GlpiApellidoLogin: String) {
+        this.glpiApellidoLogin_ = GlpiApellidoLogin
     }
 
     fun getGlpiRequesterName(): String{
@@ -72,10 +73,10 @@ class Data_Tickets {
         this.glpiRequester_Name_ = glpiRequester_Name
     }
 
-    fun getGlpiRequesterApellido(): String{
-        return glpiRequester_Apellido_.toString()
+    fun getGlpiRequesterCargo(): String{
+        return glpiRequester_Cargo_.toString()
     }
-    fun setGlpiRequestreApellido(glpiRequester_Apellido: String){
-        this.glpiRequester_Apellido_ = glpiRequester_Apellido
+    fun setGlpiRequestreCargo(glpiRequester_Cargo: String){
+        this.glpiRequester_Cargo_ = glpiRequester_Cargo
     }
 }

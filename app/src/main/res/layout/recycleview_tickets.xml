@@ -80,8 +80,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:tint="#49bf4d"
-                    app:srcCompat="@drawable/ic_circulo" />
+                    app:srcCompat="@drawable/ic_circulo"
+                    app:tint="#49bf4d"/>
 
                 <RadioButton
                     android:id="@+id/radioButton"
@@ -152,7 +152,7 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/txt_ticketsEscalados"
+                    android:id="@+id/txt_requester_cargo"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/averia_sans_libre_light"

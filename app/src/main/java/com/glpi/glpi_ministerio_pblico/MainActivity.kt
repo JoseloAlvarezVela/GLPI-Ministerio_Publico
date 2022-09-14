@@ -13,31 +13,27 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.glpi.glpi_ministerio_pblico.databinding.ActivityMainBinding
-import com.glpi.glpi_ministerio_pblico.ui.adapter.Data_Tickets
-import com.glpi.glpi_ministerio_pblico.ui.adapter.RecycleView_Adapter_Tickets
-import com.glpi.glpi_ministerio_pblico.ui.misPeticiones.MisPeticionesFragment
 import com.glpi.glpi_ministerio_pblico.ui.shared.token.Companion.prefer
 import com.google.android.material.navigation.NavigationView
-import org.json.JSONArray
+import org.json.JSONObject
 
 
 class MainActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
 
-
+    companion object{
+        var userName:String? = null
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -283,16 +279,16 @@ class MainActivity : AppCompatActivity() {
     private fun getUserID() {
         //INICIO obtenemos perfil de usuario con volley
         val userPERFIL_ID = binding.navView.getHeaderView(0).findViewById<TextView>(R.id.txt_nameUser)
-        val url_userID = "http://181.176.145.174:8080/api/user_profiles" //online
+        val url_userID = "http://181.176.145.174:8080/api/user_id" //online
         val stringRequestPerfil = object : StringRequest(Request.Method.POST,
             url_userID, Response.Listener { response ->
                 try {
-                    val jsonjObject_session = JSONArray(response) //obtenemos el objeto json
-                    val user = jsonjObject_session.getJSONObject(0)
-                    val userID = user.getString("ID")
-                    val userPerfil = user.getString("PERFIL")
-                    userPERFIL_ID.setText(userPerfil+" -> ID: "+userID)
-                    Log.i("mensaje main ok: ","main activity: "+ userID)
+                    val jsonjObject_session = JSONObject(response) //obtenemos el objeto json
+                    val user = jsonjObject_session.getJSONObject("session")
+                    userName = user.getString("glpifriendlyname")
+                    //val userPerfil = user.getString("PERFIL")
+                    userPERFIL_ID.setText(userName)
+                    Log.i("mensaje main ok: ","main activity: "+ userName)
                 }catch (e:Exception){
                     e.printStackTrace()
                     Toast.makeText(this, "token expirado: $e", Toast.LENGTH_LONG).show()

@@ -9,16 +9,22 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import com.glpi.glpi_ministerio_pblico.MainActivity
+import com.glpi.glpi_ministerio_pblico.MainActivity.Companion.userName
 import com.glpi.glpi_ministerio_pblico.R
 import com.glpi.glpi_ministerio_pblico.databinding.ActivityNavFooterTicketsBinding
+import com.glpi.glpi_ministerio_pblico.ui.adapter.Data_Tickets
+import com.glpi.glpi_ministerio_pblico.ui.misPeticiones.MisPeticionesFragment
 
 class NavFooterTicketsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityNavFooterTicketsBinding
+
     @SuppressLint("ResourceAsColor")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityNavFooterTicketsBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        ticketsHistoricoActivity_()
 
         //INICIO toogle buton tickets
         var clickTickets: Boolean = false
@@ -186,5 +192,22 @@ class NavFooterTicketsActivity : AppCompatActivity() {
             startActivity(intent_agregar_documento)
         }
         //fin eventos click de fab_opciones
+    }
+
+    //activity_tickets_historico.xml
+    private fun ticketsHistoricoActivity_() {
+        binding.includeTicketsHistorico.txtPrueba.setOnClickListener {
+            Toast.makeText(this, "aca nomas funciona", Toast.LENGTH_SHORT).show()
+        }
+
+
+        //asignamos los datos correspondientes
+        datos_tickets_historico()
+    }
+
+    private fun datos_tickets_historico() {
+        val playerModel = Data_Tickets()
+        binding.includeTicketsHistorico.txtPrueba.setText(MisPeticionesFragment.nombreLogin)
+        binding.includeTicketsHistorico.txtCurrentTime.setText(MisPeticionesFragment.CurrentTime)
     }
 }
