@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.text.Html
+import android.text.Spanned
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -23,7 +24,7 @@ class RecycleView_Adapter_Tickets(context:Context, private val dataModelArrayLis
     RecyclerView.Adapter<RecycleView_Adapter_Tickets.MyViewHolder>(){
 
     private val inflater: LayoutInflater
-
+    var description: String? = null
     init {
         inflater = LayoutInflater.from(context)
     }
@@ -60,8 +61,10 @@ class RecycleView_Adapter_Tickets(context:Context, private val dataModelArrayLis
 
         holder.txt_glpi_currenttime.text = dataModelArrayList[position].getCurrentTime()
 
-        holder.txt_descripcionTicket.text = HtmlCompat.fromHtml(dataModelArrayList[position].getGlpiDescripcion(), HtmlCompat.FROM_HTML_MODE_LEGACY)
 
+        //description = dataModelArrayList[position].getGlpiDescripcion()
+        holder.txt_descripcionTicket.text = dataModelArrayList[position].getGlpiDescripcion()
+        //holder.txt_descripcionTicket.text = HtmlCompat.fromHtml(dataModelArrayList[position].getGlpiDescripcion(), HtmlCompat.FROM_HTML_MODE_LEGACY)
         if(dataModelArrayList[position].getGlpiEstado() == "EN CURSO (Asignada)"){
             holder.txt_EstadoColor.setBackgroundResource(R.drawable.esq_redondeada_amarillo)
         }
@@ -111,7 +114,8 @@ class RecycleView_Adapter_Tickets(context:Context, private val dataModelArrayLis
             tickets.setOnClickListener {
                 val intent = Intent(itemView.context, NavFooterTicketsActivity::class.java)
                 intent.putExtra("fechaApertura", txt_glpi_currenttime.text)
-                intent.putExtra("descripción", txt_descripcionTicket.text)
+                intent.putExtra("descripcion", txt_descripcionTicket.text)
+                //intent.putExtra("descripcion", description.toString())
 
                 itemView.context.startActivity(intent)
             }

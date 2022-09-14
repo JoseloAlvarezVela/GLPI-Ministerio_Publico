@@ -24,7 +24,7 @@ class NavFooterTicketsActivity : AppCompatActivity() {
         binding = ActivityNavFooterTicketsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        ticketsHistoricoActivity_()
+        //ticketsHistoricoActivity_()
 
         //INICIO toogle buton tickets
         var clickTickets: Boolean = false
@@ -192,6 +192,7 @@ class NavFooterTicketsActivity : AppCompatActivity() {
             startActivity(intent_agregar_documento)
         }
         //fin eventos click de fab_opciones
+        ticketsHistoricoActivity_()
     }
 
     //activity_tickets_historico.xml
@@ -209,14 +210,13 @@ class NavFooterTicketsActivity : AppCompatActivity() {
 
         if (extras != null) {
             currenTime_ = extras.getString("fechaApertura").toString()
-            descripcion_ = extras.getString("descripción").toString()
+            descripcion_ = extras.getString("descripcion").toString()
 
         }
 
         binding.includeTicketsHistorico.txtNameLogin.text = MisPeticionesFragment.nombreLogin
         binding.includeTicketsHistorico.txtCurrentTime.text = currenTime_
-        binding.includeTicketsHistorico.txtDescripcionTicketHistorico.text = HtmlCompat.fromHtml(descripcion_, HtmlCompat.FROM_HTML_MODE_LEGACY)
-
+        binding.includeTicketsHistorico.txtDescripcionTicketHistorico.text = descripcion_
 
     }
 }

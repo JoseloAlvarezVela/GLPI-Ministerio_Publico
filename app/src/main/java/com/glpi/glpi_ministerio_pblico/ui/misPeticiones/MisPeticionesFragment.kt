@@ -9,6 +9,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.annotation.RequiresApi
+import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -44,7 +46,7 @@ class MisPeticionesFragment : Fragment() {
 
     companion object{
         var nombreLogin:String? = null
-        var CurrentTime:String? = null
+        var descriptioTickets:String? = null
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -78,7 +80,8 @@ class MisPeticionesFragment : Fragment() {
         //INICIO obtenemos perfil de usuario con volley
 
         val url_DataTickets = "http://181.176.145.174:8080/api/user_tickets" //online
-        val stringRequestDataTickets = object : StringRequest(Request.Method.POST,
+        val stringRequestDataTickets = @RequiresApi(Build.VERSION_CODES.N)
+        object : StringRequest(Request.Method.POST,
             url_DataTickets, Response.Listener { response ->
                 try {
                     val JS_DataTickets = JSONArray(response) //obtenemos el objeto json
@@ -92,10 +95,13 @@ class MisPeticionesFragment : Fragment() {
                         playerModel.setGlpiID(DataTickets.getString("ID"))
 
                         playerModel.setGlpiTipo(DataTickets.getString("TIPO"))
-                        playerModel.setGlpiDescripcion(DataTickets.getString("CONTENIDO"))
 
+                        //obtenemos el contenido de la descripción
+                        val decoded: String = Html.fromHtml(DataTickets.getString("CONTENIDO")).toString()
+                        val decoded2: Spanned = HtmlCompat.fromHtml(decoded,HtmlCompat.FROM_HTML_MODE_COMPACT)
 
-
+                        playerModel.setGlpiDescripcion(decoded2.toString())
+                        Log.i("mensaje html: ",""+decoded2)
 
                         playerModel.setGlpiEstado(DataTickets.getString("ESTADO"))
                         playerModel.setCurrentTime(DataTickets.getString("FECHA"))
@@ -104,8 +110,6 @@ class MisPeticionesFragment : Fragment() {
                         val nombreLogin_ = DataTickets.getString("NOMBRE")
                         val apellidoLogin_ = DataTickets.getString("APELLIDO")
                         nombreLogin = "$nombreLogin_ $apellidoLogin_"
-
-                        //obtenemos los datos del operador
 
 
                         //obtenemos los datos del solicitante
