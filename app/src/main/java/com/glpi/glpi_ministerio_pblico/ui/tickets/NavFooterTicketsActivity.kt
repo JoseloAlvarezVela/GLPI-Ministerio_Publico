@@ -3,13 +3,13 @@ package com.glpi.glpi_ministerio_pblico.ui.tickets
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Color
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.text.HtmlCompat
 import androidx.core.view.isVisible
 import com.glpi.glpi_ministerio_pblico.MainActivity
-import com.glpi.glpi_ministerio_pblico.MainActivity.Companion.userName
 import com.glpi.glpi_ministerio_pblico.R
 import com.glpi.glpi_ministerio_pblico.databinding.ActivityNavFooterTicketsBinding
 import com.glpi.glpi_ministerio_pblico.ui.adapter.Data_Tickets
@@ -196,18 +196,27 @@ class NavFooterTicketsActivity : AppCompatActivity() {
 
     //activity_tickets_historico.xml
     private fun ticketsHistoricoActivity_() {
-        binding.includeTicketsHistorico.txtPrueba.setOnClickListener {
-            Toast.makeText(this, "aca nomas funciona", Toast.LENGTH_SHORT).show()
-        }
-
-
         //asignamos los datos correspondientes
         datos_tickets_historico()
     }
 
     private fun datos_tickets_historico() {
-        val playerModel = Data_Tickets()
-        binding.includeTicketsHistorico.txtPrueba.setText(MisPeticionesFragment.nombreLogin)
-        binding.includeTicketsHistorico.txtCurrentTime.setText(MisPeticionesFragment.CurrentTime)
+
+        var currenTime_:String = ""
+        var descripcion_:String = ""
+
+        val extras = intent.extras
+
+        if (extras != null) {
+            currenTime_ = extras.getString("fechaApertura").toString()
+            descripcion_ = extras.getString("descripción").toString()
+
+        }
+
+        binding.includeTicketsHistorico.txtNameLogin.text = MisPeticionesFragment.nombreLogin
+        binding.includeTicketsHistorico.txtCurrentTime.text = currenTime_
+        binding.includeTicketsHistorico.txtDescripcionTicketHistorico.text = HtmlCompat.fromHtml(descripcion_, HtmlCompat.FROM_HTML_MODE_LEGACY)
+
+
     }
 }

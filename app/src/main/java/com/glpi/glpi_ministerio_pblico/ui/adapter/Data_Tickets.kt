@@ -59,6 +59,8 @@ class Data_Tickets {
         this.glpiNameLogin_ = GlpiNameLogin
     }
 
+
+
     fun getGlpiApellidoLogin(): String {
         return glpiApellidoLogin_.toString()
     }

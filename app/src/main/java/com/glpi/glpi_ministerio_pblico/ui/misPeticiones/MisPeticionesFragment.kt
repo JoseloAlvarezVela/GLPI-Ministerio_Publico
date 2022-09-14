@@ -1,6 +1,9 @@
 package com.glpi.glpi_ministerio_pblico.ui.misPeticiones
 
+import android.os.Build
 import android.os.Bundle
+import android.text.Html
+import android.text.Spanned
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -89,16 +92,23 @@ class MisPeticionesFragment : Fragment() {
                         playerModel.setGlpiID(DataTickets.getString("ID"))
 
                         playerModel.setGlpiTipo(DataTickets.getString("TIPO"))
-                        playerModel.setGlpiDescripcion(DataTickets.getString("DESCRIPCION"))
+                        playerModel.setGlpiDescripcion(DataTickets.getString("CONTENIDO"))
+
+
+
+
                         playerModel.setGlpiEstado(DataTickets.getString("ESTADO"))
                         playerModel.setCurrentTime(DataTickets.getString("FECHA"))
-                        CurrentTime = DataTickets.getString("FECHA")
-                        playerModel.setGlpiNameLogin(DataTickets.getString("NOMBRE"))
-                        playerModel.setGlpiApellidoLogin(DataTickets.getString("APELLIDO"))
+
+                        //obtenemos los datos del usuario logueado
                         val nombreLogin_ = DataTickets.getString("NOMBRE")
                         val apellidoLogin_ = DataTickets.getString("APELLIDO")
                         nombreLogin = "$nombreLogin_ $apellidoLogin_"
 
+                        //obtenemos los datos del operador
+
+
+                        //obtenemos los datos del solicitante
                         val JS_RequesterObjet = DataTickets.getJSONArray("REQUESTER")
                         val DataRequester = JS_RequesterObjet.getJSONObject(0)
                         val DataRequesterName = DataRequester.getString("NOMBRE")
