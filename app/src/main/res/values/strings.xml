@@ -59,4 +59,6 @@
     <string name="peticiones">Petición</string>
     <string name="conversacion">Conversación</string>
 
+    <string name="numeral">#</string>
+
 </resources>

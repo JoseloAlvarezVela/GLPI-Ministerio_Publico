@@ -1,32 +1,49 @@
 package com.glpi.glpi_ministerio_pblico.ui.adapter
 
+import android.annotation.SuppressLint
 import android.content.Context
-import android.content.Intent
 import android.graphics.Color
-import android.text.Html
-import android.text.Spanned
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.webkit.WebView
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.core.text.HtmlCompat
+import androidx.core.os.persistableBundleOf
 import androidx.recyclerview.widget.RecyclerView
 import com.glpi.glpi_ministerio_pblico.R
-import com.glpi.glpi_ministerio_pblico.ui.tickets.NavFooterTicketsActivity
 
 
 /*adaptador que obtendrá los datos del archivo de actividad principal
 y llenará la vista del reciclador*/
-class RecycleView_Adapter_Tickets(context:Context, private val dataModelArrayList:ArrayList<Data_Tickets>):
+class RecycleView_Adapter_Tickets(context:Context, private val dataModelArrayList:ArrayList<Data_Tickets>,private val itemClickListener_: ontickteClickListener):
     RecyclerView.Adapter<RecycleView_Adapter_Tickets.MyViewHolder>(){
 
     private val inflater: LayoutInflater
-    var description: String? = null
+
     init {
         inflater = LayoutInflater.from(context)
+    }
+
+    //interfaz que manejara los eventos click
+    interface ontickteClickListener{
+        fun onTicketClick(
+            TicketID: String,
+            NameOperador: Any,
+            CurrentTime: Any,
+            Contenido: Any,
+            Tipo: String,
+            Ubicacion: String,
+            Correo: String,
+            NameSolicitante: String,
+            CargoSolicitante: String,
+            TelefonoSolicitante: String,
+            LoginName: String,
+            TicketEstado: String
+            //TelefonoTecnico: String, PEDIR ESTOS DATOS
+            /*GrupoTecnico: String,
+            NameObservador: String*/
+        )
     }
 
     /*Dentro del método onCreateViewHolder, el compilador inflará el archivo
@@ -35,22 +52,26 @@ class RecycleView_Adapter_Tickets(context:Context, private val dataModelArrayLis
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int):
             RecycleView_Adapter_Tickets.MyViewHolder {
 
-        //val inflater_ = LayoutInflater.from(parent.getContext())
         val view = inflater.inflate(R.layout.recycleview_tickets, parent, false)
-        //val viewFooter = inflater.inflate(R.layout.activity_tickets_historico, parent, false)
-        //val view = LayoutInflater.from(parent.context).inflate(R.layout.recycleview_tickets,
-        //parent,false)
 
-
-        //return MyViewHolder(view,viewFooter)
         return MyViewHolder(view)
     }
 
     /*el método onBindViewHolder() asiganará los datos a los componentes*/
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: RecycleView_Adapter_Tickets.MyViewHolder, position: Int) {
-        holder.txt_numero_ticket.setText("#"+dataModelArrayList[position].getGlpiID())
+        //-----------
+        holder.txt_numero_ticket.text = "#"+dataModelArrayList[position].getGlpiID()
 
-        holder.txt_tipo.setText(dataModelArrayList[position].getGlpiTipo())
+        //-----------
+        if (dataModelArrayList[position].getGlpiEstado() == "EN CURSO (Asignada)"){
+            holder.txt_estado_ticket.setBackgroundResource(R.drawable.ic_circulo_verde)
+        }else{
+            holder.txt_estado_ticket.setBackgroundResource(R.drawable.ic_circulo)
+        }
+
+        //-----------
+        holder.txt_tipo.text = dataModelArrayList[position].getGlpiTipo()
         if (dataModelArrayList[position].getGlpiTipo() == "SOLICITUD"){
             holder.txt_tipo.setTextColor(Color.parseColor("#3FC3FF"))
             holder.txt_numero_ticket.setBackgroundColor((Color.parseColor("#3FC3FF")))
@@ -59,12 +80,19 @@ class RecycleView_Adapter_Tickets(context:Context, private val dataModelArrayLis
             holder.txt_numero_ticket.setBackgroundColor((Color.parseColor("#C5A83F")))
         }
 
+        //-----------
+        holder.txt_descripcionTicket.text = dataModelArrayList[position].getGlpiDescripcion()+"..."
+
+        //-----------
+        holder.txt_Requester_Name.text = "Solicitante: "+dataModelArrayList[position].getGlpiRequesterName()
+
+        //-----------
+        holder.txt_Requester_Cargo.text = "Cargo: "+dataModelArrayList[position].getGlpiRequesterCargo()
+
+        //-----------
         holder.txt_glpi_currenttime.text = dataModelArrayList[position].getCurrentTime()
 
-
-        //description = dataModelArrayList[position].getGlpiDescripcion()
-        holder.txt_descripcionTicket.text = dataModelArrayList[position].getGlpiDescripcion()
-        //holder.txt_descripcionTicket.text = HtmlCompat.fromHtml(dataModelArrayList[position].getGlpiDescripcion(), HtmlCompat.FROM_HTML_MODE_LEGACY)
+        //-----------
         if(dataModelArrayList[position].getGlpiEstado() == "EN CURSO (Asignada)"){
             holder.txt_EstadoColor.setBackgroundResource(R.drawable.esq_redondeada_amarillo)
         }
@@ -74,10 +102,6 @@ class RecycleView_Adapter_Tickets(context:Context, private val dataModelArrayLis
         else{
             holder.txt_EstadoColor.setBackgroundResource(R.drawable.esq_redondeada_gris)
         }
-
-        holder.txt_Requester_Name.setText("Solicitante: "+dataModelArrayList[position].getGlpiRequesterName())
-        holder.txt_Requester_Cargo.setText(dataModelArrayList[position].getGlpiRequesterCargo())
-
     }
 
 
@@ -90,37 +114,41 @@ class RecycleView_Adapter_Tickets(context:Context, private val dataModelArrayLis
     inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         var tickets : LinearLayout //para evento click
         var txt_numero_ticket : TextView
+        var txt_estado_ticket : TextView
         var txt_tipo : TextView
-        var txt_glpi_currenttime: TextView
+        var txt_descripcionTicket: TextView
         var txt_Requester_Name: TextView
         var txt_Requester_Cargo: TextView
-        //var txt_currentTime: TextView
-
-        var txt_descripcionTicket: TextView
+        var txt_glpi_currenttime: TextView
         var txt_EstadoColor: TextView
-
 
         init {
             tickets = itemView.findViewById(R.id.tickets) as LinearLayout
             txt_numero_ticket = itemView.findViewById(R.id.txt_numero_ticket) as TextView
+            txt_estado_ticket = itemView.findViewById(R.id.txt_estado_ticket) as TextView
             txt_tipo = itemView.findViewById(R.id.txt_tipo) as TextView
-            txt_glpi_currenttime = itemView.findViewById(R.id.txt_fecha_apertura) as TextView
+            txt_descripcionTicket = itemView.findViewById(R.id.txt_descripcionTicket) as TextView
             txt_Requester_Name = itemView.findViewById(R.id.txt_requester_name) as TextView
             txt_Requester_Cargo = itemView.findViewById(R.id.txt_requester_cargo) as TextView
-            txt_descripcionTicket = itemView.findViewById(R.id.txt_descripcionTicket) as TextView
+            txt_glpi_currenttime = itemView.findViewById(R.id.txt_fecha_apertura) as TextView
             txt_EstadoColor = itemView.findViewById(R.id.txt_estadoColor) as TextView
 
-            //enviamos los datos a la activity
-            tickets.setOnClickListener {
-                val intent = Intent(itemView.context, NavFooterTicketsActivity::class.java)
-                intent.putExtra("fechaApertura", txt_glpi_currenttime.text)
-                intent.putExtra("descripcion", txt_descripcionTicket.text)
-                //intent.putExtra("descripcion", description.toString())
-
-                itemView.context.startActivity(intent)
+            itemView.setOnClickListener {
+                itemClickListener_.onTicketClick(
+                    dataModelArrayList[position].getGlpiID(),
+                    dataModelArrayList[position].getGlpiOperadorName(),
+                    dataModelArrayList[position].getCurrentTime(),
+                    dataModelArrayList[position].getGlpiContenido(),
+                    dataModelArrayList[position].getGlpiTipo(),
+                    dataModelArrayList[position].getGlpiUbicacionSolicitante(),
+                    dataModelArrayList[position].getGlpiCorreoSolicitante(),
+                    dataModelArrayList[position].getGlpiRequesterName(),
+                    dataModelArrayList[position].getGlpiRequesterCargo(),
+                    dataModelArrayList[position].getGlpiTelefonoSolicitante(),
+                    dataModelArrayList[position].getGlpiLoginName(),
+                    dataModelArrayList[position].getGlpiEstado()
+                )
             }
         }
     }
-
-
 }

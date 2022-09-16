@@ -13,6 +13,7 @@ class Modal_Perfiles_Activity : AppCompatActivity() {
 
         findViewById<LinearLayout>(R.id.LinearLayout_hardwareGestor)
 
+        Toast.makeText(this, "aca se puede escribir codigo", Toast.LENGTH_SHORT).show()
 
     }
 }

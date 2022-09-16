@@ -1,7 +1,10 @@
 package com.glpi.glpi_ministerio_pblico
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
+import android.text.Html
+import android.text.Spanned
 import android.util.Log
 import android.view.KeyEvent
 import android.view.View
@@ -9,8 +12,10 @@ import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.text.HtmlCompat
 import androidx.core.view.isVisible
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
@@ -18,18 +23,37 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.glpi.glpi_ministerio_pblico.databinding.ActivityMainBinding
+import com.glpi.glpi_ministerio_pblico.ui.adapter.Data_Perfiles
+import com.glpi.glpi_ministerio_pblico.ui.adapter.Data_Tickets
+import com.glpi.glpi_ministerio_pblico.ui.adapter.RecycleView_Adapter_Perfiles
+import com.glpi.glpi_ministerio_pblico.ui.adapter.RecycleView_Adapter_Tickets
+import com.glpi.glpi_ministerio_pblico.ui.shared.token
 import com.glpi.glpi_ministerio_pblico.ui.shared.token.Companion.prefer
 import com.google.android.material.navigation.NavigationView
+import org.json.JSONArray
 import org.json.JSONObject
+import java.security.AccessController.getContext
 
 
 class MainActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
+
+    /*creamos la lista de arreglos que tendrá los objetos de la clase Data_Perfiles
+    esta lista de arreglos (dataModelArrayListPerfiles) funcionará como fuente de datos*/
+    internal lateinit var dataModelArrayListPerfil: ArrayList<Data_Perfiles>
+    //creamos el objeto de la clase RecycleView_Adapter_Tickets
+    private var RecycleView_Adapter_Perfiles: RecycleView_Adapter_Perfiles? = null
+    //creamos el objeto de la clase recyclerView
+    private var recyclerViewPerfiles: RecyclerView? = null
+    
+
 
     companion object{
         var userName:String? = null
@@ -40,6 +64,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         setSupportActionBar(binding.appBarMain.toolbar)
+
+
 
         /*binding.appBarMain.fab.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
@@ -150,6 +176,56 @@ class MainActivity : AppCompatActivity() {
             //creando dialog
             val dialog = biulder.create()
             dialog.show()
+            
+            vistaOp.findViewById<TextView>(R.id.txt_perfiles_modal).setOnClickListener {
+                Toast.makeText(this, "hola", Toast.LENGTH_SHORT).show()
+            }
+
+            val url_DataTickets = "http://181.176.145.174:8080/api/user_profiles" //online
+            val stringRequestDataTickets = @RequiresApi(Build.VERSION_CODES.N)
+            object : StringRequest(Request.Method.POST,
+                url_DataTickets, Response.Listener { response ->
+                    try {
+                        val JS_DataTickets = JSONArray(response) //obtenemos el objeto json
+                        dataModelArrayListPerfil = ArrayList()
+
+                        for (i in 0 until JS_DataTickets.length()){
+
+                            val DataPerfiles = JS_DataTickets.getJSONObject(i)
+
+                            val playerModel = Data_Perfiles()
+
+
+                            playerModel.setGlpiPerfilLogin(DataPerfiles.getString("PERFIL"))
+
+                            dataModelArrayListPerfil.add(playerModel)
+
+                            Log.i("mensaje recycler ok: ","main activity: "+ playerModel.toString())
+                        }
+                        val recyclerPerfiles = vistaOp.findViewById<RecyclerView>(R.id.recycler_perfiles)
+                        recyclerPerfiles.layoutManager = LinearLayoutManager(this)
+                        RecycleView_Adapter_Perfiles = RecycleView_Adapter_Perfiles(this,dataModelArrayListPerfil)
+                        recyclerPerfiles.adapter = RecycleView_Adapter_Perfiles
+
+                    }catch (e:Exception){
+                        e.printStackTrace()
+                        Toast.makeText(this, "token expirado: $e", Toast.LENGTH_LONG).show()
+                        Log.i("mensaje recycler e: ","recycler ERROR: "+e)
+                    }
+                }, Response.ErrorListener {
+                    Toast.makeText(this, "ERROR CON EL SERVIDOR", Toast.LENGTH_SHORT).show()
+                }){
+                override fun getParams(): Map<String, String>? {
+                    val params: MutableMap<String, String> = HashMap()
+                    params.put("session_token", token.prefer.getToken())
+                    return params
+                }
+            }
+            this?.let { VolleySingleton.getInstance(it).addToRequestQueue(stringRequestDataTickets) }
+            //FIN obtenemos perfil de usuario
+
+
+
 
             //obtenemos los id's de modal_df
             val LinearLayout_hardwareGestor: LinearLayout = vistaOp.findViewById(R.id.LinearLayout_hardwareGestor)
@@ -273,6 +349,11 @@ class MainActivity : AppCompatActivity() {
             binding.appBarMain.llyBackgroudAbm.isVisible = false
         }
         //FIN - boton filtro de la derecha - activity_filtro_right.xml
+    }
+
+
+    private fun modal_perfiles() {
+
     }
 
     //metodo que nos devuelve el id del usuario logeado

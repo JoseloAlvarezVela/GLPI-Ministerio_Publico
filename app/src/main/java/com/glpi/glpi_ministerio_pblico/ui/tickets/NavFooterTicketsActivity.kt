@@ -4,16 +4,13 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
-import android.widget.Toast
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.core.text.HtmlCompat
 import androidx.core.view.isVisible
 import com.glpi.glpi_ministerio_pblico.MainActivity
 import com.glpi.glpi_ministerio_pblico.R
 import com.glpi.glpi_ministerio_pblico.databinding.ActivityNavFooterTicketsBinding
-import com.glpi.glpi_ministerio_pblico.ui.adapter.Data_Tickets
-import com.glpi.glpi_ministerio_pblico.ui.misPeticiones.MisPeticionesFragment
 
 class NavFooterTicketsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityNavFooterTicketsBinding
@@ -24,7 +21,7 @@ class NavFooterTicketsActivity : AppCompatActivity() {
         binding = ActivityNavFooterTicketsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        //ticketsHistoricoActivity_()
+        DataToTicketsHistoricoActivity()
 
         //INICIO toogle buton tickets
         var clickTickets: Boolean = false
@@ -192,7 +189,50 @@ class NavFooterTicketsActivity : AppCompatActivity() {
             startActivity(intent_agregar_documento)
         }
         //fin eventos click de fab_opciones
-        ticketsHistoricoActivity_()
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun DataToTicketsHistoricoActivity() {
+        val bundle = intent.extras
+
+        val TicketID_ = bundle!!.getString("TicketID")
+        val NameOperador_ = bundle!!.getString("NameOperador")
+        val CurrentTime_ = bundle!!.getString("CurrentTime")
+        val Contenido_ = bundle!!.getString("Contenido")
+        val Tipo = bundle!!.getString("Tipo")
+        val Ubicacion_ = bundle!!.getString("Ubicacion")
+        val Correo_ = bundle!!.getString("Correo")
+        val NameSolicitante_ = bundle!!.getString("NameSolicitante")
+        val CargoSolicitante_ = bundle!!.getString("CargoSolicitante")
+        val TelefonoSolicitante_ = bundle!!.getString("TelefonoSolicitante")
+        val LoginName_ = bundle!!.getString("LoginName")
+        val TicketEstado_ = bundle!!.getString("TicketEstado")
+
+        binding.includeNavHeaderTickets.txtTicketID.text = "Petición #$TicketID_"
+        binding.includeNavHeaderTickets.txtUbicacion.text = Ubicacion_
+        if (TicketEstado_ == "EN CURSO (Asignada)"){
+            binding.includeNavHeaderTickets.txtTicketEstado.setBackgroundResource(R.drawable.ic_circulo_verde)
+        }else{
+            binding.includeNavHeaderTickets.txtTicketEstado.setBackgroundResource(R.drawable.ic_circulo)
+        }
+
+
+
+        binding.includeTicketsHistorico.txtNameOperador.text = NameOperador_
+        binding.includeTicketsHistorico.txtCurrentTime.text = CurrentTime_
+        binding.includeTicketsHistorico.txtDescripcionTicketHistorico.text = Contenido_
+
+        binding.includeTickets.labelFechaOperadorApertura.text = "$CurrentTime_ - $NameOperador_"
+        binding.includeTickets.labelSolicitudIncidencia.text = Tipo
+        binding.includeTickets.labelUbicacion.text = Ubicacion_
+        binding.includeTickets.labelEmail.text = Correo_
+        binding.includeTickets.labelSolicitanteNombre.text = NameSolicitante_
+        binding.includeTickets.labelSolicitanteCargo.text = CargoSolicitante_
+        binding.includeTickets.labelSolicitanteCelular.text = TelefonoSolicitante_
+        binding.includeTickets.labelAsignadoNombre.text = LoginName_
+        binding.includeTickets.labelDescrTicket.text = Contenido_
+
+
     }
 
     //activity_tickets_historico.xml
@@ -211,10 +251,12 @@ class NavFooterTicketsActivity : AppCompatActivity() {
         if (extras != null) {
             currenTime_ = extras.getString("fechaApertura").toString()
             descripcion_ = extras.getString("descripcion").toString()
-
+            //----
+            //----
         }
 
-        binding.includeTicketsHistorico.txtNameLogin.text = MisPeticionesFragment.nombreLogin
+        //binding.includeTicketsHistorico
+        //binding.includeTicketsHistorico.txtNameOperador.text = MisPeticionesFragment.nombreLogin
         binding.includeTicketsHistorico.txtCurrentTime.text = currenTime_
         binding.includeTicketsHistorico.txtDescripcionTicketHistorico.text = descripcion_
 

@@ -6,13 +6,16 @@ class Data_Tickets {
     var glpiID_: String? = null
     var glpiTipo_ : String? = null
     var GlpiDescripcion_: String? = null
+    var GlpiContenido_: String? = null
     var glpiEstado_ : String? = null
     var glpi_currenttime_: String? = null
-    var GlpiSolReq_: String? = null
-    var glpiNameLogin_: String? = null
-    var glpiApellidoLogin_: String? = null
+    var GlpiUbicacionSolicitante_: String? = null
+    var GlpiCorreSolicitante_: String? = null
+    var glpiOperadorName_: String? = null
+    var GlpiLoginName_: String? = null
     var glpiRequester_Name_: String? = null
     var glpiRequester_Cargo_: String? = null
+    var GlpiTelefonoSolicitante_: String? = null
 
 
     /*Estos métodos getter y setter nos ayudarán a mantener los datos mientras
@@ -38,6 +41,13 @@ class Data_Tickets {
         this.GlpiDescripcion_ = GlpiDescripcion
     }
 
+    fun getGlpiContenido(): String{
+        return GlpiContenido_.toString()
+    }
+    fun setGlpiContenido(GlpiContenido: String){
+        this.GlpiContenido_ = GlpiContenido
+    }
+
     fun getGlpiEstado(): String{
         return glpiEstado_.toString()
     }
@@ -52,21 +62,16 @@ class Data_Tickets {
         this.glpi_currenttime_ = CurrentTime
     }
 
-    fun getGlpiNameLogin(): String {
-        return glpiNameLogin_.toString()
+    fun getGlpiOperadorName(): String {
+        return glpiOperadorName_.toString()
     }
-    fun setGlpiNameLogin(GlpiNameLogin: String) {
-        this.glpiNameLogin_ = GlpiNameLogin
+    fun setGlpiOperadorName(OperadorName: String) {
+        this.glpiOperadorName_ = OperadorName
     }
 
 
 
-    fun getGlpiApellidoLogin(): String {
-        return glpiApellidoLogin_.toString()
-    }
-    fun setGlpiApellidoLogin(GlpiApellidoLogin: String) {
-        this.glpiApellidoLogin_ = GlpiApellidoLogin
-    }
+
 
     fun getGlpiRequesterName(): String{
         return glpiRequester_Name_.toString()
@@ -80,5 +85,34 @@ class Data_Tickets {
     }
     fun setGlpiRequestreCargo(glpiRequester_Cargo: String){
         this.glpiRequester_Cargo_ = glpiRequester_Cargo
+    }
+
+    //datos para activity_tickets.xml
+    fun getGlpiUbicacionSolicitante(): String {
+        return GlpiUbicacionSolicitante_.toString()
+    }
+    fun setGlpiUbicacionSolicitante(GlpiUbicacionSolicitante: String) {
+        this.GlpiUbicacionSolicitante_ = GlpiUbicacionSolicitante
+    }
+
+    fun getGlpiCorreoSolicitante(): String {
+        return GlpiCorreSolicitante_.toString()
+    }
+    fun setGlpiCorreoSolicitante(GlpiCorreoSolicitante: String) {
+        this.GlpiCorreSolicitante_ = GlpiCorreoSolicitante
+    }
+
+    fun getGlpiTelefonoSolicitante(): String {
+        return GlpiTelefonoSolicitante_.toString()
+    }
+    fun setGlpiTelefonoSolicitante(GlpiTelefonoSolicitante: String) {
+        this.GlpiTelefonoSolicitante_ = GlpiTelefonoSolicitante
+    }
+
+    fun getGlpiLoginName(): String{
+        return GlpiLoginName_.toString()
+    }
+    fun setGlpiLoginName(GlpiApellidoLogin: String){
+        this.GlpiLoginName_ = GlpiApellidoLogin
     }
 }

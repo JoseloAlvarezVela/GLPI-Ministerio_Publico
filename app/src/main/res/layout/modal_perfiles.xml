@@ -37,7 +37,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#F3F1F1"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="gone">
 
             <Button
                 android:id="@+id/btn_hardwareModalPerfil"
@@ -57,7 +58,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#C5A83F"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="gone">
 
             <Button
                 android:id="@+id/btn_operadorModalPerfiles"
@@ -77,7 +79,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#F3F1F1"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="gone">
 
             <Button
                 android:id="@+id/btn_escaladosModalPerfiles"
@@ -91,6 +94,12 @@
                 android:textColor="#6C6464"
                 android:textSize="12sp" />
         </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_perfiles"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
     </LinearLayout>
 
     <LinearLayout

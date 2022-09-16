@@ -75,13 +75,13 @@
                     android:textSize="12sp"
                     android:textStyle="bold" />
 
-                <ImageView
-                    android:id="@+id/imageView2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    app:srcCompat="@drawable/ic_circulo"
-                    app:tint="#49bf4d"/>
+                <TextView
+                    android:id="@+id/txt_estado_ticket"
+                    android:layout_width="20sp"
+                    android:layout_height="20sp"
+                    android:layout_gravity="center"
+                    android:layout_marginEnd="10sp"
+                    android:layout_marginRight="10sp" />
 
                 <RadioButton
                     android:id="@+id/radioButton"

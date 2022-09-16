@@ -4,8 +4,7 @@ averia_sans_libre_light.ttf	-> text normal: tamaño de letra 12sp
 
 formato de id's:
 	componente(abreviado)+accionDelComponete+nombreLayout
-	lly_background_mdfaptfr
-	inc_mdfaptfr
+	lbl_incident_request_ac-t
 
 *componentes*
 LinearLayout		->	lly
@@ -29,6 +28,7 @@ agrega_seguimiento	->	addseg
 agregar_tarea		->	addt
 agregar_categoria	->	addcat
 agrega_solución		->	addsol
+solicitud/incidente ->
 
 ****************************************************
 datos a consultar para tickets(apartado conversación):

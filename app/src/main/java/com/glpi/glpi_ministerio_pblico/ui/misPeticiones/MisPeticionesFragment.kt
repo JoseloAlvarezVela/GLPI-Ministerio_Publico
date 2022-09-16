@@ -1,5 +1,6 @@
 package com.glpi.glpi_ministerio_pblico.ui.misPeticiones
 
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.text.Html
@@ -17,16 +18,15 @@ import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
-import com.glpi.glpi_ministerio_pblico.R
 import com.glpi.glpi_ministerio_pblico.VolleySingleton
 import com.glpi.glpi_ministerio_pblico.databinding.FragmentMisPeticionesBinding
 import com.glpi.glpi_ministerio_pblico.ui.adapter.Data_Tickets
 import com.glpi.glpi_ministerio_pblico.ui.adapter.RecycleView_Adapter_Tickets
 import com.glpi.glpi_ministerio_pblico.ui.shared.token
+import com.glpi.glpi_ministerio_pblico.ui.tickets.NavFooterTicketsActivity
 import org.json.JSONArray
-import org.json.JSONObject
 
-class MisPeticionesFragment : Fragment() {
+class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.ontickteClickListener {
 
     /*creamos la lista de arreglos que tendrá los objetos de la clase Data_Tickets
    esta lista de arreglos (dataModelArrayList) funcionará como fuente de datos*/
@@ -46,7 +46,7 @@ class MisPeticionesFragment : Fragment() {
 
     companion object{
         var nombreLogin:String? = null
-        var descriptioTickets:String? = null
+        var nombreEmail:String? = null
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -72,7 +72,7 @@ class MisPeticionesFragment : Fragment() {
                 LinearLayoutManager.VERTICAL, false)
 
             recycleView_Adapter_Tickets =
-                getContext()?.let { RecycleView_Adapter_Tickets(it,dataModelArrayList) }
+                getContext()?.let { RecycleView_Adapter_Tickets(it,dataModelArrayList,this) }
             recyclerView!!.adapter = recycleView_Adapter_Tickets
         }
 
@@ -92,16 +92,18 @@ class MisPeticionesFragment : Fragment() {
                         val DataTickets = JS_DataTickets.getJSONObject(i)
 
                         val playerModel = Data_Tickets()
-                        playerModel.setGlpiID(DataTickets.getString("ID"))
 
+                        playerModel.setGlpiID(DataTickets.getString("ID"))
                         playerModel.setGlpiTipo(DataTickets.getString("TIPO"))
+
+                        playerModel.setGlpiDescripcion(DataTickets.getString("DESCRIPCION"))
 
                         //obtenemos el contenido de la descripción
                         val decoded: String = Html.fromHtml(DataTickets.getString("CONTENIDO")).toString()
                         val decoded2: Spanned = HtmlCompat.fromHtml(decoded,HtmlCompat.FROM_HTML_MODE_COMPACT)
+                        playerModel.setGlpiContenido(decoded2.toString())
+                        //Log.i("mensaje html: ",""+decoded2)
 
-                        playerModel.setGlpiDescripcion(decoded2.toString())
-                        Log.i("mensaje html: ",""+decoded2)
 
                         playerModel.setGlpiEstado(DataTickets.getString("ESTADO"))
                         playerModel.setCurrentTime(DataTickets.getString("FECHA"))
@@ -109,7 +111,14 @@ class MisPeticionesFragment : Fragment() {
                         //obtenemos los datos del usuario logueado
                         val nombreLogin_ = DataTickets.getString("NOMBRE")
                         val apellidoLogin_ = DataTickets.getString("APELLIDO")
-                        nombreLogin = "$nombreLogin_ $apellidoLogin_"
+                        playerModel.setGlpiLoginName("$nombreLogin_ $apellidoLogin_")
+
+                        //obtenemos los datos del operador
+                        val JS_ResipientObject = DataTickets.getJSONArray("RECIPIENT")
+                        val Data_Resipient = JS_ResipientObject.getJSONObject(0)
+                        val Data_RecipientName = Data_Resipient.getString("NOMBRE")
+                        val Data_RecipientApellido = Data_Resipient.getString("APELLIDO")
+                        playerModel.setGlpiOperadorName("$Data_RecipientName $Data_RecipientApellido")
 
 
                         //obtenemos los datos del solicitante
@@ -118,8 +127,14 @@ class MisPeticionesFragment : Fragment() {
                         val DataRequesterName = DataRequester.getString("NOMBRE")
                         val DataRequesterApellido = DataRequester.getString("APELLIDO")
                         val DataRequesterCargo = DataRequester.getString("CARGO")
+                        val DataRequesterUbicacion = DataRequester.getString("UBICACION")
+                        val DataRequesterCorreo = DataRequester.getString("CORREO")
+                        val DataRequesterTelefono = DataRequester.getString("TELEFONO")
                         playerModel.setGlpiRequestreName("$DataRequesterName $DataRequesterApellido")
                         playerModel.setGlpiRequestreCargo(DataRequesterCargo)
+                        playerModel.setGlpiUbicacionSolicitante(DataRequesterUbicacion)
+                        playerModel.setGlpiCorreoSolicitante(DataRequesterCorreo)
+                        playerModel.setGlpiTelefonoSolicitante(DataRequesterTelefono)
 
                         dataModelArrayList.add(playerModel)
 
@@ -159,5 +174,42 @@ class MisPeticionesFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onTicketClick(
+        TicketID: String,
+        OperadorName: Any,
+        CurrentTime: Any,
+        Contenido: Any,
+        Tipo: String,
+        Ubicacion: String,
+        Correo: String,
+        NameSolicitante: String,
+        CargoSolicitante: String,
+        TelefonoSolicitante: String,
+        LoginName: String,
+        TicketEstado: String
+    ) {
+        val intent = Intent(context, NavFooterTicketsActivity::class.java)
+
+        val bundle = Bundle()
+
+        bundle.putString("TicketID",TicketID)
+        bundle.putString("NameOperador",OperadorName.toString())
+        bundle.putString("CurrentTime",CurrentTime.toString())
+        bundle.putString("Contenido",Contenido.toString())
+        bundle.putString("Tipo",Tipo)
+        bundle.putString("Ubicacion",Ubicacion)
+        bundle.putString("Correo",Correo)
+        bundle.putString("NameSolicitante",NameSolicitante)
+        bundle.putString("CargoSolicitante",CargoSolicitante)
+        bundle.putString("TelefonoSolicitante",TelefonoSolicitante)
+        bundle.putString("LoginName",LoginName)
+        bundle.putString("TicketEstado",TicketEstado)
+
+        intent.putExtras(bundle)
+
+        startActivity(intent)
+
     }
 }
