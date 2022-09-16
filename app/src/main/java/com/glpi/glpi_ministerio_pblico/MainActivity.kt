@@ -29,15 +29,13 @@ import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.glpi.glpi_ministerio_pblico.databinding.ActivityMainBinding
-import com.glpi.glpi_ministerio_pblico.ui.adapter.Data_Perfiles
-import com.glpi.glpi_ministerio_pblico.ui.adapter.Data_Tickets
-import com.glpi.glpi_ministerio_pblico.ui.adapter.RecycleView_Adapter_Perfiles
-import com.glpi.glpi_ministerio_pblico.ui.adapter.RecycleView_Adapter_Tickets
+import com.glpi.glpi_ministerio_pblico.ui.adapter.*
 import com.glpi.glpi_ministerio_pblico.ui.shared.token
 import com.glpi.glpi_ministerio_pblico.ui.shared.token.Companion.prefer
 import com.google.android.material.navigation.NavigationView
 import org.json.JSONArray
 import org.json.JSONObject
+import java.io.File.separator
 import java.security.AccessController.getContext
 
 
@@ -48,11 +46,14 @@ class MainActivity : AppCompatActivity() {
     /*creamos la lista de arreglos que tendrá los objetos de la clase Data_Perfiles
     esta lista de arreglos (dataModelArrayListPerfiles) funcionará como fuente de datos*/
     internal lateinit var dataModelArrayListPerfil: ArrayList<Data_Perfiles>
+    internal lateinit var dataModelArrayListEntities: ArrayList<Data_Entities>
     //creamos el objeto de la clase RecycleView_Adapter_Tickets
     private var RecycleView_Adapter_Perfiles: RecycleView_Adapter_Perfiles? = null
+    private var RecycleView_Adapter_Entities: RecycleView_Adapter_Entities? = null
     //creamos el objeto de la clase recyclerView
     private var recyclerViewPerfiles: RecyclerView? = null
-    
+    private var recyclerViewEntities: RecyclerView? = null
+
 
 
     companion object{
@@ -99,6 +100,52 @@ class MainActivity : AppCompatActivity() {
             val dialog = biulder.create()
             dialog.show()
 
+
+
+            /*INICIO volley RECYCLERVIEW------------------------------------------------------------
+            val url_DataTickets = "http://181.176.145.174:8080/api/user_entities" //online
+            val stringRequestDataTickets = @RequiresApi(Build.VERSION_CODES.N)
+            object : StringRequest(Request.Method.POST,
+                url_DataTickets, Response.Listener { response ->
+                    try {
+                        val JS_DataEntities = JSONObject(response) //obtenemos el objeto json
+                        dataModelArrayListEntities = ArrayList()
+
+                        for (i in 0 until JS_DataEntities.length()){
+
+                            val DataEntities = JS_DataEntities.getJSONArray("myentities")
+
+                            val playerModel = Data_Entities()
+
+
+                            playerModel.setGlpiMyEntities(DataEntities.getString(0))
+
+                            dataModelArrayListEntities.add(playerModel)
+
+                            Log.i("mensaje recycler ok: ","main activity: "+ playerModel.toString())
+                        }
+                        val recyclerEntities = vista.findViewById<RecyclerView>(R.id.recycler_entities)
+                        recyclerEntities.layoutManager = LinearLayoutManager(this)
+                        RecycleView_Adapter_Entities = RecycleView_Adapter_Entities(this,dataModelArrayListEntities)
+                        recyclerEntities.adapter = RecycleView_Adapter_Entities
+
+                    }catch (e:Exception){
+                        e.printStackTrace()
+                        Toast.makeText(this, "token expirado: $e", Toast.LENGTH_LONG).show()
+                        Log.i("mensaje recycler e: ","recycler ERROR: "+e)
+                    }
+                }, Response.ErrorListener {
+                    Toast.makeText(this, "ERROR CON EL SERVIDOR", Toast.LENGTH_SHORT).show()
+                }){
+                override fun getParams(): Map<String, String>? {
+                    val params: MutableMap<String, String> = HashMap()
+                    params.put("session_token", token.prefer.getToken())
+                    return params
+                }
+            }
+            this?.let { VolleySingleton.getInstance(it).addToRequestQueue(stringRequestDataTickets) }
+            //FIN volley RECYCLERVIEW--------------------------------------------------------------*/
+
             //obtenemos los id's de modal_df
             val LinearLayout_mpfn: LinearLayout = vista.findViewById(R.id.LinearLayout_mpfn)
                 val btn_mpfn_atras: Button = vista.findViewById(R.id.btn_mpfn_atras)
@@ -120,6 +167,61 @@ class MainActivity : AppCompatActivity() {
                 val txt_DF: TextView = vista.findViewById(R.id.txt_DF)
             val LinearLayout_madreDeDios: LinearLayout = vista.findViewById(R.id.LinearLayout_madreDeDios)
 
+
+            //INICIO volley ------------------------------------------------------------
+            val url_DataEntities = "http://181.176.145.174:8080/api/user_entities" //online
+            //var EntitiesArray
+            val stringRequestDataTickets = @RequiresApi(Build.VERSION_CODES.N)
+            object : StringRequest(Request.Method.POST,
+                url_DataEntities, Response.Listener { response ->
+                    try {
+                        val JS_DataEntities = JSONObject(response) //obtenemos el objeto json
+                        val DataEntities = JS_DataEntities.getJSONArray("myentities")
+                        val EntitiesArray = DataEntities.getJSONObject(0)
+                        val Entities = EntitiesArray.getString("name")
+
+
+                        val delim1 = "&#62"+";"
+                        val arr = Entities.split(delim1).toTypedArray()
+                        val arr0 = arr[0]
+                        val arrSize = arr.size
+
+                        //txt_mpfn.text = arr.contentToString()
+                        txt_mpfn.text = arr0
+                        val newBtn = Button(this)
+                        newBtn.text = arr[1]
+                        btn_mpfn_modal.setOnClickListener {
+                            contenedor_mpfn.isVisible = false
+                            LinearLayout_mpfn.isVisible = true
+                            LinearLayout_cobertura.isVisible = true
+                            
+                            vista.findViewById<LinearLayout>(R.id.linearLayout_entidades).addView(newBtn)
+                        }
+                        newBtn.setOnClickListener {
+                            Toast.makeText(this, "boton presionado", Toast.LENGTH_SHORT).show()
+                        }
+
+
+
+
+                        Log.i("mensaje entities ok: ",""+ arr.contentToString())
+
+                    }catch (e:Exception){
+                        e.printStackTrace()
+                        Toast.makeText(this, "token expirado: $e", Toast.LENGTH_LONG).show()
+                        Log.i("mensaje recycler e: ","recycler ERROR: "+e)
+                    }
+                }, Response.ErrorListener {
+                    Toast.makeText(this, "ERROR CON EL SERVIDOR", Toast.LENGTH_SHORT).show()
+                }){
+                override fun getParams(): Map<String, String>? {
+                    val params: MutableMap<String, String> = HashMap()
+                    params.put("session_token", token.prefer.getToken())
+                    return params
+                }
+            }
+            this?.let { VolleySingleton.getInstance(it).addToRequestQueue(stringRequestDataTickets) }
+            //FIN volley ---------------------------------------------------------------
             //realizamos los clicksListeners necesarios
             btn_mpfn_modal.setOnClickListener{
                 contenedor_mpfn.isVisible = false
@@ -177,10 +279,8 @@ class MainActivity : AppCompatActivity() {
             val dialog = biulder.create()
             dialog.show()
             
-            vistaOp.findViewById<TextView>(R.id.txt_perfiles_modal).setOnClickListener {
-                Toast.makeText(this, "hola", Toast.LENGTH_SHORT).show()
-            }
 
+            //inicio volley
             val url_DataTickets = "http://181.176.145.174:8080/api/user_profiles" //online
             val stringRequestDataTickets = @RequiresApi(Build.VERSION_CODES.N)
             object : StringRequest(Request.Method.POST,
@@ -222,7 +322,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
             this?.let { VolleySingleton.getInstance(it).addToRequestQueue(stringRequestDataTickets) }
-            //FIN obtenemos perfil de usuario
+            //FIN volley
 
 
 

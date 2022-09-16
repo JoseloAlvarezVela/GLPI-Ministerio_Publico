@@ -315,7 +315,14 @@
         </LinearLayout>
 
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_entities"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
     </LinearLayout>
+
+
 
     <LinearLayout
         android:id="@+id/linearLayout2"
