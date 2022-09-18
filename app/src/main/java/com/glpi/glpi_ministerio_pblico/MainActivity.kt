@@ -14,7 +14,6 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.view.isVisible
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
@@ -22,7 +21,6 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.Request
 import com.android.volley.Response
@@ -39,7 +37,7 @@ import org.json.JSONArray
 import org.json.JSONObject
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(),RecycleView_Adapter_Perfiles.ItemClickListener {
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
 
@@ -280,9 +278,9 @@ class MainActivity : AppCompatActivity() {
             //creando dialog
             val dialog = biulder.create()
             dialog.show()
-            
 
-            //inicio volley
+
+            /*inicio volley
             val url_DataTickets = "http://181.176.145.174:8080/api/user_profiles" //online
             val stringRequestDataTickets = @RequiresApi(Build.VERSION_CODES.N)
             object : StringRequest(Request.Method.POST,
@@ -300,14 +298,20 @@ class MainActivity : AppCompatActivity() {
 
                             playerModel.setGlpiPerfilLogin(DataPerfiles.getString("PERFIL"))
 
+                            /*val newButtonPerfil = Button(this)
+                            newButtonPerfil.text = "PERFIL"
+                            createButton(newButtonPerfil,vistaOp)*/
+
                             dataModelArrayListPerfil.add(playerModel)
 
                             Log.i("mensaje recycler ok: ","main activity: "+ playerModel.toString())
                         }
                         val recyclerPerfiles = vistaOp.findViewById<RecyclerView>(R.id.recycler_perfiles)
-                        recyclerPerfiles.layoutManager = LinearLayoutManager(this)
-                        RecycleView_Adapter_Perfiles = RecycleView_Adapter_Perfiles(this,dataModelArrayListPerfil)
+                        recyclerPerfiles.layoutManager = LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false)
+                        RecycleView_Adapter_Perfiles = RecycleView_Adapter_Perfiles(this,dataModelArrayListPerfil,this)
                         recyclerPerfiles.adapter = RecycleView_Adapter_Perfiles
+
+
 
                     }catch (e:Exception){
                         e.printStackTrace()
@@ -324,9 +328,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
             this?.let { VolleySingleton.getInstance(it).addToRequestQueue(stringRequestDataTickets) }
-            //FIN volley
-
-
+            //FIN volley*/
 
 
             //obtenemos los id's de modal_df
@@ -338,9 +340,94 @@ class MainActivity : AppCompatActivity() {
                 val btn_escaladosModalPerfiles: Button = vistaOp.findViewById(R.id.btn_escaladosModalPerfiles)
             val btn_cerrarModalPerfiles: Button = vistaOp.findViewById(R.id.btn_cerrarModalPerfiles)
 
+            val perfilSelected = binding.navView.getHeaderView(0).findViewById<TextView>(R.id.txt_perfil_user).text.toString()
+            Log.i("perfil seleccionado:",""+perfilSelected)
+
+            //var array = ArrayList<String>()
+            //inicio volley
+            val url_DataTickets = "http://181.176.145.174:8080/api/user_profiles" //online
+            val stringRequestDataTickets = @RequiresApi(Build.VERSION_CODES.N)
+            object : StringRequest(Request.Method.POST,
+                url_DataTickets, Response.Listener { response ->
+                    try {
+                        val JS_DataTickets = JSONArray(response) //obtenemos el objeto json
+                        dataModelArrayListPerfil = ArrayList()
+                        for (i in 0 until JS_DataTickets.length()){
+                            val DataPerfiles = JS_DataTickets.getJSONObject(i)
+                            //array.add(DataPerfiles.getString("PERFIL"))
+                            val newLinearLayout = LinearLayout(this)
+                            val newButtonPerfil = Button(this)
+
+                            newButtonPerfil.text = DataPerfiles.getString("PERFIL")
+
+
+                            //INICIO DISEÑO DE lINEALAYOUT
+                            Log.i("nombre Boton",""+newButtonPerfil.text.toString())
+                            if (newButtonPerfil.text.toString() == perfilSelected){
+                                newLinearLayout.setBackgroundResource(R.color.modalPerfiles)
+                            }
+
+                            val layoutParams = ConstraintLayout.LayoutParams(
+                                ConstraintLayout.LayoutParams.MATCH_PARENT,
+                                ConstraintLayout.LayoutParams.WRAP_CONTENT
+                            )
+                            newLinearLayout.layoutParams = layoutParams
+                            //FIN DISEÑO DE lINEALAYOUT
+
+                            //INICIO DISEÑO DE BUTTON
+                            //***********************************
+                            val typedValue = TypedValue()
+                            getTheme().resolveAttribute(
+                                android.R.attr.selectableItemBackground,
+                                typedValue,
+                                true
+                            )
+                            //it's probably a good idea to check if the color wasn't specified as a resource
+                            if (typedValue.resourceId != 0) {
+                                newButtonPerfil.setBackgroundResource(typedValue.resourceId)
+                            } else {
+                                // this should work whether there was a resource id or not
+                                newButtonPerfil.setBackgroundColor(typedValue.data)
+                            }
+                            //*************************************
+
+                            val ButtonParams = ConstraintLayout.LayoutParams(
+                                ConstraintLayout.LayoutParams.MATCH_PARENT,
+                                ConstraintLayout.LayoutParams.WRAP_CONTENT
+                            )
+                            newButtonPerfil.layoutParams = ButtonParams
+                            //FIN DISEÑO DE BUTTON
+
+                            vistaOp.findViewById<LinearLayout>(R.id.linearLayout_prueba).addView(newLinearLayout)
+                            newLinearLayout.addView(newButtonPerfil)
+                            newButtonPerfil.setOnClickListener {
+
+                                binding.navView.getHeaderView(0).findViewById<TextView>(R.id.txt_perfil_user).text =
+                                    newButtonPerfil.text.toString()
+
+                                dialog.dismiss()
+                            }
+                        }//prefer.setUserPerfil(array)
+                    }catch (e:Exception){
+                        e.printStackTrace()
+                        Toast.makeText(this, "token expirado: $e", Toast.LENGTH_LONG).show()
+                        Log.i("mensaje recycler e: ","recycler ERROR: "+e)
+                    }
+                }, Response.ErrorListener {
+                    Toast.makeText(this, "ERROR CON EL SERVIDOR", Toast.LENGTH_SHORT).show()
+                }){
+                override fun getParams(): Map<String, String>? {
+                    val params: MutableMap<String, String> = HashMap()
+                    params.put("session_token", token.prefer.getToken())
+                    return params
+                }
+            }
+            this?.let { VolleySingleton.getInstance(it).addToRequestQueue(stringRequestDataTickets) }
+            //FIN volley
             //iniciamos los eventos click - introducir codigo necesario aca
 
-            if (click_btnHardware){
+
+            /*if (click_btnHardware){
                 LinearLayout_hardwareGestor.setBackgroundResource(R.color.modalPerfiles)
                 LinearLayout_operadorModal.setBackgroundResource(R.color.modalPerfilesBlanco)
                 LinearLayout_ticketsEscalados.setBackgroundResource(R.color.modalPerfilesBlanco)
@@ -352,16 +439,22 @@ class MainActivity : AppCompatActivity() {
                 LinearLayout_operadorModal.setBackgroundResource(R.color.modalPerfiles)
                 LinearLayout_hardwareGestor.setBackgroundResource(R.color.modalPerfilesBlanco)
                 LinearLayout_ticketsEscalados.setBackgroundResource(R.color.modalPerfilesBlanco)
-            }
+            }*/
 
-            btn_hardwareModalPerfil.setOnClickListener {
+            /*btn_hardwareModalPerfil.setOnClickListener {
                 click_btnHardware = true
                 click_escalados = false
                 LinearLayout_hardwareGestor.setBackgroundResource(R.color.modalPerfiles)
                 LinearLayout_operadorModal.setBackgroundResource(R.color.modalPerfilesBlanco)
                 LinearLayout_ticketsEscalados.setBackgroundResource(R.color.modalPerfilesBlanco)
+                val arreglo = prefer.getUserPerfil()
+                val a = arreglo.toString().get(0)
+                //val arreglo = arrayListOf<String>(prefer.getUserPerfil().toString())
 
-                binding.navView.getHeaderView(0).findViewById<TextView>(R.id.txt_perfil_user).setText("Hardware - Gestor")
+                binding.navView.getHeaderView(0).findViewById<TextView>(R.id.txt_perfil_user).text =
+                    a.toString()
+
+                Log.i("prefer dataPerfiles",""+ array.toString())
                 dialog.dismiss()
             }
             btn_operadorModalPerfiles.setOnClickListener {
@@ -384,7 +477,7 @@ class MainActivity : AppCompatActivity() {
                 binding.navView.getHeaderView(0).findViewById<TextView>(R.id.txt_perfil_user).setText("Tickets escalados (DF)")
                 dialog.dismiss()
 
-            }
+            }*/
             btn_cerrarModalPerfiles.setOnClickListener {
                 dialog.dismiss()
             }
@@ -462,10 +555,7 @@ class MainActivity : AppCompatActivity() {
 //*****************INICIO DISEÑO DEL BOTON******************************
         newButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_fab_desplegar,0,0,0)
         newButton.setPadding(30,0,0,0)
-        val Tamaño = ConstraintLayout.LayoutParams(
-            ConstraintLayout.LayoutParams.LEFT,
-            ConstraintLayout.LayoutParams.WRAP_CONTENT
-        )
+
         //inicio tamaño de boton
         val layoutParams = RelativeLayout.LayoutParams(125, 150)
         newButton.layoutParams = layoutParams
@@ -514,11 +604,6 @@ class MainActivity : AppCompatActivity() {
         vista.findViewById<LinearLayout>(R.id.LinearLayout_cobertura).addView(newTextView)
     }
 
-
-    private fun modal_perfiles() {
-
-    }
-
     //metodo que nos devuelve el id del usuario logeado
     private fun getUserID() {
         //INICIO obtenemos perfil de usuario con volley
@@ -557,6 +642,13 @@ class MainActivity : AppCompatActivity() {
         return true
     }*/
 
+    /*override fun onItemClickPerfiles(TipoPerfil: String) {//sin uso
+        val intent = Intent(this, NavFooterTicketsActivity::class.java)
+        startActivity(intent)
+        Toast.makeText(this, TipoPerfil, Toast.LENGTH_LONG).show()
+        Log.i("click perfiles",""+TipoPerfil)
+    }*/
+
     override fun onSupportNavigateUp(): Boolean {
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
@@ -570,6 +662,17 @@ class MainActivity : AppCompatActivity() {
         startActivity(intent)
         return super.onKeyDown(keyCode, event)
     }
+
+    override fun onItemClick(position: Data_Perfiles) {
+        Toast.makeText(this, "TEST: $position", Toast.LENGTH_SHORT).show()
+    }
+
+    override fun onLongClick(position: Data_Perfiles) {
+
+        Toast.makeText(this, "TEST: $position", Toast.LENGTH_SHORT).show()
+    }
+
+
 }
 
 

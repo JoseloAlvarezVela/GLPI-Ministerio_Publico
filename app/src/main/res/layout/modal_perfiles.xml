@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".ui.modals.Modal_Perfiles_Activity">
+<!--    tools:context=".ui.modals.Modal_Perfiles_Activity"-->
 
     <LinearLayout
         android:id="@+id/linearLayout_prueba"
@@ -39,7 +40,7 @@
             android:layout_height="wrap_content"
             android:background="#F3F1F1"
             android:orientation="vertical"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <Button
                 android:id="@+id/btn_hardwareModalPerfil"
@@ -51,7 +52,8 @@
                 android:paddingBottom="15sp"
                 android:text="Hardware - Gestor"
                 android:textColor="#6C6464"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                android:visibility="gone" />
         </LinearLayout>
 
         <LinearLayout
@@ -99,7 +101,9 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_perfiles"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
     </LinearLayout>
 

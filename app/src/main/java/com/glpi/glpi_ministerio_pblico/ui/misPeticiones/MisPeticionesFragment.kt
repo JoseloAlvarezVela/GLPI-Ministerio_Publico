@@ -48,7 +48,6 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.ontickteCl
         super.onCreate(savedInstanceState)
         arguments?.let {
 
-
         }
     }
     override fun onCreateView(
@@ -195,6 +194,7 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.ontickteCl
         val intent = Intent(context, NavFooterTicketsActivity::class.java)
 
         val bundle = Bundle()
+
 
         bundle.putString("TicketID",TicketID)
         bundle.putString("NameOperador",OperadorName.toString())

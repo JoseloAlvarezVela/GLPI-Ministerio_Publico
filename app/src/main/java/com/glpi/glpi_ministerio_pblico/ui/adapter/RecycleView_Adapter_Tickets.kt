@@ -16,8 +16,11 @@ import com.glpi.glpi_ministerio_pblico.R
 
 /*adaptador que obtendrá los datos del archivo de actividad principal
 y llenará la vista del reciclador*/
-class RecycleView_Adapter_Tickets(context:Context, private val dataModelArrayList:ArrayList<Data_Tickets>,private val itemClickListener_: ontickteClickListener):
-    RecyclerView.Adapter<RecycleView_Adapter_Tickets.MyViewHolder>(){
+class RecycleView_Adapter_Tickets(
+    context:Context,
+    private val dataModelArrayList:ArrayList<Data_Tickets>,
+    private val itemClickListener_: ontickteClickListener
+    ):RecyclerView.Adapter<RecycleView_Adapter_Tickets.MyViewHolder>(){
 
     private val inflater: LayoutInflater
 
@@ -52,8 +55,10 @@ class RecycleView_Adapter_Tickets(context:Context, private val dataModelArrayLis
     /*Dentro del método onCreateViewHolder, el compilador inflará el archivo
     fragment_mis_peticiones.xml para que pueda desarrollar el diseño de cada fila
     de la vista del reciclador*/
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int):
-            RecycleView_Adapter_Tickets.MyViewHolder {
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ):RecycleView_Adapter_Tickets.MyViewHolder {
 
         val view = inflater.inflate(R.layout.recycleview_tickets, parent, false)
 
