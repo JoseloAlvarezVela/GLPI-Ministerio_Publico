@@ -39,7 +39,10 @@ class RecycleView_Adapter_Tickets(context:Context, private val dataModelArrayLis
             CargoSolicitante: String,
             TelefonoSolicitante: String,
             LoginName: String,
-            TicketEstado: String
+            TicketEstado: String,
+            TicketCategoria: String,
+            TicketOrigen: String,
+            TicketUrgencia: String
             //TelefonoTecnico: String, PEDIR ESTOS DATOS
             /*GrupoTecnico: String,
             NameObservador: String*/
@@ -133,6 +136,7 @@ class RecycleView_Adapter_Tickets(context:Context, private val dataModelArrayLis
             txt_glpi_currenttime = itemView.findViewById(R.id.txt_fecha_apertura) as TextView
             txt_EstadoColor = itemView.findViewById(R.id.txt_estadoColor) as TextView
 
+
             itemView.setOnClickListener {
                 itemClickListener_.onTicketClick(
                     dataModelArrayList[position].getGlpiID(),
@@ -146,7 +150,10 @@ class RecycleView_Adapter_Tickets(context:Context, private val dataModelArrayLis
                     dataModelArrayList[position].getGlpiRequesterCargo(),
                     dataModelArrayList[position].getGlpiTelefonoSolicitante(),
                     dataModelArrayList[position].getGlpiLoginName(),
-                    dataModelArrayList[position].getGlpiEstado()
+                    dataModelArrayList[position].getGlpiEstado(),
+                    dataModelArrayList[position].getGlpiCategoria(),
+                    dataModelArrayList[position].getGlpiOrigen(),
+                    dataModelArrayList[position].getGlpiUrgencia()
                 )
             }
         }

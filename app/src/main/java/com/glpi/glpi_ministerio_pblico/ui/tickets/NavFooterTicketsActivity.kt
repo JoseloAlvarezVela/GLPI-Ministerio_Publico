@@ -3,14 +3,17 @@ package com.glpi.glpi_ministerio_pblico.ui.tickets
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Color
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffColorFilter
+import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import com.glpi.glpi_ministerio_pblico.MainActivity
 import com.glpi.glpi_ministerio_pblico.R
 import com.glpi.glpi_ministerio_pblico.databinding.ActivityNavFooterTicketsBinding
+
 
 class NavFooterTicketsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityNavFooterTicketsBinding
@@ -207,6 +210,9 @@ class NavFooterTicketsActivity : AppCompatActivity() {
         val TelefonoSolicitante_ = bundle!!.getString("TelefonoSolicitante")
         val LoginName_ = bundle!!.getString("LoginName")
         val TicketEstado_ = bundle!!.getString("TicketEstado")
+        val TicketCategoria_ = bundle!!.getString("TicketCategoria")
+        val TicketOrigen_ = bundle!!.getString("TicketOrigen")
+        val TicketUrgencia_ = bundle!!.getString("TicketUrgencia")
 
         binding.includeNavHeaderTickets.txtTicketID.text = "Petición #$TicketID_"
         binding.includeNavHeaderTickets.txtUbicacion.text = Ubicacion_
@@ -223,6 +229,29 @@ class NavFooterTicketsActivity : AppCompatActivity() {
         binding.includeTicketsHistorico.txtDescripcionTicketHistorico.text = Contenido_
 
         binding.includeTickets.labelFechaOperadorApertura.text = "$CurrentTime_ - $NameOperador_"
+        binding.includeTickets.labelCategoria.text = TicketCategoria_
+
+        //CAMBIAR COLOR DE ESTADO DE URGENCIA-------------------------------------------------------
+        if (TicketUrgencia_ == "BAJA"){
+            val compoundDrawables: Array<Drawable> = binding.includeTickets.labelPrioridad.compoundDrawables
+            val drawableLeft = compoundDrawables[0].mutate()
+            drawableLeft.colorFilter =
+                PorterDuffColorFilter(Color.parseColor("#06B711"), PorterDuff.Mode.SRC_IN)
+        }else if(TicketUrgencia_ == "MEDIA"){
+            val compoundDrawables: Array<Drawable> = binding.includeTickets.labelPrioridad.compoundDrawables
+            val drawableLeft = compoundDrawables[0].mutate()
+            drawableLeft.colorFilter =
+                PorterDuffColorFilter(Color.parseColor("#FBFF0F"), PorterDuff.Mode.SRC_IN)
+        }else{
+            val compoundDrawables: Array<Drawable> = binding.includeTickets.labelPrioridad.compoundDrawables
+            val drawableLeft = compoundDrawables[0].mutate()
+            drawableLeft.colorFilter =
+                PorterDuffColorFilter(Color.parseColor("#FF8800"), PorterDuff.Mode.SRC_IN)
+        }
+        //------------------------------------------------------------------------------------------
+        binding.includeTickets.labelPrioridad.text = TicketUrgencia_
+        binding.includeTickets.lableFechaMAXCierre.text = "fecha y hora de cierre estimado - $TicketUrgencia_"
+
         binding.includeTickets.labelSolicitudIncidencia.text = Tipo
         binding.includeTickets.labelUbicacion.text = Ubicacion_
         binding.includeTickets.labelEmail.text = Correo_
@@ -235,10 +264,10 @@ class NavFooterTicketsActivity : AppCompatActivity() {
 
     }
 
-    //activity_tickets_historico.xml
+    /*activity_tickets_historico.xml
     private fun ticketsHistoricoActivity_() {
         //asignamos los datos correspondientes
-        datos_tickets_historico()
+        //datos_tickets_historico()
     }
 
     private fun datos_tickets_historico() {
@@ -251,14 +280,10 @@ class NavFooterTicketsActivity : AppCompatActivity() {
         if (extras != null) {
             currenTime_ = extras.getString("fechaApertura").toString()
             descripcion_ = extras.getString("descripcion").toString()
-            //----
-            //----
         }
 
-        //binding.includeTicketsHistorico
-        //binding.includeTicketsHistorico.txtNameOperador.text = MisPeticionesFragment.nombreLogin
         binding.includeTicketsHistorico.txtCurrentTime.text = currenTime_
         binding.includeTicketsHistorico.txtDescripcionTicketHistorico.text = descripcion_
 
-    }
+    }*/
 }

@@ -23,7 +23,6 @@
             android:layout_weight="0"
             android:background="@drawable/degradado_azul"
             android:drawableLeft="@drawable/ic_entidades"
-            android:drawableRight="@drawable/ic_lupa"
             android:drawablePadding="29sp"
             android:fontFamily="@font/averia_libre_light"
             android:gravity="center_vertical"
@@ -84,6 +83,7 @@
                 android:layout_weight="6.3"
                 android:background="?android:attr/selectableItemBackground"
                 android:fontFamily="@font/averia_sans_libre_light"
+                android:visibility="visible"
                 app:icon="@drawable/ic_mpfn_modal"
                 app:iconGravity="textEnd" />
 
@@ -119,6 +119,7 @@
                 android:layout_weight="6.3"
                 android:background="?android:attr/selectableItemBackground"
                 android:fontFamily="@font/averia_sans_libre_light"
+                android:visibility="gone"
                 app:icon="@drawable/ic_fab_desplegar"
                 app:iconGravity="textStart"
                 app:iconPadding="0sp"
@@ -135,7 +136,8 @@
                 android:gravity="center_vertical"
                 android:hint="Cobertura Nacional"
                 android:padding="15sp"
-                android:textColor="#FFFFFF" />
+                android:textColor="#FFFFFF"
+                android:visibility="gone" />
         </LinearLayout>
 
         <LinearLayout
@@ -155,6 +157,7 @@
                 android:layout_weight="6.3"
                 android:background="?android:attr/selectableItemBackground"
                 android:fontFamily="@font/averia_sans_libre_light"
+                android:visibility="gone"
                 app:icon="@drawable/ic_mpfn_modal"
                 app:iconGravity="textEnd" />
 
@@ -170,7 +173,7 @@
                 android:paddingBottom="15sp"
                 android:text="Cobertura Nacional"
                 android:textColor="#FFFFFF"
-                android:visibility="visible" />
+                android:visibility="gone" />
         </LinearLayout>
 
         <LinearLayout
@@ -189,6 +192,7 @@
                 android:layout_weight="6.3"
                 android:background="?android:attr/selectableItemBackground"
                 android:fontFamily="@font/averia_sans_libre_light"
+                android:visibility="gone"
                 app:icon="@drawable/ic_fab_desplegar"
                 app:iconGravity="textStart"
                 app:iconPadding="0sp"
@@ -205,7 +209,8 @@
                 android:gravity="center_vertical"
                 android:hint="Distritos Fiscales"
                 android:padding="15sp"
-                android:textColor="#FFFFFF" />
+                android:textColor="#FFFFFF"
+                android:visibility="gone" />
         </LinearLayout>
 
 
@@ -226,6 +231,7 @@
                 android:layout_weight="6.3"
                 android:background="?android:attr/selectableItemBackground"
                 android:fontFamily="@font/averia_sans_libre_light"
+                android:visibility="gone"
                 app:icon="@drawable/ic_mpfn_modal"
                 app:iconGravity="textEnd" />
 
@@ -241,7 +247,7 @@
                 android:paddingBottom="15sp"
                 android:text="Distritos Fiscales"
                 android:textColor="#FFFFFF"
-                android:visibility="visible" />
+                android:visibility="gone" />
         </LinearLayout>
 
         <LinearLayout
@@ -260,6 +266,7 @@
                 android:layout_weight="6.3"
                 android:background="?android:attr/selectableItemBackground"
                 android:fontFamily="@font/averia_sans_libre_light"
+                android:visibility="gone"
                 app:icon="@drawable/ic_fab_desplegar"
                 app:iconGravity="textStart"
                 app:iconPadding="0sp"
@@ -276,7 +283,8 @@
                 android:gravity="center_vertical"
                 android:hint="D.F. Madre de Dios"
                 android:padding="15sp"
-                android:textColor="#FFFFFF" />
+                android:textColor="#FFFFFF"
+                android:visibility="gone" />
         </LinearLayout>
 
         <LinearLayout
@@ -297,7 +305,8 @@
                 android:gravity="center_vertical"
                 android:hint="D.F. Madre de Dios"
                 android:padding="15sp"
-                android:textColor="#FFFFFF" />
+                android:textColor="#FFFFFF"
+                android:visibility="gone" />
 
             <Button
                 android:id="@+id/button4"

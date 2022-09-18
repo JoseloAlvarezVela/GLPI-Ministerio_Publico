@@ -44,11 +44,6 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.ontickteCl
     // onDestroyView.
     private val binding get() = _binding!!
 
-    companion object{
-        var nombreLogin:String? = null
-        var nombreEmail:String? = null
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -112,6 +107,10 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.ontickteCl
                         val nombreLogin_ = DataTickets.getString("NOMBRE")
                         val apellidoLogin_ = DataTickets.getString("APELLIDO")
                         playerModel.setGlpiLoginName("$nombreLogin_ $apellidoLogin_")
+
+                        playerModel.setGlpiCategoria(DataTickets.getString("CATEGORIA"))
+                        playerModel.setGlpiOrigen(DataTickets.getString("ORIGEN"))
+                        playerModel.setGlpiUrgencia(DataTickets.getString("URGENCIA"))
 
                         //obtenemos los datos del operador
                         val JS_ResipientObject = DataTickets.getJSONArray("RECIPIENT")
@@ -188,7 +187,10 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.ontickteCl
         CargoSolicitante: String,
         TelefonoSolicitante: String,
         LoginName: String,
-        TicketEstado: String
+        TicketEstado: String,
+        TicketCategoria: String,
+        TicketOrigen: String,
+        TicketUrgencia: String
     ) {
         val intent = Intent(context, NavFooterTicketsActivity::class.java)
 
@@ -206,6 +208,9 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.ontickteCl
         bundle.putString("TelefonoSolicitante",TelefonoSolicitante)
         bundle.putString("LoginName",LoginName)
         bundle.putString("TicketEstado",TicketEstado)
+        bundle.putString("TicketCategoria",TicketCategoria)
+        bundle.putString("TicketOrigen",TicketOrigen)
+        bundle.putString("TicketUrgencia",TicketUrgencia)
 
         intent.putExtras(bundle)
 

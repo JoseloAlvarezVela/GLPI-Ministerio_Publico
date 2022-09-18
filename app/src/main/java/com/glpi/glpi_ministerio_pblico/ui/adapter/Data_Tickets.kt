@@ -13,6 +13,9 @@ class Data_Tickets {
     var GlpiCorreSolicitante_: String? = null
     var glpiOperadorName_: String? = null
     var GlpiLoginName_: String? = null
+    var GlpiCategoria_: String? = null
+    var GlpiOrigen_: String? = null
+    var GlpiUrgencia_: String? = null
     var glpiRequester_Name_: String? = null
     var glpiRequester_Cargo_: String? = null
     var GlpiTelefonoSolicitante_: String? = null
@@ -114,5 +117,27 @@ class Data_Tickets {
     }
     fun setGlpiLoginName(GlpiApellidoLogin: String){
         this.GlpiLoginName_ = GlpiApellidoLogin
+    }
+
+    fun getGlpiCategoria(): String{
+        return GlpiCategoria_.toString()
+    }
+    fun setGlpiCategoria(GlpiCategoria: String){
+        this.GlpiCategoria_ = GlpiCategoria
+    }
+
+    fun getGlpiOrigen(): String{
+        return GlpiOrigen_.toString()
+    }
+
+    fun setGlpiOrigen(GlpiOrigen: String){
+        this.GlpiOrigen_ = GlpiOrigen
+    }
+
+    fun getGlpiUrgencia(): String{
+        return GlpiUrgencia_.toString()
+    }
+    fun setGlpiUrgencia(GlpiUrgencia: String){
+        this.GlpiUrgencia_ = GlpiUrgencia
     }
 }

@@ -1,21 +1,20 @@
 package com.glpi.glpi_ministerio_pblico
 
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.Typeface
 import android.os.Build
 import android.os.Bundle
-import android.text.Html
-import android.text.Spanned
 import android.util.Log
+import android.util.TypedValue
 import android.view.KeyEvent
 import android.view.View
-import android.widget.Button
-import android.widget.LinearLayout
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.text.HtmlCompat
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.core.view.isVisible
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
@@ -29,14 +28,15 @@ import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.glpi.glpi_ministerio_pblico.databinding.ActivityMainBinding
-import com.glpi.glpi_ministerio_pblico.ui.adapter.*
+import com.glpi.glpi_ministerio_pblico.ui.adapter.Data_Entities
+import com.glpi.glpi_ministerio_pblico.ui.adapter.Data_Perfiles
+import com.glpi.glpi_ministerio_pblico.ui.adapter.RecycleView_Adapter_Entities
+import com.glpi.glpi_ministerio_pblico.ui.adapter.RecycleView_Adapter_Perfiles
 import com.glpi.glpi_ministerio_pblico.ui.shared.token
 import com.glpi.glpi_ministerio_pblico.ui.shared.token.Companion.prefer
 import com.google.android.material.navigation.NavigationView
 import org.json.JSONArray
 import org.json.JSONObject
-import java.io.File.separator
-import java.security.AccessController.getContext
 
 
 class MainActivity : AppCompatActivity() {
@@ -89,6 +89,7 @@ class MainActivity : AppCompatActivity() {
         getUserID() //metodo que nos devuelve el id del usuario logeado con volley
 
         //accedemos a los elementos "id" del headerLayout con getHeaderView y lo guardamos en una variable
+        //DEL MODAL ENTIDADES
         val headerView: View = binding.navView.getHeaderView(0).findViewById(R.id.linear_layout_DF)
         headerView.setOnClickListener{
             // mostramos el modal con el siguiente código
@@ -148,15 +149,15 @@ class MainActivity : AppCompatActivity() {
 
             //obtenemos los id's de modal_df
             val LinearLayout_mpfn: LinearLayout = vista.findViewById(R.id.LinearLayout_mpfn)
-                val btn_mpfn_atras: Button = vista.findViewById(R.id.btn_mpfn_atras)
-            val LinearLayout_cobertura_: LinearLayout = vista.findViewById(R.id.LinearLayout_cobertura_)
+            val btn_mpfn_atras: Button = vista.findViewById(R.id.btn_mpfn_atras)
+            val contenedor_mpfn: LinearLayout = vista.findViewById(R.id.contenedor_mpfn)
+            val btn_mpfn_modal: Button = vista.findViewById(R.id.btn_mpfn_modal)
+            val txt_mpfn: TextView = vista.findViewById(R.id.txt_mpfn)
+            val LinearLayout_cobertura: LinearLayout = vista.findViewById(R.id.LinearLayout_cobertura)
+            /*val LinearLayout_cobertura_: LinearLayout = vista.findViewById(R.id.LinearLayout_cobertura_)
                 val btn_cobertura_atras: Button = vista.findViewById(R.id.btn_cobertura_atras)
             val LinearLayout_distritosFiscales: LinearLayout = vista.findViewById(R.id.LinearLayout_distritosFiscales)
                 val btn_distritosFiscales_atras: Button = vista.findViewById(R.id.btn_distritosFiscales_atras)
-            val contenedor_mpfn: LinearLayout = vista.findViewById(R.id.contenedor_mpfn)
-                val btn_mpfn_modal: Button = vista.findViewById(R.id.btn_mpfn_modal)
-                val txt_mpfn: TextView = vista.findViewById(R.id.txt_mpfn)
-            val LinearLayout_cobertura: LinearLayout = vista.findViewById(R.id.LinearLayout_cobertura)
                 val btn_cobertura: Button = vista.findViewById(R.id.btn_cobertura)
                 val txt_CoberturaNacional: TextView = vista.findViewById(R.id.txt_CoberturaNacional)
             val LinearLayout_DF_MDD: LinearLayout = vista.findViewById(R.id.LinearLayout_DF_MDD)
@@ -165,7 +166,7 @@ class MainActivity : AppCompatActivity() {
             val LinearLayout_DF: LinearLayout = vista.findViewById(R.id.LinearLayout_DF)
                 val btn_DF: Button = vista.findViewById(R.id.btn_DF)
                 val txt_DF: TextView = vista.findViewById(R.id.txt_DF)
-            val LinearLayout_madreDeDios: LinearLayout = vista.findViewById(R.id.LinearLayout_madreDeDios)
+            val LinearLayout_madreDeDios: LinearLayout = vista.findViewById(R.id.LinearLayout_madreDeDios)*/
 
 
             //INICIO volley ------------------------------------------------------------
@@ -180,31 +181,68 @@ class MainActivity : AppCompatActivity() {
                         val EntitiesArray = DataEntities.getJSONObject(0)
                         val Entities = EntitiesArray.getString("name")
 
-
                         val delim1 = "&#62"+";"
-                        val arr = Entities.split(delim1).toTypedArray()
-                        val arr0 = arr[0]
-                        val arrSize = arr.size
+                        val getEntitiesArray = Entities.split(delim1).toTypedArray() //obtenemos el array de datos
+                        val entitiesArray0 = getEntitiesArray[0] // accedemos a la posision 0
 
-                        //txt_mpfn.text = arr.contentToString()
-                        txt_mpfn.text = arr0
-                        val newBtn = Button(this)
-                        newBtn.text = arr[1]
+                        txt_mpfn.text = entitiesArray0
+
+                        val newButton = Button(this)
+                        val newTextView = TextView(this)
+
+                        var iterador = 1
                         btn_mpfn_modal.setOnClickListener {
+                            deleteButton(newButton,vista)
+                            deleteTextView(newTextView,vista)
                             contenedor_mpfn.isVisible = false
                             LinearLayout_mpfn.isVisible = true
                             LinearLayout_cobertura.isVisible = true
-                            
-                            vista.findViewById<LinearLayout>(R.id.linearLayout_entidades).addView(newBtn)
+
+                            createButton(newButton,vista)
+                            createTextView(newTextView,getEntitiesArray[iterador],vista)
+
+                            if (iterador>=getEntitiesArray.size){
+                                iterador=getEntitiesArray.size-1
+                            }else{
+                                iterador++
+                            }
+                            Log.i("iterador",","+iterador)
                         }
-                        newBtn.setOnClickListener {
-                            Toast.makeText(this, "boton presionado", Toast.LENGTH_SHORT).show()
+
+                        btn_mpfn_atras.setOnClickListener {
+                            iterador--
+                            if (iterador < 2){
+                                contenedor_mpfn.isVisible = true
+                                LinearLayout_mpfn.isVisible = false
+                                LinearLayout_cobertura.isVisible = false
+                            }else{
+                                deleteButton(newButton,vista)
+                                deleteTextView(newTextView,vista)
+
+                                if (iterador>1){
+                                    createButton(newButton,vista)
+                                    createTextView(newTextView,getEntitiesArray[iterador-1],vista)
+                                }
+                            }
+                            Log.i("iterador",","+iterador)
                         }
 
+                        newButton.setOnClickListener {
+                            Toast.makeText(this, "boton clickeado", Toast.LENGTH_SHORT).show()
 
+                            if (iterador < getEntitiesArray.size){
+                                deleteButton(newButton,vista)
+                                deleteTextView(newTextView,vista)
 
-
-                        Log.i("mensaje entities ok: ",""+ arr.contentToString())
+                                createButton(newButton,vista)
+                                createTextView(newTextView,getEntitiesArray[iterador],vista)
+                                iterador++
+                            }else{
+                                iterador = getEntitiesArray.size
+                            }
+                            Log.i("iterador",","+iterador)
+                        }
+                        Log.i("iterador",","+iterador)
 
                     }catch (e:Exception){
                         e.printStackTrace()
@@ -221,43 +259,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
             this?.let { VolleySingleton.getInstance(it).addToRequestQueue(stringRequestDataTickets) }
-            //FIN volley ---------------------------------------------------------------
-            //realizamos los clicksListeners necesarios
-            btn_mpfn_modal.setOnClickListener{
-                contenedor_mpfn.isVisible = false
-                LinearLayout_mpfn.isVisible = true
-                LinearLayout_cobertura.isVisible = true
-            }
-            btn_cobertura.setOnClickListener {
-                LinearLayout_mpfn.isVisible = false
-                LinearLayout_cobertura.isVisible = false
-                LinearLayout_cobertura_.isVisible = true
-                LinearLayout_DF.isVisible = true
-            }
-            btn_DF.setOnClickListener {
-                LinearLayout_cobertura_.isVisible = false
-                LinearLayout_DF.isVisible = false
-                LinearLayout_distritosFiscales.isVisible = true
-                LinearLayout_madreDeDios.isVisible = true
-            }
-            //botones espejo------------------------------------------
-            btn_distritosFiscales_atras.setOnClickListener {
-                LinearLayout_cobertura_.isVisible = true
-                LinearLayout_DF.isVisible = true
-                LinearLayout_distritosFiscales.isVisible = false
-                LinearLayout_madreDeDios.isVisible = false
-            }
-            btn_cobertura_atras.setOnClickListener {
-                LinearLayout_mpfn.isVisible = true
-                LinearLayout_cobertura.isVisible = true
-                LinearLayout_cobertura_.isVisible = false
-                LinearLayout_DF.isVisible = false
-            }
-            btn_mpfn_atras.setOnClickListener {
-                contenedor_mpfn.isVisible = true
-                LinearLayout_mpfn.isVisible = false
-                LinearLayout_cobertura.isVisible = false
-            }
+            //FIN volley ------------------------------------------------------------
 
             val btn_cerrar: Button = vista.findViewById<Button>(R.id.btn_salir_modal_df)
             btn_cerrar.setOnClickListener(){
@@ -449,6 +451,67 @@ class MainActivity : AppCompatActivity() {
             binding.appBarMain.llyBackgroudAbm.isVisible = false
         }
         //FIN - boton filtro de la derecha - activity_filtro_right.xml
+    }
+
+    private fun deleteButton(newButton: Button, vista: View) {
+        val cobertura = R.id.LinearLayout_cobertura
+        vista.findViewById<LinearLayout>(cobertura).removeView(newButton)
+    }
+
+    private fun createButton(newButton: Button, vista: View) {
+//*****************INICIO DISEÑO DEL BOTON******************************
+        newButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_fab_desplegar,0,0,0)
+        newButton.setPadding(30,0,0,0)
+        val Tamaño = ConstraintLayout.LayoutParams(
+            ConstraintLayout.LayoutParams.LEFT,
+            ConstraintLayout.LayoutParams.WRAP_CONTENT
+        )
+        //inicio tamaño de boton
+        val layoutParams = RelativeLayout.LayoutParams(125, 150)
+        newButton.layoutParams = layoutParams
+        //fin tamaño de boton
+
+        ////************
+        val typedValue = TypedValue()
+        getTheme().resolveAttribute(
+            android.R.attr.selectableItemBackground,
+            typedValue,
+            true
+        )
+        //it's probably a good idea to check if the color wasn't specified as a resource
+        if (typedValue.resourceId != 0) {
+            newButton.setBackgroundResource(typedValue.resourceId)
+        } else {
+            // this should work whether there was a resource id or not
+            newButton.setBackgroundColor(typedValue.data)
+        }
+        //************
+        //********************FIN DISEÑO DEL BOTON******************************
+        vista.findViewById<LinearLayout>(R.id.LinearLayout_cobertura).addView(newButton)
+    }
+
+    private fun deleteTextView(newTextView: TextView, vista: View) {
+        vista.findViewById<LinearLayout>(R.id.LinearLayout_cobertura).removeView(newTextView)
+    }
+
+    private fun createTextView(newTextView: TextView, entitiesArray: String, vista: View) {
+        //*****************INICIO DISEÑO DEL TEXVIEW****************************
+        newTextView.text = entitiesArray
+        newTextView.setTextColor(Color.parseColor("#FFFFFF"))
+        //--
+        val fontFamily = Typeface.createFromAsset(
+            assets,
+            "font/averia_sans_libre_light.ttf"
+        )
+        newTextView.setTypeface(fontFamily)
+        //--
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            newTextView.textAlignment = View.TEXT_ALIGNMENT_TEXT_START
+        }
+        newTextView.setPadding(30,0,0,0)
+        //--
+        //*****************FIN DISEÑO DEL TEXVIEW*******************************
+        vista.findViewById<LinearLayout>(R.id.LinearLayout_cobertura).addView(newTextView)
     }
 
 

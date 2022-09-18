@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/degradado_azul"
             android:drawableLeft="@drawable/ic_actor"
-            android:drawableRight="@drawable/ic_lupa"
+
             android:drawablePadding="29sp"
             android:fontFamily="@font/averia_libre_light"
             android:gravity="center_vertical"
@@ -31,6 +31,7 @@
             android:textColor="#FFFFFF"
             android:textSize="20sp"
             app:drawableTint="#FFFFFF" />
+<!--        android:drawableRight="@drawable/ic_lupa"-->
 
         <LinearLayout
             android:id="@+id/LinearLayout_hardwareGestor"

@@ -45,7 +45,7 @@
                         android:orientation="horizontal">
 
                         <TextView
-                            android:id="@+id/label_descr_general"
+                            android:id="@+id/label_prioridad"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
@@ -135,7 +135,7 @@
                             android:textSize="12sp" />
 
                         <TextView
-                            android:id="@+id/label_peticion"
+                            android:id="@+id/label_categoria"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="5sp"
