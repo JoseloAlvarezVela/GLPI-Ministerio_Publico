@@ -1,33 +1,34 @@
 package com.glpi.glpi_ministerio_pblico
 
-import android.R.attr.password
-import android.accounts.AccountManager.KEY_PASSWORD
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.KeyEvent
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import com.android.volley.Request
 import com.android.volley.RequestQueue
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
+import com.glpi.glpi_ministerio_pblico.ui.LogoutActivity
 import com.glpi.glpi_ministerio_pblico.ui.shared.token.Companion.prefer
 import org.json.JSONObject
 
 
 class LoginActivity : AppCompatActivity() {
-    //declaramos
     internal lateinit var queue: RequestQueue
+    lateinit private var progressBarAction_ : ProgressBar
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
         queue = Volley.newRequestQueue(this@LoginActivity)
+
+        checkUserLogin()
 
         val loginUserName = findViewById<EditText>(R.id.login_user)
         val loginUserPassword = findViewById<EditText>(R.id.login_password)
@@ -45,8 +46,9 @@ class LoginActivity : AppCompatActivity() {
 
                         val i = Intent(this@LoginActivity, MainActivity::class.java)
                         prefer.SaveToken(token_)//guardamos el token en el sharedPreference
-                        Log.i("mensaje login:","Login: "+ prefer.getToken()+" : "+token_)
-                        //
+                        Log.i("mensajeT login:","Login: "+ prefer.getToken()+" : "+token_)
+
+
                         Toast.makeText(this@LoginActivity, "toast 1: $token_", Toast.LENGTH_LONG).show()
                         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                         startActivity(i)
@@ -58,7 +60,7 @@ class LoginActivity : AppCompatActivity() {
                     }
                 }, Response.ErrorListener {
                     Toast.makeText(this@LoginActivity,
-                        "PROBLEMAS CON EL SERVIDOR"+ Response.ErrorListener{},
+                        "PROBLEMAS CON EL SERVIDOR: Login user"+ Response.ErrorListener{},
                         Toast.LENGTH_LONG).show()
                 }) {
                 override fun getParams(): Map<String, String>? {
@@ -71,15 +73,50 @@ class LoginActivity : AppCompatActivity() {
             VolleySingleton.getInstance(this).addToRequestQueue(stringRequest)
             //fin boton login volley iniciar sesion
         }
-        CheckUserLogin() //verificamos si existe usuario logeado
-        //Toast.makeText(this, prefer.getToken(), Toast.LENGTH_SHORT).show()
     }
 
     //verificamos si tenemos guardado el token
-    private fun CheckUserLogin() {
-        if(prefer.getToken() != "noToken" ){
-            startActivity(Intent(this,MainActivity::class.java))
+    private fun checkUserLogin() {
+
+        progressBarAction_ = findViewById(R.id.progressBarAction)
+
+        val url = "http://181.176.145.174:8080/api/user_entities" //online
+        val stringRequest = object : StringRequest(Request.Method.POST,
+            url, Response.Listener { response ->
+                try {
+                    val jsonObject = JSONObject(response)
+                    val token_ = jsonObject.getString("myentities")
+                    Log.i("mensajeT tokenValidate:",""+ prefer.getToken()+" : "+token_)
+                    if(prefer.getToken() != "noToken" ){
+                        startActivity(Intent(this,MainActivity::class.java))
+                    }
+
+                } catch (e: Exception) {
+                    Toast.makeText(this, "SESIÓN EXPIRADA.", Toast.LENGTH_SHORT).show()
+                    e.printStackTrace()
+                    Log.i("mensajeT tokenEXPIRADO:",""+ prefer.getToken())
+                    prefer.deleteToken()
+                    val layoutLogin_ = findViewById<LinearLayout>(R.id.LayoutLogin)
+                    val progressBarText_ = findViewById<TextView>(R.id.progressBarText)
+                    progressBarAction_.isVisible = false
+                    progressBarText_.isVisible = false
+                    layoutLogin_.isVisible = true
+
+                }
+            }, Response.ErrorListener {
+                Toast.makeText(this,
+                    "PROBLEMAS CON EL SERVIDOR: token Validate"+ Response.ErrorListener{},
+                    Toast.LENGTH_LONG).show()
+                Log.i("mensajeT tokenValidate ",""+prefer.getToken())
+            }) {
+            override fun getParams(): Map<String, String>? {
+                val params: MutableMap<String, String> = HashMap()
+                params.put("session_token", prefer.getToken())
+                return params
+            }
         }
+        VolleySingleton.getInstance(this).addToRequestQueue(stringRequest)
+
     }
 
     //controlamos la pulsación del boton atras por defecto del celular para que cierre la app

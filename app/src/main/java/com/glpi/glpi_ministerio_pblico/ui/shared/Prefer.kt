@@ -6,24 +6,26 @@ import org.json.JSONObject
 class Prefer(val context: Context) {
 
     val SHARED_DB = "Mydb"
+    val SHARED_VALIDATE = "myTokenValidate"
     val TOKEN_DB = "noToken"
     val USER_PERFIL = "noPERFIL"
     val USER_ID = "noUserID"
 
     val storage = context.getSharedPreferences(SHARED_DB,0)
+    val storageValidate = context.getSharedPreferences(SHARED_VALIDATE,0)
 
 
 
     //metodo que guarda el perfil del usuario
-    fun setUserPerfil(name: ArrayList<String>){
-        storage.edit().putString(USER_PERFIL, name.toString()).apply()
+    fun setUserPerfil(name: String){
+        storageValidate.edit().putString(USER_PERFIL, name.toString()).apply()
     }
     //metodo que recupera nombre del sharedPreference
     fun getUserPerfil(): String? {
-        return storage.getString(USER_PERFIL,"null")
+        return storageValidate.getString(USER_PERFIL,"null")
     }
     fun deleteUserPerfil(){
-        storage.edit().clear().apply()
+        storageValidate.edit().clear().apply()
     }
 
     //metodo que guarda el nombre del usuario
