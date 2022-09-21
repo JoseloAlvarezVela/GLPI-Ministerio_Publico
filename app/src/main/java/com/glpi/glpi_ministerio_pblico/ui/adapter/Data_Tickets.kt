@@ -19,6 +19,9 @@ class Data_Tickets {
     var glpiRequester_Name_: String? = null
     var glpiRequester_Cargo_: String? = null
     var GlpiTelefonoSolicitante_: String? = null
+    //SECTION TASKS
+    var glpiTasksName_: String? = null
+    var glpiTasksDescripcion_: String? = null
 
 
     /*Estos métodos getter y setter nos ayudarán a mantener los datos mientras
@@ -139,5 +142,20 @@ class Data_Tickets {
     }
     fun setGlpiUrgencia(GlpiUrgencia: String){
         this.GlpiUrgencia_ = GlpiUrgencia
+    }
+
+    //SECTION TASK
+    fun getGlpiTasksName(): String{
+        return glpiTasksName_.toString()
+    }
+    fun setGlpiTasktName(GlpiTasktName: String){
+        this.glpiTasksName_ = GlpiTasktName
+    }
+
+    fun getGlpiTasksDescripcion(): String{
+        return glpiTasksDescripcion_.toString()
+    }
+    fun setGlpiTasksDescripcion(GlpiTasksDescripcion: String){
+        this.glpiTasksDescripcion_ = GlpiTasksDescripcion
     }
 }

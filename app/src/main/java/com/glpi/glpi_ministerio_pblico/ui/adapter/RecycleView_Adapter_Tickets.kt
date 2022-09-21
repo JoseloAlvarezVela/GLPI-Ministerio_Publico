@@ -3,13 +3,11 @@ package com.glpi.glpi_ministerio_pblico.ui.adapter
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.core.os.persistableBundleOf
 import androidx.recyclerview.widget.RecyclerView
 import com.glpi.glpi_ministerio_pblico.R
 
@@ -45,7 +43,9 @@ class RecycleView_Adapter_Tickets(
             TicketEstado: String,
             TicketCategoria: String,
             TicketOrigen: String,
-            TicketUrgencia: String
+            TicketUrgencia: String,
+            glpiTasksName: String,
+            glpiTasksDescripcion: String
             //TelefonoTecnico: String, PEDIR ESTOS DATOS
             /*GrupoTecnico: String,
             NameObservador: String*/
@@ -129,6 +129,11 @@ class RecycleView_Adapter_Tickets(
         var txt_Requester_Cargo: TextView
         var txt_glpi_currenttime: TextView
         var txt_EstadoColor: TextView
+        //SECTION TASKS
+        var txt_TaskNameLogin: String
+        var txt_TaskDescription: String
+        /*var txt_TaskNameLogin: TextView
+        var txt_TaskDescription: TextView*/
 
         init {
             tickets = itemView.findViewById(R.id.tickets) as LinearLayout
@@ -140,6 +145,10 @@ class RecycleView_Adapter_Tickets(
             txt_Requester_Cargo = itemView.findViewById(R.id.txt_requester_cargo) as TextView
             txt_glpi_currenttime = itemView.findViewById(R.id.txt_fecha_apertura) as TextView
             txt_EstadoColor = itemView.findViewById(R.id.txt_estadoColor) as TextView
+            /*txt_TaskNameLogin = itemView.findViewById(R.id.txt_TaskNameLogin) as TextView
+            txt_TaskDescription = itemView.findViewById(R.id.txt_TaskDescription) as TextView*/
+            txt_TaskNameLogin = "itemView.findViewById(R.id.txt_TaskNameLogin) as TextView"
+            txt_TaskDescription = "itemView.findViewById(R.id.txt_TaskDescription) as TextView"
 
 
             itemView.setOnClickListener {
@@ -158,7 +167,9 @@ class RecycleView_Adapter_Tickets(
                     dataModelArrayList[position].getGlpiEstado(),
                     dataModelArrayList[position].getGlpiCategoria(),
                     dataModelArrayList[position].getGlpiOrigen(),
-                    dataModelArrayList[position].getGlpiUrgencia()
+                    dataModelArrayList[position].getGlpiUrgencia(),
+                    "dataModelArrayList[position].getGlpiTasksName()",
+                    "dataModelArrayList[position].getGlpiTasksDescripcion()"
                 )
             }
         }

@@ -2,7 +2,6 @@ package com.glpi.glpi_ministerio_pblico
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
 import android.util.Log
 import android.view.KeyEvent
 import android.widget.*
@@ -13,7 +12,6 @@ import com.android.volley.RequestQueue
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
-import com.glpi.glpi_ministerio_pblico.ui.LogoutActivity
 import com.glpi.glpi_ministerio_pblico.ui.shared.token.Companion.prefer
 import org.json.JSONObject
 

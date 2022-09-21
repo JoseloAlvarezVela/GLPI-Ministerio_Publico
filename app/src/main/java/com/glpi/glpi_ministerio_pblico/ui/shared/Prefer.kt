@@ -11,6 +11,10 @@ class Prefer(val context: Context) {
     val USER_PERFIL = "noPERFIL"
     val USER_ID = "noUserID"
 
+    //json data
+    val JSON_ENTITES = "MyJson"
+    val storareJson = context.getSharedPreferences(JSON_ENTITES,0)
+
     val storage = context.getSharedPreferences(SHARED_DB,0)
     val storageValidate = context.getSharedPreferences(SHARED_VALIDATE,0)
 
@@ -53,5 +57,12 @@ class Prefer(val context: Context) {
         return storage.getString(USER_ID,"noUser")!!
     }
 
+    //json data
+    fun setJsonEntities(json_content: String){
+        storareJson.edit().putString(JSON_ENTITES,json_content).apply()
+    }
+    fun getJsonEntities(): String{
+        return storage.getString(JSON_ENTITES,"noContent")!!
+    }
 
 }

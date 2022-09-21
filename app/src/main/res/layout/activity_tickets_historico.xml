@@ -24,6 +24,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <LinearLayout
+                android:id="@+id/layout_conversation"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
@@ -117,7 +118,7 @@
                                 android:fontFamily="@font/averia_sans_libre_light"
                                 android:text="TextView TextView TextView TextView TextView TextView TextView TextView TextView TextView TextView TextView TextView TextView TextView TextView TextView TextView TextView TextView TextView TextView TextView"
                                 android:textColor="#000000"
-                                android:textSize="12sp"/>
+                                android:textSize="12sp" />
                         </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
@@ -128,7 +129,7 @@
                     android:layout_margin="10dp"
                     android:background="@drawable/esq_redondeada_blanco"
                     android:orientation="vertical"
-                    android:visibility="gone">
+                    android:visibility="visible">
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -156,7 +157,7 @@
                             android:orientation="vertical">
 
                             <TextView
-                                android:id="@+id/textView37"
+                                android:id="@+id/txt_TaskNameLogin"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="@font/averia_sans_libre_light"
@@ -242,7 +243,7 @@
                             android:textSize="12sp" />
 
                         <TextView
-                            android:id="@+id/textView42"
+                            android:id="@+id/txt_TaskDescription"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="5dp"
