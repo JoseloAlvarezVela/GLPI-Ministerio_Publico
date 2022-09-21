@@ -43,16 +43,8 @@ class NavFooterTicketsActivity : AppCompatActivity() {
 
         DataToTicketsHistoricoActivity()
 
-        creatNewLinearLayout()
-        createTextView()
-
-        binding.includeTicketsHistorico.layoutConversation.addView(creatNewLinearLayout())
-        binding.includeTicketsHistorico.layoutConversation.addView(createTextView())
-        creatNewLinearLayout().addView(createTextView())
-
         volleyResquestGet(urlApi_TicketID)
-
-
+        Log.i("mesanje json init",""+jsonObjectResponse)
         //INICIO toogle buton tickets
         var clickTickets: Boolean = false
         var clickConvezaciones: Boolean = false
@@ -235,22 +227,29 @@ class NavFooterTicketsActivity : AppCompatActivity() {
                     if (jsonObjectResponse.length() > 1){
 
                         var iterador = 0
-                        var taskDescriptions = ArrayList<String>()
+                        //var taskDescriptions = ArrayList<String>()
                         var tasksIterador: JSONObject
                         for (i in  0 until jsonObjectResponse.length()){
                             tasksIterador = jsonObjectResponse.getJSONObject(iterador.toString())
                             val tasksTipo = tasksIterador.getString("TIPO")
                             iterador++
                             if (tasksTipo == "TASK"){
-
-
-
+                                val taskDescriptions = tasksIterador.getString("CONTENIDO")
+                                creatNewLinearLayout(taskDescriptions)
+                                binding.includeTicketsHistorico.layoutConversation.addView(
+                                    creatNewLinearLayout(taskDescriptions))
                             }else if( tasksTipo == "FOLLOWUP"){
-
+                                val taskDescriptionsFollow = tasksIterador.getString("CONTENIDO")
+                                creatNewLinearLayoutFollow(taskDescriptionsFollow)
+                                binding.includeTicketsHistorico.layoutConversation.addView(
+                                    creatNewLinearLayoutFollow(taskDescriptionsFollow))
                             }else{
-                                //solution
+                                val taskDescriptionsSolution = tasksIterador.getString("CONTENIDO")
+                                creatNewLinearLayoutSolution(taskDescriptionsSolution)
+                                binding.includeTicketsHistorico.layoutConversation.addView(
+                                    creatNewLinearLayoutSolution(taskDescriptionsSolution))
                             }
-                            Log.i("mensaje tipo",""+tasksTipo)
+                            //Log.i("mensaje tipo",""+tasksTipo)
                         }
 
                     }else{
@@ -275,21 +274,50 @@ class NavFooterTicketsActivity : AppCompatActivity() {
         }
     }
 
-    private fun creatNewLinearLayout(): LinearLayout {
+    private fun creatNewLinearLayout(taskDescriptions: String): LinearLayout {
         val newLayout = LinearLayout(this) // declaramos el componente
+        newLayout.setPadding(30,32,0,32)
         //inicio tamaño de linearlayout
         val layoutParams = LinearLayout.LayoutParams(1000,500 )
         newLayout.layoutParams = layoutParams
         //fin tamaño de boton
         newLayout.setBackgroundColor(Color.parseColor("#FFF3DB"))
+        createTextView(taskDescriptions)
+        newLayout.addView(createTextView(taskDescriptions))
         return newLayout
     }
 
-    private fun createTextView(): TextView {
+    private fun creatNewLinearLayoutFollow(taskDescriptions: String): LinearLayout {
+        val newLayoutFollow = LinearLayout(this) // declaramos el componente
+        newLayoutFollow.setPadding(30,32,0,32)
+        //inicio tamaño de linearlayout
+        val layoutParams = LinearLayout.LayoutParams(1000,500 )
+        newLayoutFollow.layoutParams = layoutParams
+        //fin tamaño de boton
+        newLayoutFollow.setBackgroundColor(Color.parseColor("#E0E0E0"))
+        createTextView(taskDescriptions)
+        newLayoutFollow.addView(createTextView(taskDescriptions))
+        return newLayoutFollow
+    }
+
+    private fun creatNewLinearLayoutSolution(taskDescriptions: String): LinearLayout {
+        val Solution = LinearLayout(this) // declaramos el componente
+        Solution.setPadding(30,32,0,32)
+        //inicio tamaño de linearlayout
+        val layoutParams = LinearLayout.LayoutParams(1000,500 )
+        Solution.layoutParams = layoutParams
+        //fin tamaño de boton
+        Solution.setBackgroundColor(Color.parseColor("#9FD6ED"))
+        createTextView(taskDescriptions)
+        Solution.addView(createTextView(taskDescriptions))
+        return Solution
+    }
+
+    private fun createTextView(taskDescriptions: String): TextView {
         val newTextView = TextView(this)
         //*****************INICIO DISEÑO DEL TEXVIEW****************************
-        newTextView.text = "este texto es de prueba"
-        newTextView.setTextColor(Color.parseColor("#FFFFFF"))
+        newTextView.text = taskDescriptions
+        newTextView.setTextColor(Color.parseColor("#000000"))
         //--
         val fontFamily = Typeface.createFromAsset(
             assets,
