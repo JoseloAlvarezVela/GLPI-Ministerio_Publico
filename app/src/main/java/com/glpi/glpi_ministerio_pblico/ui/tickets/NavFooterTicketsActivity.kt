@@ -44,7 +44,8 @@ class NavFooterTicketsActivity : AppCompatActivity() {
         DataToTicketsHistoricoActivity()
 
         volleyResquestGet(urlApi_TicketID)
-        Log.i("mesanje json init",""+jsonObjectResponse)
+
+
         //INICIO toogle buton tickets
         var clickTickets: Boolean = false
         var clickConvezaciones: Boolean = false
@@ -289,7 +290,6 @@ class NavFooterTicketsActivity : AppCompatActivity() {
 
     private fun creatNewLinearLayoutFollow(taskDescriptions: String): LinearLayout {
         val newLayoutFollow = LinearLayout(this) // declaramos el componente
-        newLayoutFollow.setPadding(30,32,0,32)
         //inicio tamaño de linearlayout
         val layoutParams = LinearLayout.LayoutParams(1000,500 )
         newLayoutFollow.layoutParams = layoutParams
@@ -302,7 +302,6 @@ class NavFooterTicketsActivity : AppCompatActivity() {
 
     private fun creatNewLinearLayoutSolution(taskDescriptions: String): LinearLayout {
         val Solution = LinearLayout(this) // declaramos el componente
-        Solution.setPadding(30,32,0,32)
         //inicio tamaño de linearlayout
         val layoutParams = LinearLayout.LayoutParams(1000,500 )
         Solution.layoutParams = layoutParams
