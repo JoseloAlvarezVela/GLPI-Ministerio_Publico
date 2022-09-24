@@ -3,9 +3,11 @@ package com.glpi.glpi_ministerio_pblico.ui.tickets
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.KeyEvent
 import android.widget.Toast
 import androidx.core.view.isVisible
 import com.glpi.glpi_ministerio_pblico.MainActivity
+import com.glpi.glpi_ministerio_pblico.MainActivity.Companion.flag
 import com.glpi.glpi_ministerio_pblico.R
 import com.glpi.glpi_ministerio_pblico.databinding.ActivityTicketsAgregarTareaBinding
 
@@ -15,6 +17,15 @@ class TicketsAgregarTareaActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityTicketsAgregarTareaBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        var flagTasks = flag
+
+        if (flagTasks){
+            val intent = intent.extras
+            val tasksDescription = intent!!.getString("tasks_description","")
+            binding.edtTasksDescription.setText(tasksDescription)
+            flag = false
+        }
 
         btn_fabs()
         btn_atras()
@@ -50,9 +61,10 @@ class TicketsAgregarTareaActivity : AppCompatActivity() {
     //INICIO - funcion que regresa a la vista anterior: activity_nav_footer_tickets.xml
     private fun btn_atras() {
        binding.btnAtrasActtaddt.setOnClickListener {
-           val intent_atras = Intent(this, NavFooterTicketsActivity::class.java)
+           /*val intent_atras = Intent(this, NavFooterTicketsActivity::class.java)
            intent_atras.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-           startActivity(intent_atras)
+           startActivity(intent_atras)*/
+           Toast.makeText(this, "falta implementar", Toast.LENGTH_SHORT).show()
        }
     }
 

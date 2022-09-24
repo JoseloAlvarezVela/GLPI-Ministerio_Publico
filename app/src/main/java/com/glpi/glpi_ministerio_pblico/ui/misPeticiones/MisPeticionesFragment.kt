@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
+import com.glpi.glpi_ministerio_pblico.MainActivity
 import com.glpi.glpi_ministerio_pblico.MainActivity.Companion.nameLoginUser
 import com.glpi.glpi_ministerio_pblico.VolleySingleton
 import com.glpi.glpi_ministerio_pblico.databinding.FragmentMisPeticionesBinding
@@ -100,6 +101,8 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.ontickteCl
                          TODO ese string en array para buscar los atributos necesarios de forma local */
 
                         playerModel.setGlpiID(DataTickets.getString("ID"))
+                        //MainActivity.idTicket = DataTickets.getString("ID") //aca recibiremos el id para adjutanr al volleyGet
+
                         playerModel.setGlpiTipo(DataTickets.getString("TIPO"))
 
                         playerModel.setGlpiDescripcion(DataTickets.getString("DESCRIPCION"))
@@ -172,7 +175,8 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.ontickteCl
                             //Log.i("mensaje tasks in false",""+jsResquestTask.getString("msg"))
                         }
 
-                        Log.i("mensaje ok",""+taskDescriptions)
+                        Log.i("mensaje ok",""+dataModelArrayList)
+                        //dataModelArrayList.sortBy { it.getGlpiTipo() }
                         dataModelArrayList.add(playerModel)
                     }
                     setupRecycler()
@@ -194,7 +198,7 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.ontickteCl
         context?.let { VolleySingleton.getInstance(it).addToRequestQueue(stringRequestDataTickets) }
         //FIN obtenemos perfil de usuario
 
-        requesteVolleyTickets()
+        //requesteVolleyTickets()
 
         val root = binding.root
 
@@ -221,6 +225,8 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.ontickteCl
                          TODO ese string en array para buscar los atributos necesarios de forma local */
 
                         playerModel.setGlpiID(DataTickets.getString("ID"))
+
+
                         playerModel.setGlpiTipo(DataTickets.getString("TIPO"))
 
                         playerModel.setGlpiDescripcion(DataTickets.getString("DESCRIPCION"))

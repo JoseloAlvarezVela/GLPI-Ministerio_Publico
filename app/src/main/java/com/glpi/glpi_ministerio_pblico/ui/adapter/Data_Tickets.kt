@@ -1,5 +1,7 @@
 package com.glpi.glpi_ministerio_pblico.ui.adapter
 
+import java.util.*
+
 /*1:
 creamos una clase para la lista de tickets y declaramos los atributos que vamos a obtener*/
 class Data_Tickets {
@@ -22,6 +24,9 @@ class Data_Tickets {
     //SECTION TASKS
     var glpiTasksName_: String? = null
     var glpiTasksDescripcion_: String? = null
+    var glpiTasksTipo_: String? = null
+    var conversationCreation_: Date? = null
+    var conversationName_: String? = null
 
 
     /*Estos métodos getter y setter nos ayudarán a mantener los datos mientras
@@ -157,5 +162,26 @@ class Data_Tickets {
     }
     fun setGlpiTasksDescripcion(GlpiTasksDescripcion: String){
         this.glpiTasksDescripcion_ = GlpiTasksDescripcion
+    }
+
+    fun getGlpiTasksTipo(): String{
+        return glpiTasksTipo_.toString()
+    }
+    fun setGlpiTasksTipo(GlpiTasksTipo: String){
+        this.glpiTasksTipo_ = GlpiTasksTipo
+    }
+
+    fun getConversationCreation(): Date? {
+        return conversationCreation_
+    }
+    fun setConversationCreation(ConversationCreation: Date) {
+        this.conversationCreation_ = ConversationCreation
+    }
+
+    fun getConversationName(): String{
+        return conversationName_.toString()
+    }
+    fun setConversationName(ConversationName: String){
+        this.conversationName_ = ConversationName
     }
 }

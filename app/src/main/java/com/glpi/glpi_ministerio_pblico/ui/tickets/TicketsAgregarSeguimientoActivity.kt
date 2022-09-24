@@ -16,6 +16,15 @@ class TicketsAgregarSeguimientoActivity : AppCompatActivity() {
         binding = ActivityTicketsAgregarSeguimientoBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        var flagTasks = MainActivity.flag
+
+        if (flagTasks){
+            val intent = intent.extras
+            val tasksDescription = intent!!.getString("tasks_description","")
+            binding.edtFollowupDescription.setText(tasksDescription)
+            MainActivity.flag = false
+        }
+
         btn_fabs_taddsegact()
         btn_header_taddsegact()
     }
@@ -23,9 +32,10 @@ class TicketsAgregarSeguimientoActivity : AppCompatActivity() {
     private fun btn_header_taddsegact() {
         //boton atras
         binding.btnAtrasActtaddseg.setOnClickListener {
-            val intent_atras = Intent(this, NavFooterTicketsActivity::class.java)
+            /*val intent_atras = Intent(this, NavFooterTicketsActivity::class.java)
             intent_atras.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            startActivity(intent_atras)
+            startActivity(intent_atras)*/
+            Toast.makeText(this, "falta implementar", Toast.LENGTH_SHORT).show()
         }
         //boton agregar seguimiento
         binding.btnAddsegActtaddseg.setOnClickListener {

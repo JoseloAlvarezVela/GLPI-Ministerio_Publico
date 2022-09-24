@@ -118,6 +118,8 @@ class RecycleView_Adapter_Tickets(
         return dataModelArrayList.size
     }
 
+
+
     //inicializamos los componetes de nuestro ticket de la forma tradicional
     inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         var tickets : LinearLayout //para evento click

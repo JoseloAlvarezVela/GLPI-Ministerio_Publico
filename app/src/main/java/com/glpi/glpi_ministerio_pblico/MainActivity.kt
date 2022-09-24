@@ -35,26 +35,16 @@ class MainActivity : AppCompatActivity(){
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
 
-    /*creamos la lista de arreglos que tendrá los objetos de la clase Data_Perfiles
-    esta lista de arreglos (dataModelArrayListPerfiles) funcionará como fuente de datos
-    internal lateinit var dataModelArrayListPerfil: ArrayList<Data_Perfiles>
-    internal lateinit var dataModelArrayListEntities: ArrayList<Data_Entities>
-    //creamos el objeto de la clase RecycleView_Adapter_Tickets
-    private var RecycleView_Adapter_Perfiles: RecycleView_Adapter_Perfiles? = null
-    private var RecycleView_Adapter_Entities: RecycleView_Adapter_Entities? = null
-    //creamos el objeto de la clase recyclerView
-    private var recyclerViewPerfiles: RecyclerView? = null
-    private var recyclerViewEntities: RecyclerView? = null
-    private var entitiesArray : String? = null
-    //private lateinit var entitiesArray: String*/
-
     companion object{
         val urlApi_Entities: String = "http://181.176.145.174:8080/api/user_entities"
         val urlApi_Profiles: String = "http://181.176.145.174:8080/api/user_profiles"
-        val urlApi_TicketID: String = "http://181.176.145.174:8080/api/ticket_info/223417"
+        val urlApi_TicketID: String = "http://181.176.145.174:8080/api/ticket_info/"
         val urlApi_Ticket: String = "http://181.176.145.174:8080/api/user_ticket"
 
         lateinit var nameLoginUser: String
+        var flag = false
+        //lateinit var idTicket: String
+        val idTicket: String = "223417"
     }
     lateinit var jsonObjectResponse: JSONObject
     lateinit var jsonArrayResponse: JSONArray
@@ -227,7 +217,6 @@ class MainActivity : AppCompatActivity(){
                 newButtonPerfil.text = dataPerfiles.getString("PERFIL")
 
                 //INICIO DISEÑO DE lINEALAYOUT
-                //Log.i("nombre Boton",""+newButtonPerfil.text.toString())
                 if (newButtonPerfil.text.toString() == perfilSelected){
                     newLinearLayout.setBackgroundResource(R.color.modalPerfiles)
                 }

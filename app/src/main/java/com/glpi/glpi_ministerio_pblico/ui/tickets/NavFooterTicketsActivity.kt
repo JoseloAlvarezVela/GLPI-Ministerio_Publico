@@ -9,39 +9,48 @@ import android.graphics.Typeface
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
+import android.text.Html
+import android.text.Spanned
 import android.util.Log
 import android.view.View
 import android.widget.LinearLayout
-import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import androidx.core.text.HtmlCompat
 import androidx.core.view.isVisible
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.glpi.glpi_ministerio_pblico.MainActivity
+import com.glpi.glpi_ministerio_pblico.MainActivity.Companion.flag
 import com.glpi.glpi_ministerio_pblico.MainActivity.Companion.urlApi_TicketID
 import com.glpi.glpi_ministerio_pblico.R
 import com.glpi.glpi_ministerio_pblico.VolleySingleton
 import com.glpi.glpi_ministerio_pblico.databinding.ActivityNavFooterTicketsBinding
-import com.glpi.glpi_ministerio_pblico.ui.shared.token
+import com.glpi.glpi_ministerio_pblico.ui.adapter.Data_Tickets
+import com.glpi.glpi_ministerio_pblico.ui.adapter.RecyclerAdapter
 import org.json.JSONObject
+import java.text.SimpleDateFormat
+import java.util.*
 
 
-class NavFooterTicketsActivity : AppCompatActivity() {
+class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversationClickListener {
     private lateinit var binding: ActivityNavFooterTicketsBinding
     private lateinit var jsonObjectResponse: JSONObject
+
+    /*creamos la lista de arreglos que tendrá los objetos de la clase Data_Tickets
+   esta lista de arreglos (dataModelArrayList) funcionará como fuente de datos*/
+    internal lateinit var dataModelArrayListConverdation: ArrayList<Data_Tickets>
 
     @SuppressLint("ResourceAsColor")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityNavFooterTicketsBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        DataToTicketsHistoricoActivity()
+        //DataToTicketsHistoricoActivity()
 
         volleyResquestGet(urlApi_TicketID)
 
@@ -63,19 +72,20 @@ class NavFooterTicketsActivity : AppCompatActivity() {
                 binding.btnConversacionFooter.setTextColor(Color.parseColor("#676161"))
 
                 binding.includeTickets.includeTicketsLayout.isVisible = true //se muestra
-                binding.includeTicketsHistorico.includeTicketsHistoricoLayout.isVisible = false //se esconde
+                binding.ticketConversation.isVisible = false
+                //binding.includeTicketsHistorico.includeTicketsHistoricoLayout.isVisible = false //se esconde
                 //binding.btnTicketsFooterCOLOR.setBackgroundResource(R.color.ticketsGris)
                 binding.btnConversacionFooterCOLOR.setBackgroundResource(R.color.ticketsBlanco)
 
                 //************INICIO DE SETEO LOS FAB'S DE LAYOUT activity_tickets_historico.xml************
                 binding.includeTicketsHistorico.fabSolucion.isVisible = false
-                    binding.includeTicketsHistorico.btnFabSolucion.isVisible = false
+                binding.includeTicketsHistorico.btnFabSolucion.isVisible = false
                 binding.includeTicketsHistorico.fabDocumentos.isVisible = false
-                    binding.includeTicketsHistorico.btnFabDocumentos.isVisible = false
+                binding.includeTicketsHistorico.btnFabDocumentos.isVisible = false
                 binding.includeTicketsHistorico.fabTareas.isVisible = false
-                    binding.includeTicketsHistorico.btnFabTareas.isVisible = false
+                binding.includeTicketsHistorico.btnFabTareas.isVisible = false
                 binding.includeTicketsHistorico.fabSeguimiento.isVisible = false
-                    binding.includeTicketsHistorico.btnFabSeguimiento.isVisible = false
+                binding.includeTicketsHistorico.btnFabSeguimiento.isVisible = false
                 binding.includeTicketsHistorico.fabBackgroud.isVisible = false
                 click_fab = false
                 //************FIN DE SETEO DE LOS FAB'S DE LAYOUT activity_tickets_historico.xml************
@@ -87,13 +97,14 @@ class NavFooterTicketsActivity : AppCompatActivity() {
 
         binding.btnConversacionFooter.setOnClickListener {
             if(clickConvezaciones == false){
+                binding.ticketConversation.isVisible = true
                 binding.btnTicketsFooter.iconTint = ContextCompat.getColorStateList(this, R.color.ticketsGris)
                 binding.btnTicketsFooter.setTextColor(Color.parseColor("#676161"))
 
                 binding.btnConversacionFooter.iconTint = ContextCompat.getColorStateList(this, R.color.textColor)
                 binding.btnConversacionFooter.setTextColor(Color.parseColor("#175381"))
 
-                binding.includeTicketsHistorico.includeTicketsHistoricoLayout.isVisible = true
+                //binding.includeTicketsHistorico.includeTicketsHistoricoLayout.isVisible = true
                 binding.includeTickets.includeTicketsLayout.isVisible = false
                 binding.btnTicketsFooterCOLOR.setBackgroundResource(R.color.ticketsBlanco)
                 //binding.btnConversacionFooterCOLOR.setBackgroundResource(R.color.ticketsGris)
@@ -150,25 +161,25 @@ class NavFooterTicketsActivity : AppCompatActivity() {
         binding.includeTicketsHistorico.fabDesplegarOpciones.setOnClickListener {
             if (click_fab == false){
                 binding.includeTicketsHistorico.fabSolucion.isVisible = true
-                    binding.includeTicketsHistorico.btnFabSolucion.isVisible = true
+                binding.includeTicketsHistorico.btnFabSolucion.isVisible = true
                 binding.includeTicketsHistorico.fabDocumentos.isVisible = true
-                    binding.includeTicketsHistorico.btnFabDocumentos.isVisible = true
+                binding.includeTicketsHistorico.btnFabDocumentos.isVisible = true
                 binding.includeTicketsHistorico.fabTareas.isVisible = true
-                    binding.includeTicketsHistorico.btnFabTareas.isVisible = true
+                binding.includeTicketsHistorico.btnFabTareas.isVisible = true
                 binding.includeTicketsHistorico.fabSeguimiento.isVisible = true
-                    binding.includeTicketsHistorico.btnFabSeguimiento.isVisible = true
+                binding.includeTicketsHistorico.btnFabSeguimiento.isVisible = true
                 binding.includeTicketsHistorico.fabBackgroud.isVisible = true
 
                 click_fab = true
             }else{
                 binding.includeTicketsHistorico.fabSolucion.isVisible = false
-                    binding.includeTicketsHistorico.btnFabSolucion.isVisible = false
+                binding.includeTicketsHistorico.btnFabSolucion.isVisible = false
                 binding.includeTicketsHistorico.fabDocumentos.isVisible = false
-                    binding.includeTicketsHistorico.btnFabDocumentos.isVisible = false
+                binding.includeTicketsHistorico.btnFabDocumentos.isVisible = false
                 binding.includeTicketsHistorico.fabTareas.isVisible = false
-                    binding.includeTicketsHistorico.btnFabTareas.isVisible = false
+                binding.includeTicketsHistorico.btnFabTareas.isVisible = false
                 binding.includeTicketsHistorico.fabSeguimiento.isVisible = false
-                    binding.includeTicketsHistorico.btnFabSeguimiento.isVisible = false
+                binding.includeTicketsHistorico.btnFabSeguimiento.isVisible = false
                 binding.includeTicketsHistorico.fabBackgroud.isVisible = false
 
                 click_fab = false
@@ -176,13 +187,13 @@ class NavFooterTicketsActivity : AppCompatActivity() {
         }
         binding.includeTicketsHistorico.fabBackgroud.setOnClickListener {
             binding.includeTicketsHistorico.fabSolucion.isVisible = false
-                binding.includeTicketsHistorico.btnFabSolucion.isVisible = false
+            binding.includeTicketsHistorico.btnFabSolucion.isVisible = false
             binding.includeTicketsHistorico.fabDocumentos.isVisible = false
-                binding.includeTicketsHistorico.btnFabDocumentos.isVisible = false
+            binding.includeTicketsHistorico.btnFabDocumentos.isVisible = false
             binding.includeTicketsHistorico.fabTareas.isVisible = false
-                binding.includeTicketsHistorico.btnFabTareas.isVisible = false
+            binding.includeTicketsHistorico.btnFabTareas.isVisible = false
             binding.includeTicketsHistorico.fabSeguimiento.isVisible = false
-                binding.includeTicketsHistorico.btnFabSeguimiento.isVisible = false
+            binding.includeTicketsHistorico.btnFabSeguimiento.isVisible = false
             binding.includeTicketsHistorico.fabBackgroud.isVisible = false
             binding.includeTicketsHistorico.fabDesplegarOpciones.isVisible = true
 
@@ -212,50 +223,67 @@ class NavFooterTicketsActivity : AppCompatActivity() {
             startActivity(intent_agregar_documento)
         }
         //fin eventos click de fab_opciones
+
+    }
+
+    private fun setupRecyclerView(){
+        val recyclerViewNews = binding.recyclerViewConversation
+        val newsList = dataModelArrayListConverdation
+        val newsAdapter = RecyclerAdapter(this,newsList,this)
+        val layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, true,)
+        layoutManager.stackFromEnd = true
+
+        recyclerViewNews.adapter = newsAdapter
+        recyclerViewNews.layoutManager = layoutManager
+        //recyclerViewNews.setHasFixedSize(true)
     }
 
     private fun volleyResquestGet(urlApi_: String) {
         jsonObjectResponse = JSONObject()
-        //val bundle = intent.extras
-        //val TicketID_ = bundle!!.getString("TicketID").toString()
 
         val stringRequestDataTickets = @RequiresApi(Build.VERSION_CODES.N)
         object : StringRequest(Method.GET,
-            urlApi_, Response.Listener { response ->
+            urlApi_+MainActivity.idTicket, Response.Listener { response ->
                 try {
+                    dataModelArrayListConverdation = ArrayList()
                     jsonObjectResponse = JSONObject(response)
-                    val nTasks = jsonObjectResponse.getJSONObject("0")
-                    if (jsonObjectResponse.length() > 1){
 
+                    //val nTasks = jsonObjectResponse.getJSONObject("0")
+                    if (jsonObjectResponse.length() > 1){
                         var iterador = 0
                         //var taskDescriptions = ArrayList<String>()
                         var tasksIterador: JSONObject
                         for (i in  0 until jsonObjectResponse.length()){
+                            val playerModel = Data_Tickets()
                             tasksIterador = jsonObjectResponse.getJSONObject(iterador.toString())
                             val tasksTipo = tasksIterador.getString("TIPO")
-                            iterador++
-                            if (tasksTipo == "TASK"){
-                                val taskDescriptions = tasksIterador.getString("CONTENIDO")
-                                creatNewLinearLayout(taskDescriptions)
-                                binding.includeTicketsHistorico.layoutConversation.addView(
-                                    creatNewLinearLayout(taskDescriptions))
-                            }else if( tasksTipo == "FOLLOWUP"){
-                                val taskDescriptionsFollow = tasksIterador.getString("CONTENIDO")
-                                creatNewLinearLayoutFollow(taskDescriptionsFollow)
-                                binding.includeTicketsHistorico.layoutConversation.addView(
-                                    creatNewLinearLayoutFollow(taskDescriptionsFollow))
-                            }else{
-                                val taskDescriptionsSolution = tasksIterador.getString("CONTENIDO")
-                                creatNewLinearLayoutSolution(taskDescriptionsSolution)
-                                binding.includeTicketsHistorico.layoutConversation.addView(
-                                    creatNewLinearLayoutSolution(taskDescriptionsSolution))
-                            }
-                            //Log.i("mensaje tipo",""+tasksTipo)
-                        }
+                            val tasksFechaCreacion = tasksIterador.getString("FECHA_CREACION")
+                            val tasksNombre = tasksIterador.getString("NOMBRE")
+                            val tasksApellido = tasksIterador.getString("APELLIDO")
+                            playerModel.setConversationName("$tasksNombre $tasksApellido")
+                            val dateTime = tasksFechaCreacion.replace(" ","T")
+                            val dateTimeiso1801 = dateTime+"Z"
+                            val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
+                            val tasks_dateTime: Date = format.parse(dateTimeiso1801)
+                            Log.i("mensaje creacionString",""+tasksFechaCreacion)
+                            Log.i("mensaje creacion",""+tasks_dateTime)
+                            playerModel.setConversationCreation(tasks_dateTime)
 
+                            val decoded: String = Html.fromHtml(tasksIterador.getString("CONTENIDO")).toString()
+                            val decoded2: Spanned = HtmlCompat.fromHtml(decoded, HtmlCompat.FROM_HTML_MODE_COMPACT)
+                            playerModel.setGlpiTasksDescripcion(decoded2.toString())
+
+                            iterador++
+                            playerModel.setGlpiTasksTipo(tasksTipo)
+
+                            dataModelArrayListConverdation.sortBy { it.getConversationCreation() }
+                            dataModelArrayListConverdation.add(playerModel)
+
+                        }
                     }else{
                         //do anything
                     }
+                    setupRecyclerView()
                 } catch (e: Exception) {
                     e.printStackTrace()
                     Toast.makeText(this, "token expirado: $e", Toast.LENGTH_LONG).show()
@@ -266,7 +294,7 @@ class NavFooterTicketsActivity : AppCompatActivity() {
             }) {
             override fun getParams(): Map<String, String>? {
                 val params: MutableMap<String, String> = HashMap()
-                params["session_token"] = token.prefer.getToken()
+                params["session_token"] = "token.prefer.getToken()"
                 return params
             }
         }
@@ -290,6 +318,7 @@ class NavFooterTicketsActivity : AppCompatActivity() {
 
     private fun creatNewLinearLayoutFollow(taskDescriptions: String): LinearLayout {
         val newLayoutFollow = LinearLayout(this) // declaramos el componente
+        newLayoutFollow.setPadding(30,32,0,32)
         //inicio tamaño de linearlayout
         val layoutParams = LinearLayout.LayoutParams(1000,500 )
         newLayoutFollow.layoutParams = layoutParams
@@ -302,6 +331,7 @@ class NavFooterTicketsActivity : AppCompatActivity() {
 
     private fun creatNewLinearLayoutSolution(taskDescriptions: String): LinearLayout {
         val Solution = LinearLayout(this) // declaramos el componente
+            Solution.setPadding(30,32,0,32)
         //inicio tamaño de linearlayout
         val layoutParams = LinearLayout.LayoutParams(1000,500 )
         Solution.layoutParams = layoutParams
@@ -405,5 +435,23 @@ class NavFooterTicketsActivity : AppCompatActivity() {
         //SECTION TASKS
         binding.includeTicketsHistorico.txtTaskNameLogin.text = taskName
         binding.includeTicketsHistorico.txtTaskDescription.text = taskDescription
+    }
+
+    override fun onEditClick(glpiTasksDescripcion: String, glpiConversationTipo: String) {
+        val intentTasks = (Intent(this,TicketsAgregarTareaActivity::class.java))
+        intentTasks.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        val intentFollowUp = (Intent(this,TicketsAgregarSeguimientoActivity::class.java))
+        intentFollowUp.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        flag = true
+        //Log.i("mensaje edit: ",""+glpiConversationTipo)
+        if (glpiConversationTipo == "TASK"){
+            intentTasks.putExtra("tasks_description",glpiTasksDescripcion)
+            startActivity(intentTasks)
+        }else{
+            intentFollowUp.putExtra("tasks_description",glpiTasksDescripcion)
+            startActivity(intentFollowUp)
+        }
+
+
     }
 }
