@@ -88,7 +88,6 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.ontickteCl
             url_DataTickets, Response.Listener { response ->
                 try {
                     val JS_DataTickets = JSONArray(response) //obtenemos el objeto json
-                    //jsonTicketResponse = JSONArray(response) //obtenemos el objeto json
 
                     dataModelArrayList = ArrayList()
                     //Log.i("mensaje tasks in",""+jsonTicketResponse)
@@ -101,7 +100,7 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.ontickteCl
                          TODO ese string en array para buscar los atributos necesarios de forma local */
 
                         playerModel.setGlpiID(DataTickets.getString("ID"))
-                        //MainActivity.idTicket = DataTickets.getString("ID") //aca recibiremos el id para adjutanr al volleyGet
+                        MainActivity.idTicket = DataTickets.getString("ID") //aca recibiremos el id para adjutanr al volleyGet
 
                         playerModel.setGlpiTipo(DataTickets.getString("TIPO"))
 
@@ -191,7 +190,7 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.ontickteCl
             }) {
             override fun getParams(): Map<String, String>? {
                 val params: MutableMap<String, String> = HashMap()
-                params.put("session_token", token.prefer.getToken())
+                params["session_token"] = token.prefer.getToken()
                 return params
             }
         }

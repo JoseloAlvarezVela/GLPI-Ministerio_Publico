@@ -1,5 +1,6 @@
 package com.glpi.glpi_ministerio_pblico
 
+import android.app.DatePickerDialog
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.Typeface
@@ -28,6 +29,8 @@ import com.glpi.glpi_ministerio_pblico.ui.shared.token.Companion.prefer
 import com.google.android.material.navigation.NavigationView
 import org.json.JSONArray
 import org.json.JSONObject
+import java.util.*
+import kotlin.collections.HashMap
 
 
 //class MainActivity : AppCompatActivity(),RecycleView_Adapter_Perfiles.ItemClickListener {
@@ -43,8 +46,8 @@ class MainActivity : AppCompatActivity(){
 
         lateinit var nameLoginUser: String
         var flag = false
-        //lateinit var idTicket: String
-        val idTicket: String = "223417"
+        lateinit var idTicket: String
+        //val idTicket: String = "223417"
     }
     lateinit var jsonObjectResponse: JSONObject
     lateinit var jsonArrayResponse: JSONArray
@@ -289,8 +292,22 @@ class MainActivity : AppCompatActivity(){
             }
         }
         //boton que abre calendario modal filtro por ultima modificación
-        binding.appBarMain.includeFiltroRight.btnUltModificacionFiltroRight.setOnClickListener {
-            binding.appBarMain.includeModalCalendario.LinearLayoutFiltroCalendario.isVisible = true
+        binding.appBarMain.includeFiltroRight.btnUltModificacionFiltroRight.setOnClickListener { //TODO: ACA TENGO QUE CONTINUAR
+            //binding.appBarMain.includeModalCalendario.LinearLayoutFiltroCalendario.isVisible = true
+            val c = Calendar.getInstance()
+            val year = c.get(Calendar.YEAR)
+            val month = c.get(Calendar.MONTH)
+            val day = c.get(Calendar.DAY_OF_MONTH)
+
+
+            val dpd = DatePickerDialog(this, { view, year, monthOfYear, dayOfMonth ->
+
+                //Display Selected date in textbox
+                //lblDate.setText("" + dayOfMonth + " " + MONTHS[monthOfYear] + ", " + year)
+
+            }, year, month, day)
+
+            dpd.show()
         }
         binding.appBarMain.includeModalCalendario.LinearLayoutFiltroCalendario.setOnClickListener {
             binding.appBarMain.includeModalCalendario.LinearLayoutFiltroCalendario.isVisible = false

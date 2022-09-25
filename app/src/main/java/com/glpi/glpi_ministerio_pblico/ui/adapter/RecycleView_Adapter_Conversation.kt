@@ -41,25 +41,25 @@ class RecyclerAdapter(val context: Context,
         override fun bind(item: Data_Tickets, position: Int) {
             //Log.i("mensajeAdapter",""+item.getGlpiTasksDescripcion())
             if(item.getGlpiTasksTipo() == "TASK"){
-                val param = itemView.findViewById<LinearLayout>(R.id.ticket_estado_conversation).layoutParams as ViewGroup.MarginLayoutParams
+                val param = itemView.findViewById<LinearLayout>(R.id.tv_conversation).layoutParams as ViewGroup.MarginLayoutParams
                 param.setMargins(0,10,100,10)
-                itemView.findViewById<LinearLayout>(R.id.ticket_estado_conversation).layoutParams = param
+                itemView.findViewById<LinearLayout>(R.id.tv_conversation).layoutParams = param
 
-                itemView.findViewById<LinearLayout>(R.id.ticket_estado_conversation).setBackgroundResource(R.drawable.esq_redondeada_tasks)
+                itemView.findViewById<LinearLayout>(R.id.tv_conversation).setBackgroundResource(R.drawable.esq_redondeada_tasks)
                 itemView.findViewById<TextView>(R.id.txt_descripcionTicketHistorico_conversation).text =
                     item.getGlpiTasksDescripcion()
             }else if(item.getGlpiTasksTipo() == "FOLLOWUP"){
                 itemView.findViewById<LinearLayout>(R.id.tv_conversation_estado).isVisible = false
-                val param = itemView.findViewById<LinearLayout>(R.id.ticket_estado_conversation).layoutParams as ViewGroup.MarginLayoutParams
+                val param = itemView.findViewById<LinearLayout>(R.id.tv_conversation).layoutParams as ViewGroup.MarginLayoutParams
                 param.setMargins(100,10,0,10)
-                itemView.findViewById<LinearLayout>(R.id.ticket_estado_conversation).layoutParams = param
-                itemView.findViewById<LinearLayout>(R.id.ticket_estado_conversation).setBackgroundResource(R.drawable.esq_redondeada_followup)
+                itemView.findViewById<LinearLayout>(R.id.tv_conversation).layoutParams = param
+                itemView.findViewById<LinearLayout>(R.id.tv_conversation).setBackgroundResource(R.drawable.esq_redondeada_followup)
             }else{
                 itemView.findViewById<LinearLayout>(R.id.tv_conversation_estado).isVisible = false
-                val param = itemView.findViewById<LinearLayout>(R.id.ticket_estado_conversation).layoutParams as ViewGroup.MarginLayoutParams
+                val param = itemView.findViewById<LinearLayout>(R.id.tv_conversation).layoutParams as ViewGroup.MarginLayoutParams
                 param.setMargins(100,10,0,10)
-                itemView.findViewById<LinearLayout>(R.id.ticket_estado_conversation).layoutParams = param
-                itemView.findViewById<LinearLayout>(R.id.ticket_estado_conversation).setBackgroundResource(R.drawable.esq_redondeada_solution)
+                itemView.findViewById<LinearLayout>(R.id.tv_conversation).layoutParams = param
+                itemView.findViewById<LinearLayout>(R.id.tv_conversation).setBackgroundResource(R.drawable.esq_redondeada_solution)
             }
             itemView.findViewById<TextView>(R.id.txt_nameOperador_conversation).text =
                 item.getConversationName()

@@ -7,7 +7,7 @@
     android:orientation="vertical">
 
     <LinearLayout
-        android:id="@+id/ticket_estado_conversation"
+        android:id="@+id/tv_conversation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/esq_redondeada_azul"
