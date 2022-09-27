@@ -26,7 +26,6 @@ class Data_Tickets {
     var glpiTasksDescripcion_: String? = null
     var glpiTasksTipo_: String? = null
     var conversationCreation_: Date? = null
-    var conversationName_: String? = null
 
 
     /*Estos métodos getter y setter nos ayudarán a mantener los datos mientras
@@ -176,12 +175,5 @@ class Data_Tickets {
     }
     fun setConversationCreation(ConversationCreation: Date) {
         this.conversationCreation_ = ConversationCreation
-    }
-
-    fun getConversationName(): String{
-        return conversationName_.toString()
-    }
-    fun setConversationName(ConversationName: String){
-        this.conversationName_ = ConversationName
     }
 }

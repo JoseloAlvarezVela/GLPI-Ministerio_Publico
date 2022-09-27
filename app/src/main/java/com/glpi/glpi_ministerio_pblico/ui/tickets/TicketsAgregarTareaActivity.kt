@@ -1,24 +1,51 @@
 package com.glpi.glpi_ministerio_pblico.ui.tickets
 
 import android.content.Intent
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.KeyEvent
+import android.text.Html
+import android.text.Spanned
+import android.util.Log
 import android.widget.Toast
+import androidx.core.text.HtmlCompat
 import androidx.core.view.isVisible
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.android.volley.Response
+import com.android.volley.toolbox.StringRequest
 import com.glpi.glpi_ministerio_pblico.MainActivity
+import com.glpi.glpi_ministerio_pblico.MainActivity.Companion.decodeHtml
 import com.glpi.glpi_ministerio_pblico.MainActivity.Companion.flag
-import com.glpi.glpi_ministerio_pblico.R
+import com.glpi.glpi_ministerio_pblico.MainActivity.Companion.urlApi_TasksTemplate
+import com.glpi.glpi_ministerio_pblico.VolleySingleton
 import com.glpi.glpi_ministerio_pblico.databinding.ActivityTicketsAgregarTareaBinding
+import com.glpi.glpi_ministerio_pblico.ui.adapter.Data_TasksTemplate
+import com.glpi.glpi_ministerio_pblico.ui.adapter.RecycleView_Adapter_TasksTemplate
+import com.glpi.glpi_ministerio_pblico.ui.shared.token
+import org.json.JSONArray
+import java.util.*
 
-class TicketsAgregarTareaActivity : AppCompatActivity() {
+class TicketsAgregarTareaActivity : AppCompatActivity(), RecycleView_Adapter_TasksTemplate.onTasksTemplateClickListener {
     lateinit var binding: ActivityTicketsAgregarTareaBinding //declaramos binding para acceder variables
+    //creamos el objeto de la clase recyclerView
+    private var recyclerView: RecyclerView? = null
+    /*creamos la lista de arreglos que tendrá los objetos de la clase Data_Tickets
+   esta lista de arreglos (dataModelArrayList) funcionará como fuente de datos*/
+    internal lateinit var dataModelArrayListTasksTemplate: ArrayList<Data_TasksTemplate>
+    private var recyclerView_Adapter_TasksTemplate: RecycleView_Adapter_TasksTemplate? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityTicketsAgregarTareaBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         var flagTasks = flag
+        recyclerView = binding.includeModalPlantillaTarea.recyclerTasksTemplate
+        //recyclerView = binding.recyclerTaskTemplate
+
+        //setupRecycler()
+        volleyRequestDataTasksTemplate()
 
         if (flagTasks){
             val intent = intent.extras
@@ -33,6 +60,56 @@ class TicketsAgregarTareaActivity : AppCompatActivity() {
         btn_agregarCat()
 
     }
+
+    private fun volleyRequestDataTasksTemplate() {
+        val stringRequestDataTickets = object : StringRequest(Method.POST,
+            urlApi_TasksTemplate, Response.Listener { response ->
+                try {
+                    dataModelArrayListTasksTemplate = ArrayList()
+
+                    val jsonObjectResponse = JSONArray(response)
+                    var iterador = 0
+                    for (i in  0 until jsonObjectResponse.length()){
+                        val nTemplate = jsonObjectResponse.getJSONObject(iterador)
+                        val player = Data_TasksTemplate()
+                        player.setNombreTasksTemplate(nTemplate.getString("NOMBRE"))
+                        player.setContentTasksTemplate(nTemplate.getString("CONTENIDO"))
+                        iterador++
+                        Log.i("mensaje posicion",""+nTemplate.getString("NOMBRE"))
+                        dataModelArrayListTasksTemplate.add(player)
+                    }
+                    setupRecycler()
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    Toast.makeText(this, "token expirado: $e", Toast.LENGTH_LONG).show()
+                }
+            }, Response.ErrorListener {
+                Toast.makeText(this, "ERROR CON EL SERVIDOR", Toast.LENGTH_SHORT).show()
+            }) {
+            override fun getParams(): Map<String, String>? {
+                val params: MutableMap<String, String> = HashMap()
+                params["session_token"] = token.prefer.getToken()
+                return params
+            }
+        }
+        this?.let {
+            VolleySingleton.getInstance(it).addToRequestQueue(stringRequestDataTickets)
+        }
+    }
+
+
+    private fun setupRecycler() {
+        val layoutManager =
+            LinearLayoutManager(this, LinearLayoutManager.VERTICAL, true,)
+        layoutManager.stackFromEnd = true
+
+        recyclerView!!.layoutManager = layoutManager
+
+        recyclerView_Adapter_TasksTemplate =
+            RecycleView_Adapter_TasksTemplate(this,dataModelArrayListTasksTemplate,this)
+        recyclerView!!.adapter = recyclerView_Adapter_TasksTemplate
+    }
+
     //INICIO - funcion que abre modal para escoger una tarea
     private fun btn_agregarCat() {
         //INICO - boton que abre modal_agregar_cat_tickets.xml
@@ -61,16 +138,16 @@ class TicketsAgregarTareaActivity : AppCompatActivity() {
     //INICIO - funcion que regresa a la vista anterior: activity_nav_footer_tickets.xml
     private fun btn_atras() {
        binding.btnAtrasActtaddt.setOnClickListener {
-           /*val intent_atras = Intent(this, NavFooterTicketsActivity::class.java)
+           val intent_atras = Intent(this, NavFooterTicketsActivity::class.java)
            intent_atras.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-           startActivity(intent_atras)*/
-           Toast.makeText(this, "falta implementar", Toast.LENGTH_SHORT).show()
+           startActivity(intent_atras)
        }
     }
 
     //INICIO - funcion que despliega los FAB's
+    var click: Boolean = false
     private fun btn_fabs(){
-        var click: Boolean = false
+
 
         //INICIO DE inicialización de variables
         val desplegar_fabs = binding.fabDesplegarAddTarea
@@ -144,4 +221,20 @@ class TicketsAgregarTareaActivity : AppCompatActivity() {
         //FIN de eventos de click de los FAB's
     }
     //FIN - funcion que despliega los FAB's
+
+
+    override fun onTasksTemplateClick(nameTasksTemplate: String, contentTasksTemplate: String) {
+        binding.includeModalPlantillaTarea.modalPlantillaAgregarTarea.isVisible = false
+        binding.LayoutBackgroudAgregarTarea.isVisible = false
+        binding.fabPlantilla.isVisible = false
+        binding.fabFoto.isVisible = false
+        binding.fabArchivo.isVisible = false
+        click = false
+        binding.LayoutFabAgregarTarea.isVisible = true
+        //val formatoText = decodeHtml(contentTasksTemplate).split(" ")
+        binding.edtTasksDescription.setText(decodeHtml(contentTasksTemplate))
+        binding.edtTasksDescription.setTextColor(Color.parseColor("#1D20DD"))
+
+        //Log.i("mensaje html",""+formatoText)
+    }
 }

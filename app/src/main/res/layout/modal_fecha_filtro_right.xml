@@ -15,10 +15,11 @@
         android:visibility="gone">
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#FFFFFF"
             android:clickable="true"
+            android:gravity="center"
             android:orientation="vertical"
             android:paddingBottom="10sp">
 
@@ -28,13 +29,36 @@
                 android:layout_height="wrap_content" />
 
             <TextView
-                android:id="@+id/textView19"
-                android:layout_width="match_parent"
+                android:id="@+id/fecha_start"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/averia_sans_libre_light"
                 android:gravity="center"
-                android:text="Desde &quot;dia X&quot; - Hasta &quot;dia Y&quot;"
                 android:textColor="#000000" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/fecha_end"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/averia_sans_libre_light"
+                    android:gravity="center"
+                    android:textColor="#000000" />
+
+                <ImageButton
+                    android:id="@+id/img_delete"
+                    android:layout_width="15sp"
+                    android:layout_height="15sp"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:padding="5sp"
+                    android:visibility="invisible"
+                    app:srcCompat="@drawable/ic_cerrar" />
+            </LinearLayout>
+
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -51,7 +75,7 @@
                     android:orientation="vertical">
 
                     <Button
-                        android:id="@+id/button12"
+                        android:id="@+id/btn_starDay"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="5sp"
@@ -70,12 +94,13 @@
                     android:orientation="vertical">
 
                     <Button
-                        android:id="@+id/button13"
+                        android:id="@+id/btn_endDay"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="5sp"
                         android:layout_weight="1"
                         android:background="?android:attr/selectableItemBackground"
+                        android:enabled="false"
                         android:fontFamily="@font/averia_sans_libre_light"
                         android:text="Dia Fin" />
                 </LinearLayout>
@@ -89,10 +114,11 @@
                 android:orientation="vertical">
 
                 <Button
-                    android:id="@+id/button14"
+                    android:id="@+id/btn_aceptar_fecha"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="?android:attr/selectableItemBackground"
+                    android:enabled="false"
                     android:fontFamily="@font/averia_sans_libre_light"
                     android:text="Aceptar" />
             </LinearLayout>

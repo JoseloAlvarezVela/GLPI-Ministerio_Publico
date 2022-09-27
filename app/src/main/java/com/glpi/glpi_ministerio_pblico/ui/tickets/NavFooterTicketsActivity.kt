@@ -1,6 +1,5 @@
 package com.glpi.glpi_ministerio_pblico.ui.tickets
 
-import android.R.attr.tag
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Color
@@ -17,20 +16,16 @@ import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.text.HtmlCompat
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.android.volley.AuthFailureError
-import com.android.volley.Request
 import com.android.volley.Response
-import com.android.volley.VolleyLog
-import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.StringRequest
 import com.glpi.glpi_ministerio_pblico.MainActivity
 import com.glpi.glpi_ministerio_pblico.MainActivity.Companion.flag
-import com.glpi.glpi_ministerio_pblico.MainActivity.Companion.idTicket
 import com.glpi.glpi_ministerio_pblico.MainActivity.Companion.urlApi_TicketID
 import com.glpi.glpi_ministerio_pblico.R
 import com.glpi.glpi_ministerio_pblico.VolleySingleton
@@ -38,7 +33,6 @@ import com.glpi.glpi_ministerio_pblico.databinding.ActivityNavFooterTicketsBindi
 import com.glpi.glpi_ministerio_pblico.ui.adapter.Data_Tickets
 import com.glpi.glpi_ministerio_pblico.ui.adapter.RecyclerAdapter
 import com.glpi.glpi_ministerio_pblico.ui.shared.token
-import org.json.JSONException
 import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.*
@@ -57,9 +51,10 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
         super.onCreate(savedInstanceState)
         binding = ActivityNavFooterTicketsBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
         DataToTicketsHistoricoActivity()
-        //volleyGetRequest()
-        volleyResquestGet(urlApi_TicketID)
+
+        volleyResquestPost(urlApi_TicketID)
 
 
         //INICIO toogle buton tickets
@@ -237,7 +232,7 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
         val recyclerViewNews = binding.recyclerViewConversation
         val newsList = dataModelArrayListConverdation
         val newsAdapter = RecyclerAdapter(this,newsList,this)
-        val layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        val layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, true,)
         layoutManager.stackFromEnd = true
 
         recyclerViewNews.adapter = newsAdapter
@@ -245,150 +240,65 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
         //recyclerViewNews.setHasFixedSize(true)
     }
 
-    private fun volleyGetRequest(){
-
-        val ConfiURL = "http://181.176.145.174:8080/api/ticket_info/"
-
-        val req: JsonObjectRequest = object : JsonObjectRequest(
-            Method.GET, ConfiURL+idTicket,
-            null,
-            Response.Listener { response ->
-                Log.i("tag", response.toString())
-                Toast.makeText(
-                    this,
-                    response.toString(), Toast.LENGTH_SHORT
-                ).show()
-            },
-            Response.ErrorListener { error ->
-                Log.i("tag", error.toString())
-                Toast.makeText(
-                    this,
-                    error.message, Toast.LENGTH_SHORT
-                ).show()
-            }) {
-            @Throws(AuthFailureError::class)
-            override fun getHeaders(): Map<String, String> {
-                val headers = HashMap<String, String>()
-                //headers["Content-Type"] = "application/json";
-                headers["x-access-token"] = "goldapi-ds7ftl8h8jgec-io"
-                return headers
-            }
-        }
-        /*val req: JsonObjectRequest = object : JsonObjectRequest(
-            Method.GET,ConfiURL,null,
-            Response.Listener { response ->
-                Log.i("Response", response.toString())
-            },
-            Response.ErrorListener { error ->
-                //VolleyLog.d("Error", "Error: " + error.message)
-                Log.i("Response error: ", error.toString())
-                Toast.makeText(this, "Response E: " + error.message, Toast.LENGTH_SHORT)
-                    .show()
-            }) {
-            override fun getHeaders(): Map<String, String>? {
-                val headers = HashMap<String, String>()
-                headers.put("Content-Type", "application/x-www-form-urlencoded");
-                headers["session_token"] = "8qf5e9e5rcjolmda8efa4d7q4j"
-                return headers
-            }*/
-            /*@Throws(AuthFailureError::class)
-            open fun getHeaders(): MutableMap<String?, String?>? {
-                val headers: MutableMap<String, String> = HashMap()
-                val credentials = "username:password"
-                val auth =
-                    "Basic " + Base64.encodeToString(credentials.toByteArray(), Base64.NO_WRAP)
-                headers["Content-Type"] = "application/json"
-                headers["Authorization"] = auth
-                return headers
-            }*/
-            /*@Throws(AuthFailureError::class)
-            override fun getHeaders(): MutableMap<String, String>? {
-                val headers: MutableMap<String, String> = HashMap()
-                /*val credentials = "username:password"
-                val auth =
-                    "Basic " + Base64.encodeToString(credentials.toByteArray(), Base64.NO_WRAP)*/
-                //headers["Content-Type"] = "application/x-www-form-urlencoded"
-                headers["session_token"] = "8qf5e9e5rcjolmda8efa4d7q4j"
-                return headers
-            }*/
-            /*override fun getBodyContentType(): String {
-                return "application/x-www-form-urlencoded; charset=utf-8"
-            }*/
-
-            /*@Throws(AuthFailureError::class)
-            override fun getHeaders(): Map<String, String> {
-                val headers = HashMap<String, String>()
-                headers["session_token"] = "8qf5e9e5rcjolmda8efa4d7q4j"
-                return headers
-            }*/
-        //}
-        VolleySingleton.getInstance(this).addToRequestQueue(req)
-        /*val queue = Volley.newRequestQueue(applicationContext)
-        queue.add(req)*/
-    }
-
-    private fun volleyResquestGet(urlApi_: String) {
+    private fun volleyResquestPost(urlApi_: String) {
         val bundle = intent.extras
         val TicketID_ = bundle!!.getString("TicketID")
+        jsonObjectResponse = JSONObject()
 
-        Log.i("mensaje idTickect", "" +TicketID_)
-        val playerModel = Data_Tickets()
-        val stringRequestDataTickets = object : StringRequest(Request.Method.POST,
-            "$urlApi_$TicketID_", Response.Listener { response ->
+        val stringRequestDataTickets = @RequiresApi(Build.VERSION_CODES.N)
+        object : StringRequest(Method.POST,
+            urlApi_+TicketID_, Response.Listener { response ->
                 try {
                     dataModelArrayListConverdation = ArrayList()
                     jsonObjectResponse = JSONObject(response)
-                    if (jsonObjectResponse.length() > 1) {
-                        var iterador = 0
-                        //var taskDescriptions = ArrayList<String>()
-                        var tasksIterador: JSONObject
-                        for (i in 0 until jsonObjectResponse.length()-1) {
+                    Log.i("mensaje posicion",""+jsonObjectResponse.getString("0").get(2))
+                    //val nTasks = jsonObjectResponse.getJSONObject("0")
+                    var iterador = 0
+                    var tasksIterador: JSONObject
+                    for (i in  0 until jsonObjectResponse.length()){
 
+                        if (jsonObjectResponse.getString(iterador.toString()).get(2) == 'T'){
+                            val playerModel = Data_Tickets()
                             tasksIterador = jsonObjectResponse.getJSONObject(iterador.toString())
-                            Log.i("mensaje response", "" + tasksIterador)
-                            if (tasksIterador.toString().get(2) == 'T') {
-                                val tasksTipo = tasksIterador.getString("TIPO")
-                                val tasksFechaCreacion = tasksIterador.getString("FECHA_CREACION")
-                                val tasksNombre = tasksIterador.getString("NOMBRE")
-                                val tasksApellido = tasksIterador.getString("APELLIDO")
-                                playerModel.setConversationName("$tasksNombre $tasksApellido")
-                                val dateTime = tasksFechaCreacion.replace(" ", "T")
-                                val dateTimeiso1801 = dateTime + "Z"
-                                val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
-                                val tasks_dateTime: Date = format.parse(dateTimeiso1801)
 
-                                playerModel.setConversationCreation(tasks_dateTime)
+                            val tasksTipo = tasksIterador.getString("TIPO")
+                            val tasksNameOperador = tasksIterador.getString("NOMBRE")
+                            val tasksApellidoOperador = tasksIterador.getString("APELLIDO")
+                            playerModel.setGlpiTasktName("$tasksNameOperador $tasksApellidoOperador")
+                            val tasksFechaCreacion = tasksIterador.getString("FECHA_CREACION")
+                            val dateTime = tasksFechaCreacion.replace(" ","T")
+                            val dateTimeiso1801 = dateTime+"Z"
+                            val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
+                            val tasks_dateTime: Date = format.parse(dateTimeiso1801)
+                            Log.i("mensaje creacionString",""+tasksFechaCreacion)
 
-                                val decoded: String =
-                                    Html.fromHtml(tasksIterador.getString("CONTENIDO")).toString()
-                                val decoded2: Spanned =
-                                    HtmlCompat.fromHtml(decoded, HtmlCompat.FROM_HTML_MODE_COMPACT)
-                                playerModel.setGlpiTasksDescripcion(decoded2.toString())
+                            playerModel.setConversationCreation(tasks_dateTime)
+                            val decoded: String = Html.fromHtml(tasksIterador.getString("CONTENIDO")).toString()
+                            val decoded2: Spanned = HtmlCompat.fromHtml(decoded, HtmlCompat.FROM_HTML_MODE_COMPACT)
+                            //Log.i("mensaje taskiterador",""+decoded2)
+                            playerModel.setGlpiTasksDescripcion(decoded2.toString())
 
-                                iterador++
-                                playerModel.setGlpiTasksTipo(tasksTipo)
-                            } else {
-                                val tasksTipo = tasksIterador.getString("scalar")
-                                //Log.i("mensaje scalar",""+tasksTipo)
-                                playerModel.setGlpiTasksDescripcion(tasksIterador.getString("scalar"))
-                            }
-
+                            iterador++
+                            playerModel.setGlpiTasksTipo(tasksTipo)
 
                             dataModelArrayListConverdation.sortBy { it.getConversationCreation() }
                             dataModelArrayListConverdation.add(playerModel)
-
+                        }else{
+                            //Log.i("mensaje creacionString",""+jsonObjectResponse.getString("scalar"))
+                            //iterador++
+                            //----------------------------------------------------------------------------
                         }
-                    } else {
-                        //do anything
                     }
+
                     setupRecyclerView()
                 } catch (e: Exception) {
                     e.printStackTrace()
                     Toast.makeText(this, "token expirado: $e", Toast.LENGTH_LONG).show()
+                    //Log.i("mensaje entitis dentroE",""+response.get(0))
                 }
             }, Response.ErrorListener {
-                Toast.makeText(this, "ERROR CON EL SERVIDOR de isaac", Toast.LENGTH_SHORT).show()
-            }){
+                Toast.makeText(this, "ERROR CON EL SERVIDOR", Toast.LENGTH_SHORT).show()
+            }) {
             override fun getParams(): Map<String, String>? {
                 val params: MutableMap<String, String> = HashMap()
                 params["session_token"] = token.prefer.getToken()
@@ -534,21 +444,19 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
         binding.includeTicketsHistorico.txtTaskDescription.text = taskDescription
     }
 
-    override fun onEditClick(glpiTasksDescripcion: String, glpiConversationTipo: String) {
+    override fun onEditClick(glpiTasksDescripcion: String, glpiTasksTipo: String) {
         val intentTasks = (Intent(this,TicketsAgregarTareaActivity::class.java))
         intentTasks.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         val intentFollowUp = (Intent(this,TicketsAgregarSeguimientoActivity::class.java))
         intentFollowUp.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         flag = true
         //Log.i("mensaje edit: ",""+glpiConversationTipo)
-        if (glpiConversationTipo == "TASK"){
+        if (glpiTasksTipo == "TASK"){
             intentTasks.putExtra("tasks_description",glpiTasksDescripcion)
             startActivity(intentTasks)
         }else{
             intentFollowUp.putExtra("tasks_description",glpiTasksDescripcion)
             startActivity(intentFollowUp)
         }
-
-
     }
 }

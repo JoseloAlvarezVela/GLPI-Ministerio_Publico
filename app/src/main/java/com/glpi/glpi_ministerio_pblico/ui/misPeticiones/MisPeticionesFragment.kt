@@ -21,7 +21,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
-import com.glpi.glpi_ministerio_pblico.MainActivity
 import com.glpi.glpi_ministerio_pblico.MainActivity.Companion.nameLoginUser
 import com.glpi.glpi_ministerio_pblico.VolleySingleton
 import com.glpi.glpi_ministerio_pblico.databinding.FragmentMisPeticionesBinding
@@ -71,11 +70,15 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.ontickteCl
 
         /*Este método vinculará el objeto del adaptador a la vista del reciclador*/
         fun setupRecycler() {
-            recyclerView!!.layoutManager = LinearLayoutManager(getContext(),
-                LinearLayoutManager.VERTICAL, false)
+            /*recyclerView!!.layoutManager = LinearLayoutManager(
+                context, LinearLayoutManager.VERTICAL, true,)*/
+            val layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, true,)
+            layoutManager.stackFromEnd = true
+
+            recyclerView!!.layoutManager = layoutManager
 
             recycleView_Adapter_Tickets =
-                getContext()?.let { RecycleView_Adapter_Tickets(it,dataModelArrayList,this) }
+                context?.let { RecycleView_Adapter_Tickets(it,dataModelArrayList,this) }
             recyclerView!!.adapter = recycleView_Adapter_Tickets
         }
 
@@ -88,6 +91,7 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.ontickteCl
             url_DataTickets, Response.Listener { response ->
                 try {
                     val JS_DataTickets = JSONArray(response) //obtenemos el objeto json
+                    //jsonTicketResponse = JSONArray(response) //obtenemos el objeto json
 
                     dataModelArrayList = ArrayList()
                     //Log.i("mensaje tasks in",""+jsonTicketResponse)
@@ -100,8 +104,6 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.ontickteCl
                          TODO ese string en array para buscar los atributos necesarios de forma local */
 
                         playerModel.setGlpiID(DataTickets.getString("ID"))
-                        MainActivity.idTicket = DataTickets.getString("ID") //aca recibiremos el id para adjutanr al volleyGet
-
                         playerModel.setGlpiTipo(DataTickets.getString("TIPO"))
 
                         playerModel.setGlpiDescripcion(DataTickets.getString("DESCRIPCION"))
@@ -190,7 +192,7 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.ontickteCl
             }) {
             override fun getParams(): Map<String, String>? {
                 val params: MutableMap<String, String> = HashMap()
-                params["session_token"] = token.prefer.getToken()
+                params.put("session_token", token.prefer.getToken())
                 return params
             }
         }
@@ -224,8 +226,6 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.ontickteCl
                          TODO ese string en array para buscar los atributos necesarios de forma local */
 
                         playerModel.setGlpiID(DataTickets.getString("ID"))
-
-
                         playerModel.setGlpiTipo(DataTickets.getString("TIPO"))
 
                         playerModel.setGlpiDescripcion(DataTickets.getString("DESCRIPCION"))

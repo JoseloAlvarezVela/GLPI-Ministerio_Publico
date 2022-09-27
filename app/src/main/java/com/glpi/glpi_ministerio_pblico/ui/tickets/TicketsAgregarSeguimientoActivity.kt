@@ -32,10 +32,9 @@ class TicketsAgregarSeguimientoActivity : AppCompatActivity() {
     private fun btn_header_taddsegact() {
         //boton atras
         binding.btnAtrasActtaddseg.setOnClickListener {
-            /*val intent_atras = Intent(this, NavFooterTicketsActivity::class.java)
+            val intent_atras = Intent(this, NavFooterTicketsActivity::class.java)
             intent_atras.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            startActivity(intent_atras)*/
-            Toast.makeText(this, "falta implementar", Toast.LENGTH_SHORT).show()
+            startActivity(intent_atras)
         }
         //boton agregar seguimiento
         binding.btnAddsegActtaddseg.setOnClickListener {

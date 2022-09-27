@@ -67,7 +67,8 @@ class RecycleView_Adapter_Tickets(
 
     /*el método onBindViewHolder() asiganará los datos a los componentes*/
     @SuppressLint("SetTextI18n")
-    override fun onBindViewHolder(holder: RecycleView_Adapter_Tickets.MyViewHolder, position: Int) {
+    override fun onBindViewHolder(
+        holder: RecycleView_Adapter_Tickets.MyViewHolder, position: Int) {
         //-----------
         holder.txt_numero_ticket.text = "#"+dataModelArrayList[position].getGlpiID()
 

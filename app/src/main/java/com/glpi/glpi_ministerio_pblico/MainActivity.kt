@@ -1,11 +1,13 @@
 package com.glpi.glpi_ministerio_pblico
 
-import android.app.DatePickerDialog
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Build
 import android.os.Bundle
+import android.text.Html
+import android.text.Spanned
+import android.util.Log
 import android.util.TypedValue
 import android.view.KeyEvent
 import android.view.View
@@ -14,6 +16,7 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.text.HtmlCompat
 import androidx.core.view.isVisible
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.findNavController
@@ -29,8 +32,9 @@ import com.glpi.glpi_ministerio_pblico.ui.shared.token.Companion.prefer
 import com.google.android.material.navigation.NavigationView
 import org.json.JSONArray
 import org.json.JSONObject
+import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.HashMap
+import kotlin.collections.ArrayList
 
 
 //class MainActivity : AppCompatActivity(),RecycleView_Adapter_Perfiles.ItemClickListener {
@@ -43,11 +47,15 @@ class MainActivity : AppCompatActivity(){
         val urlApi_Profiles: String = "http://181.176.145.174:8080/api/user_profiles"
         val urlApi_TicketID: String = "http://181.176.145.174:8080/api/ticket_info/"
         val urlApi_Ticket: String = "http://181.176.145.174:8080/api/user_ticket"
+        val urlApi_TasksTemplate: String = "http://181.176.145.174:8080/api/task_templates"
 
         lateinit var nameLoginUser: String
         var flag = false
-        lateinit var idTicket: String
-        //val idTicket: String = "223417"
+        fun decodeHtml(contenido: String): String{
+            val decoded: String = Html.fromHtml(contenido).toString()
+            val decoded2: Spanned = HtmlCompat.fromHtml(decoded, HtmlCompat.FROM_HTML_MODE_COMPACT)
+            return decoded2.toString()
+        }
     }
     lateinit var jsonObjectResponse: JSONObject
     lateinit var jsonArrayResponse: JSONArray
@@ -292,35 +300,87 @@ class MainActivity : AppCompatActivity(){
             }
         }
         //boton que abre calendario modal filtro por ultima modificación
-        binding.appBarMain.includeFiltroRight.btnUltModificacionFiltroRight.setOnClickListener { //TODO: ACA TENGO QUE CONTINUAR
-            //binding.appBarMain.includeModalCalendario.LinearLayoutFiltroCalendario.isVisible = true
-            val c = Calendar.getInstance()
-            val year = c.get(Calendar.YEAR)
-            val month = c.get(Calendar.MONTH)
-            val day = c.get(Calendar.DAY_OF_MONTH)
-
-
-            val dpd = DatePickerDialog(this, { view, year, monthOfYear, dayOfMonth ->
-
-                //Display Selected date in textbox
-                //lblDate.setText("" + dayOfMonth + " " + MONTHS[monthOfYear] + ", " + year)
-
-            }, year, month, day)
-
-            dpd.show()
+        var flagUltimaModificacion = false
+        var flagFechaApertura = false
+        var flagFechaCierre = false
+        binding.appBarMain.includeFiltroRight.btnUltModificacionFiltroRight.setOnClickListener {
+            binding.appBarMain.includeModalCalendario.LinearLayoutFiltroCalendario.isVisible = true
+            flagUltimaModificacion = true
+            flagFechaApertura = false
+            flagFechaCierre = false
         }
+        //boton dia inicio del calendario
+        val calendarView: CalendarView = binding.appBarMain.includeModalCalendario.calendarView
+        val sdf = SimpleDateFormat("dd/MM/yyyy", Locale("es", "ES"))//obtenemos fecha actual
+        sdf.timeZone = TimeZone.getTimeZone("UTC-5")
+        val currentdate = sdf.format(Date()).replace("/",",")
+        val textElements: ArrayList<String> = currentdate.split(",") as ArrayList
+
+        val calendar = Calendar.getInstance()
+        calendar.set(textElements[2].toInt(),textElements[1].toInt()-1,textElements[0].toInt())
+        calendarView.maxDate = calendar.timeInMillis//asignamos la fecha maxima que puede seleccionar
+        calendarView.setOnDateChangeListener { calendarView, i, i2, i3 ->
+            val i2_ = i2+1//se le tiene que aumentar 1 ya que devuelve con un mes de retraso
+            binding.appBarMain.includeModalCalendario.btnStarDay.setOnClickListener {
+                binding.appBarMain.includeModalCalendario.btnAceptarFecha.isEnabled = true
+                binding.appBarMain.includeModalCalendario.btnEndDay.isEnabled = true
+
+                binding.appBarMain.includeModalCalendario.fechaStart.text =
+                    "Dia Inicio: $i3/$i2_/$i"
+            }
+            binding.appBarMain.includeModalCalendario.btnEndDay.setOnClickListener {
+                //binding.appBarMain.includeModalCalendario.imgDelete.isVisible = true
+                binding.appBarMain.includeModalCalendario.fechaEnd.text =
+                    "   Dia Fin: $i3/$i2_/$i"
+            }
+        }
+        binding.appBarMain.includeModalCalendario.btnAceptarFecha.setOnClickListener {
+            binding.appBarMain.includeModalCalendario.LinearLayoutFiltroCalendario.isVisible = false
+
+            if (flagUltimaModificacion == true){
+                val dateRange = binding.appBarMain.includeModalCalendario.fechaStart.text.toString() +"\n"+
+                        binding.appBarMain.includeModalCalendario.fechaEnd.text.toString()
+                Toast.makeText(this, "Ultima Modificación: $dateRange", Toast.LENGTH_SHORT).show()
+            }else if (flagFechaApertura == true){
+                val dateRange = binding.appBarMain.includeModalCalendario.fechaStart.text.toString() +"\n"+
+                        binding.appBarMain.includeModalCalendario.fechaEnd.text.toString()
+                Toast.makeText(this, "Fecha Apertura: $dateRange", Toast.LENGTH_SHORT).show()
+            }else if (flagFechaCierre == true){
+                val dateRange = binding.appBarMain.includeModalCalendario.fechaStart.text.toString() +"\n"+
+                        binding.appBarMain.includeModalCalendario.fechaEnd.text.toString()
+                Toast.makeText(this, "Fecha de Cierre: $dateRange", Toast.LENGTH_SHORT).show()
+            }
+
+
+            binding.appBarMain.includeModalCalendario.fechaStart.text = ""
+            binding.appBarMain.includeModalCalendario.fechaEnd.text = ""
+            binding.appBarMain.includeModalCalendario.btnAceptarFecha.isEnabled = false
+            binding.appBarMain.includeModalCalendario.btnEndDay.isEnabled = false
+        }
+
+
         binding.appBarMain.includeModalCalendario.LinearLayoutFiltroCalendario.setOnClickListener {
             binding.appBarMain.includeModalCalendario.LinearLayoutFiltroCalendario.isVisible = false
         }
         //boton que abre calendario modal filtro por fecha de apertura
         binding.appBarMain.includeFiltroRight.btnFechaAperturaFiltroRight.setOnClickListener {
-            binding.appBarMain.llyBackgroudAbm.isVisible = true
-            binding.appBarMain.incMdfaptfr.llyBackgroundMdfaptfr.isVisible = true
+            binding.appBarMain.includeModalCalendario.LinearLayoutFiltroCalendario.isVisible = true
+            //binding.appBarMain.llyBackgroudAbm.isVisible = true
+            flagUltimaModificacion = false
+            flagFechaApertura = true
+            flagFechaCierre = false
+
+            //binding.appBarMain.incMdfaptfr.llyBackgroundMdfaptfr.isVisible = true
         }
         //boton que abre calendario modal filtro por fecha de cierre
         binding.appBarMain.includeFiltroRight.btnFechaCierreFiltroRight.setOnClickListener {
-            binding.appBarMain.llyBackgroudAbm.isVisible = true
-            binding.appBarMain.incMdfcfr.llyBgMdfcfr.isVisible = true
+            binding.appBarMain.includeModalCalendario.LinearLayoutFiltroCalendario.isVisible = true
+            //binding.appBarMain.llyBackgroudAbm.isVisible = true
+            flagUltimaModificacion = false
+            flagFechaApertura = false
+            flagFechaCierre = true
+
+            //binding.appBarMain.incMdfcfr.llyBgMdfcfr.isVisible = true
         }
         //boton que abre buscador modal filtro por apellidos
         binding.appBarMain.includeFiltroRight.btnBsActfr.setOnClickListener {
@@ -449,6 +509,7 @@ class MainActivity : AppCompatActivity(){
         Log.i("click perfiles",""+TipoPerfil)
     }*/
 
+
     override fun onSupportNavigateUp(): Boolean { //slide de la izquierda
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         binding.navView.getHeaderView(0).findViewById<TextView>(R.id.txt_nameUser).text = nameLoginUser
@@ -463,10 +524,4 @@ class MainActivity : AppCompatActivity(){
         startActivity(intent)
         return super.onKeyDown(keyCode, event)
     }
-    /*override fun onItemClick(position: Data_Perfiles) {
-        Toast.makeText(this, "TEST: $position", Toast.LENGTH_SHORT).show()
-    }
-    override fun onLongClick(position: Data_Perfiles) {
-        Toast.makeText(this, "TEST: $position", Toast.LENGTH_SHORT).show()
-    }*/
 }

@@ -7,7 +7,7 @@
     android:orientation="vertical">
 
     <LinearLayout
-        android:id="@+id/tv_conversation"
+        android:id="@+id/ticket_estado_conversation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/esq_redondeada_azul"
@@ -26,7 +26,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginLeft="10dp"
@@ -42,7 +42,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:orientation="vertical"
-                    app:layout_constraintStart_toStartOf="parent">
+                    android:weightSum="1"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
 
                     <TextView
                         android:id="@+id/textView32_conversation"
@@ -54,12 +56,13 @@
 
                 <LinearLayout
                     android:id="@+id/linearLayout8"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
                     android:orientation="vertical"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/linearLayout9"
-                    tools:layout_editor_absoluteY="0dp">
+                    app:layout_constraintTop_toTopOf="parent">
 
                     <TextView
                         android:id="@+id/txt_nameOperador_conversation"
@@ -80,23 +83,17 @@
                         android:textSize="12sp" />
                 </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="45dp"
-                    android:layout_height="40dp"
-                    android:gravity="center"
-                    android:orientation="horizontal"
+                <ImageButton
+                    android:id="@+id/btn_edit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:paddingTop="5sp"
+                    android:paddingRight="5sp"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
-
-                    <ImageButton
-                        android:id="@+id/btn_edit"
-                        style="?android:attr/borderlessButtonStyle"
-                        android:background="?selectableItemBackgroundBorderless"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        app:srcCompat="@drawable/ic_edit" />
-                </LinearLayout>
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@android:drawable/ic_menu_edit" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
