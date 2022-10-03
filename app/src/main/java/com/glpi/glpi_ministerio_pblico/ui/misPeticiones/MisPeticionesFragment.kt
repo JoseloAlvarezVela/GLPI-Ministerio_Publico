@@ -1,7 +1,6 @@
 package com.glpi.glpi_ministerio_pblico.ui.misPeticiones
 
 import android.content.Intent
-import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.text.Html
@@ -10,7 +9,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.Toast
 import androidx.annotation.RequiresApi
@@ -22,8 +20,11 @@ import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.glpi.glpi_ministerio_pblico.MainActivity.Companion.nameLoginUser
+import com.glpi.glpi_ministerio_pblico.MainActivity.Companion.urlApi_TasksUsers
+import com.glpi.glpi_ministerio_pblico.MainActivity.Companion.urlApi_Ticket
 import com.glpi.glpi_ministerio_pblico.VolleySingleton
 import com.glpi.glpi_ministerio_pblico.databinding.FragmentMisPeticionesBinding
+import com.glpi.glpi_ministerio_pblico.ui.adapter.Data_TaskUsers
 import com.glpi.glpi_ministerio_pblico.ui.adapter.Data_Tickets
 import com.glpi.glpi_ministerio_pblico.ui.adapter.RecycleView_Adapter_Tickets
 import com.glpi.glpi_ministerio_pblico.ui.shared.token
@@ -36,6 +37,7 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.ontickteCl
     /*creamos la lista de arreglos que tendrá los objetos de la clase Data_Tickets
    esta lista de arreglos (dataModelArrayList) funcionará como fuente de datos*/
     internal lateinit var dataModelArrayList: ArrayList<Data_Tickets>
+    internal lateinit var dataModelArrayListRequester: ArrayList<Data_TaskUsers>
 
     //creamos el objeto de la clase RecycleView_Adapter_Tickets
     private var recycleView_Adapter_Tickets: RecycleView_Adapter_Tickets? = null
@@ -66,118 +68,59 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.ontickteCl
         // Inflate the layout for this fragment
         _binding = FragmentMisPeticionesBinding.inflate(inflater, container, false)
 
-        recyclerView = binding.recycler//asignamos el recycleview de recycleview_tickets.xml
+        requestVolleyTicketSorts()
 
-        /*Este método vinculará el objeto del adaptador a la vista del reciclador*/
-        fun setupRecycler() {
-            /*recyclerView!!.layoutManager = LinearLayoutManager(
-                context, LinearLayoutManager.VERTICAL, true,)*/
-            val layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, true,)
-            layoutManager.stackFromEnd = true
+        val root = binding.root
 
-            recyclerView!!.layoutManager = layoutManager
+        return root
+    }
 
-            recycleView_Adapter_Tickets =
-                context?.let { RecycleView_Adapter_Tickets(it,dataModelArrayList,this) }
-            recyclerView!!.adapter = recycleView_Adapter_Tickets
-        }
-
+    private fun requestVolleyTicketSorts(){
         //metodo que nos devuelve los datos para los tickets
-        //INICIO obtenemos perfil de usuario con volley
-        //jsonTicketResponse = JSONArray()
-        val url_DataTickets = "http://181.176.145.174:8080/api/user_tickets" //online
         val stringRequestDataTickets = @RequiresApi(Build.VERSION_CODES.N)
         object : StringRequest(Request.Method.POST,
-            url_DataTickets, Response.Listener { response ->
+            urlApi_Ticket, Response.Listener { response ->
                 try {
-                    val JS_DataTickets = JSONArray(response) //obtenemos el objeto json
-                    //jsonTicketResponse = JSONArray(response) //obtenemos el objeto json
+                    val JS_DataTickets = JSONObject(response) //obtenemos el objeto json
 
                     dataModelArrayList = ArrayList()
-                    //Log.i("mensaje tasks in",""+jsonTicketResponse)
+
                     for (i in 0 until JS_DataTickets.length()){
 
-                        val DataTickets = JS_DataTickets.getJSONObject(i)
-
+                        val DataTickets = JS_DataTickets.getJSONObject(i.toString())
+                        //Log.i("mensaje tasks in",""+DataTickets)
                         val playerModel = Data_Tickets()
-                        /*TODO buscar objeto por ID y guardar su contenido en una variable string, luego convertir
-                         TODO ese string en array para buscar los atributos necesarios de forma local */
 
-                        playerModel.setGlpiID(DataTickets.getString("ID"))
-                        playerModel.setGlpiTipo(DataTickets.getString("TIPO"))
+                        playerModel.setTicketSortsID(DataTickets.getString("ID"))
+                        playerModel.setTicketSortsType(DataTickets.getString("TIPO"))
+                        playerModel.setTicketSortsState(DataTickets.getString("ESTADO"))
+                        playerModel.setTicketSortsDescription(DataTickets.getString("DESCRIPCION"))
+                        //obtenemos el id del operador, creador del ticket
+                        playerModel.setTicketSortsIdRecipient(DataTickets.getString("ID_RECIPIENT"))
+                        //obtenemos el id del tecnico(usuario logeado) y su nombre
+                        playerModel.setTicketSortsIdTechnician(DataTickets.getString("ID_TECHNICIAN"))
+                        val technicianName = DataTickets.getString("NOMBRE")
+                        val technicianLastName = DataTickets.getString("APELLIDO")
+                        playerModel.setTechnicianName("$technicianName $technicianLastName")
+                        //obtenemos el id del solicitante(usuario logeado)
+                        val idPositionResquester = DataTickets.getJSONObject("ID_REQUESTER")
+                        val idRequester = idPositionResquester.getString("0")
+                        playerModel.setTicketSortsIdRequester(idRequester)
 
-                        playerModel.setGlpiDescripcion(DataTickets.getString("DESCRIPCION"))
 
-                        //obtenemos el contenido de la descripción
+                        playerModel.setTicketSortsCreationDate(DataTickets.getString("FECHA_CREACION"))//fecha de creación
+                        playerModel.setTicketSortsModificationDate(DataTickets.getString("FECHA_MODIFICACION"))//fecha de creación
+
+                        //obtenemos la descripción completa del ticket - primero decodificamos el formato html
                         val decoded: String = Html.fromHtml(DataTickets.getString("CONTENIDO")).toString()
                         val decoded2: Spanned = HtmlCompat.fromHtml(decoded,HtmlCompat.FROM_HTML_MODE_COMPACT)
-                        playerModel.setGlpiContenido(decoded2.toString())
-                        //Log.i("mensaje html: ",""+decoded2)
-
-                        playerModel.setGlpiEstado(DataTickets.getString("ESTADO"))
-                        playerModel.setCurrentTime(DataTickets.getString("FECHA"))
-
-                        //obtenemos los datos del usuario logueado
-                        val nombreLogin_ = DataTickets.getString("NOMBRE")
-                        val apellidoLogin_ = DataTickets.getString("APELLIDO")
-                        playerModel.setGlpiLoginName("$nombreLogin_ $apellidoLogin_")
-                        nameLoginUser = "$nombreLogin_ $apellidoLogin_"
-
-                        playerModel.setGlpiCategoria(DataTickets.getString("CATEGORIA"))
-                        playerModel.setGlpiOrigen(DataTickets.getString("ORIGEN"))
-                        playerModel.setGlpiUrgencia(DataTickets.getString("URGENCIA"))
-
-                        //obtenemos los datos del operador
-                        val JS_ResipientObject = DataTickets.getJSONObject("RECIPIENT")
-                        val recipient = JS_ResipientObject.getJSONObject("0")
-                        val Data_RecipientName = recipient.getString("NOMBRE")
-                        val Data_RecipientApellido = recipient.getString("APELLIDO")
-                        playerModel.setGlpiOperadorName("$Data_RecipientName $Data_RecipientApellido")
-
-
-                        //obtenemos los datos del solicitante
-                        val JS_RequesterObjet = DataTickets.getJSONObject("REQUESTER")
-                        val DataRequester = JS_RequesterObjet.getJSONObject("0")
-                        val DataRequesterName = DataRequester.getString("NOMBRE")
-                        val DataRequesterApellido = DataRequester.getString("APELLIDO")
-                        val DataRequesterCargo = DataRequester.getString("CARGO")
-                        val DataRequesterUbicacion = DataRequester.getString("UBICACION")
-                        val DataRequesterCorreo = DataRequester.getString("CORREO")
-                        val DataRequesterTelefono = DataRequester.getString("TELEFONO")
-                        playerModel.setGlpiRequestreName("$DataRequesterName $DataRequesterApellido")
-                        playerModel.setGlpiRequestreCargo(DataRequesterCargo)
-                        playerModel.setGlpiUbicacionSolicitante(DataRequesterUbicacion)
-                        playerModel.setGlpiCorreoSolicitante(DataRequesterCorreo)
-                        playerModel.setGlpiTelefonoSolicitante(DataRequesterTelefono)
-
-                        //OBTENEMOS LOS TAKS
-                        val jsResquestTask = DataTickets.getJSONObject("TASKS")
-                        val jsonTasks = jsResquestTask.toString()
-                        var iterador = 0
-                        var taskDescriptions = ArrayList<String>()
-                        var tasksIterador: JSONObject
-                        Log.i("mensaje tasks out",""+jsonTasks[2])
-                        if (jsonTasks[2] == '0'){
-                            if (jsResquestTask.length() > 1){
-                                for (i in 0 until jsResquestTask.length()){
-                                    Log.i("mensaje tasks in SIZE",""+jsResquestTask.length())
-                                    tasksIterador = jsResquestTask.getJSONObject(iterador.toString())
-                                    taskDescriptions.add(tasksIterador.getString("DESCRIPCION"))
-                                    Log.i("mensaje tasks for",""+iterador.toString()+": "+taskDescriptions)
-                                    iterador++
-                                }
-                            }else{
-                                val tasks = jsResquestTask.getJSONObject("0")
-                                val tasksDescription = tasks.getString("DESCRIPCION")
-                                Log.i("mensaje tasks in true",""+tasksDescription)
-                            }
-                        }else{
-                            //val tasksEmpty = jsonTasks
-                            //Log.i("mensaje tasks in false",""+jsResquestTask.getString("msg"))
-                        }
-
-                        Log.i("mensaje ok",""+dataModelArrayList)
-                        //dataModelArrayList.sortBy { it.getGlpiTipo() }
+                        playerModel.setTicketSortsContents(decoded2.toString())
+                        //urgencia del ticket
+                        playerModel.setTicketSortsUrgency(DataTickets.getString("URGENCIA"))
+                        //categoria del ticket
+                        playerModel.setTicketSortsCategory(DataTickets.getString("CATEGORIA"))
+                        //origen del ticket
+                        playerModel.setTicketSortsSource(DataTickets.getString("ORIGEN"))
                         dataModelArrayList.add(playerModel)
                     }
                     setupRecycler()
@@ -185,144 +128,82 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.ontickteCl
                 } catch (e: Exception) {
                     e.printStackTrace()
                     Toast.makeText(context, "token expirado: $e", Toast.LENGTH_LONG).show()
-                    Log.i("mensaje recycler e: ", "recycler ERROR: " + e)
+                    Log.i("mensaje recycler e: ", "recycler ERROR: $e")
                 }
             }, Response.ErrorListener {
                 Toast.makeText(context, "ERROR CON EL SERVIDOR", Toast.LENGTH_SHORT).show()
             }) {
             override fun getParams(): Map<String, String>? {
                 val params: MutableMap<String, String> = HashMap()
-                params.put("session_token", token.prefer.getToken())
+                params["session_token"] = token.prefer.getToken()
+                params["order_type"] = "DESC"
                 return params
             }
         }
         context?.let { VolleySingleton.getInstance(it).addToRequestQueue(stringRequestDataTickets) }
         //FIN obtenemos perfil de usuario
-
-        //requesteVolleyTickets()
-
-        val root = binding.root
-
-        return root
     }
 
-    fun requesteVolleyTickets(){
-        val url_DataTickets = "http://181.176.145.174:8080/api/user_tickets" //online
+    /*private fun volleyRequestRequester(id: String){
+        Log.i("mensajeurl: ", "" + urlApi_TasksUsers+id)
+        //metodo que nos devuelve los datos del solicitante,operador ó tecnico
         val stringRequestDataTickets = @RequiresApi(Build.VERSION_CODES.N)
         object : StringRequest(Request.Method.POST,
-            url_DataTickets, Response.Listener { response ->
+            urlApi_TasksUsers+id, Response.Listener { response ->
                 try {
-                    val JS_DataTickets = JSONArray(response) //obtenemos el objeto json
-                    //jsonTicketResponse = JSONArray(response) //obtenemos el objeto json
+                    val jsonIdRequester = JSONArray(response) //obtenemos el objeto json
+                    Log.i("mensajeId: ", "" + jsonIdRequester)
 
                     dataModelArrayList = ArrayList()
-                    //Log.i("mensaje tasks in",""+jsonTicketResponse)
-                    for (i in 0 until JS_DataTickets.length()){
 
-                        val DataTickets = JS_DataTickets.getJSONObject(i)
+                    for (i in 0 until jsonIdRequester.length()){
 
+                        val dataRequester = jsonIdRequester.getJSONObject(i)
                         val playerModel = Data_Tickets()
-                        /*TODO buscar objeto por ID y guardar su contenido en una variable string, luego convertir
-                         TODO ese string en array para buscar los atributos necesarios de forma local */
 
-                        playerModel.setGlpiID(DataTickets.getString("ID"))
-                        playerModel.setGlpiTipo(DataTickets.getString("TIPO"))
+                        val requesterName = dataRequester.getString("NOMBRE")
+                        val requesterLastName = dataRequester.getString("APELLIDO")
+                        //playerModel.setTaskUserName("$requesterName $requesterLastName")
+                        playerModel.setTaskUserPosition(dataRequester.getString("CARGO"))
 
-                        playerModel.setGlpiDescripcion(DataTickets.getString("DESCRIPCION"))
-
-                        //obtenemos el contenido de la descripción
-                        val decoded: String = Html.fromHtml(DataTickets.getString("CONTENIDO")).toString()
-                        val decoded2: Spanned = HtmlCompat.fromHtml(decoded,HtmlCompat.FROM_HTML_MODE_COMPACT)
-                        playerModel.setGlpiContenido(decoded2.toString())
-                        //Log.i("mensaje html: ",""+decoded2)
-
-                        playerModel.setGlpiEstado(DataTickets.getString("ESTADO"))
-                        playerModel.setCurrentTime(DataTickets.getString("FECHA"))
-
-                        //obtenemos los datos del usuario logueado
-                        val nombreLogin_ = DataTickets.getString("NOMBRE")
-                        val apellidoLogin_ = DataTickets.getString("APELLIDO")
-                        playerModel.setGlpiLoginName("$nombreLogin_ $apellidoLogin_")
-                        nameLoginUser = "$nombreLogin_ $apellidoLogin_"
-
-                        playerModel.setGlpiCategoria(DataTickets.getString("CATEGORIA"))
-                        playerModel.setGlpiOrigen(DataTickets.getString("ORIGEN"))
-                        playerModel.setGlpiUrgencia(DataTickets.getString("URGENCIA"))
-
-                        //obtenemos los datos del operador
-                        val JS_ResipientObject = DataTickets.getJSONObject("RECIPIENT")
-                        val recipient = JS_ResipientObject.getJSONObject("0")
-                        val Data_RecipientName = recipient.getString("NOMBRE")
-                        val Data_RecipientApellido = recipient.getString("APELLIDO")
-                        playerModel.setGlpiOperadorName("$Data_RecipientName $Data_RecipientApellido")
-
-
-                        //obtenemos los datos del solicitante
-                        val JS_RequesterObjet = DataTickets.getJSONObject("REQUESTER")
-                        val DataRequester = JS_RequesterObjet.getJSONObject("0")
-                        val DataRequesterName = DataRequester.getString("NOMBRE")
-                        val DataRequesterApellido = DataRequester.getString("APELLIDO")
-                        val DataRequesterCargo = DataRequester.getString("CARGO")
-                        val DataRequesterUbicacion = DataRequester.getString("UBICACION")
-                        val DataRequesterCorreo = DataRequester.getString("CORREO")
-                        val DataRequesterTelefono = DataRequester.getString("TELEFONO")
-                        playerModel.setGlpiRequestreName("$DataRequesterName $DataRequesterApellido")
-                        playerModel.setGlpiRequestreCargo(DataRequesterCargo)
-                        playerModel.setGlpiUbicacionSolicitante(DataRequesterUbicacion)
-                        playerModel.setGlpiCorreoSolicitante(DataRequesterCorreo)
-                        playerModel.setGlpiTelefonoSolicitante(DataRequesterTelefono)
-
-                        //OBTENEMOS LOS TAKS
-                        val jsResquestTask = DataTickets.getJSONObject("TASKS")
-                        val jsonTasks = jsResquestTask.toString()
-                        var iterador = 0
-                        var taskDescriptions = ArrayList<String>()
-                        var tasksIterador: JSONObject
-                        Log.i("mensaje tasks out",""+jsonTasks[2])
-                        if (jsonTasks[2] == '0'){
-                            if (jsResquestTask.length() > 1){
-                                for (i in 0 until jsResquestTask.length()){
-                                    Log.i("mensaje tasks in SIZE",""+jsResquestTask.length())
-                                    tasksIterador = jsResquestTask.getJSONObject(iterador.toString())
-                                    taskDescriptions.add(tasksIterador.getString("DESCRIPCION"))
-                                    Log.i("mensaje tasks for",""+iterador.toString()+": "+taskDescriptions)
-                                    iterador++
-                                }
-                            }else{
-                                val tasks = jsResquestTask.getJSONObject("0")
-                                val tasksDescription = tasks.getString("DESCRIPCION")
-                                Log.i("mensaje tasks in true",""+tasksDescription)
-                            }
-                        }else{
-                            //val tasksEmpty = jsonTasks
-                            //Log.i("mensaje tasks in false",""+jsResquestTask.getString("msg"))
-                        }
-
-                        Log.i("mensaje ok",""+taskDescriptions)
                         dataModelArrayList.add(playerModel)
                     }
-                    //setupRecycler()
+                    setupRecycler()
 
                 } catch (e: Exception) {
                     e.printStackTrace()
                     Toast.makeText(context, "token expirado: $e", Toast.LENGTH_LONG).show()
-                    Log.i("mensaje recycler e: ", "recycler ERROR: " + e)
+                    Log.i("mensaje recyclerid: ", "" + e)
                 }
             }, Response.ErrorListener {
                 Toast.makeText(context, "ERROR CON EL SERVIDOR", Toast.LENGTH_SHORT).show()
             }) {
             override fun getParams(): Map<String, String>? {
                 val params: MutableMap<String, String> = HashMap()
-                params.put("session_token", token.prefer.getToken())
+                params["session_token"] = token.prefer.getToken()
+                params["order_type"] = "DESC"
                 return params
             }
         }
         context?.let { VolleySingleton.getInstance(it).addToRequestQueue(stringRequestDataTickets) }
-    }
+    }*/
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    fun setupRecycler() {
+        recyclerView = binding.recycler//asignamos el recycleview de recycleview_tickets.xml
+        /*recyclerView!!.layoutManager = LinearLayoutManager(
+            context, LinearLayoutManager.VERTICAL, true,)*/
+        val layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false,)
+        //layoutManager.stackFromEnd = true
+
+        recyclerView!!.layoutManager = layoutManager
+
+        recycleView_Adapter_Tickets =
+            context?.let { RecycleView_Adapter_Tickets(it,dataModelArrayList,this) }
+        recyclerView!!.adapter = recycleView_Adapter_Tickets
     }
+    /*override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+    }*/
 
     override fun onDestroyView() {
         super.onDestroyView()
@@ -331,9 +212,15 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.ontickteCl
 
     override fun onTicketClick(
         TicketID: String, //TODO : pasar id y hacer nueva consulta a la API para evitar sobreCargar la vista
-        OperadorName: Any,
+        NameOperador: Any,
         CurrentTime: Any,
+        ModificationDate: String,
+        IdRecipient: String,
+        IdTechnician: String,
+        IdRequester: String,
         Contenido: Any,
+
+        //-----
         Tipo: String,
         Ubicacion: String,
         Correo: String,
@@ -353,9 +240,14 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.ontickteCl
         val bundle = Bundle()
 
         bundle.putString("TicketID", TicketID)
-        bundle.putString("NameOperador", OperadorName.toString())
+        bundle.putString("NameOperador", NameOperador.toString())
         bundle.putString("CurrentTime", CurrentTime.toString())
+        bundle.putString("ModificationDate", ModificationDate)
+        bundle.putString("IdRecipient",IdRecipient)
+        bundle.putString("IdTechnician",IdTechnician)
+        bundle.putString("IdRequester",IdRequester)
         bundle.putString("Contenido", Contenido.toString())
+        //-----
         bundle.putString("Tipo", Tipo)
         bundle.putString("Ubicacion", Ubicacion)
         bundle.putString("Correo", Correo)

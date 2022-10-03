@@ -20,12 +20,16 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.text.HtmlCompat
+import androidx.core.view.isEmpty
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.glpi.glpi_ministerio_pblico.MainActivity
 import com.glpi.glpi_ministerio_pblico.MainActivity.Companion.flag
+import com.glpi.glpi_ministerio_pblico.MainActivity.Companion.jsonArrayResponse
+import com.glpi.glpi_ministerio_pblico.MainActivity.Companion.urlApi_TasksUsers
 import com.glpi.glpi_ministerio_pblico.MainActivity.Companion.urlApi_TicketID
 import com.glpi.glpi_ministerio_pblico.R
 import com.glpi.glpi_ministerio_pblico.VolleySingleton
@@ -33,9 +37,12 @@ import com.glpi.glpi_ministerio_pblico.databinding.ActivityNavFooterTicketsBindi
 import com.glpi.glpi_ministerio_pblico.ui.adapter.Data_Tickets
 import com.glpi.glpi_ministerio_pblico.ui.adapter.RecyclerAdapter
 import com.glpi.glpi_ministerio_pblico.ui.shared.token
+import com.glpi.glpi_ministerio_pblico.utilities.Utils_Global
+import org.json.JSONArray
 import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversationClickListener {
@@ -45,6 +52,16 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
     /*creamos la lista de arreglos que tendrá los objetos de la clase Data_Tickets
    esta lista de arreglos (dataModelArrayList) funcionará como fuente de datos*/
     internal lateinit var dataModelArrayListConverdation: ArrayList<Data_Tickets>
+    internal lateinit var dataModelArrayListConverzation: ArrayList<Data_Tickets>
+
+    private lateinit var jsonArrayIdRecipient: JSONArray
+    private lateinit var jsonArrayIdTechnician: JSONArray
+    private lateinit var jsonArrayIdRequester: JSONArray
+
+    //INICIO toogle buton tickets
+    var clickTickets: Boolean = false
+    var clickConvezaciones: Boolean = false
+    var click_fab:Boolean = false //fab_opciones de layout activity_tickets_historico.xml
 
     @SuppressLint("ResourceAsColor")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,77 +69,86 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
         binding = ActivityNavFooterTicketsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        DataToTicketsHistoricoActivity()
+        volleyRequestIdRecipient() //datos del operador
+        volleyRequestIdTechnician() //datos del tecnico
+        volleyRequestIdRequester() //datos del solicitante
+        volleyRequestPost(urlApi_TicketID)
+        activityHeader()
+        btnPetition()
+        btnFabs()
+        toggleButtonFooter()
+    }
 
-        volleyResquestPost(urlApi_TicketID)
+    private fun btnFabs(){
+        //INICIO fab_opciones de layout activity_tickets_historico.xml
+        binding.includeFabs.fabDesplegarOp.setOnClickListener {
+            if (click_fab == false){
+                binding.includeFabs.fabSolucion.isVisible = true
+                binding.includeFabs.btnFabSolucion.isVisible = true
+                binding.includeFabs.fabDocumentos.isVisible = true
+                binding.includeFabs.btnFabDocumentos.isVisible = true
+                binding.includeFabs.fabTareas.isVisible = true
+                binding.includeFabs.btnFabTareas.isVisible = true
+                binding.includeFabs.fabSeguimiento.isVisible = true
+                binding.includeFabs.btnFabSeguimiento.isVisible = true
+                binding.fabBackground.isVisible = true
 
+                click_fab = true
+            }else{
+                binding.includeFabs.fabSolucion.isVisible = false
+                binding.includeFabs.btnFabSolucion.isVisible = false
+                binding.includeFabs.fabDocumentos.isVisible = false
+                binding.includeFabs.btnFabDocumentos.isVisible = false
+                binding.includeFabs.fabTareas.isVisible = false
+                binding.includeFabs.btnFabTareas.isVisible = false
+                binding.includeFabs.fabSeguimiento.isVisible = false
+                binding.includeFabs.btnFabSeguimiento.isVisible = false
+                binding.fabBackground.isVisible = false
 
-        //INICIO toogle buton tickets
-        var clickTickets: Boolean = false
-        var clickConvezaciones: Boolean = false
-        var click_fab:Boolean = false //fab_opciones de layout activity_tickets_historico.xml
-
-        binding.btnConversacionFooter.iconTint = ContextCompat.getColorStateList(this, R.color.textColor)
-        binding.btnConversacionFooter.setTextColor(Color.parseColor("#175381"))
-
-        binding.btnTicketsFooter.setOnClickListener {
-            if(clickTickets == false){
-                binding.btnTicketsFooter.iconTint = ContextCompat.getColorStateList(this, R.color.textColor)
-                binding.btnTicketsFooter.setTextColor(Color.parseColor("#175381"))
-
-                binding.btnConversacionFooter.iconTint = ContextCompat.getColorStateList(this, R.color.ticketsGris)
-                binding.btnConversacionFooter.setTextColor(Color.parseColor("#676161"))
-
-                binding.includeTickets.includeTicketsLayout.isVisible = true //se muestra
-                binding.ticketConversation.isVisible = false
-                //binding.includeTicketsHistorico.includeTicketsHistoricoLayout.isVisible = false //se esconde
-                //binding.btnTicketsFooterCOLOR.setBackgroundResource(R.color.ticketsGris)
-                binding.btnConversacionFooterCOLOR.setBackgroundResource(R.color.ticketsBlanco)
-
-                //************INICIO DE SETEO LOS FAB'S DE LAYOUT activity_tickets_historico.xml************
-                binding.includeTicketsHistorico.fabSolucion.isVisible = false
-                binding.includeTicketsHistorico.btnFabSolucion.isVisible = false
-                binding.includeTicketsHistorico.fabDocumentos.isVisible = false
-                binding.includeTicketsHistorico.btnFabDocumentos.isVisible = false
-                binding.includeTicketsHistorico.fabTareas.isVisible = false
-                binding.includeTicketsHistorico.btnFabTareas.isVisible = false
-                binding.includeTicketsHistorico.fabSeguimiento.isVisible = false
-                binding.includeTicketsHistorico.btnFabSeguimiento.isVisible = false
-                binding.includeTicketsHistorico.fabBackgroud.isVisible = false
                 click_fab = false
-                //************FIN DE SETEO DE LOS FAB'S DE LAYOUT activity_tickets_historico.xml************
-
-                clickTickets = true
-                clickConvezaciones = false
             }
         }
+        binding.fabBackground.setOnClickListener {
+            binding.includeFabs.fabSolucion.isVisible = false
+            binding.includeFabs.btnFabSolucion.isVisible = false
+            binding.includeFabs.fabDocumentos.isVisible = false
+            binding.includeFabs.btnFabDocumentos.isVisible = false
+            binding.includeFabs.fabTareas.isVisible = false
+            binding.includeFabs.btnFabTareas.isVisible = false
+            binding.includeFabs.fabSeguimiento.isVisible = false
+            binding.includeFabs.btnFabSeguimiento.isVisible = false
+            binding.fabBackground.isVisible = false
+            binding.includeFabs.fabDesplegarOp.isVisible = true
 
-        binding.btnConversacionFooter.setOnClickListener {
-            if(clickConvezaciones == false){
-                binding.ticketConversation.isVisible = true
-                binding.btnTicketsFooter.iconTint = ContextCompat.getColorStateList(this, R.color.ticketsGris)
-                binding.btnTicketsFooter.setTextColor(Color.parseColor("#676161"))
-
-                binding.btnConversacionFooter.iconTint = ContextCompat.getColorStateList(this, R.color.textColor)
-                binding.btnConversacionFooter.setTextColor(Color.parseColor("#175381"))
-
-                //binding.includeTicketsHistorico.includeTicketsHistoricoLayout.isVisible = true
-                binding.includeTickets.includeTicketsLayout.isVisible = false
-                binding.btnTicketsFooterCOLOR.setBackgroundResource(R.color.ticketsBlanco)
-                //binding.btnConversacionFooterCOLOR.setBackgroundResource(R.color.ticketsGris)
-                clickConvezaciones = true
-                clickTickets = false
-            }
+            click_fab = false
         }
-        //FIN toogle buton
+        //FIN fab_opciones de layout activity_tickets_historico
 
-        //boton atras - include de nav_header_tickets.xml
-        binding.includeNavHeaderTickets.btnAtrasTickets.setOnClickListener {
-            val intent_header_tickets = Intent(this@NavFooterTicketsActivity, MainActivity::class.java)
-            intent_header_tickets.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            startActivity(intent_header_tickets)
+        //INICIO eventos click de fab_opciones
+        binding.includeFabs.btnFabTareas.setOnClickListener {
+            val intent_agregar_tarea = Intent(this@NavFooterTicketsActivity, TicketsAgregarTareaActivity::class.java)
+            intent_agregar_tarea.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            startActivity(intent_agregar_tarea)
         }
+        binding.includeFabs.btnFabSeguimiento.setOnClickListener {
+            val intent_agregar_seguimiento = Intent(this@NavFooterTicketsActivity, TicketsAgregarSeguimientoActivity::class.java)
+            intent_agregar_seguimiento.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            startActivity(intent_agregar_seguimiento)
+        }
+        binding.includeFabs.btnFabSolucion.setOnClickListener {
+            val intent_agregar_seguimiento = Intent(this@NavFooterTicketsActivity, TicketsAgregarSolucionActivity::class.java)
+            intent_agregar_seguimiento.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            startActivity(intent_agregar_seguimiento)
+        }
+        binding.includeFabs.btnFabDocumentos.setOnClickListener {
+            val intent_agregar_documento = Intent(this@NavFooterTicketsActivity, TicketsAgregarDocumentosActivity::class.java)
+            intent_agregar_documento.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            startActivity(intent_agregar_documento)
+        }
+        //fin eventos click de fab_opciones
+    }
 
+    private fun btnPetition(){
         //INICIO botones para desplegar y plegar descripciones
         var clickG: Boolean = false
         var clickD: Boolean = false
@@ -158,74 +184,67 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
             }
         }
         //FIN botones para desplegar y plegar descripciones
+    }
 
-        //INICIO fab_opciones de layout activity_tickets_historico.xml
-        binding.includeTicketsHistorico.fabDesplegarOpciones.setOnClickListener {
-            if (click_fab == false){
-                binding.includeTicketsHistorico.fabSolucion.isVisible = true
-                binding.includeTicketsHistorico.btnFabSolucion.isVisible = true
-                binding.includeTicketsHistorico.fabDocumentos.isVisible = true
-                binding.includeTicketsHistorico.btnFabDocumentos.isVisible = true
-                binding.includeTicketsHistorico.fabTareas.isVisible = true
-                binding.includeTicketsHistorico.btnFabTareas.isVisible = true
-                binding.includeTicketsHistorico.fabSeguimiento.isVisible = true
-                binding.includeTicketsHistorico.btnFabSeguimiento.isVisible = true
-                binding.includeTicketsHistorico.fabBackgroud.isVisible = true
+    private fun activityHeader(){
+        //boton atras - include de nav_header_tickets.xml
+        binding.includeNavHeaderTickets.btnAtrasTickets.setOnClickListener {
+            val intent_header_tickets = Intent(this@NavFooterTicketsActivity, MainActivity::class.java)
+            intent_header_tickets.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            startActivity(intent_header_tickets)
+        }
+    }
 
-                click_fab = true
-            }else{
-                binding.includeTicketsHistorico.fabSolucion.isVisible = false
-                binding.includeTicketsHistorico.btnFabSolucion.isVisible = false
-                binding.includeTicketsHistorico.fabDocumentos.isVisible = false
-                binding.includeTicketsHistorico.btnFabDocumentos.isVisible = false
-                binding.includeTicketsHistorico.fabTareas.isVisible = false
-                binding.includeTicketsHistorico.btnFabTareas.isVisible = false
-                binding.includeTicketsHistorico.fabSeguimiento.isVisible = false
-                binding.includeTicketsHistorico.btnFabSeguimiento.isVisible = false
-                binding.includeTicketsHistorico.fabBackgroud.isVisible = false
+    private fun toggleButtonFooter(){
+        binding.btnConversacionFooter.iconTint = ContextCompat.getColorStateList(this, R.color.textColor)
+        binding.btnConversacionFooter.setTextColor(Color.parseColor("#175381"))
 
+        binding.btnTicketsFooter.setOnClickListener {
+            if(clickTickets == false){
+                binding.btnTicketsFooter.iconTint = ContextCompat.getColorStateList(this, R.color.textColor)
+                binding.btnTicketsFooter.setTextColor(Color.parseColor("#175381"))
+
+                binding.btnConversacionFooter.iconTint = ContextCompat.getColorStateList(this, R.color.ticketsGris)
+                binding.btnConversacionFooter.setTextColor(Color.parseColor("#676161"))
+
+                binding.includeTickets.includeTicketsLayout.isVisible = true //se muestra
+                binding.ticketConversation.isVisible = false
+                binding.btnConversacionFooterCOLOR.setBackgroundResource(R.color.ticketsBlanco)
+
+                //************INICIO DE SETEO LOS FAB'S DE LAYOUT activity_tickets_historico.xml************
+                binding.includeFabs.fabSolucion.isVisible = false
+                binding.includeFabs.btnFabSolucion.isVisible = false
+                binding.includeFabs.fabDocumentos.isVisible = false
+                binding.includeFabs.btnFabDocumentos.isVisible = false
+                binding.includeFabs.fabTareas.isVisible = false
+                binding.includeFabs.btnFabTareas.isVisible = false
+                binding.includeFabs.fabSeguimiento.isVisible = false
+                binding.includeFabs.btnFabSeguimiento.isVisible = false
+                binding.fabBackground.isVisible = false
                 click_fab = false
+                //************FIN DE SETEO DE LOS FAB'S DE LAYOUT activity_tickets_historico.xml************
+
+                clickTickets = true
+                clickConvezaciones = false
             }
         }
-        binding.includeTicketsHistorico.fabBackgroud.setOnClickListener {
-            binding.includeTicketsHistorico.fabSolucion.isVisible = false
-            binding.includeTicketsHistorico.btnFabSolucion.isVisible = false
-            binding.includeTicketsHistorico.fabDocumentos.isVisible = false
-            binding.includeTicketsHistorico.btnFabDocumentos.isVisible = false
-            binding.includeTicketsHistorico.fabTareas.isVisible = false
-            binding.includeTicketsHistorico.btnFabTareas.isVisible = false
-            binding.includeTicketsHistorico.fabSeguimiento.isVisible = false
-            binding.includeTicketsHistorico.btnFabSeguimiento.isVisible = false
-            binding.includeTicketsHistorico.fabBackgroud.isVisible = false
-            binding.includeTicketsHistorico.fabDesplegarOpciones.isVisible = true
 
-            click_fab = false
-        }
-        //FIN fab_opciones de layout activity_tickets_historico
+        binding.btnConversacionFooter.setOnClickListener {
+            if(clickConvezaciones == false){
+                binding.ticketConversation.isVisible = true
+                binding.btnTicketsFooter.iconTint = ContextCompat.getColorStateList(this, R.color.ticketsGris)
+                binding.btnTicketsFooter.setTextColor(Color.parseColor("#676161"))
 
-        //INICIO eventos click de fab_opciones
-        binding.includeTicketsHistorico.btnFabTareas.setOnClickListener {
-            val intent_agregar_tarea = Intent(this@NavFooterTicketsActivity, TicketsAgregarTareaActivity::class.java)
-            intent_agregar_tarea.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            startActivity(intent_agregar_tarea)
-        }
-        binding.includeTicketsHistorico.btnFabSeguimiento.setOnClickListener {
-            val intent_agregar_seguimiento = Intent(this@NavFooterTicketsActivity, TicketsAgregarSeguimientoActivity::class.java)
-            intent_agregar_seguimiento.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            startActivity(intent_agregar_seguimiento)
-        }
-        binding.includeTicketsHistorico.btnFabSolucion.setOnClickListener {
-            val intent_agregar_seguimiento = Intent(this@NavFooterTicketsActivity, TicketsAgregarSolucionActivity::class.java)
-            intent_agregar_seguimiento.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            startActivity(intent_agregar_seguimiento)
-        }
-        binding.includeTicketsHistorico.btnFabDocumentos.setOnClickListener {
-            val intent_agregar_documento = Intent(this@NavFooterTicketsActivity, TicketsAgregarDocumentosActivity::class.java)
-            intent_agregar_documento.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            startActivity(intent_agregar_documento)
-        }
-        //fin eventos click de fab_opciones
+                binding.btnConversacionFooter.iconTint = ContextCompat.getColorStateList(this, R.color.textColor)
+                binding.btnConversacionFooter.setTextColor(Color.parseColor("#175381"))
 
+                binding.includeTickets.includeTicketsLayout.isVisible = false
+                binding.btnTicketsFooterCOLOR.setBackgroundResource(R.color.ticketsBlanco)
+                clickConvezaciones = true
+                clickTickets = false
+            }
+        }
+        //FIN toogle buton
     }
 
     private fun setupRecyclerView(){
@@ -237,12 +256,23 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
 
         recyclerViewNews.adapter = newsAdapter
         recyclerViewNews.layoutManager = layoutManager
+        if (newsAdapter.itemCount == 0){
+            binding.recyclerViewConversation.isVisible = false
+            binding.includeTicketsHistorico.layoutHistorico.isVisible = true
+        }
         //recyclerViewNews.setHasFixedSize(true)
     }
 
-    private fun volleyResquestPost(urlApi_: String) {
+    private fun volleyRequestPost(urlApi_: String) {
         val bundle = intent.extras
         val TicketID_ = bundle!!.getString("TicketID")
+        val Contenido_ = bundle!!.getString("Contenido")
+        val NameOperador_ = bundle!!.getString("NameOperador")
+        val CurrentTime_ = bundle!!.getString("CurrentTime")
+        val ModificationDate = bundle.getString("ModificationDate")
+
+
+
         jsonObjectResponse = JSONObject()
 
         val stringRequestDataTickets = @RequiresApi(Build.VERSION_CODES.N)
@@ -251,17 +281,18 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
                 try {
                     dataModelArrayListConverdation = ArrayList()
                     jsonObjectResponse = JSONObject(response)
-                    Log.i("mensaje posicion",""+jsonObjectResponse.getString("0").get(2))
+                    //Log.i("mensaje posicion",""+jsonObjectResponse)
                     //val nTasks = jsonObjectResponse.getJSONObject("0")
                     var iterador = 0
                     var tasksIterador: JSONObject
                     for (i in  0 until jsonObjectResponse.length()){
+                        val playerModel = Data_Tickets()
+                        if (jsonObjectResponse.getString(iterador.toString())[2] == 'T'){
 
-                        if (jsonObjectResponse.getString(iterador.toString()).get(2) == 'T'){
-                            val playerModel = Data_Tickets()
                             tasksIterador = jsonObjectResponse.getJSONObject(iterador.toString())
 
                             val tasksTipo = tasksIterador.getString("TIPO")
+                            playerModel.setGlpiTasksTipo(tasksTipo)
                             val tasksNameOperador = tasksIterador.getString("NOMBRE")
                             val tasksApellidoOperador = tasksIterador.getString("APELLIDO")
                             playerModel.setGlpiTasktName("$tasksNameOperador $tasksApellidoOperador")
@@ -270,7 +301,7 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
                             val dateTimeiso1801 = dateTime+"Z"
                             val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
                             val tasks_dateTime: Date = format.parse(dateTimeiso1801)
-                            Log.i("mensaje creacionString",""+tasksFechaCreacion)
+                            //Log.i("mensaje creacionString",""+tasksFechaCreacion)
 
                             playerModel.setConversationCreation(tasks_dateTime)
                             val decoded: String = Html.fromHtml(tasksIterador.getString("CONTENIDO")).toString()
@@ -278,18 +309,37 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
                             //Log.i("mensaje taskiterador",""+decoded2)
                             playerModel.setGlpiTasksDescripcion(decoded2.toString())
 
+                            //----------
+                            val dataId = jsonArrayIdRecipient.getJSONObject(0)
+                            val nameId = dataId.getString("NOMBRE")
+                            val lastNameId = dataId.getString("APELLIDO")
+                            playerModel.setTaskUserName("$nameId $lastNameId")
+
+                            /*val dataIdRequester = jsonArrayIdRequester.getJSONObject(0)
+                            val nameIdRequester = dataIdRequester.getString("NOMBRE")
+                            val lastNameIdRequester = dataId.getString("APELLIDO")
+                            playerModel.setTaskUsersNameRequester("$nameIdRequester $lastNameIdRequester")*/
+                            //----------
+
+                            playerModel.setTicketSortsContents(Contenido_.toString())
+                            playerModel.setGlpiOperadorName(NameOperador_.toString())
+                            playerModel.setTicketSortsCreationDate(CurrentTime_.toString())
+                            playerModel.setTicketSortsModificationDate(ModificationDate.toString())
+
                             iterador++
-                            playerModel.setGlpiTasksTipo(tasksTipo)
+
 
                             dataModelArrayListConverdation.sortBy { it.getConversationCreation() }
                             dataModelArrayListConverdation.add(playerModel)
                         }else{
-                            //Log.i("mensaje creacionString",""+jsonObjectResponse.getString("scalar"))
-                            //iterador++
+                            /*Log.i("mensaje creacionString",""+jsonObjectResponse.getJSONObject(iterador.toString()))
+                            tasksIterador = jsonObjectResponse.getJSONObject(iterador.toString())
+                            playerModel.setGlpiDescripcion(tasksIterador.getString("scalar"))
+
+                            iterador++*/
                             //----------------------------------------------------------------------------
                         }
                     }
-
                     setupRecyclerView()
                 } catch (e: Exception) {
                     e.printStackTrace()
@@ -306,47 +356,9 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
             }
         }
         this?.let {
-            VolleySingleton.getInstance(it).addToRequestQueue(stringRequestDataTickets)
+            VolleySingleton.getInstance(this).addToRequestQueue(stringRequestDataTickets)
         }
-    }
-
-    private fun creatNewLinearLayout(taskDescriptions: String): LinearLayout {
-        val newLayout = LinearLayout(this) // declaramos el componente
-        newLayout.setPadding(30,32,0,32)
-        //inicio tamaño de linearlayout
-        val layoutParams = LinearLayout.LayoutParams(1000,500 )
-        newLayout.layoutParams = layoutParams
-        //fin tamaño de boton
-        newLayout.setBackgroundColor(Color.parseColor("#FFF3DB"))
-        createTextView(taskDescriptions)
-        newLayout.addView(createTextView(taskDescriptions))
-        return newLayout
-    }
-
-    private fun creatNewLinearLayoutFollow(taskDescriptions: String): LinearLayout {
-        val newLayoutFollow = LinearLayout(this) // declaramos el componente
-        newLayoutFollow.setPadding(30,32,0,32)
-        //inicio tamaño de linearlayout
-        val layoutParams = LinearLayout.LayoutParams(1000,500 )
-        newLayoutFollow.layoutParams = layoutParams
-        //fin tamaño de boton
-        newLayoutFollow.setBackgroundColor(Color.parseColor("#E0E0E0"))
-        createTextView(taskDescriptions)
-        newLayoutFollow.addView(createTextView(taskDescriptions))
-        return newLayoutFollow
-    }
-
-    private fun creatNewLinearLayoutSolution(taskDescriptions: String): LinearLayout {
-        val Solution = LinearLayout(this) // declaramos el componente
-            Solution.setPadding(30,32,0,32)
-        //inicio tamaño de linearlayout
-        val layoutParams = LinearLayout.LayoutParams(1000,500 )
-        Solution.layoutParams = layoutParams
-        //fin tamaño de boton
-        Solution.setBackgroundColor(Color.parseColor("#9FD6ED"))
-        createTextView(taskDescriptions)
-        Solution.addView(createTextView(taskDescriptions))
-        return Solution
+        DataToTicketsHistoricoActivity()
     }
 
     private fun createTextView(taskDescriptions: String): TextView {
@@ -375,9 +387,12 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
         val bundle = intent.extras
 
         val TicketID_ = bundle!!.getString("TicketID")
-        val NameOperador_ = bundle!!.getString("NameOperador")
+        val NameOperador_ = bundle!!.getString("NameOperador")//aun no hay
         val CurrentTime_ = bundle!!.getString("CurrentTime")
+        val ModificationDate = bundle!!.getString("ModificationDate")
+
         val Contenido_ = bundle!!.getString("Contenido")
+        //-----
         val Tipo = bundle!!.getString("Tipo")
         val Ubicacion_ = bundle!!.getString("Ubicacion")
         val Correo_ = bundle!!.getString("Correo")
@@ -393,6 +408,16 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
         val taskName = bundle!!.getString("taskName")
         val taskDescription = bundle.getString("taskDescription")
 
+        //jsonObjetcIdResponse = JSONObject()
+        //volleyRequestID(idRecipient.toString())
+        //val id = jsonObjetcIdResponse.getJSONObject("0")
+
+
+        //val nameOperador = id.getString("NOMBRE")//OBTENEMOS EL NOMBRE DEL OPERADOR QUE ASIGNÓ EL TICKET
+
+        //--------------
+
+        //--------------
 
         binding.includeNavHeaderTickets.txtTicketID.text = "Petición #$TicketID_"
         binding.includeNavHeaderTickets.txtUbicacion.text = Ubicacion_
@@ -402,11 +427,14 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
             binding.includeNavHeaderTickets.txtTicketEstado.setBackgroundResource(R.drawable.ic_circulo)
         }
 
-        binding.includeTicketsHistorico.txtNameOperador.text = NameOperador_
-        binding.includeTicketsHistorico.txtCurrentTime.text = CurrentTime_
-        binding.includeTicketsHistorico.txtDescripcionTicketHistorico.text = Contenido_
+        binding.includeTicketsHistorico.txtCurrentTime.text = "Fecha Creación $CurrentTime_"
+        if (CurrentTime_ != ModificationDate){
+            binding.includeTicketsHistorico.txtModificationDate.text = "Ult. Modificación $ModificationDate"
+            binding.includeTicketsHistorico.txtModificationDate.isVisible = true
+        }
 
-        binding.includeTickets.labelFechaOperadorApertura.text = "$CurrentTime_ - $NameOperador_"
+        binding.includeTicketsHistorico.txtDescripcionTicketHistorico.text = Contenido_
+        binding.includeTickets.labelFechaOperadorApertura.text = "$CurrentTime_ - "
         binding.includeTickets.labelCategoria.text = TicketCategoria_
 
         //CAMBIAR COLOR DE ESTADO DE URGENCIA-------------------------------------------------------
@@ -429,20 +457,133 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
         //------------------------------------------------------------------------------------------
         binding.includeTickets.labelPrioridad.text = TicketUrgencia_
         binding.includeTickets.lableFechaMAXCierre.text = "fecha y hora de cierre estimado - $TicketUrgencia_"
-
         binding.includeTickets.labelSolicitudIncidencia.text = Tipo
+        if (Tipo == "SOLICITUD"){
+            binding.includeTickets.txtSolicitud.text ="?"
+            binding.includeTickets.tvIncidencia.isVisible = false
+            binding.includeTickets.tvSolicitud.isVisible = true
+        }
         binding.includeTickets.labelUbicacion.text = Ubicacion_
         binding.includeTickets.labelEmail.text = Correo_
-        binding.includeTickets.labelSolicitanteNombre.text = NameSolicitante_
+        binding.includeTickets.labelOrigen.text = TicketOrigen_
+        //binding.includeTickets.labelSolicitanteNombre.text = NameSolicitante_
         binding.includeTickets.labelSolicitanteCargo.text = CargoSolicitante_
         binding.includeTickets.labelSolicitanteCelular.text = TelefonoSolicitante_
-        binding.includeTickets.labelAsignadoNombre.text = LoginName_
+        binding.includeTickets.labelAsignadoNombre.text = NameSolicitante_
         binding.includeTickets.labelDescrTicket.text = Contenido_
 
         //SECTION TASKS
         binding.includeTicketsHistorico.txtTaskNameLogin.text = taskName
         binding.includeTicketsHistorico.txtTaskDescription.text = taskDescription
     }
+
+    private fun volleyRequestIdRecipient(){
+        val bundle = intent.extras
+        val idRecipient = bundle!!.getString("IdRecipient")
+        Log.i("mensaje cel","$idRecipient")
+        val stringRequestDataTickets = object : StringRequest(Method.POST,
+            urlApi_TasksUsers+idRecipient, Response.Listener { response ->
+            try {
+                jsonArrayIdRecipient = JSONArray()
+                jsonArrayIdRecipient = JSONArray(response)
+                val dataId = jsonArrayIdRecipient.getJSONObject(0)
+                val nameId = dataId.getString("NOMBRE")
+                val lastNameId = dataId.getString("APELLIDO")
+                val cellPhone = dataId.getString("TELEFONO")
+
+                binding.includeTicketsHistorico.txtNameOperador.text = "$nameId $lastNameId"
+                binding.includeTickets.txtTasksUserName.text = "$nameId $lastNameId"
+                if (cellPhone != " " && cellPhone != "null"){
+                    binding.includeTickets.labelAsignadoCelular.text = cellPhone
+                    binding.includeTickets.labelAsignadoCelular.isVisible = true
+                }
+            }catch (e:Exception){
+                e.printStackTrace()
+            }
+        }, Response.ErrorListener {
+            Toast.makeText(this, "ERROR CON EL SERVIDOR", Toast.LENGTH_SHORT).show()
+        }){
+            override fun getParams(): Map<String, String>? {
+                val params: MutableMap<String, String> = HashMap()
+                params["session_token"] = token.prefer.getToken()
+                return params
+            }
+        }
+        VolleySingleton.getInstance(this).addToRequestQueue(stringRequestDataTickets)
+        //FIN volley ------------------------------------------------------------
+    }
+
+    private fun volleyRequestIdTechnician(){
+        val bundle = intent.extras
+        val idRecipient = bundle!!.getString("IdTechnician")
+        val stringRequestDataTickets = object : StringRequest(Method.POST,
+            urlApi_TasksUsers+idRecipient, Response.Listener { response ->
+                try {
+                    jsonArrayIdTechnician = JSONArray()
+                    jsonArrayIdTechnician = JSONArray(response)
+                    /*val dataId = jsonArrayIdTechnician.getJSONObject(0)
+                    val nameId = dataId.getString("NOMBRE")
+                    val lastNameId = dataId.getString("APELLIDO")
+                    binding.includeTicketsHistorico.txtNameOperador.text = "$nameId $lastNameId"
+                    binding.includeTickets.txtTasksUserName.text = "$nameId $lastNameId"*/
+                }catch (e:Exception){
+                    e.printStackTrace()
+                }
+            }, Response.ErrorListener {
+                Toast.makeText(this, "ERROR CON EL SERVIDOR", Toast.LENGTH_SHORT).show()
+            }){
+            override fun getParams(): Map<String, String>? {
+                val params: MutableMap<String, String> = HashMap()
+                params["session_token"] = token.prefer.getToken()
+                return params
+            }
+        }
+        VolleySingleton.getInstance(this).addToRequestQueue(stringRequestDataTickets)
+    }
+    private fun volleyRequestIdRequester(){
+        val bundle = intent.extras
+        val idRecipient = bundle!!.getString("IdRequester")
+        val stringRequestDataTickets = object : StringRequest(Method.POST,
+            urlApi_TasksUsers+idRecipient, Response.Listener { response ->
+                try {
+                    jsonArrayIdRequester = JSONArray()
+                    jsonArrayIdRequester = JSONArray(response)
+                    val dataId = jsonArrayIdRequester.getJSONObject(0)
+                    val nameId = dataId.getString("NOMBRE")
+                    val lastNameId = dataId.getString("APELLIDO")
+                    binding.includeTickets.labelSolicitanteNombre.text = "$nameId $lastNameId"
+
+                    val placeId = dataId.getString("UBICACION")
+                    binding.includeTickets.labelUbicacion.text = placeId
+                    binding.includeNavHeaderTickets.txtUbicacion.text = placeId
+
+                    val emailId = dataId.getString("CORREO")
+                    binding.includeTickets.labelEmail.text = emailId
+
+                    val positionId = dataId.getString("CARGO")
+                    binding.includeTickets.labelSolicitanteCargo.text = positionId
+
+                    val cellphoneId = dataId.getString("TELEFONO")
+                    if (cellphoneId != "null"){
+                        binding.includeTickets.labelSolicitanteCelular.isVisible = true
+                        binding.includeTickets.labelSolicitanteCelular.text = cellphoneId
+                    }
+
+                }catch (e:Exception){
+                    e.printStackTrace()
+                }
+            }, Response.ErrorListener {
+                Toast.makeText(this, "ERROR CON EL SERVIDOR", Toast.LENGTH_SHORT).show()
+            }){
+            override fun getParams(): Map<String, String>? {
+                val params: MutableMap<String, String> = HashMap()
+                params["session_token"] = token.prefer.getToken()
+                return params
+            }
+        }
+        VolleySingleton.getInstance(this).addToRequestQueue(stringRequestDataTickets)
+    }
+
 
     override fun onEditClick(glpiTasksDescripcion: String, glpiTasksTipo: String) {
         val intentTasks = (Intent(this,TicketsAgregarTareaActivity::class.java))
@@ -458,5 +599,11 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
             intentFollowUp.putExtra("tasks_description",glpiTasksDescripcion)
             startActivity(intentFollowUp)
         }
+    }
+
+    override fun onFabClick() {
+        val bundle = intent.extras
+        Toast.makeText(this, bundle!!.getString("Contenido"), Toast.LENGTH_SHORT).show()
+        val Contenido_ = bundle!!.getString("Contenido")
     }
 }

@@ -25,6 +25,7 @@ import com.glpi.glpi_ministerio_pblico.ui.adapter.RecycleView_Adapter_TasksTempl
 import com.glpi.glpi_ministerio_pblico.ui.shared.token
 import org.json.JSONArray
 import java.util.*
+import kotlin.collections.ArrayList
 
 class TicketsAgregarTareaActivity : AppCompatActivity(), RecycleView_Adapter_TasksTemplate.onTasksTemplateClickListener {
     lateinit var binding: ActivityTicketsAgregarTareaBinding //declaramos binding para acceder variables
@@ -231,10 +232,17 @@ class TicketsAgregarTareaActivity : AppCompatActivity(), RecycleView_Adapter_Tas
         binding.fabArchivo.isVisible = false
         click = false
         binding.LayoutFabAgregarTarea.isVisible = true
-        //val formatoText = decodeHtml(contentTasksTemplate).split(" ")
         binding.edtTasksDescription.setText(decodeHtml(contentTasksTemplate))
         binding.edtTasksDescription.setTextColor(Color.parseColor("#1D20DD"))
-
-        //Log.i("mensaje html",""+formatoText)
+        /*val fullHtml = "<h2 style=\"text-align: center;\"><span style=\"color: #0000ff;\">ACOMPAÑAMIENTO</span></h2><h4><span style=\"color: #0000ff;\"><span style=\"color: #ff0000;\">Evento:</span> </span></h4><h4><span style=\"color: #0000ff;\"><span style=\"color: #ff0000;\">Modalidad (pres./rem.):</span> </span></h4>"
+        val decodeFullhtml = fullHtml.split("</span>") as ArrayList
+        binding.edtTasksDescription.setText(decodeFullhtml.toString())
+        binding.edtTasksDescription.setTextColor(Color.parseColor("#1D20DD"))
+        for(i in 0 until decodeFullhtml.size){
+            Log.i("mensaje html",""+ decodeHtml(decodeFullhtml[i]))
+            binding.edtTasksDescription.setText(decodeHtml(decodeFullhtml[i]))
+        }*/
+        //Log.i("mensaje html",""+ decodeHtml(decodeFullhtml[0]))
+        //binding.edtTasksDescription.setText(decodeFullhtml.toString())
     }
 }

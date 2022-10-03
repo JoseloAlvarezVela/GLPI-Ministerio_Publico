@@ -8,7 +8,9 @@ import android.widget.Button
 import androidx.recyclerview.widget.RecyclerView
 import com.glpi.glpi_ministerio_pblico.R
 
-class RecycleView_Adapter_Entities(context: Context,private val dataModelArrarListEntities:ArrayList<Data_Entities>):RecyclerView.Adapter<RecycleView_Adapter_Entities.MyViewHolderEntities>(){
+class RecycleView_Adapter_Entities(context: Context,
+    private val dataModelArrarListEntities:ArrayList<Data_Tickets>
+    ):RecyclerView.Adapter<RecycleView_Adapter_Entities.MyViewHolderEntities>(){
     private val inflater: LayoutInflater
 
     init {
@@ -27,7 +29,7 @@ class RecycleView_Adapter_Entities(context: Context,private val dataModelArrarLi
         holder: RecycleView_Adapter_Entities.MyViewHolderEntities,
         position: Int
     ) {
-        holder.btn_entities_.text = dataModelArrarListEntities[position].getGlpiMyEntities()
+        holder.btn_entities_.text = dataModelArrarListEntities[position].getTicketSortsDescription()
     }
 
     override fun getItemCount(): Int {

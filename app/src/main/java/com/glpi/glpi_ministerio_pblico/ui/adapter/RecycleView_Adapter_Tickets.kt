@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.glpi.glpi_ministerio_pblico.R
 
@@ -32,6 +33,10 @@ class RecycleView_Adapter_Tickets(
             TicketID: String,
             NameOperador: Any,
             CurrentTime: Any,
+            ModificationDate: String,
+            IdRecipient: String,
+            IdTechnician: String,
+            IdRequester: String,
             Contenido: Any,
             Tipo: String,
             Ubicacion: String,
@@ -70,43 +75,45 @@ class RecycleView_Adapter_Tickets(
     override fun onBindViewHolder(
         holder: RecycleView_Adapter_Tickets.MyViewHolder, position: Int) {
         //-----------
-        holder.txt_numero_ticket.text = "#"+dataModelArrayList[position].getGlpiID()
+
 
         //-----------
-        if (dataModelArrayList[position].getGlpiEstado() == "EN CURSO (Asignada)"){
+        if (dataModelArrayList[position].getTicketSortsState() == "EN CURSO (Asignada)"){
             holder.txt_estado_ticket.setBackgroundResource(R.drawable.ic_circulo_verde)
         }else{
             holder.txt_estado_ticket.setBackgroundResource(R.drawable.ic_circulo)
         }
 
         //-----------
-        holder.txt_tipo.text = dataModelArrayList[position].getGlpiTipo()
-        if (dataModelArrayList[position].getGlpiTipo() == "SOLICITUD"){
-            holder.txt_tipo.setTextColor(Color.parseColor("#3FC3FF"))
-            holder.txt_numero_ticket.setBackgroundColor((Color.parseColor("#3FC3FF")))
+        holder.txt_tipo.text = dataModelArrayList[position].getTicketSortsType()
+        if (dataModelArrayList[position].getTicketSortsType() == "SOLICITUD"){
+            holder.txt_numero_ticket.text = "?  #"+dataModelArrayList[position].getTicketSortsID()
+            holder.txt_tipo.setTextColor(Color.parseColor("#3DC7FF"))
+            holder.txt_numero_ticket.setBackgroundColor((Color.parseColor("#3DC7FF")))
         }else{
-            holder.txt_tipo.setTextColor(Color.parseColor("#C5A83F"))
-            holder.txt_numero_ticket.setBackgroundColor((Color.parseColor("#C5A83F")))
+            holder.txt_numero_ticket.text = "!  #"+dataModelArrayList[position].getTicketSortsID()
+            holder.txt_tipo.setTextColor(Color.parseColor("#FEB300"))
+            holder.txt_numero_ticket.setBackgroundColor((Color.parseColor("#FEB300")))
         }
 
         //-----------
-        holder.txt_descripcionTicket.text = dataModelArrayList[position].getGlpiDescripcion()+"..."
+        holder.txt_descripcionTicket.text = dataModelArrayList[position].getTicketSortsDescription()+"..."
 
         //-----------
-        holder.txt_Requester_Name.text = "Solicitante: "+dataModelArrayList[position].getGlpiRequesterName()
+        holder.txt_Requester_Name.text = "Solicitante: null"
 
         //-----------
         holder.txt_Requester_Cargo.text = "Cargo: "+dataModelArrayList[position].getGlpiRequesterCargo()
 
         //-----------
-        holder.txt_glpi_currenttime.text = dataModelArrayList[position].getCurrentTime()
+        holder.txt_glpi_currenttime.text = dataModelArrayList[position].getTicketSortsCreationDate()
 
-        //-----------
-        if(dataModelArrayList[position].getGlpiEstado() == "EN CURSO (Asignada)"){
-            holder.txt_EstadoColor.setBackgroundResource(R.drawable.esq_redondeada_amarillo)
-        }
-        else if(dataModelArrayList[position].getGlpiEstado() == "URGENTE"){
+        //urgencia del ticket
+        if(dataModelArrayList[position].getTicketSortsUrgency() == "ALTA"){
             holder.txt_EstadoColor.setBackgroundResource(R.drawable.esq_redondeada_rojo)
+        }
+        else if(dataModelArrayList[position].getTicketSortsUrgency() == "MEDIA"){
+            holder.txt_EstadoColor.setBackgroundResource(R.drawable.esq_redondeada_amarillo)
         }
         else{
             holder.txt_EstadoColor.setBackgroundResource(R.drawable.esq_redondeada_gris)
@@ -123,7 +130,7 @@ class RecycleView_Adapter_Tickets(
 
     //inicializamos los componetes de nuestro ticket de la forma tradicional
     inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
-        var tickets : LinearLayout //para evento click
+        var tickets : ConstraintLayout //para evento click
         var txt_numero_ticket : TextView
         var txt_estado_ticket : TextView
         var txt_tipo : TextView
@@ -139,7 +146,7 @@ class RecycleView_Adapter_Tickets(
         var txt_TaskDescription: TextView*/
 
         init {
-            tickets = itemView.findViewById(R.id.tickets) as LinearLayout
+            tickets = itemView.findViewById(R.id.tickets) as ConstraintLayout
             txt_numero_ticket = itemView.findViewById(R.id.txt_numero_ticket) as TextView
             txt_estado_ticket = itemView.findViewById(R.id.txt_estado_ticket) as TextView
             txt_tipo = itemView.findViewById(R.id.txt_tipo) as TextView
@@ -156,21 +163,25 @@ class RecycleView_Adapter_Tickets(
 
             itemView.setOnClickListener {
                 itemClickListener_.onTicketClick(
-                    dataModelArrayList[position].getGlpiID(),
+                    dataModelArrayList[position].getTicketSortsID(),
                     dataModelArrayList[position].getGlpiOperadorName(),
-                    dataModelArrayList[position].getCurrentTime(),
-                    dataModelArrayList[position].getGlpiContenido(),
-                    dataModelArrayList[position].getGlpiTipo(),
+                    dataModelArrayList[position].getTicketSortsCreationDate(),
+                    dataModelArrayList[position].getTicketSortsModificationDate(),
+                    dataModelArrayList[position].getTicketSortsIdRecipient(),
+                    dataModelArrayList[position].getTicketSortsIdTechnician(),
+                    dataModelArrayList[position].getTicketSortsIdRequester(),
+                    dataModelArrayList[position].getTicketSortsContents(),
+                    dataModelArrayList[position].getTicketSortsType(),
                     dataModelArrayList[position].getGlpiUbicacionSolicitante(),
                     dataModelArrayList[position].getGlpiCorreoSolicitante(),
-                    dataModelArrayList[position].getGlpiRequesterName(),
+                    dataModelArrayList[position].getTechnicianName(),
                     dataModelArrayList[position].getGlpiRequesterCargo(),
                     dataModelArrayList[position].getGlpiTelefonoSolicitante(),
                     dataModelArrayList[position].getGlpiLoginName(),
-                    dataModelArrayList[position].getGlpiEstado(),
-                    dataModelArrayList[position].getGlpiCategoria(),
-                    dataModelArrayList[position].getGlpiOrigen(),
-                    dataModelArrayList[position].getGlpiUrgencia(),
+                    dataModelArrayList[position].getTicketSortsState(),
+                    dataModelArrayList[position].getTicketSortsCategory(),
+                    dataModelArrayList[position].getTicketSortsSource(),
+                    dataModelArrayList[position].getTicketSortsUrgency(),
                     "dataModelArrayList[position].getGlpiTasksName()",
                     "dataModelArrayList[position].getGlpiTasksDescripcion()"
                 )

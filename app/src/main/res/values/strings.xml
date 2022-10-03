@@ -61,4 +61,8 @@
 
     <string name="numeral">#</string>
 
+<!--    string para ticket info en conversacion-->
+    <string name="creationDate">Fecha Creación</string>
+    <string name="ModificationDate">Ult. Modificación</string>
+
 </resources>

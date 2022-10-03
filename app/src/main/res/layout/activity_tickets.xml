@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/includeTicketsLayout"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
@@ -62,6 +62,44 @@
                             android:textColor="#000000"
                             android:textSize="18sp" />
 
+                        <LinearLayout
+                            android:id="@+id/tv_incidencia"
+                            android:layout_width="30sp"
+                            android:layout_height="30sp"
+                            android:layout_gravity="center_vertical"
+                            android:background="@drawable/circulo_incidencia"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/txt_incidencia"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_horizontal|center_vertical"
+                                android:text="!"
+                                android:textColor="#000000"
+                                android:textSize="24sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/tv_solicitud"
+                            android:layout_width="30sp"
+                            android:layout_height="30sp"
+                            android:layout_gravity="center_vertical"
+                            android:background="@drawable/circulo_solicitud"
+                            android:orientation="vertical"
+                            android:visibility="gone">
+
+                            <TextView
+                                android:id="@+id/txt_solicitud"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_horizontal|center_vertical"
+                                android:textColor="#000000"
+                                android:textSize="24sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
                         <TextView
                             android:id="@+id/label_solicitud_incidencia"
                             android:layout_width="match_parent"
@@ -69,12 +107,11 @@
                             android:layout_gravity="center_vertical"
                             android:layout_weight="1"
                             android:backgroundTint="@android:color/transparent"
-                            android:drawableLeft="@drawable/ic_interrogacion"
-                            android:drawablePadding="5dp"
                             android:ems="10"
                             android:fontFamily="@font/averia_libre_light"
                             android:gravity="left|center_vertical"
                             android:minHeight="48dp"
+                            android:paddingLeft="5sp"
                             android:text="Solicitud/Incidente"
                             android:textColor="#000000"
                             android:textSize="18sp" />
@@ -104,20 +141,40 @@
                         android:orientation="vertical"
                         android:visibility="visible">
 
-                        <TextView
-                            android:id="@+id/label_fecha_operador_apertura"
+                        <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="5sp"
-                            android:backgroundTint="@android:color/transparent"
-                            android:drawableLeft="@drawable/ic_reloj"
-                            android:drawablePadding="5dp"
-                            android:ems="10"
-                            android:fontFamily="@font/averia_sans_libre_light"
-                            android:gravity="left|center_vertical"
-                            android:text="26 de jul. 2022 - 10:08 am - NOMBRE DEL OPERADOR"
-                            android:textColor="#000000"
-                            android:textSize="12sp" />
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/label_fecha_operador_apertura"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="5sp"
+                                android:backgroundTint="@android:color/transparent"
+                                android:drawableLeft="@drawable/ic_reloj"
+                                android:drawablePadding="5dp"
+                                android:fontFamily="@font/averia_sans_libre_light"
+                                android:gravity="left|center_vertical"
+                                android:text="fecha y hora de creación de ticket -"
+                                android:textColor="#000000"
+                                android:textSize="12sp" />
+
+                            <TextView
+                                android:id="@+id/txt_tasksUser_name"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="5sp"
+                                android:backgroundTint="@android:color/transparent"
+                                android:drawablePadding="5dp"
+                                android:ems="10"
+                                android:fontFamily="@font/averia_sans_libre_light"
+                                android:gravity="left|center_vertical"
+                                android:text="26 de jul. 2022 - 10:08 am"
+                                android:textColor="#000000"
+                                android:textSize="12sp" />
+                        </LinearLayout>
 
                         <TextView
                             android:id="@+id/lable_fechaMAX_cierre"
@@ -176,9 +233,27 @@
                             android:ems="10"
                             android:fontFamily="@font/averia_sans_libre_light"
                             android:gravity="left|center_vertical"
-                            android:text="CORREO ELECTRÓNICO"
+                            android:text="CORREO ELECTRONICO"
                             android:textColor="#000000"
                             android:textSize="12sp" />
+
+                        <TextView
+                            android:id="@+id/label_origen"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5sp"
+                            android:layout_marginBottom="5sp"
+                            android:backgroundTint="@android:color/transparent"
+                            android:drawableLeft="@android:drawable/stat_sys_headset"
+                            android:drawablePadding="9sp"
+                            android:ems="10"
+                            android:fontFamily="@font/averia_sans_libre_light"
+                            android:gravity="left|center_vertical"
+                            android:paddingLeft="3sp"
+                            android:text="ORIGEN"
+                            android:textColor="#000000"
+                            android:textSize="12sp"
+                            app:drawableTint="#000000" />
 
                     </LinearLayout>
 
@@ -282,7 +357,7 @@
                             android:paddingLeft="5dp"
                             android:paddingTop="8dp"
                             android:text="Descripción completa del ticket,Descripción completa del ticket,Descripción completa del ticket     Descripción completa del ticket,Descripción completa del ticket,Descripción completa del ticket,Descripción completa del ticket     Descripción completa del ticketDescripción completa"
-                            android:textColor="#000000"
+                            android:textColor="#0000ff"
                             android:textSize="12sp" />
 
                     </LinearLayout>
@@ -351,6 +426,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
+                            android:paddingBottom="5sp"
                             android:visibility="visible">
 
                             <TextView
@@ -411,13 +487,15 @@
                                 android:gravity="center|left"
                                 android:text="932713859"
                                 android:textColor="#000000"
-                                android:textSize="12sp" />
+                                android:textSize="12sp"
+                                android:visibility="gone" />
                         </LinearLayout>
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="vertical">
+                            android:orientation="vertical"
+                            android:paddingBottom="5sp">
 
                             <TextView
                                 android:id="@+id/label_asignado"
@@ -461,13 +539,15 @@
                                 android:gravity="center|left"
                                 android:text="Celular del tecnico asignado"
                                 android:textColor="#000000"
-                                android:textSize="12sp" />
+                                android:textSize="12sp"
+                                android:visibility="gone" />
                         </LinearLayout>
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="vertical">
+                            android:orientation="vertical"
+                            android:visibility="gone">
 
                             <TextView
                                 android:id="@+id/label_grupo_tecnico"
@@ -503,7 +583,8 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="vertical">
+                            android:orientation="vertical"
+                            android:visibility="gone">
 
                             <TextView
                                 android:id="@+id/label_observador"

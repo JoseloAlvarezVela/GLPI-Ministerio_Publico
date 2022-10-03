@@ -242,7 +242,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/averia_sans_libre_light"
                     android:gravity="center_horizontal"
-                    android:text="Asesoramiento"
+                    android:text="Categoria"
                     android:textColor="#1D20DD"
                     android:textSize="24sp"
                     android:textStyle="normal|bold" />
@@ -250,7 +250,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:visibility="gone">
 
                     <TextView
                         android:id="@+id/textView29"
@@ -289,18 +290,23 @@
                         android:fontFamily="@font/averia_sans_libre_light"
                         android:text="Tema : "
                         android:textColor="#1D20DD"
-                        android:textSize="12sp" />
+                        android:textSize="12sp"
+                        android:visibility="gone" />
 
                     <EditText
                         android:id="@+id/edtTasksDescription"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="20sp"
+                        android:layout_marginLeft="20sp"
+                        android:layout_marginEnd="20sp"
+                        android:layout_marginRight="20sp"
                         android:layout_weight="1"
                         android:ems="10"
                         android:fontFamily="@font/averia_sans_libre_light"
                         android:hint="ingrese lo indicado"
                         android:inputType="textMultiLine|textPersonName"
-                        android:textSize="12sp" />
+                        android:textSize="14sp" />
                 </LinearLayout>
 
             </LinearLayout>

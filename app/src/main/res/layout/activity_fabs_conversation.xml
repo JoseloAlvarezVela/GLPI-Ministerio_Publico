@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:id="@+id/linearLayout10"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        android:gravity="end"
+        android:orientation="vertical"
+        android:paddingRight="10sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:id="@+id/fab_seguimiento"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10sp"
+            android:clickable="true"
+            android:gravity="center|end"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5sp"
+                android:layout_marginRight="5sp"
+                android:background="@drawable/esq_redondeada_blanco"
+                android:gravity="center"
+                android:padding="5sp"
+                android:text="Seguimiento"
+                android:textColor="#636363"
+                android:textSize="12sp" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/btn_fab_seguimiento"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:visibility="visible"
+                app:backgroundTint="#CFC8C8"
+                app:srcCompat="@drawable/ic_conversacion" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/fab_tareas"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10sp"
+            android:clickable="true"
+            android:gravity="center|end"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5sp"
+                android:layout_marginRight="5sp"
+                android:background="@drawable/esq_redondeada_blanco"
+                android:padding="5sp"
+                android:text="Agregar Tarea"
+                android:textColor="#636363"
+                android:textSize="12sp" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/btn_fab_tareas"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:visibility="visible"
+                app:backgroundTint="#E4C529"
+                app:srcCompat="@drawable/ic_configuraciones" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/fab_documentos"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10sp"
+            android:clickable="true"
+            android:gravity="center|end"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5sp"
+                android:layout_marginRight="5sp"
+                android:background="@drawable/esq_redondeada_blanco"
+                android:padding="5sp"
+                android:text="Documento"
+                android:textColor="#636363"
+                android:textSize="12sp" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/btn_fab_documentos"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:visibility="visible"
+                app:backgroundTint="#77D370"
+                app:srcCompat="@drawable/ic_fab_documento" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/fab_solucion"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10sp"
+            android:clickable="true"
+            android:gravity="center|end"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5sp"
+                android:layout_marginRight="5sp"
+                android:background="@drawable/esq_redondeada_blanco"
+                android:padding="5sp"
+                android:text="Solución"
+                android:textColor="#636363"
+                android:textSize="12sp" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/btn_fab_solucion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:visibility="visible"
+                app:backgroundTint="#4770EC"
+                app:srcCompat="@drawable/ic_check" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10sp"
+            android:layout_marginBottom="10sp"
+            android:clickable="true"
+            android:gravity="center|end"
+            android:orientation="vertical">
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fab_desplegar_op"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                app:backgroundTint="#E68080"
+                app:srcCompat="@drawable/ic_fab_desplegar" />
+        </LinearLayout>
+
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

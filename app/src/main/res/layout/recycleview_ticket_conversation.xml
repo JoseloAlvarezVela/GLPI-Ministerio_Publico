@@ -14,9 +14,11 @@
         android:orientation="horizontal">
 
         <LinearLayout
+            android:id="@+id/linearLayout_Solution"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/tv_conversation_estado"

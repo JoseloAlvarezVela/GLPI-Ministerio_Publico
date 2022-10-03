@@ -1,24 +1,42 @@
 package com.glpi.glpi_ministerio_pblico.ui.adapter
 
+import android.util.Log
 import java.util.*
 
 /*1:
 creamos una clase para la lista de tickets y declaramos los atributos que vamos a obtener*/
 class Data_Tickets {
-    var glpiID_: String? = null
-    var glpiTipo_ : String? = null
-    var GlpiDescripcion_: String? = null
-    var GlpiContenido_: String? = null
-    var glpiEstado_ : String? = null
-    var glpi_currenttime_: String? = null
+    private var ticketSortsId: String? = null
+    private var ticketSortsType : String? = null
+    private var ticketSortsState : String? = null
+    private var ticketSortsDescription: String? = null
+    private var ticketSortsIdRecipient: String? = null
+    private var ticketSortsIdTechnician: String? = null
+    private var technicianName: String? = null
+    private var ticketSortsIdRequester: String? = null
+    private var ticketSortsCreationDate: String? = null
+    private var ticketSortsContents: String? = null
+    private var ticketSortsUrgency: String? = null
+    private var ticketSortsCategory: String? = null
+    private var ticketSortsSource: String? = null
+    private var ticketSortsModificationDate: String? = null
+    //--------------------------------------------------
+
+    private var taskUsersName: String? = null
+    private var taskUsersPosition: String? = null //cargo
+    private var taskUsersNameRequester: String? = null
+
+
+
+
     var GlpiUbicacionSolicitante_: String? = null
     var GlpiCorreSolicitante_: String? = null
     var glpiOperadorName_: String? = null
     var GlpiLoginName_: String? = null
-    var GlpiCategoria_: String? = null
-    var GlpiOrigen_: String? = null
-    var GlpiUrgencia_: String? = null
-    var glpiRequester_Name_: String? = null
+
+
+
+
     var glpiRequester_Cargo_: String? = null
     var GlpiTelefonoSolicitante_: String? = null
     //SECTION TASKS
@@ -30,47 +48,131 @@ class Data_Tickets {
 
     /*Estos métodos getter y setter nos ayudarán a mantener los datos mientras
     llenamos la vista Recycler en la clase Adapter.*/
-    fun getGlpiID(): String {
-        return glpiID_.toString()
+    fun getTicketSortsID(): String {
+        return ticketSortsId.toString()
     }
-    fun setGlpiID(GlpiID: String) {
-        this.glpiID_ = GlpiID
-    }
-
-    fun getGlpiTipo(): String{
-        return glpiTipo_.toString()
-    }
-    fun setGlpiTipo(GlpiTipo: String){
-        this.glpiTipo_ = GlpiTipo
+    fun setTicketSortsID(ticketSortsId_: String) {
+        this.ticketSortsId = ticketSortsId_
     }
 
-    fun getGlpiDescripcion(): String{
-        return  GlpiDescripcion_.toString()
+    fun getTicketSortsType(): String{
+        return ticketSortsType.toString()
     }
-    fun setGlpiDescripcion(GlpiDescripcion: String){
-        this.GlpiDescripcion_ = GlpiDescripcion
-    }
-
-    fun getGlpiContenido(): String{
-        return GlpiContenido_.toString()
-    }
-    fun setGlpiContenido(GlpiContenido: String){
-        this.GlpiContenido_ = GlpiContenido
+    fun setTicketSortsType(ticketSortsType_: String){
+        this.ticketSortsType = ticketSortsType_
     }
 
-    fun getGlpiEstado(): String{
-        return glpiEstado_.toString()
+    fun getTicketSortsState(): String{
+        return ticketSortsState.toString()
     }
-    fun setGlpiEstado(glpiEstado: String){
-        this.glpiEstado_ = glpiEstado
+    fun setTicketSortsState(ticketSortsState_: String){
+        this.ticketSortsState = ticketSortsState_
     }
 
-    fun getCurrentTime(): String {
-        return glpi_currenttime_.toString()
+    fun getTicketSortsDescription(): String{
+        return  ticketSortsDescription.toString()
     }
-    fun setCurrentTime(CurrentTime: String) {
-        this.glpi_currenttime_ = CurrentTime
+    fun setTicketSortsDescription(ticketSortsDescription_: String){
+        this.ticketSortsDescription = ticketSortsDescription_
     }
+
+    fun getTicketSortsIdRecipient(): String{
+        return ticketSortsIdRecipient.toString()
+    }
+    fun setTicketSortsIdRecipient(ticketSortsIdRecipient_: String){
+        this.ticketSortsIdRecipient = ticketSortsIdRecipient_
+    }
+
+    fun getTicketSortsIdTechnician(): String{
+        return ticketSortsIdTechnician.toString()
+    }
+    fun setTicketSortsIdTechnician(ticketSortsIdTechnician_: String){
+        this.ticketSortsIdTechnician = ticketSortsIdTechnician_
+    }
+
+    fun getTechnicianName(): String{
+        return technicianName.toString()
+    }
+    fun setTechnicianName(technicianName_: String){
+        this.technicianName = technicianName_
+    }
+
+    fun getTicketSortsIdRequester(): String{
+        return ticketSortsIdRequester.toString()
+    }
+    fun setTicketSortsIdRequester(TicketSorts_IdRequester_: String){
+        this.ticketSortsIdRequester = TicketSorts_IdRequester_
+    }
+
+    fun getTicketSortsCreationDate(): String {
+        return ticketSortsCreationDate.toString()
+    }
+    fun setTicketSortsCreationDate(ticketSortsCreationDate_: String) {
+        this.ticketSortsCreationDate = ticketSortsCreationDate_
+    }
+
+    fun getTicketSortsContents(): String{
+        return ticketSortsContents.toString()
+    }
+    fun setTicketSortsContents(ticketSortsContents_: String){
+        this.ticketSortsContents = ticketSortsContents_
+    }
+
+    fun getTicketSortsUrgency(): String{
+        return ticketSortsUrgency.toString()
+    }
+    fun setTicketSortsUrgency(ticketSortsUrgency_: String){
+        this.ticketSortsUrgency = ticketSortsUrgency_
+    }
+
+    fun getTicketSortsCategory(): String{
+        return ticketSortsCategory.toString()
+    }
+    fun setTicketSortsCategory(ticketSortsCategory_: String){
+        this.ticketSortsCategory = ticketSortsCategory_
+    }
+
+    fun getTicketSortsSource(): String{
+        return ticketSortsSource.toString()
+    }
+
+    fun setTicketSortsSource(ticketSortsSource_: String){
+        this.ticketSortsSource = ticketSortsSource_
+    }
+
+    fun getTicketSortsModificationDate(): String{
+        return ticketSortsModificationDate.toString()
+    }
+    fun setTicketSortsModificationDate(ticketSortsModificationDate_: String){
+        this.ticketSortsModificationDate = ticketSortsModificationDate_
+    }
+
+    //----------datos tecnico------------------------
+    fun getTaskUserName(): String{
+        return taskUsersName.toString()
+    }
+    fun setTaskUserName(taskUsersName_: String){
+        this.taskUsersName = taskUsersName_
+    }
+
+    //----------datos solicitante------------------------
+    fun getTaskUsersNameRequester(): String{
+        return taskUsersNameRequester.toString()
+    }
+    fun setTaskUsersNameRequester(taskUsersNameRequester_: String){
+        this.taskUsersNameRequester = taskUsersNameRequester_
+    }
+    /*fun getTaskUserPosition(): String{
+        return taskUsersName.toString()
+    }
+    fun setTaskUserPosition(taskUserPosition_: String){
+        this.taskUsersPosition = taskUserPosition_
+    }*/
+
+
+
+//-----------------
+
 
     fun getGlpiOperadorName(): String {
         return glpiOperadorName_.toString()
@@ -83,12 +185,7 @@ class Data_Tickets {
 
 
 
-    fun getGlpiRequesterName(): String{
-        return glpiRequester_Name_.toString()
-    }
-    fun setGlpiRequestreName(glpiRequester_Name: String){
-        this.glpiRequester_Name_ = glpiRequester_Name
-    }
+
 
     fun getGlpiRequesterCargo(): String{
         return glpiRequester_Cargo_.toString()
@@ -126,27 +223,11 @@ class Data_Tickets {
         this.GlpiLoginName_ = GlpiApellidoLogin
     }
 
-    fun getGlpiCategoria(): String{
-        return GlpiCategoria_.toString()
-    }
-    fun setGlpiCategoria(GlpiCategoria: String){
-        this.GlpiCategoria_ = GlpiCategoria
-    }
 
-    fun getGlpiOrigen(): String{
-        return GlpiOrigen_.toString()
-    }
 
-    fun setGlpiOrigen(GlpiOrigen: String){
-        this.GlpiOrigen_ = GlpiOrigen
-    }
 
-    fun getGlpiUrgencia(): String{
-        return GlpiUrgencia_.toString()
-    }
-    fun setGlpiUrgencia(GlpiUrgencia: String){
-        this.GlpiUrgencia_ = GlpiUrgencia
-    }
+
+
 
     //SECTION TASK
     fun getGlpiTasksName(): String{
