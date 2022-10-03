@@ -26,6 +26,7 @@ class Data_Tickets {
     private var taskUsersPosition: String? = null //cargo
     private var taskUsersNameRequester: String? = null
     private var taskUsersEstimateDuration: String? = null
+    private var taskUsersMillisToHours: String? = null
 
 
 
@@ -175,6 +176,13 @@ class Data_Tickets {
     }
     fun setTaskUsersEstimateDuration(taskUsersEstimateDuration_ : String){
         this.taskUsersEstimateDuration = taskUsersEstimateDuration_
+    }
+
+    fun getTaskUsersMillisToHours(): String{
+        return taskUsersMillisToHours.toString()
+    }
+    fun setTaskUsersMillisToHours(taskUsersMillisToHours_: String){
+        this.taskUsersMillisToHours = taskUsersMillisToHours_
     }
 
 

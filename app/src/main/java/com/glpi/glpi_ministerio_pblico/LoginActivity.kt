@@ -2,11 +2,14 @@ package com.glpi.glpi_ministerio_pblico
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.KeyEvent
+import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
+import com.android.volley.DefaultRetryPolicy
 import com.android.volley.Request
 import com.android.volley.RequestQueue
 import com.android.volley.Response
@@ -25,7 +28,7 @@ class LoginActivity : AppCompatActivity() {
         setContentView(R.layout.activity_login)
 
         queue = Volley.newRequestQueue(this@LoginActivity)
-
+        val TIMEOUT = 10000
         checkUserLogin()
 
         val loginUserName = findViewById<EditText>(R.id.login_user)
@@ -42,24 +45,23 @@ class LoginActivity : AppCompatActivity() {
                         val jsonObject = JSONObject(response)
                         val token_ = jsonObject.getString("session_token")
 
-                        val i = Intent(this@LoginActivity, MainActivity::class.java)
+                        val i = Intent(this, MainActivity::class.java)
                         prefer.SaveToken(token_)//guardamos el token en el sharedPreference
                         Log.i("mensajeT login:","Login: "+ prefer.getToken()+" : "+token_)
 
 
-                        Toast.makeText(this@LoginActivity, "toast 1: $token_", Toast.LENGTH_LONG).show()
+                        Toast.makeText(this, "toast 1: $token_", Toast.LENGTH_LONG).show()
                         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                         startActivity(i)
 
                     } catch (e: Exception) {
-                        Toast.makeText(this@LoginActivity, "USUARIO O CONTRASEÑA INCORRECTA.", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "USUARIO O CONTRASEÑA INCORRECTA.", Toast.LENGTH_SHORT).show()
                         e.printStackTrace()
                         //Log.i("mensaje:",""+e) para mostrar mensaje por consola
                     }
                 }, Response.ErrorListener {
-                    Toast.makeText(this@LoginActivity,
-                        "PROBLEMAS CON EL SERVIDOR: Login user"+ Response.ErrorListener{},
-                        Toast.LENGTH_LONG).show()
+                    Toast.makeText(this,
+                        "Sin conexión a internet",Toast.LENGTH_LONG).show()
                 }) {
                 override fun getParams(): Map<String, String>? {
                     val params: MutableMap<String, String> = HashMap()
@@ -68,6 +70,11 @@ class LoginActivity : AppCompatActivity() {
                     return params
                 }
             }
+            stringRequest.retryPolicy = DefaultRetryPolicy(
+                TIMEOUT,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
+            )
             VolleySingleton.getInstance(this).addToRequestQueue(stringRequest)
             //fin boton login volley iniciar sesion
         }
@@ -82,12 +89,14 @@ class LoginActivity : AppCompatActivity() {
         val stringRequest = object : StringRequest(Request.Method.POST,
             url, Response.Listener { response ->
                 try {
+
                     val jsonObject = JSONObject(response)
                     val token_ = jsonObject.getString("myentities")
                     Log.i("mensajeT tokenValidate:",""+ prefer.getToken()+" : "+token_)
                     if(prefer.getToken() != "noToken" ){
                         startActivity(Intent(this,MainActivity::class.java))
                     }
+
 
                 } catch (e: Exception) {
                     Toast.makeText(this, "SESIÓN EXPIRADA.", Toast.LENGTH_SHORT).show()
@@ -103,8 +112,7 @@ class LoginActivity : AppCompatActivity() {
                 }
             }, Response.ErrorListener {
                 Toast.makeText(this,
-                    "PROBLEMAS CON EL SERVIDOR: token Validate"+ Response.ErrorListener{},
-                    Toast.LENGTH_LONG).show()
+                    "Verifique su conexión a internet",Toast.LENGTH_LONG).show()
                 Log.i("mensajeT tokenValidate ",""+prefer.getToken())
             }) {
             override fun getParams(): Map<String, String>? {
@@ -113,6 +121,18 @@ class LoginActivity : AppCompatActivity() {
                 return params
             }
         }
+        Handler().postDelayed({
+            val layoutLogin_ = findViewById<LinearLayout>(R.id.LayoutLogin)
+            val progressBarText_ = findViewById<TextView>(R.id.progressBarText)
+            progressBarAction_!!.isVisible = false
+            progressBarText_.isVisible = false
+            layoutLogin_.isVisible = true
+        },10000/* 5 second */)
+        stringRequest.retryPolicy = DefaultRetryPolicy(
+            10000,
+            DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+            DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
+        )
         VolleySingleton.getInstance(this).addToRequestQueue(stringRequest)
 
     }

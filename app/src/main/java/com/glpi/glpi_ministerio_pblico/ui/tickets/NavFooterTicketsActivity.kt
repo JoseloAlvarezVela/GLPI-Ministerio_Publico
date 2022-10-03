@@ -283,8 +283,6 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
                 try {
                     dataModelArrayListConverdation = ArrayList()
                     jsonObjectResponse = JSONObject(response)
-                    //Log.i("mensaje posicion",""+jsonObjectResponse)
-                    //val nTasks = jsonObjectResponse.getJSONObject("0")
                     var iterador = 0
                     var tasksIterador: JSONObject
                     for (i in  0 until jsonObjectResponse.length()){
@@ -325,7 +323,14 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
 
                             if (tasksTipo == "TASK"){
                                 val estimatedTime = tasksIterador.getString("DURACION")
-                                val estimatedTimeConvert = estimatedTime.replace(".","")
+                                val estimatedTimeConvert = estimatedTime.replace(".","").toLong()
+                                val milisToHours = String.format(
+                                    "%02d:%02d:%02d", TimeUnit.MILLISECONDS.toHours(estimatedTimeConvert),
+                                    TimeUnit.MILLISECONDS.toMinutes(estimatedTimeConvert) % TimeUnit.HOURS.toMinutes(1),
+                                    TimeUnit.MILLISECONDS.toSeconds(estimatedTimeConvert) % TimeUnit.MINUTES.toSeconds(1)
+                                )
+                                playerModel.setTaskUsersMillisToHours(milisToHours)
+
                                 val date = creationDateTicket.toString().split(" ")
                                 //val day = date[0]
                                 val hour = date[1].split(":")
@@ -334,13 +339,13 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
                                 val hoursToMs1: Int = hour[0].toInt() * 3600000
                                 val total1 = secondsToMs1 + minutesToMs1 + hoursToMs1
                                 val estimatedTime_: Long = (total1 + estimatedTimeConvert.toInt()).toLong()
-                                Log.i("mensaje split: ", "${date[1]}")
+                                //Log.i("mensaje split: ", "${date[1]}")
                                 val hms = String.format(
                                     "%02d:%02d:%02d", TimeUnit.MILLISECONDS.toHours(estimatedTime_),
                                     TimeUnit.MILLISECONDS.toMinutes(estimatedTime_) % TimeUnit.HOURS.toMinutes(1),
                                     TimeUnit.MILLISECONDS.toSeconds(estimatedTime_) % TimeUnit.MINUTES.toSeconds(1)
                                 )
-                                Log.i("mensaje trans: ", "$hms")
+                                //Log.i("mensaje trans: ", "$hms")
                                 playerModel.setTaskUsersEstimateDuration(hms)
                             }
 
@@ -369,7 +374,7 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
                     setupRecyclerView()
                 } catch (e: Exception) {
                     e.printStackTrace()
-                    Toast.makeText(this, "token expirado: $e", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, "token expirado_: $e", Toast.LENGTH_LONG).show()
                     //Log.i("mensaje entitis dentroE",""+response.get(0))
                 }
             }, Response.ErrorListener {
