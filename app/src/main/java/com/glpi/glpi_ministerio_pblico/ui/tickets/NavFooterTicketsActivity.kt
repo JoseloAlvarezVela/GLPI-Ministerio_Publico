@@ -42,6 +42,7 @@ import org.json.JSONArray
 import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.concurrent.TimeUnit
 import kotlin.collections.ArrayList
 
 
@@ -270,6 +271,7 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
         val NameOperador_ = bundle!!.getString("NameOperador")
         val CurrentTime_ = bundle!!.getString("CurrentTime")
         val ModificationDate = bundle.getString("ModificationDate")
+        val creationDateTicket = bundle!!.getString("creationDateTicket")
 
 
 
@@ -315,15 +317,39 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
                             val lastNameId = dataId.getString("APELLIDO")
                             playerModel.setTaskUserName("$nameId $lastNameId")
 
-                            /*val dataIdRequester = jsonArrayIdRequester.getJSONObject(0)
-                            val nameIdRequester = dataIdRequester.getString("NOMBRE")
-                            val lastNameIdRequester = dataId.getString("APELLIDO")
-                            playerModel.setTaskUsersNameRequester("$nameIdRequester $lastNameIdRequester")*/
+                            val dataTechnicianId = jsonArrayIdTechnician.getJSONObject(0)
+                            val nameTechnicianId = dataTechnicianId.getString("NOMBRE")
+                            val lastNameTechnicianId = dataTechnicianId.getString("APELLIDO")
+                            playerModel.setTechnicianName("$nameTechnicianId $lastNameTechnicianId")
+                            //binding.includeTickets.txtTasksUserName.text = "$nameId $lastNameId"
+
+                            if (tasksTipo == "TASK"){
+                                val estimatedTime = tasksIterador.getString("DURACION")
+                                val estimatedTimeConvert = estimatedTime.replace(".","")
+                                val date = creationDateTicket.toString().split(" ")
+                                //val day = date[0]
+                                val hour = date[1].split(":")
+                                val secondsToMs1: Int = hour[2].toInt() * 1000
+                                val minutesToMs1: Int = hour[1].toInt() * 60000
+                                val hoursToMs1: Int = hour[0].toInt() * 3600000
+                                val total1 = secondsToMs1 + minutesToMs1 + hoursToMs1
+                                val estimatedTime_: Long = (total1 + estimatedTimeConvert.toInt()).toLong()
+                                Log.i("mensaje split: ", "${date[1]}")
+                                val hms = String.format(
+                                    "%02d:%02d:%02d", TimeUnit.MILLISECONDS.toHours(estimatedTime_),
+                                    TimeUnit.MILLISECONDS.toMinutes(estimatedTime_) % TimeUnit.HOURS.toMinutes(1),
+                                    TimeUnit.MILLISECONDS.toSeconds(estimatedTime_) % TimeUnit.MINUTES.toSeconds(1)
+                                )
+                                Log.i("mensaje trans: ", "$hms")
+                                playerModel.setTaskUsersEstimateDuration(hms)
+                            }
+
                             //----------
 
                             playerModel.setTicketSortsContents(Contenido_.toString())
                             playerModel.setGlpiOperadorName(NameOperador_.toString())
                             playerModel.setTicketSortsCreationDate(CurrentTime_.toString())
+                            playerModel.setTicketSortsModificationDate(ModificationDate.toString())
                             playerModel.setTicketSortsModificationDate(ModificationDate.toString())
 
                             iterador++
@@ -394,6 +420,8 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
         val Contenido_ = bundle!!.getString("Contenido")
         //-----
         val Tipo = bundle!!.getString("Tipo")
+
+
         val Ubicacion_ = bundle!!.getString("Ubicacion")
         val Correo_ = bundle!!.getString("Correo")
         val NameSolicitante_ = bundle!!.getString("NameSolicitante")

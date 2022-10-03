@@ -83,9 +83,6 @@ class RecyclerAdapter(
                 itemView.findViewById<TextView>(R.id.txt_modificationDate).text =
                     "Ult. Modificación "+item.getTicketSortsModificationDate()
             }
-
-
-
         }
 
     }
@@ -94,6 +91,10 @@ class RecyclerAdapter(
         override fun bind(item: Data_Tickets, position: Int) {
             //Log.i("mensajeAdapter",""+item.getGlpiTasksTipo())
             if(item.getGlpiTasksTipo() == "TASK"){
+                itemView.findViewById<TextView>(R.id.linearLayout_tasksOperadorName).isVisible = true
+                itemView.findViewById<TextView>(R.id.txt_tasksOperadorName).text = item.getTechnicianName()
+                itemView.findViewById<TextView>(R.id.txt_creationTicketDate).text =
+                    "${item.getTicketSortsCreationDate()} -> ${item.getTaskUsersEstimateDuration()}"
                 itemView.findViewById<TextView>(R.id.tv_conversation_estado).isVisible = false
                 val param = itemView.findViewById<LinearLayout>(R.id.ticket_estado_conversation).layoutParams as ViewGroup.MarginLayoutParams
                 param.setMargins(0,10,100,10)
@@ -109,6 +110,7 @@ class RecyclerAdapter(
                 itemView.findViewById<LinearLayout>(R.id.ticket_estado_conversation).layoutParams = param
                 itemView.findViewById<LinearLayout>(R.id.ticket_estado_conversation).setBackgroundResource(R.drawable.esq_redondeada_followup)
             }else if(item.getGlpiTasksTipo() == "SOLUTION"){
+                itemView.findViewById<LinearLayout>(R.id.linearLayout_Solution).isVisible = true
                 val param = itemView.findViewById<LinearLayout>(R.id.ticket_estado_conversation).layoutParams as ViewGroup.MarginLayoutParams
                 param.setMargins(100,10,0,10)
                 itemView.findViewById<LinearLayout>(R.id.ticket_estado_conversation).layoutParams = param

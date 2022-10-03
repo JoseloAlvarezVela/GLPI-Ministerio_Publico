@@ -9,7 +9,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.RelativeLayout
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.text.HtmlCompat
@@ -19,8 +18,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
-import com.glpi.glpi_ministerio_pblico.MainActivity.Companion.nameLoginUser
-import com.glpi.glpi_ministerio_pblico.MainActivity.Companion.urlApi_TasksUsers
 import com.glpi.glpi_ministerio_pblico.MainActivity.Companion.urlApi_Ticket
 import com.glpi.glpi_ministerio_pblico.VolleySingleton
 import com.glpi.glpi_ministerio_pblico.databinding.FragmentMisPeticionesBinding
@@ -31,6 +28,7 @@ import com.glpi.glpi_ministerio_pblico.ui.shared.token
 import com.glpi.glpi_ministerio_pblico.ui.tickets.NavFooterTicketsActivity
 import org.json.JSONArray
 import org.json.JSONObject
+import java.util.concurrent.TimeUnit
 
 class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.ontickteClickListener {
 
@@ -107,7 +105,6 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.ontickteCl
                         val idRequester = idPositionResquester.getString("0")
                         playerModel.setTicketSortsIdRequester(idRequester)
 
-
                         playerModel.setTicketSortsCreationDate(DataTickets.getString("FECHA_CREACION"))//fecha de creación
                         playerModel.setTicketSortsModificationDate(DataTickets.getString("FECHA_MODIFICACION"))//fecha de creación
 
@@ -128,7 +125,7 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.ontickteCl
                 } catch (e: Exception) {
                     e.printStackTrace()
                     Toast.makeText(context, "token expirado: $e", Toast.LENGTH_LONG).show()
-                    Log.i("mensaje recycler e: ", "recycler ERROR: $e")
+                    //Log.i("mensaje recycler e: ", "recycler ERROR: $e")
                 }
             }, Response.ErrorListener {
                 Toast.makeText(context, "ERROR CON EL SERVIDOR", Toast.LENGTH_SHORT).show()
@@ -192,7 +189,7 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.ontickteCl
         recyclerView = binding.recycler//asignamos el recycleview de recycleview_tickets.xml
         /*recyclerView!!.layoutManager = LinearLayoutManager(
             context, LinearLayoutManager.VERTICAL, true,)*/
-        val layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false,)
+        val layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         //layoutManager.stackFromEnd = true
 
         recyclerView!!.layoutManager = layoutManager
@@ -222,6 +219,7 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.ontickteCl
 
         //-----
         Tipo: String,
+        creationDateTicket: String,
         Ubicacion: String,
         Correo: String,
         NameSolicitante: String,
@@ -249,6 +247,7 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.ontickteCl
         bundle.putString("Contenido", Contenido.toString())
         //-----
         bundle.putString("Tipo", Tipo)
+        bundle.putString("creationDateTicket", creationDateTicket)
         bundle.putString("Ubicacion", Ubicacion)
         bundle.putString("Correo", Correo)
         bundle.putString("NameSolicitante", NameSolicitante)
