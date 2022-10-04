@@ -12,13 +12,16 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.text.HtmlCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
+import com.glpi.glpi_ministerio_pblico.MainActivity
 import com.glpi.glpi_ministerio_pblico.MainActivity.Companion.urlApi_Ticket
+import com.glpi.glpi_ministerio_pblico.MainActivity.Companion.urlApi_TicketSorts
 import com.glpi.glpi_ministerio_pblico.VolleySingleton
 import com.glpi.glpi_ministerio_pblico.databinding.FragmentMisPeticionesBinding
 import com.glpi.glpi_ministerio_pblico.ui.adapter.Data_TaskUsers
@@ -28,7 +31,6 @@ import com.glpi.glpi_ministerio_pblico.ui.shared.token
 import com.glpi.glpi_ministerio_pblico.ui.tickets.NavFooterTicketsActivity
 import org.json.JSONArray
 import org.json.JSONObject
-import java.util.concurrent.TimeUnit
 
 class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.ontickteClickListener {
 
@@ -51,6 +53,7 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.ontickteCl
     // onDestroyView.
     private val binding get() = _binding!!
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -66,18 +69,46 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.ontickteCl
         // Inflate the layout for this fragment
         _binding = FragmentMisPeticionesBinding.inflate(inflater, container, false)
 
-        requestVolleyTicketSorts()
+        var checkBoxNewTicket: Int
+        var checkBoxAssignedTicket = 0
+        var checkBoxPlannedTicket = 0
+        var checkBoxWaitTicket = 0
+        var checkBoxCloseTicket = 0
+        if (MainActivity.checkBoxNewTicket){
+            checkBoxNewTicket = 1
+        }
+        if (!MainActivity.flagFilter){
+            Toast.makeText(context, "${MainActivity.checkNewTicket}," +
+                    " ${MainActivity.checkAssignedTicket} "+
+                    "${MainActivity.checkPlannedTicket}," +
+                    "${MainActivity.checkWaitTicket}," +
+                    "${MainActivity.checkCloseTicket}  ", Toast.LENGTH_SHORT).show()
+            Log.i("mensajeFlag","$urlApi_Ticket == GENERAL")
+            requestVolleyTicketSorts(urlApi_Ticket)
+        }else{
+
+            Toast.makeText(context, "${MainActivity.checkNewTicket}," +
+                    " ${MainActivity.checkAssignedTicket}," +
+                    "${MainActivity.checkPlannedTicket}," +
+                    "${MainActivity.checkWaitTicket}," +
+                    "${MainActivity.checkCloseTicket}  ", Toast.LENGTH_SHORT).show()
+            Log.i("mensajeURL","$urlApi_TicketSorts == SortByStatus")
+            requestVolleyTicketSorts(urlApi_TicketSorts)
+        }
+
+
+        
 
         val root = binding.root
 
         return root
     }
 
-    private fun requestVolleyTicketSorts(){
+    private fun requestVolleyTicketSorts(urlApi_TicketSort: String){
         //metodo que nos devuelve los datos para los tickets
         val stringRequestDataTickets = @RequiresApi(Build.VERSION_CODES.N)
         object : StringRequest(Request.Method.POST,
-            urlApi_Ticket, Response.Listener { response ->
+            urlApi_TicketSort, Response.Listener { response ->
                 try {
                     val JS_DataTickets = JSONObject(response) //obtenemos el objeto json
 
@@ -92,7 +123,7 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.ontickteCl
                         playerModel.setTicketSortsID(DataTickets.getString("ID"))
                         playerModel.setTicketSortsType(DataTickets.getString("TIPO"))
                         playerModel.setTicketSortsState(DataTickets.getString("ESTADO"))
-                        playerModel.setTicketSortsDescription(DataTickets.getString("DESCRIPCION"))
+                        playerModel.setTicketSortsDescription(DataTickets.getString("DESCRIPCION")) 
                         //obtenemos el id del operador, creador del ticket
                         playerModel.setTicketSortsIdRecipient(DataTickets.getString("ID_RECIPIENT"))
                         //obtenemos el id del tecnico(usuario logeado) y su nombre
@@ -133,12 +164,21 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.ontickteCl
             override fun getParams(): Map<String, String>? {
                 val params: MutableMap<String, String> = HashMap()
                 params["session_token"] = token.prefer.getToken()
-                params["order_type"] = "DESC"
+                params["idStatus1"] = MainActivity.checkNewTicket
+                params["idStatus2"] = MainActivity.checkAssignedTicket
+                params["idStatus3"] = MainActivity.checkPlannedTicket
+                params["idStatus4"] = MainActivity.checkWaitTicket
+                params["idStatus5"] = "0"
+                params["idStatus6"] = MainActivity.checkCloseTicket
                 return params
             }
         }
         context?.let { VolleySingleton.getInstance(it).addToRequestQueue(stringRequestDataTickets) }
         //FIN obtenemos perfil de usuario
+    }
+    
+    private fun requestVolleySortByStatus(){
+        Toast.makeText(context, "aplicar filtro con nuevo volley", Toast.LENGTH_SHORT).show()
     }
 
     /*private fun volleyRequestRequester(id: String){
@@ -201,6 +241,13 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.ontickteCl
     /*override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
     }*/
+
+    override fun onStart() {
+        super.onStart()
+        /*val ft: FragmentTransaction = requireFragmentManager().beginTransaction()
+        ft.detach(this).attach(this).commit()*/
+
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()

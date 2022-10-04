@@ -81,6 +81,8 @@ class RecycleView_Adapter_Tickets(
         //-----------
         if (dataModelArrayList[position].getTicketSortsState() == "EN CURSO (Asignada)"){
             holder.txt_estado_ticket.setBackgroundResource(R.drawable.ic_circulo_verde)
+        }else if (dataModelArrayList[position].getTicketSortsState() == "CERRADO"){
+            holder.txt_estado_ticket.setBackgroundResource(R.drawable.ic_circulo_negro)
         }else{
             holder.txt_estado_ticket.setBackgroundResource(R.drawable.ic_circulo)
         }

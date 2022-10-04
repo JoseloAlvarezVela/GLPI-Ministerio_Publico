@@ -7,7 +7,6 @@ import android.os.Build
 import android.os.Bundle
 import android.text.Html
 import android.text.Spanned
-import android.util.Log
 import android.util.TypedValue
 import android.view.KeyEvent
 import android.view.View
@@ -19,6 +18,9 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.text.HtmlCompat
 import androidx.core.view.isVisible
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
+import androidx.fragment.app.replace
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
@@ -28,6 +30,7 @@ import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.glpi.glpi_ministerio_pblico.databinding.ActivityMainBinding
+import com.glpi.glpi_ministerio_pblico.ui.misPeticiones.MisPeticionesFragment
 import com.glpi.glpi_ministerio_pblico.ui.shared.token.Companion.prefer
 import com.glpi.glpi_ministerio_pblico.utilities.Utils_Global
 import com.google.android.material.navigation.NavigationView
@@ -35,7 +38,6 @@ import org.json.JSONArray
 import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 //class MainActivity : AppCompatActivity(),RecycleView_Adapter_Perfiles.ItemClickListener {
@@ -48,6 +50,7 @@ class MainActivity : AppCompatActivity(){
         val urlApi_Profiles: String = "http://181.176.145.174:8080/api/user_profiles"
         val urlApi_TicketID: String = "http://181.176.145.174:8080/api/ticket_info/" //consulta si el ticket tiene tareas,soluciones o seguimiente, pasarle id de ticket
         val urlApi_Ticket: String = "http://181.176.145.174:8080/api/ticket_sorts/General"
+        val urlApi_TicketSorts: String = "http://181.176.145.174:8080/api/ticket_sorts/SortByStatus"
         val urlApi_TasksUsers: String = "http://181.176.145.174:8080/api/task_users/" //para consultar id de: user,technician,requester
         val urlApi_TasksTemplate: String = "http://181.176.145.174:8080/api/task_templates"
 
@@ -56,6 +59,20 @@ class MainActivity : AppCompatActivity(){
         lateinit var jsonArrayResponse: JSONArray
 
         var flag = false
+
+        //variables para filtrar tickets
+        var flagFilter = false
+        var checkBoxNewTicket = false
+        var checkBoxAssignedTicket = false
+        var checkBoxPlannedTicket = false
+        var checkBoxWaitTicket = false
+        var checkBoxCloseTicket = false
+        var checkNewTicket: String = "0"
+        var checkAssignedTicket: String = "0"
+        var checkPlannedTicket: String = "0"
+        var checkWaitTicket: String = "0"
+        var checkCloseTicket: String = "0"
+
         fun decodeHtml(contenido: String): String{
             val decoded: String = Html.fromHtml(contenido).toString()
             val decoded2: Spanned = HtmlCompat.fromHtml(decoded, HtmlCompat.FROM_HTML_MODE_COMPACT)
@@ -101,19 +118,70 @@ class MainActivity : AppCompatActivity(){
         binding.appBarMain.includeFiltroRight.LinearLayoutActivityFiltroRight.setOnClickListener {
             binding.appBarMain.includeFiltroRight.LinearLayoutActivityFiltroRight.isVisible = false
         }
+        //check para filtroRight de tickets
+
+        binding.appBarMain.includeFiltroRight.checkBoxNewTicket.isChecked = true
+        binding.appBarMain.includeFiltroRight.checkBoxAssignedTicket.isChecked = true
+        binding.appBarMain.includeFiltroRight.checkBoxPlannedTicket.isChecked = true
+
+        binding.appBarMain.includeFiltroRight.btnApplyFilter.setOnClickListener {
+            flagFilter = true
+            if (binding.appBarMain.includeFiltroRight.checkBoxNewTicket.isChecked){
+                checkNewTicket = "1"
+            }
+            if (binding.appBarMain.includeFiltroRight.checkBoxAssignedTicket.isChecked){
+                checkAssignedTicket = "2"
+            }
+            if (binding.appBarMain.includeFiltroRight.checkBoxPlannedTicket.isChecked){
+                checkPlannedTicket = "3"
+            }
+            if (binding.appBarMain.includeFiltroRight.checkBoxWaitTicket.isChecked){
+                checkWaitTicket = "4"
+            }
+            if (binding.appBarMain.includeFiltroRight.checkBoxCloseTicket.isChecked){
+                checkCloseTicket = "6"
+            }
+            //checkBoxNewTicket = binding.appBarMain.includeFiltroRight.checkBoxNewTicket.isChecked
+            //checkBoxAssignedTicket = binding.appBarMain.includeFiltroRight.checkBoxAssignedTicket.isChecked
+            //checkBoxPlannedTicket = binding.appBarMain.includeFiltroRight.checkBoxPlannedTicket.isChecked
+            //checkBoxWaitTicket = binding.appBarMain.includeFiltroRight.checkBoxWaitTicket.isChecked
+            //checkBoxCloseTicket = binding.appBarMain.includeFiltroRight.checkBoxCloseTicket.isChecked
+
+            //cerramos y volvemos a abrir el fragment para recargar su contenido
+            replaceFragment(MisPeticionesFragment())
+
+        }
+
+        binding.appBarMain.includeFiltroRight.btnClearFilter.setOnClickListener {
+            flagFilter = false
+            checkNewTicket = "0"
+            checkAssignedTicket = "0"
+            checkPlannedTicket = "0"
+            checkWaitTicket = "0"
+            checkCloseTicket = "0"
+            binding.appBarMain.includeFiltroRight.checkBoxNewTicket.isChecked = false
+            binding.appBarMain.includeFiltroRight.checkBoxAssignedTicket.isChecked = false
+            binding.appBarMain.includeFiltroRight.checkBoxPlannedTicket.isChecked = false
+            binding.appBarMain.includeFiltroRight.checkBoxWaitTicket.isChecked = false
+            binding.appBarMain.includeFiltroRight.checkBoxCloseTicket.isChecked = false
+
+            //cerramos y volvemos a abrir el fragment para recargar su contenido
+            replaceFragment(MisPeticionesFragment())
+        }
+
         //boton que despliega menu de filtro por fechas
-        var click_desplegar = false
+        var clickDesplegar = false
         binding.appBarMain.includeFiltroRight.btnDesplegarFechaFiltroRight.setOnClickListener {
-            if (click_desplegar == false){
+            if (clickDesplegar == false){
                 binding.appBarMain.includeFiltroRight.btnUltModificacionFiltroRight.isVisible = true
                 binding.appBarMain.includeFiltroRight.btnFechaAperturaFiltroRight.isVisible = true
                 binding.appBarMain.includeFiltroRight.btnFechaCierreFiltroRight.isVisible = true
-                click_desplegar = true
+                clickDesplegar = true
             }else{
                 binding.appBarMain.includeFiltroRight.btnUltModificacionFiltroRight.isVisible = false
                 binding.appBarMain.includeFiltroRight.btnFechaAperturaFiltroRight.isVisible = false
                 binding.appBarMain.includeFiltroRight.btnFechaCierreFiltroRight.isVisible = false
-                click_desplegar = false
+                clickDesplegar = false
             }
         }
         //boton que abre calendario modal filtro por ultima modificación
@@ -222,6 +290,14 @@ class MainActivity : AppCompatActivity(){
         }
         //FIN - boton filtro de la derecha - activity_filtro_right.xml
     }
+
+    //nota:eliminar fragment de fondo
+    private fun replaceFragment(misPeticionesFragment: MisPeticionesFragment) {
+        val fragmentManager = supportFragmentManager
+        val fragmentTransaction = fragmentManager.beginTransaction()
+        fragmentTransaction.replace(R.id.frameLayoutFragment,misPeticionesFragment).commit()
+    }
+
 
     private fun userEntities() {
         //accedemos a los elementos "id" del headerLayout con getHeaderView y lo guardamos en una variable
