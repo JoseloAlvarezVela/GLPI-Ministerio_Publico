@@ -150,6 +150,7 @@ class MainActivity : AppCompatActivity(){
             //cerramos y volvemos a abrir el fragment para recargar su contenido
             replaceFragment(MisPeticionesFragment())
 
+            binding.appBarMain.includeFiltroRight.LinearLayoutActivityFiltroRight.isVisible = false
         }
 
         binding.appBarMain.includeFiltroRight.btnClearFilter.setOnClickListener {
@@ -167,6 +168,7 @@ class MainActivity : AppCompatActivity(){
 
             //cerramos y volvemos a abrir el fragment para recargar su contenido
             replaceFragment(MisPeticionesFragment())
+            binding.appBarMain.includeFiltroRight.LinearLayoutActivityFiltroRight.isVisible = false
         }
 
         //boton que despliega menu de filtro por fechas

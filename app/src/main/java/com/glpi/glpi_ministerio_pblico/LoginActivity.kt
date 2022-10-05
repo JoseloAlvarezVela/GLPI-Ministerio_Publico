@@ -112,7 +112,7 @@ class LoginActivity : AppCompatActivity() {
                 }
             }, Response.ErrorListener {
                 Toast.makeText(this,
-                    "Verifique su conexión a internet",Toast.LENGTH_LONG).show()
+                    "Problemas con el servidor",Toast.LENGTH_LONG).show()
                 Log.i("mensajeT tokenValidate ",""+prefer.getToken())
             }) {
             override fun getParams(): Map<String, String>? {

@@ -9,11 +9,13 @@ import android.graphics.Typeface
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 import android.text.Html
 import android.text.Spanned
 import android.util.Log
 import android.view.View
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
@@ -58,6 +60,8 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
     private lateinit var jsonArrayIdRecipient: JSONArray
     private lateinit var jsonArrayIdTechnician: JSONArray
     private lateinit var jsonArrayIdRequester: JSONArray
+
+    lateinit private var progressBarTicketConversation: ProgressBar
 
     //INICIO toogle buton tickets
     var clickTickets: Boolean = false
@@ -265,6 +269,8 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
     }
 
     private fun volleyRequestPost(urlApi_: String) {
+        progressBarTicketConversation = binding.progressBarTicketConversation
+
         val bundle = intent.extras
         val TicketID_ = bundle!!.getString("TicketID")
         val Contenido_ = bundle!!.getString("Contenido")
@@ -386,6 +392,10 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
                 return params
             }
         }
+        Handler().postDelayed({
+            progressBarTicketConversation!!.isVisible = false
+            binding.ticketConversation.isVisible = true
+        },2000/* 5 second */)
         this?.let {
             VolleySingleton.getInstance(this).addToRequestQueue(stringRequestDataTickets)
         }
@@ -497,7 +507,7 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
             binding.includeTickets.tvSolicitud.isVisible = true
         }
         binding.includeTickets.labelUbicacion.text = Ubicacion_
-        binding.includeTickets.labelEmail.text = Correo_
+        //binding.includeTickets.labelEmail.text = Correo_
         binding.includeTickets.labelOrigen.text = TicketOrigen_
         //binding.includeTickets.labelSolicitanteNombre.text = NameSolicitante_
         binding.includeTickets.labelSolicitanteCargo.text = CargoSolicitante_
@@ -591,7 +601,11 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
                     binding.includeNavHeaderTickets.txtUbicacion.text = placeId
 
                     val emailId = dataId.getString("CORREO")
-                    binding.includeTickets.labelEmail.text = emailId
+                    if (emailId != "null" && emailId != "null"){
+                        binding.includeTickets.labelEmail.isVisible = true
+                        binding.includeTickets.labelEmail.text = emailId
+                    }
+
 
                     val positionId = dataId.getString("CARGO")
                     binding.includeTickets.labelSolicitanteCargo.text = positionId

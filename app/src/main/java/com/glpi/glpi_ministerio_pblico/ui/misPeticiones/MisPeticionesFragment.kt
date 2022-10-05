@@ -12,7 +12,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.text.HtmlCompat
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -93,7 +92,13 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.ontickteCl
                     "${MainActivity.checkWaitTicket}," +
                     "${MainActivity.checkCloseTicket}  ", Toast.LENGTH_SHORT).show()
             Log.i("mensajeURL","$urlApi_TicketSorts == SortByStatus")
-            requestVolleyTicketSorts(urlApi_TicketSorts)
+            volleyRequestSortByStatus(
+                urlApi_TicketSorts,
+                MainActivity.checkNewTicket,
+                MainActivity.checkAssignedTicket,
+                MainActivity.checkPlannedTicket,
+                MainActivity.checkWaitTicket,
+                MainActivity.checkCloseTicket)
         }
 
 
@@ -127,7 +132,9 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.ontickteCl
                         //obtenemos el id del operador, creador del ticket
                         playerModel.setTicketSortsIdRecipient(DataTickets.getString("ID_RECIPIENT"))
                         //obtenemos el id del tecnico(usuario logeado) y su nombre
-                        playerModel.setTicketSortsIdTechnician(DataTickets.getString("ID_TECHNICIAN"))
+                        val idTechnician = DataTickets.getJSONObject("ID_TECHNICIAN")
+                        playerModel.setTicketSortsIdTechnician(idTechnician.getString("0"))
+                        //Log.i("mensaje idTechnician",""+idTechnician.getString("0"))
                         val technicianName = DataTickets.getString("NOMBRE")
                         val technicianLastName = DataTickets.getString("APELLIDO")
                         playerModel.setTechnicianName("$technicianName $technicianLastName")
@@ -155,7 +162,7 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.ontickteCl
 
                 } catch (e: Exception) {
                     e.printStackTrace()
-                    Toast.makeText(context, "token expirado: $e", Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, "token expirado_: $e", Toast.LENGTH_LONG).show()
                     //Log.i("mensaje recycler e: ", "recycler ERROR: $e")
                 }
             }, Response.ErrorListener {
@@ -164,12 +171,6 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.ontickteCl
             override fun getParams(): Map<String, String>? {
                 val params: MutableMap<String, String> = HashMap()
                 params["session_token"] = token.prefer.getToken()
-                params["idStatus1"] = MainActivity.checkNewTicket
-                params["idStatus2"] = MainActivity.checkAssignedTicket
-                params["idStatus3"] = MainActivity.checkPlannedTicket
-                params["idStatus4"] = MainActivity.checkWaitTicket
-                params["idStatus5"] = "0"
-                params["idStatus6"] = MainActivity.checkCloseTicket
                 return params
             }
         }
@@ -181,36 +182,68 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.ontickteCl
         Toast.makeText(context, "aplicar filtro con nuevo volley", Toast.LENGTH_SHORT).show()
     }
 
-    /*private fun volleyRequestRequester(id: String){
-        Log.i("mensajeurl: ", "" + urlApi_TasksUsers+id)
-        //metodo que nos devuelve los datos del solicitante,operador ó tecnico
+    private fun volleyRequestSortByStatus(
+        urlApi_TicketSort: String,
+        idStatus1: String,
+        idStatus2: String,
+        idStatus3: String,
+        idStatus4: String,
+        idStatus6: String
+    ){
+        //metodo que nos devuelve los datos para los tickets
         val stringRequestDataTickets = @RequiresApi(Build.VERSION_CODES.N)
         object : StringRequest(Request.Method.POST,
-            urlApi_TasksUsers+id, Response.Listener { response ->
+            urlApi_TicketSort, Response.Listener { response ->
                 try {
-                    val jsonIdRequester = JSONArray(response) //obtenemos el objeto json
-                    Log.i("mensajeId: ", "" + jsonIdRequester)
+                    val JS_DataTickets = JSONObject(response) //obtenemos el objeto json
 
                     dataModelArrayList = ArrayList()
 
-                    for (i in 0 until jsonIdRequester.length()){
+                    for (i in 0 until JS_DataTickets.length()){
 
-                        val dataRequester = jsonIdRequester.getJSONObject(i)
+                        val DataTickets = JS_DataTickets.getJSONObject(i.toString())
+                        //Log.i("mensaje tasks in",""+DataTickets)
                         val playerModel = Data_Tickets()
 
-                        val requesterName = dataRequester.getString("NOMBRE")
-                        val requesterLastName = dataRequester.getString("APELLIDO")
-                        //playerModel.setTaskUserName("$requesterName $requesterLastName")
-                        playerModel.setTaskUserPosition(dataRequester.getString("CARGO"))
+                        playerModel.setTicketSortsID(DataTickets.getString("ID"))
+                        playerModel.setTicketSortsType(DataTickets.getString("TIPO"))
+                        playerModel.setTicketSortsState(DataTickets.getString("ESTADO"))
+                        playerModel.setTicketSortsDescription(DataTickets.getString("DESCRIPCION"))
+                        //obtenemos el id del operador, creador del ticket
+                        playerModel.setTicketSortsIdRecipient(DataTickets.getString("ID_RECIPIENT"))
+                        //obtenemos el id del tecnico(usuario logeado) y su nombre
+                        val idTechnician = DataTickets.getJSONObject("ID_TECHNICIAN")
+                        playerModel.setTicketSortsIdTechnician(idTechnician.getString("0"))
+                        //Log.i("mensaje idTechnician",""+idTechnician.getString("0"))
+                        val technicianName = DataTickets.getString("NOMBRE")
+                        val technicianLastName = DataTickets.getString("APELLIDO")
+                        playerModel.setTechnicianName("$technicianName $technicianLastName")
+                        //obtenemos el id del solicitante(usuario logeado)
+                        val idPositionResquester = DataTickets.getJSONObject("ID_REQUESTER")
+                        val idRequester = idPositionResquester.getString("0")
+                        playerModel.setTicketSortsIdRequester(idRequester)
 
+                        playerModel.setTicketSortsCreationDate(DataTickets.getString("FECHA_CREACION"))//fecha de creación
+                        playerModel.setTicketSortsModificationDate(DataTickets.getString("FECHA_MODIFICACION"))//fecha de creación
+
+                        //obtenemos la descripción completa del ticket - primero decodificamos el formato html
+                        val decoded: String = Html.fromHtml(DataTickets.getString("CONTENIDO")).toString()
+                        val decoded2: Spanned = HtmlCompat.fromHtml(decoded,HtmlCompat.FROM_HTML_MODE_COMPACT)
+                        playerModel.setTicketSortsContents(decoded2.toString())
+                        //urgencia del ticket
+                        playerModel.setTicketSortsUrgency(DataTickets.getString("URGENCIA"))
+                        //categoria del ticket
+                        playerModel.setTicketSortsCategory(DataTickets.getString("CATEGORIA"))
+                        //origen del ticket
+                        playerModel.setTicketSortsSource(DataTickets.getString("ORIGEN"))
                         dataModelArrayList.add(playerModel)
                     }
                     setupRecycler()
 
                 } catch (e: Exception) {
                     e.printStackTrace()
-                    Toast.makeText(context, "token expirado: $e", Toast.LENGTH_LONG).show()
-                    Log.i("mensaje recyclerid: ", "" + e)
+                    Toast.makeText(context, "token expirado_: $e", Toast.LENGTH_LONG).show()
+                    //Log.i("mensaje recycler e: ", "recycler ERROR: $e")
                 }
             }, Response.ErrorListener {
                 Toast.makeText(context, "ERROR CON EL SERVIDOR", Toast.LENGTH_SHORT).show()
@@ -218,12 +251,15 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.ontickteCl
             override fun getParams(): Map<String, String>? {
                 val params: MutableMap<String, String> = HashMap()
                 params["session_token"] = token.prefer.getToken()
-                params["order_type"] = "DESC"
+                if (status3 != ""){
+                    params["idStatus3"] = MainActivity.checkPlannedTicket
+                }
                 return params
             }
         }
         context?.let { VolleySingleton.getInstance(it).addToRequestQueue(stringRequestDataTickets) }
-    }*/
+        //FIN obtenemos perfil de usuario
+    }
 
     fun setupRecycler() {
         recyclerView = binding.recycler//asignamos el recycleview de recycleview_tickets.xml
