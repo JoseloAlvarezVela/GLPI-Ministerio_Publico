@@ -68,14 +68,6 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.ontickteCl
         // Inflate the layout for this fragment
         _binding = FragmentMisPeticionesBinding.inflate(inflater, container, false)
 
-        var checkBoxNewTicket: Int
-        var checkBoxAssignedTicket = 0
-        var checkBoxPlannedTicket = 0
-        var checkBoxWaitTicket = 0
-        var checkBoxCloseTicket = 0
-        if (MainActivity.checkBoxNewTicket){
-            checkBoxNewTicket = 1
-        }
         if (!MainActivity.flagFilter){
             Toast.makeText(context, "${MainActivity.checkNewTicket}," +
                     " ${MainActivity.checkAssignedTicket} "+
@@ -90,6 +82,7 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.ontickteCl
                     " ${MainActivity.checkAssignedTicket}," +
                     "${MainActivity.checkPlannedTicket}," +
                     "${MainActivity.checkWaitTicket}," +
+                    "${MainActivity.checkSolvedTicket}," +
                     "${MainActivity.checkCloseTicket}  ", Toast.LENGTH_SHORT).show()
             Log.i("mensajeURL","$urlApi_TicketSorts == SortByStatus")
             volleyRequestSortByStatus(
@@ -98,6 +91,7 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.ontickteCl
                 MainActivity.checkAssignedTicket,
                 MainActivity.checkPlannedTicket,
                 MainActivity.checkWaitTicket,
+                MainActivity.checkSolvedTicket,
                 MainActivity.checkCloseTicket)
         }
 
@@ -188,6 +182,7 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.ontickteCl
         idStatus2: String,
         idStatus3: String,
         idStatus4: String,
+        idStatus5: String,
         idStatus6: String
     ){
         //metodo que nos devuelve los datos para los tickets
@@ -251,9 +246,25 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.ontickteCl
             override fun getParams(): Map<String, String>? {
                 val params: MutableMap<String, String> = HashMap()
                 params["session_token"] = token.prefer.getToken()
-                if (status3 != ""){
+                if (idStatus1 != ""){
+                    params["idStatus3"] = MainActivity.checkNewTicket
+                }
+                if (idStatus2 != ""){
+                    params["idStatus3"] = MainActivity.checkAssignedTicket
+                }
+                if (idStatus3 != ""){
                     params["idStatus3"] = MainActivity.checkPlannedTicket
                 }
+                if (idStatus4 != ""){
+                    params["idStatus3"] = MainActivity.checkWaitTicket
+                }
+                if (idStatus5 != ""){
+                    params["idStatus3"] = MainActivity.checkSolvedTicket
+                }
+                if (idStatus6 != ""){
+                    params["idStatus3"] = MainActivity.checkCloseTicket
+                }
+
                 return params
             }
         }

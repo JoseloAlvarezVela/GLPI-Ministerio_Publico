@@ -71,6 +71,7 @@ class MainActivity : AppCompatActivity(){
         var checkAssignedTicket: String = "0"
         var checkPlannedTicket: String = "0"
         var checkWaitTicket: String = "0"
+        var checkSolvedTicket: String = "0"
         var checkCloseTicket: String = "0"
 
         fun decodeHtml(contenido: String): String{
@@ -138,6 +139,9 @@ class MainActivity : AppCompatActivity(){
             if (binding.appBarMain.includeFiltroRight.checkBoxWaitTicket.isChecked){
                 checkWaitTicket = "4"
             }
+            if (binding.appBarMain.includeFiltroRight.checkBoxSolvedTicket.isChecked){
+                checkSolvedTicket = "5"
+            }
             if (binding.appBarMain.includeFiltroRight.checkBoxCloseTicket.isChecked){
                 checkCloseTicket = "6"
             }
@@ -159,6 +163,7 @@ class MainActivity : AppCompatActivity(){
             checkAssignedTicket = "0"
             checkPlannedTicket = "0"
             checkWaitTicket = "0"
+            checkSolvedTicket = "0"
             checkCloseTicket = "0"
             binding.appBarMain.includeFiltroRight.checkBoxNewTicket.isChecked = false
             binding.appBarMain.includeFiltroRight.checkBoxAssignedTicket.isChecked = false

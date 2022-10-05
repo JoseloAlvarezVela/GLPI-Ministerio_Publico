@@ -110,6 +110,13 @@
                     android:text="En Espera" />
 
                 <CheckBox
+                    android:id="@+id/checkBox_solvedTicket"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/averia_sans_libre_light"
+                    android:text="Solucionado" />
+
+                <CheckBox
                     android:id="@+id/checkBox_closeTicket"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
