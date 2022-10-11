@@ -7,6 +7,7 @@ import android.os.Build
 import android.os.Bundle
 import android.text.Html
 import android.text.Spanned
+import android.util.Log
 import android.util.TypedValue
 import android.view.KeyEvent
 import android.view.View
@@ -18,9 +19,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.text.HtmlCompat
 import androidx.core.view.isVisible
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
-import androidx.fragment.app.replace
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
@@ -46,11 +45,14 @@ class MainActivity : AppCompatActivity(){
     private lateinit var binding: ActivityMainBinding
 
     companion object{
-        val urlApi_Entities: String = "http://181.176.145.174:8080/api/user_entities"
+        var flagTicketSort = true
+        const val urlApi_Entities: String = "http://181.176.145.174:8080/api/user_entities"
         val urlApi_Profiles: String = "http://181.176.145.174:8080/api/user_profiles"
         val urlApi_TicketID: String = "http://181.176.145.174:8080/api/ticket_info/" //consulta si el ticket tiene tareas,soluciones o seguimiente, pasarle id de ticket
         val urlApi_Ticket: String = "http://181.176.145.174:8080/api/ticket_sorts/General"
+        val urlApi_TicketSortByIncident: String = "http://181.176.145.174:8080/api/ticket_sorts/SortByIncident"
         val urlApi_TicketSorts: String = "http://181.176.145.174:8080/api/ticket_sorts/SortByStatus"
+        val urlApi_SortByTicketId: String = "http://181.176.145.174:8080/api/ticket_sorts/SortByTicketId"
         val urlApi_TasksUsers: String = "http://181.176.145.174:8080/api/task_users/" //para consultar id de: user,technician,requester
         val urlApi_TasksTemplate: String = "http://181.176.145.174:8080/api/task_templates"
 
@@ -59,6 +61,8 @@ class MainActivity : AppCompatActivity(){
         lateinit var jsonArrayResponse: JSONArray
 
         var flag = false
+        var flag_edtFindTicketID = false
+        lateinit var edtFindTicketID: String
 
         //variables para filtrar tickets
         var flagFilter = false
@@ -73,6 +77,25 @@ class MainActivity : AppCompatActivity(){
         var checkWaitTicket: String = "0"
         var checkSolvedTicket: String = "0"
         var checkCloseTicket: String = "0"
+
+        //variables para listar por calendario por ultima modificación de ticket
+        var flagCalendar = false
+        val urlApi_SortByModDate = "http://181.176.145.174:8080/api/ticket_sorts/SortByModDate"
+        val urlApi_SortByCreationDate = "http://181.176.145.174:8080/api/ticket_sorts/SortByCreationDate"
+        val urlApi_SortByCloseDate = "http://181.176.145.174:8080/api/ticket_sorts/SortByCloseDate"
+        var flagCalendarUltModify = false
+        var flagCalendarOpenDate = false
+        var flagCalendarCloseDate = false
+        lateinit var utlModifyStar: String
+        var ultModifyEnd: String = currentDate() //obtenemos la fecha actual
+
+        private fun currentDate(): String {
+            val sdf = SimpleDateFormat("dd/MM/yyyy", Locale("es", "ES"))//obtenemos fecha actual
+            sdf.timeZone = TimeZone.getTimeZone("UTC-5")
+            val currentDate = sdf.format(Date()).replace("/", ",")
+            val textElements: ArrayList<String> = currentDate.split(",") as ArrayList
+            return "${textElements[2]}/${textElements[1]}/${textElements[0]}"
+        }
 
         fun decodeHtml(contenido: String): String{
             val decoded: String = Html.fromHtml(contenido).toString()
@@ -101,7 +124,7 @@ class MainActivity : AppCompatActivity(){
         /* menu should be considered as top level destinations.*/
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.nav_mis_peticiones,R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow,
+                R.id.nav_mis_peticiones,R.id.nav_home,R.id.nav_mis_incidencias, R.id.nav_slideshow,
                 R.id.acttivity_misIncidencias
             ), drawerLayout
         )
@@ -114,6 +137,7 @@ class MainActivity : AppCompatActivity(){
 
         //INICIO - boton filtro de la derecha - activity_filtro_right.xml
         binding.appBarMain.btnFiltroRight.setOnClickListener {
+            binding.appBarMain.includeFiltroRight.edtFindTicketID.setText("")
             binding.appBarMain.includeFiltroRight.LinearLayoutActivityFiltroRight.isVisible = true
         }
         binding.appBarMain.includeFiltroRight.LinearLayoutActivityFiltroRight.setOnClickListener {
@@ -126,30 +150,34 @@ class MainActivity : AppCompatActivity(){
         binding.appBarMain.includeFiltroRight.checkBoxPlannedTicket.isChecked = true
 
         binding.appBarMain.includeFiltroRight.btnApplyFilter.setOnClickListener {
-            flagFilter = true
-            if (binding.appBarMain.includeFiltroRight.checkBoxNewTicket.isChecked){
-                checkNewTicket = "1"
+            if (binding.appBarMain.includeFiltroRight.edtFindTicketID.text.toString() != ""){
+                flag_edtFindTicketID = true
+                edtFindTicketID = binding.appBarMain.includeFiltroRight.edtFindTicketID.text.toString()
+                //Toast.makeText(this, ""+binding.appBarMain.includeFiltroRight.edtFindTicketID.text.toString(), Toast.LENGTH_LONG).show()
+            }else{
+                flagFilter = true
+                flagTicketSort = false
+                flagCalendar = false
+                if (binding.appBarMain.includeFiltroRight.checkBoxNewTicket.isChecked){
+                    checkNewTicket = "1"
+                }
+                if (binding.appBarMain.includeFiltroRight.checkBoxAssignedTicket.isChecked){
+                    checkAssignedTicket = "2"
+                }
+                if (binding.appBarMain.includeFiltroRight.checkBoxPlannedTicket.isChecked){
+                    checkPlannedTicket = "3"
+                }
+                if (binding.appBarMain.includeFiltroRight.checkBoxWaitTicket.isChecked){
+                    checkWaitTicket = "4"
+                }
+                if (binding.appBarMain.includeFiltroRight.checkBoxSolvedTicket.isChecked){
+                    checkSolvedTicket = "5"
+                }
+                if (binding.appBarMain.includeFiltroRight.checkBoxCloseTicket.isChecked){
+                    checkCloseTicket = "6"
+                }
             }
-            if (binding.appBarMain.includeFiltroRight.checkBoxAssignedTicket.isChecked){
-                checkAssignedTicket = "2"
-            }
-            if (binding.appBarMain.includeFiltroRight.checkBoxPlannedTicket.isChecked){
-                checkPlannedTicket = "3"
-            }
-            if (binding.appBarMain.includeFiltroRight.checkBoxWaitTicket.isChecked){
-                checkWaitTicket = "4"
-            }
-            if (binding.appBarMain.includeFiltroRight.checkBoxSolvedTicket.isChecked){
-                checkSolvedTicket = "5"
-            }
-            if (binding.appBarMain.includeFiltroRight.checkBoxCloseTicket.isChecked){
-                checkCloseTicket = "6"
-            }
-            //checkBoxNewTicket = binding.appBarMain.includeFiltroRight.checkBoxNewTicket.isChecked
-            //checkBoxAssignedTicket = binding.appBarMain.includeFiltroRight.checkBoxAssignedTicket.isChecked
-            //checkBoxPlannedTicket = binding.appBarMain.includeFiltroRight.checkBoxPlannedTicket.isChecked
-            //checkBoxWaitTicket = binding.appBarMain.includeFiltroRight.checkBoxWaitTicket.isChecked
-            //checkBoxCloseTicket = binding.appBarMain.includeFiltroRight.checkBoxCloseTicket.isChecked
+
 
             //cerramos y volvemos a abrir el fragment para recargar su contenido
             replaceFragment(MisPeticionesFragment())
@@ -158,7 +186,10 @@ class MainActivity : AppCompatActivity(){
         }
 
         binding.appBarMain.includeFiltroRight.btnClearFilter.setOnClickListener {
+            flag_edtFindTicketID = false
+            flagTicketSort = true
             flagFilter = false
+            flagCalendar = false
             checkNewTicket = "0"
             checkAssignedTicket = "0"
             checkPlannedTicket = "0"
@@ -201,59 +232,6 @@ class MainActivity : AppCompatActivity(){
             flagFechaApertura = false
             flagFechaCierre = false
         }
-        //boton dia inicio del calendario
-        val calendarView: CalendarView = binding.appBarMain.includeModalCalendario.calendarView
-        val sdf = SimpleDateFormat("dd/MM/yyyy", Locale("es", "ES"))//obtenemos fecha actual
-        sdf.timeZone = TimeZone.getTimeZone("UTC-5")
-        val currentdate = sdf.format(Date()).replace("/",",")
-        val textElements: ArrayList<String> = currentdate.split(",") as ArrayList
-
-        val calendar = Calendar.getInstance()
-        calendar.set(textElements[2].toInt(),textElements[1].toInt()-1,textElements[0].toInt())
-        calendarView.maxDate = calendar.timeInMillis//asignamos la fecha maxima que puede seleccionar
-        calendarView.setOnDateChangeListener { calendarView, i, i2, i3 ->
-            val i2_ = i2+1//se le tiene que aumentar 1 ya que devuelve con un mes de retraso
-            binding.appBarMain.includeModalCalendario.btnStarDay.setOnClickListener {
-                binding.appBarMain.includeModalCalendario.btnAceptarFecha.isEnabled = true
-                binding.appBarMain.includeModalCalendario.btnEndDay.isEnabled = true
-
-                binding.appBarMain.includeModalCalendario.fechaStart.text =
-                    "Dia Inicio: $i3/$i2_/$i"
-            }
-            binding.appBarMain.includeModalCalendario.btnEndDay.setOnClickListener {
-                //binding.appBarMain.includeModalCalendario.imgDelete.isVisible = true
-                binding.appBarMain.includeModalCalendario.fechaEnd.text =
-                    "   Dia Fin: $i3/$i2_/$i"
-            }
-        }
-        binding.appBarMain.includeModalCalendario.btnAceptarFecha.setOnClickListener {
-            binding.appBarMain.includeModalCalendario.LinearLayoutFiltroCalendario.isVisible = false
-
-            if (flagUltimaModificacion == true){
-                val dateRange = binding.appBarMain.includeModalCalendario.fechaStart.text.toString() +"\n"+
-                        binding.appBarMain.includeModalCalendario.fechaEnd.text.toString()
-                Toast.makeText(this, "Ultima Modificación: $dateRange", Toast.LENGTH_SHORT).show()
-            }else if (flagFechaApertura == true){
-                val dateRange = binding.appBarMain.includeModalCalendario.fechaStart.text.toString() +"\n"+
-                        binding.appBarMain.includeModalCalendario.fechaEnd.text.toString()
-                Toast.makeText(this, "Fecha Apertura: $dateRange", Toast.LENGTH_SHORT).show()
-            }else if (flagFechaCierre == true){
-                val dateRange = binding.appBarMain.includeModalCalendario.fechaStart.text.toString() +"\n"+
-                        binding.appBarMain.includeModalCalendario.fechaEnd.text.toString()
-                Toast.makeText(this, "Fecha de Cierre: $dateRange", Toast.LENGTH_SHORT).show()
-            }
-
-
-            binding.appBarMain.includeModalCalendario.fechaStart.text = ""
-            binding.appBarMain.includeModalCalendario.fechaEnd.text = ""
-            binding.appBarMain.includeModalCalendario.btnAceptarFecha.isEnabled = false
-            binding.appBarMain.includeModalCalendario.btnEndDay.isEnabled = false
-        }
-
-
-        binding.appBarMain.includeModalCalendario.LinearLayoutFiltroCalendario.setOnClickListener {
-            binding.appBarMain.includeModalCalendario.LinearLayoutFiltroCalendario.isVisible = false
-        }
         //boton que abre calendario modal filtro por fecha de apertura
         binding.appBarMain.includeFiltroRight.btnFechaAperturaFiltroRight.setOnClickListener {
             binding.appBarMain.includeModalCalendario.LinearLayoutFiltroCalendario.isVisible = true
@@ -274,6 +252,99 @@ class MainActivity : AppCompatActivity(){
 
             //binding.appBarMain.incMdfcfr.llyBgMdfcfr.isVisible = true
         }
+        //boton dia inicio del calendario
+        val calendarView: CalendarView = binding.appBarMain.includeModalCalendario.calendarView
+        val sdf = SimpleDateFormat("dd/MM/yyyy", Locale("es", "ES"))//obtenemos fecha actual
+        sdf.timeZone = TimeZone.getTimeZone("UTC-5")
+        val currentdate = sdf.format(Date()).replace("/",",")
+        val textElements: ArrayList<String> = currentdate.split(",") as ArrayList
+        val today = "${textElements[2]}/${textElements[1]}/${textElements[0]}"
+        Log.i("mensaje fechaObtenida","$today")
+        val calendar = Calendar.getInstance()
+        calendar.set(textElements[2].toInt(),textElements[1].toInt()-1,textElements[0].toInt())
+        calendarView.maxDate = calendar.timeInMillis//asignamos la fecha maxima que puede seleccionar
+        calendarView.setOnDateChangeListener { calendarView, i, i2, i3 ->
+
+            binding.appBarMain.includeModalCalendario.btnStarDay.setOnClickListener {
+                ultModifyEnd = currentDate()
+                val i2_ = i2+1//se le tiene que aumentar 1 ya que devuelve con un mes de retraso
+                binding.appBarMain.includeModalCalendario.btnAceptarFecha.isEnabled = true
+                binding.appBarMain.includeModalCalendario.btnEndDay.isEnabled = true
+
+                binding.appBarMain.includeModalCalendario.fechaStart.text =
+                    "Dia Inicio: $i3/$i2_/$i"
+                utlModifyStar = "$i-$i2_-$i3"
+                //Log.i("mensaje fechaInicia","$utlModifyStar")
+            }
+            binding.appBarMain.includeModalCalendario.btnEndDay.setOnClickListener {
+                val i2_ = i2+1//se le tiene que aumentar 1 ya que devuelve con un mes de retraso
+                //binding.appBarMain.includeModalCalendario.imgDelete.isVisible = true
+                binding.appBarMain.includeModalCalendario.fechaEnd.text =
+                    "   Dia Fin: $i3/$i2_/$i"
+                ultModifyEnd = "$i-$i2_-$i3"
+                //Log.i("mensaje fechaFin","$ultModifyEnd")
+            }
+        }
+        binding.appBarMain.includeModalCalendario.btnAceptarFecha.setOnClickListener {
+
+            binding.appBarMain.includeModalCalendario.LinearLayoutFiltroCalendario.isVisible = false
+            if (flagUltimaModificacion){
+                //flag tipos de filtro
+                flagCalendar = true
+                flagTicketSort = false
+                flagFilter = false
+                //flag tipos de busqueda en calendario
+                flagCalendarUltModify = true
+                flagCalendarOpenDate = false
+                flagCalendarCloseDate = false
+                //cerramos y volvemos a abrir el fragment para recargar su contenido
+                replaceFragment(MisPeticionesFragment())
+                Log.i("mensaje mainAct","$flagCalendar / $flagTicketSort / $flagFilter" )
+                val dateRange = binding.appBarMain.includeModalCalendario.fechaStart.text.toString() +"\n"+
+                        binding.appBarMain.includeModalCalendario.fechaEnd.text.toString()
+                Toast.makeText(this, "Ultima Modificación: $dateRange", Toast.LENGTH_SHORT).show()
+            }else if (flagFechaApertura){
+                //flag tipos de filtro
+                flagCalendar = true
+                flagTicketSort = false
+                flagFilter = false
+                //flag tipos de busqueda en calendario
+                flagCalendarUltModify = false
+                flagCalendarOpenDate = true
+                flagCalendarCloseDate = false
+                //cerramos y volvemos a abrir el fragment para recargar su contenido
+                replaceFragment(MisPeticionesFragment())
+                val dateRange = binding.appBarMain.includeModalCalendario.fechaStart.text.toString() +"\n"+
+                        binding.appBarMain.includeModalCalendario.fechaEnd.text.toString()
+                Toast.makeText(this, "Fecha Apertura: $dateRange", Toast.LENGTH_SHORT).show()
+            }else if (flagFechaCierre){
+                //flag tipos de filtro
+                flagCalendar = true
+                flagTicketSort = false
+                flagFilter = false
+                //flag tipos de busqueda en calendario
+                flagCalendarUltModify = false
+                flagCalendarOpenDate = false
+                flagCalendarCloseDate = true
+                //cerramos y volvemos a abrir el fragment para recargar su contenido
+                replaceFragment(MisPeticionesFragment())
+                val dateRange = binding.appBarMain.includeModalCalendario.fechaStart.text.toString() +"\n"+
+                        binding.appBarMain.includeModalCalendario.fechaEnd.text.toString()
+                Toast.makeText(this, "Fecha de Cierre: $dateRange", Toast.LENGTH_SHORT).show()
+            }
+
+
+            binding.appBarMain.includeModalCalendario.fechaStart.text = ""
+            binding.appBarMain.includeModalCalendario.fechaEnd.text = ""
+            binding.appBarMain.includeModalCalendario.btnAceptarFecha.isEnabled = false
+            binding.appBarMain.includeModalCalendario.btnEndDay.isEnabled = false
+        }
+
+
+        binding.appBarMain.includeModalCalendario.LinearLayoutFiltroCalendario.setOnClickListener {
+            binding.appBarMain.includeModalCalendario.LinearLayoutFiltroCalendario.isVisible = false
+        }
+
         //boton que abre buscador modal filtro por apellidos
         binding.appBarMain.includeFiltroRight.btnBsActfr.setOnClickListener {
             binding.appBarMain.incMdbsfr.llyMdbsfr.isVisible = true
@@ -300,9 +371,16 @@ class MainActivity : AppCompatActivity(){
 
     //nota:eliminar fragment de fondo
     private fun replaceFragment(misPeticionesFragment: MisPeticionesFragment) {
-        val fragmentManager = supportFragmentManager
+        val f2 = misPeticionesFragment
+        val transaction: FragmentTransaction = supportFragmentManager.beginTransaction()
+        transaction.replace(R.id.frameLayoutFragment, f2)
+        transaction.addToBackStack(null)
+        transaction.commit()
+
+        /*val fragmentManager = supportFragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()
-        fragmentTransaction.replace(R.id.frameLayoutFragment,misPeticionesFragment).commit()
+        fragmentTransaction.replace(R.id.frameLayoutFragment,misPeticionesFragment).commit()*/
+
     }
 
 

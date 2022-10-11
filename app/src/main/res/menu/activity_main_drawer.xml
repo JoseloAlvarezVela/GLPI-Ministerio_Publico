@@ -8,10 +8,15 @@
             android:id="@+id/nav_mis_peticiones"
             android:icon="@drawable/ic_peticiones_asignadas"
             android:title="@string/menu_mis_peticiones" />
-        <item
+        <!--<item
             android:id="@+id/nav_gallery"
             android:icon="@drawable/ic_fab_herramienta"
-            android:title="@string/menu_MisIncidencias" />
+            android:title="@string/menu_MisIncidencias" />-->
+        <item
+            android:id="@+id/nav_mis_incidencias"
+            android:icon="@drawable/ic_fab_herramienta"
+            android:title="@string/menu_MisIncidencias"
+            />
         <item
             android:id="@+id/nav_slideshow"
             android:icon="@drawable/ic_solicitud"

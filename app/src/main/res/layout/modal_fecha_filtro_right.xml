@@ -55,7 +55,7 @@
                     android:layout_height="15sp"
                     android:background="?android:attr/selectableItemBackground"
                     android:padding="5sp"
-                    android:visibility="invisible"
+                    android:visibility="gone"
                     app:srcCompat="@drawable/ic_cerrar" />
             </LinearLayout>
 

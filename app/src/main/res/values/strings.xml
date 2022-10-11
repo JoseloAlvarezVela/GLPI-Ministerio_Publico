@@ -55,13 +55,13 @@
     <string name="cat_22">ERROR AL SUBIR ARCHIVO</string>
     <string name="cat_23">ERROR AL VISUALIZAR EL DOCUMENTO CARGADO</string>
 
-<!--    string para los 2 botones de la barra inferior de activity_nav_footer_tickets.xml-->
+    <!--    string para los 2 botones de la barra inferior de activity_nav_footer_tickets.xml-->
     <string name="peticiones">Petición</string>
     <string name="conversacion">Conversación</string>
 
     <string name="numeral">#</string>
 
-<!--    string para ticket info en conversacion-->
+    <!--    string para ticket info en conversacion-->
     <string name="creationDate">Fecha Creación</string>
     <string name="ModificationDate">Ult. Modificación</string>
 

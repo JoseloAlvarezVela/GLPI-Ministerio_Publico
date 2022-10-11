@@ -17,17 +17,24 @@
         android:label="@string/menu_home"
         tools:layout="@layout/fragment_home" />
 
-    <fragment
+    <!--<fragment
         android:id="@+id/nav_gallery"
         android:name="com.glpi.glpi_ministerio_pblico.ui.gallery.GalleryFragment"
         android:label="@string/menu_MisIncidencias"
-        tools:layout="@layout/fragment_gallery" />
+        tools:layout="@layout/fragment_gallery" />-->
 
     <fragment
+        android:id="@+id/nav_mis_incidencias"
+        android:name="com.glpi.glpi_ministerio_pblico.ui.misIncidencias.MisIncidenciasFragment"
+        android:label="@string/menu_MisIncidencias"
+        tools:layout="@layout/fragment_mis_incidencias"
+        />
+
+    <!--<fragment
         android:id="@+id/nav_slideshow"
         android:name="com.glpi.glpi_ministerio_pblico.ui.slideshow.SlideshowFragment"
         android:label="@string/menu_slideshow"
-        tools:layout="@layout/fragment_slideshow" />
+        tools:layout="@layout/fragment_slideshow" />-->
     <activity
         android:id="@+id/acttivity_misIncidencias"
         android:name="com.glpi.glpi_ministerio_pblico.ui.misIncidencias.MisIncidenciasActivity"

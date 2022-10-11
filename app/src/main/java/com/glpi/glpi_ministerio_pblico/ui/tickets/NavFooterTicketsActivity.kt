@@ -38,6 +38,7 @@ import com.glpi.glpi_ministerio_pblico.VolleySingleton
 import com.glpi.glpi_ministerio_pblico.databinding.ActivityNavFooterTicketsBinding
 import com.glpi.glpi_ministerio_pblico.ui.adapter.Data_Tickets
 import com.glpi.glpi_ministerio_pblico.ui.adapter.RecyclerAdapter
+import com.glpi.glpi_ministerio_pblico.ui.misIncidencias.MisIncidenciasFragment
 import com.glpi.glpi_ministerio_pblico.ui.shared.token
 import com.glpi.glpi_ministerio_pblico.utilities.Utils_Global
 import org.json.JSONArray
@@ -194,9 +195,16 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
     private fun activityHeader(){
         //boton atras - include de nav_header_tickets.xml
         binding.includeNavHeaderTickets.btnAtrasTickets.setOnClickListener {
-            val intent_header_tickets = Intent(this@NavFooterTicketsActivity, MainActivity::class.java)
-            intent_header_tickets.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            startActivity(intent_header_tickets)
+            onBackPressed()
+            /*if (MainActivity.flagMisPeticionesFragment){
+                val intent_header_tickets = Intent(this@NavFooterTicketsActivity, MainActivity::class.java)
+                intent_header_tickets.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                startActivity(intent_header_tickets)
+            }else if(MainActivity.flagMisIncidenciasFragment){
+                val intent_header_tickets = Intent(this@NavFooterTicketsActivity, MisIncidenciasFragment::class.java)
+                intent_header_tickets.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                startActivity(intent_header_tickets)
+            }*/
         }
     }
 
