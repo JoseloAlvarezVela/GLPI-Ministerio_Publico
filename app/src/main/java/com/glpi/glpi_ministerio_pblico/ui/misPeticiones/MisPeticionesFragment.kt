@@ -135,9 +135,9 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.ontickteCl
                     /*Log.i("mensaje","$JS_DataTickets")
                     Log.i("mensaje","${JS_DataTickets.toString()[2]}")*/
                     if (JS_DataTickets.toString()[2] == 'm'){
-
                         Toast.makeText(context, "Id de Ticket No Existe", Toast.LENGTH_LONG).show()
                         requestVolleyTicketSorts(urlApi_Ticket)
+                        MainActivity.flag_edtFindTicketID = false
                     }else{
                         dataModelArrayList = ArrayList()
 
