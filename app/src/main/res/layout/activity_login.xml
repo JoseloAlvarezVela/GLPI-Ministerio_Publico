@@ -116,10 +116,14 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="300sp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="100sp"
+            android:layout_marginStart="25sp"
 
+            android:layout_marginLeft="25sp"
+            android:layout_marginTop="100sp"
+            android:layout_marginEnd="25sp"
+            android:layout_marginRight="25sp"
             android:background="@drawable/esq_redondeada_blanco"
             android:orientation="vertical">
 
