@@ -52,7 +52,7 @@
         <entry key="..\:/Users/JOSELO/AndroidStudioProjects/GLPIMinisterio_Pblico/app/src/main/res/layout/activity_tickets_agregar_documentos.xml" value="0.1796875" />
         <entry key="..\:/Users/JOSELO/AndroidStudioProjects/GLPIMinisterio_Pblico/app/src/main/res/layout/activity_tickets_agregar_seguimiento.xml" value="0.264" />
         <entry key="..\:/Users/JOSELO/AndroidStudioProjects/GLPIMinisterio_Pblico/app/src/main/res/layout/activity_tickets_agregar_solucion.xml" value="0.22" />
-        <entry key="..\:/Users/JOSELO/AndroidStudioProjects/GLPIMinisterio_Pblico/app/src/main/res/layout/activity_tickets_agregar_tarea.xml" value="0.4" />
+        <entry key="..\:/Users/JOSELO/AndroidStudioProjects/GLPIMinisterio_Pblico/app/src/main/res/layout/activity_tickets_agregar_tarea.xml" value="0.264" />
         <entry key="..\:/Users/JOSELO/AndroidStudioProjects/GLPIMinisterio_Pblico/app/src/main/res/layout/activity_tickets_historico.xml" value="0.264" />
         <entry key="..\:/Users/JOSELO/AndroidStudioProjects/GLPIMinisterio_Pblico/app/src/main/res/layout/app_bar_main.xml" value="0.16666666666666666" />
         <entry key="..\:/Users/JOSELO/AndroidStudioProjects/GLPIMinisterio_Pblico/app/src/main/res/layout/background_gris.xml" value="0.17864583333333334" />
@@ -61,6 +61,7 @@
         <entry key="..\:/Users/JOSELO/AndroidStudioProjects/GLPIMinisterio_Pblico/app/src/main/res/layout/fragment_home.xml" value="0.14764492753623187" />
         <entry key="..\:/Users/JOSELO/AndroidStudioProjects/GLPIMinisterio_Pblico/app/src/main/res/layout/fragment_mis_incidencias.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/JOSELO/AndroidStudioProjects/GLPIMinisterio_Pblico/app/src/main/res/layout/fragment_mis_peticiones.xml" value="0.22" />
+        <entry key="..\:/Users/JOSELO/AndroidStudioProjects/GLPIMinisterio_Pblico/app/src/main/res/layout/fragment_mis_solicitudes.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/JOSELO/AndroidStudioProjects/GLPIMinisterio_Pblico/app/src/main/res/layout/fragment_slideshow.xml" value="0.1796875" />
         <entry key="..\:/Users/JOSELO/AndroidStudioProjects/GLPIMinisterio_Pblico/app/src/main/res/layout/modal_agregar_cat_tickets.xml" value="0.2" />
         <entry key="..\:/Users/JOSELO/AndroidStudioProjects/GLPIMinisterio_Pblico/app/src/main/res/layout/modal_buscar_solicitante_filtro_right.xml" value="0.17864583333333334" />
@@ -69,7 +70,8 @@
         <entry key="..\:/Users/JOSELO/AndroidStudioProjects/GLPIMinisterio_Pblico/app/src/main/res/layout/modal_fecha_cierre_filtro_right.xml" value="0.25416666666666665" />
         <entry key="..\:/Users/JOSELO/AndroidStudioProjects/GLPIMinisterio_Pblico/app/src/main/res/layout/modal_fecha_filtro_right.xml" value="0.22" />
         <entry key="..\:/Users/JOSELO/AndroidStudioProjects/GLPIMinisterio_Pblico/app/src/main/res/layout/modal_perfiles.xml" value="0.264" />
-        <entry key="..\:/Users/JOSELO/AndroidStudioProjects/GLPIMinisterio_Pblico/app/src/main/res/layout/modal_plantilla_agregar_tarea.xml" value="0.22" />
+        <entry key="..\:/Users/JOSELO/AndroidStudioProjects/GLPIMinisterio_Pblico/app/src/main/res/layout/modal_plantilla_agregar_seguimiento.xml" value="0.18333333333333332" />
+        <entry key="..\:/Users/JOSELO/AndroidStudioProjects/GLPIMinisterio_Pblico/app/src/main/res/layout/modal_plantilla_agregar_tarea.xml" value="0.2" />
         <entry key="..\:/Users/JOSELO/AndroidStudioProjects/GLPIMinisterio_Pblico/app/src/main/res/layout/nav_header_main.xml" value="0.22" />
         <entry key="..\:/Users/JOSELO/AndroidStudioProjects/GLPIMinisterio_Pblico/app/src/main/res/layout/recicleview_entities.xml" value="0.253125" />
         <entry key="..\:/Users/JOSELO/AndroidStudioProjects/GLPIMinisterio_Pblico/app/src/main/res/layout/recyclerview_perfiles.xml" value="0.2" />
@@ -77,6 +79,7 @@
         <entry key="..\:/Users/JOSELO/AndroidStudioProjects/GLPIMinisterio_Pblico/app/src/main/res/layout/recyclerview_tickets_followup.xml" value="0.2" />
         <entry key="..\:/Users/JOSELO/AndroidStudioProjects/GLPIMinisterio_Pblico/app/src/main/res/layout/recyclerview_tickets_solution.xml" value="0.2" />
         <entry key="..\:/Users/JOSELO/AndroidStudioProjects/GLPIMinisterio_Pblico/app/src/main/res/layout/recyclerview_tickets_tasks.xml" value="0.16" />
+        <entry key="..\:/Users/JOSELO/AndroidStudioProjects/GLPIMinisterio_Pblico/app/src/main/res/layout/recycleview_followup_template.xml" value="0.3537037037037037" />
         <entry key="..\:/Users/JOSELO/AndroidStudioProjects/GLPIMinisterio_Pblico/app/src/main/res/layout/recycleview_tasks_template.xml" value="0.264" />
         <entry key="..\:/Users/JOSELO/AndroidStudioProjects/GLPIMinisterio_Pblico/app/src/main/res/layout/recycleview_ticket_conversation.xml" value="0.264" />
         <entry key="..\:/Users/JOSELO/AndroidStudioProjects/GLPIMinisterio_Pblico/app/src/main/res/layout/recycleview_ticket_historico.xml" value="0.2" />

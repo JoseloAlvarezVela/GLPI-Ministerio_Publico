@@ -51,10 +51,12 @@ class MainActivity : AppCompatActivity(){
         val urlApi_TicketID: String = "http://181.176.145.174:8080/api/ticket_info/" //consulta si el ticket tiene tareas,soluciones o seguimiente, pasarle id de ticket
         val urlApi_Ticket: String = "http://181.176.145.174:8080/api/ticket_sorts/General"
         val urlApi_TicketSortByIncident: String = "http://181.176.145.174:8080/api/ticket_sorts/SortByIncident"
+        val urlApi_TicketSortByRequest: String = "http://181.176.145.174:8080/api/ticket_sorts/SortByRequest"
         val urlApi_TicketSorts: String = "http://181.176.145.174:8080/api/ticket_sorts/SortByStatus"
         val urlApi_SortByTicketId: String = "http://181.176.145.174:8080/api/ticket_sorts/SortByTicketId"
         val urlApi_TasksUsers: String = "http://181.176.145.174:8080/api/task_users/" //para consultar id de: user,technician,requester
         val urlApi_TasksTemplate: String = "http://181.176.145.174:8080/api/task_templates"
+        val urlApi_FollowupTemplates: String = "http://181.176.145.174:8080/api/followup_templates"
 
         lateinit var nameLoginUser: String
         lateinit var jsonObjectResponse: JSONObject
@@ -63,6 +65,7 @@ class MainActivity : AppCompatActivity(){
         var flag = false
         var flag_edtFindTicketID = false
         lateinit var edtFindTicketID: String
+
 
         //variables para filtrar tickets
         var flagFilter = false
@@ -124,7 +127,7 @@ class MainActivity : AppCompatActivity(){
         /* menu should be considered as top level destinations.*/
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.nav_mis_peticiones,R.id.nav_home,R.id.nav_mis_incidencias, R.id.nav_slideshow,
+                R.id.nav_mis_peticiones,R.id.nav_home,R.id.nav_mis_incidencias,R.id.nav_mis_solicitudes,
                 R.id.acttivity_misIncidencias
             ), drawerLayout
         )
@@ -687,7 +690,7 @@ class MainActivity : AppCompatActivity(){
 
     override fun onSupportNavigateUp(): Boolean { //slide de la izquierda
         val navController = findNavController(R.id.nav_host_fragment_content_main)
-        binding.navView.getHeaderView(0).findViewById<TextView>(R.id.txt_nameUser).text = "nameLoginUser" //TODO: ASIGANAR NOMBRE
+        binding.navView.getHeaderView(0).findViewById<TextView>(R.id.txt_nameUser).text = nameLoginUser
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
 

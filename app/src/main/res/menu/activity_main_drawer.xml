@@ -18,9 +18,13 @@
             android:title="@string/menu_MisIncidencias"
             />
         <item
-            android:id="@+id/nav_slideshow"
+            android:id="@+id/nav_mis_solicitudes"
             android:icon="@drawable/ic_solicitud"
             android:title="@string/menu_MisSolicitudes" />
+        <!--<item
+            android:id="@+id/nav_slideshow"
+            android:icon="@drawable/ic_solicitud"
+            android:title="@string/menu_MisSolicitudes" />-->
     </group>
 
     <group android:checkableBehavior="single">

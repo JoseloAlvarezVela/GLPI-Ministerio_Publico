@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/modal_plantilla_add_followup"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    android:orientation="vertical"
+    android:visibility="gone">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/degradado_azul">
+
+        <Button
+            android:id="@+id/btn_onBackPressed"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="4"
+            android:background="?android:attr/selectableItemBackground"
+            android:fontFamily="@font/averia_libre_light"
+            android:textColor="#FFFFFF"
+            app:icon="@drawable/ic_atras"
+            app:iconGravity="textStart"
+            app:iconTint="#FFFFFF" />
+
+        <TextView
+            android:id="@+id/textView620"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:clickable="true"
+            android:drawableRight="@android:drawable/ic_menu_search"
+            android:fontFamily="@font/averia_libre_light"
+            android:gravity="center_vertical"
+            android:paddingLeft="10sp"
+            android:text="Plantilla Seguimiento"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            app:drawableTint="#000000" />
+    </LinearLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_followup_template"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="#5999D1"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btn_close_followup_template"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="?android:attr/selectableItemBackground"
+            android:fontFamily="@font/averia_sans_libre_light"
+            android:text="Salir"
+            android:textColor="#FFFFFF"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+</LinearLayout>

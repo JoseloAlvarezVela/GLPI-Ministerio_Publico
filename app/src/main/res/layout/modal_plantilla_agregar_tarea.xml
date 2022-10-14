@@ -8,7 +8,7 @@
     android:background="#FFFFFF"
     android:orientation="vertical"
     android:visibility="gone"
-    tools:context=".ui.modals.Modal_TasksTemplate">>
+    tools:context=".ui.modals.Modal_TasksTemplate">
 
     <LinearLayout
         android:layout_width="match_parent"

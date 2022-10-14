@@ -116,11 +116,6 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.ontickteCl
         Log.i("mensaje flagCalendar","${MainActivity.flagCalendar}")*/
 
 
-
-
-
-        
-
         val root = binding.root
 
         return root
@@ -159,6 +154,7 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.ontickteCl
                             //Log.i("mensaje idTechnician",""+idTechnician.getString("0"))
                             val technicianName = DataTickets.getString("NOMBRE")
                             val technicianLastName = DataTickets.getString("APELLIDO")
+
                             playerModel.setTechnicianName("$technicianName $technicianLastName")
                             //obtenemos el id del solicitante(usuario logeado)
                             val idPositionResquester = DataTickets.getJSONObject("ID_REQUESTER")
@@ -231,6 +227,7 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.ontickteCl
                         val technicianName = DataTickets.getString("NOMBRE")
                         val technicianLastName = DataTickets.getString("APELLIDO")
                         playerModel.setTechnicianName("$technicianName $technicianLastName")
+                        MainActivity.nameLoginUser = "$technicianName $technicianLastName"
                         //obtenemos el id del solicitante(usuario logeado)
                         val idPositionResquester = DataTickets.getJSONObject("ID_REQUESTER")
                         val idRequester = idPositionResquester.getString("0")
