@@ -97,7 +97,7 @@ class RecyclerAdapter(
                 itemView.findViewById<TextView>(R.id.txt_creationTicketDate).text =
                     "${item.getTicketSortsCreationDate()} -> ${item.getTaskUsersEstimateDuration()}"
                 itemView.findViewById<TextView>(R.id.txt_estimatedHour).text = item.getTaskUsersMillisToHours()
-                itemView.findViewById<TextView>(R.id.txt_timeResolved).text = item.getTaskUsersMillisToHours()//TODO: MOSTRAR EL TIEMPO EN EL QUE FUE RESUELTO
+                itemView.findViewById<TextView>(R.id.txt_timeResolved).text = item.getTaskUsersMillisToHours()//TODO: borrar
                 itemView.findViewById<TextView>(R.id.tv_conversation_estado).isVisible = false
                 val param = itemView.findViewById<LinearLayout>(R.id.ticket_estado_conversation).layoutParams as ViewGroup.MarginLayoutParams
                 param.setMargins(0,10,100,10)

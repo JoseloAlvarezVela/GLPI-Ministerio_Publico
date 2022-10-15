@@ -57,7 +57,7 @@
                         android:textStyle="bold" />
 
                     <TextView
-                        android:id="@+id/tv_idTicket"
+                        android:id="@+id/tvIdTicket"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/averia_libre_light"

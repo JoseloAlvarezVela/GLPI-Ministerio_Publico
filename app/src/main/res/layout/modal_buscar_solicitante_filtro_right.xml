@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/lly_mdbsfr"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center_horizontal"
-    android:background="#FFFFFF"
+    android:layout_margin="10sp"
+    android:background="@drawable/esq_redondeada_blanco"
+    android:clickable="false"
     android:orientation="vertical"
     android:padding="5sp"
     android:visibility="gone">
 
     <TextView
         android:id="@+id/textView63"
-        android:layout_width="350sp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/degradado_azul"
         android:clickable="true"
@@ -19,15 +22,36 @@
         android:paddingLeft="10sp"
         android:paddingTop="10sp"
         android:paddingBottom="10sp"
-        android:text="Buscar Solicitante por Apellido"
+        android:text="Buscar por Nombre ó Apellido"
         android:textColor="#FFFFFF"
         android:textSize="18sp" />
 
-    <SearchView
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/tvRequesterSearch"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:hint="Ingrese Solicitante a buscar" />
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btnRequesterSearch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Buscar" />
+
+    <!--<SearchView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:iconifiedByDefault="false"
         android:orientation="vertical"
-        android:queryHint="Buscar por apellidos" />
+        android:queryHint="Buscar por apellidos" >
+
+    </SearchView>-->
 
 </LinearLayout>

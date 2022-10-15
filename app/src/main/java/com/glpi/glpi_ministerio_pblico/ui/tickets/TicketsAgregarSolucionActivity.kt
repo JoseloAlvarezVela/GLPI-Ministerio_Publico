@@ -17,16 +17,20 @@ class TicketsAgregarSolucionActivity : AppCompatActivity() {
         binding = ActivityTicketsAgregarSolucionBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        ticketInfo()
         btn_fabs()
         btn_header()
 
     }
+
+    private fun ticketInfo(){
+        val bundle = intent.extras
+        binding.tvIdTicket.text = "Petición #${bundle!!.getString("TicketID")}"
+    }
     //INICIO - funcion que contiene botones en la cabecera del layout
     private fun btn_header() {
         binding.btnAtrasActtaddsol.setOnClickListener {
-            val intent_atras = Intent(this, NavFooterTicketsActivity::class.java)
-            intent_atras.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            startActivity(intent_atras)
+            onBackPressed()
         }
         //boton agregar solución
         binding.btnAddsolActtaddsol.setOnClickListener {

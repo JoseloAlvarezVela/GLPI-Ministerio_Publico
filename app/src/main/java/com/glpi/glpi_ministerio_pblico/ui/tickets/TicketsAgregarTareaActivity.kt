@@ -45,12 +45,15 @@ class TicketsAgregarTareaActivity : AppCompatActivity(), RecycleView_Adapter_Tas
         recyclerView = binding.includeModalPlantillaTarea.recyclerTasksTemplate
         //recyclerView = binding.recyclerTaskTemplate
 
+        ticketInfo()
         //setupRecycler()
         volleyRequestDataTasksTemplate()
 
         if (flagTasks){
             val intent = intent.extras
+            val ticketId = intent!!.getString("ticketId")
             val tasksDescription = intent!!.getString("tasks_description","")
+            binding.tvIdTicket.text = "Petición #$ticketId"
             binding.edtTasksDescription.setText(tasksDescription)
             flag = false
         }
@@ -60,6 +63,11 @@ class TicketsAgregarTareaActivity : AppCompatActivity(), RecycleView_Adapter_Tas
         btn_agregarTarea()
         btn_agregarCat()
 
+    }
+
+    private fun ticketInfo(){
+        val bundle = intent.extras
+        binding.tvIdTicket.text = "Petición #${bundle!!.getString("TicketID")}"
     }
 
     private fun volleyRequestDataTasksTemplate() {
@@ -139,9 +147,10 @@ class TicketsAgregarTareaActivity : AppCompatActivity(), RecycleView_Adapter_Tas
     //INICIO - funcion que regresa a la vista anterior: activity_nav_footer_tickets.xml
     private fun btn_atras() {
        binding.btnAtrasActtaddt.setOnClickListener {
-           val intent_atras = Intent(this, NavFooterTicketsActivity::class.java)
+           onBackPressed()
+           /*val intent_atras = Intent(this, NavFooterTicketsActivity::class.java)
            intent_atras.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-           startActivity(intent_atras)
+           startActivity(intent_atras)*/
        }
     }
 

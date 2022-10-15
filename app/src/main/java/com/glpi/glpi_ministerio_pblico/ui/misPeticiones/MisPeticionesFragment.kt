@@ -28,6 +28,7 @@ import com.glpi.glpi_ministerio_pblico.ui.adapter.Data_Tickets
 import com.glpi.glpi_ministerio_pblico.ui.adapter.RecycleView_Adapter_Tickets
 import com.glpi.glpi_ministerio_pblico.ui.shared.token
 import com.glpi.glpi_ministerio_pblico.ui.tickets.NavFooterTicketsActivity
+import com.glpi.glpi_ministerio_pblico.utilities.Utils_Global
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -67,10 +68,12 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.ontickteCl
     ): View {
         // Inflate the layout for this fragment
         _binding = FragmentMisPeticionesBinding.inflate(inflater, container, false)
-
         if (MainActivity.flag_edtFindTicketID){
             volleyRequestSortByTicketId(MainActivity.urlApi_SortByTicketId,MainActivity.edtFindTicketID)
             Log.i("mensajeFlag","${MainActivity.urlApi_SortByTicketId} == SortByTicketId")
+        }else if (MainActivity.flag_requesterSearch) {
+            requestVolleySortByRequester(MainActivity.urlApi_SortByRequester)
+            Log.i("mensajeFlag","${MainActivity.urlApi_SortByRequester} == SortByRequester")
         }else{
             if (MainActivity.flagTicketSort){
                 /*Toast.makeText(context, "${MainActivity.checkNewTicket}," +
@@ -119,6 +122,79 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.ontickteCl
         val root = binding.root
 
         return root
+    }
+
+    private fun requestVolleySortByRequester(urlApi_SortByRequester: String){
+        //metodo que nos devuelve los datos para los tickets
+        val stringRequestDataTickets = object : StringRequest(Method.POST,
+            urlApi_SortByRequester, Response.Listener { response ->
+                try {
+                    val JS_DataTickets = JSONObject(response) //obtenemos el objeto json
+
+                    dataModelArrayList = ArrayList()
+
+                    for (i in 0 until JS_DataTickets.length()){
+
+                        val DataTickets = JS_DataTickets.getJSONObject(i.toString())
+                        //Log.i("mensaje tasks in",""+DataTickets)
+                        val playerModel = Data_Tickets()
+
+                        playerModel.setTicketSortsID(DataTickets.getString("ID"))
+                        playerModel.setTicketSortsType(DataTickets.getString("TIPO"))
+                        playerModel.setTicketSortsState(DataTickets.getString("ESTADO"))
+                        playerModel.setTicketSortsDescription(DataTickets.getString("DESCRIPCION"))
+                        //obtenemos el id del operador, creador del ticket
+                        playerModel.setTicketSortsIdRecipient(DataTickets.getString("ID_RECIPIENT"))
+                        //obtenemos el id del tecnico(usuario logeado) y su nombre
+                        val idTechnician = DataTickets.getJSONObject("ID_TECHNICIAN")
+                        playerModel.setTicketSortsIdTechnician(idTechnician.getString("0"))
+                        //Log.i("mensaje idTechnician",""+idTechnician.getString("0"))
+                        val technicianName = DataTickets.getString("NOMBRE")
+                        val technicianLastName = DataTickets.getString("APELLIDO")
+                        playerModel.setTechnicianName("$technicianName $technicianLastName")
+                        MainActivity.nameLoginUser = "$technicianName $technicianLastName"
+                        //obtenemos el id del solicitante(usuario logeado)
+                        val idPositionResquester = DataTickets.getJSONObject("ID_REQUESTER")
+
+                        val idRequester = idPositionResquester.getString("0")
+                        playerModel.setTicketSortsIdRequester(idRequester)
+
+                        playerModel.setTicketSortsCreationDate(DataTickets.getString("FECHA_CREACION"))//fecha de creación
+                        playerModel.setTicketSortsModificationDate(DataTickets.getString("FECHA_MODIFICACION"))//fecha de creación
+
+                        //obtenemos la descripción completa del ticket - primero decodificamos el formato html
+                        val decoded: String = Html.fromHtml(DataTickets.getString("CONTENIDO")).toString()
+                        val decoded2: Spanned = HtmlCompat.fromHtml(decoded,HtmlCompat.FROM_HTML_MODE_COMPACT)
+                        playerModel.setTicketSortsContents(decoded2.toString())
+                        //urgencia del ticket
+                        playerModel.setTicketSortsUrgency(DataTickets.getString("URGENCIA"))
+                        //categoria del ticket
+                        playerModel.setTicketSortsCategory(DataTickets.getString("CATEGORIA"))
+                        //origen del ticket
+                        playerModel.setTicketSortsSource(DataTickets.getString("ORIGEN"))
+                        dataModelArrayList.add(playerModel)
+                    }
+                    setupRecycler()
+
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    Toast.makeText(context, "token expirado_: $e", Toast.LENGTH_LONG).show()
+                    //Log.i("mensaje recycler e: ", "recycler ERROR: $e")
+                }
+            }, Response.ErrorListener {
+                Toast.makeText(context, "ERROR CON EL SERVIDOR", Toast.LENGTH_SHORT).show()
+            }) {
+            override fun getParams(): Map<String, String>? {
+                val params: MutableMap<String, String> = HashMap()
+                params["session_token"] = token.prefer.getToken()
+                params["requester_completename"] = MainActivity.requesterSearch.toString()
+                params["requester_completename_type"] = "1"
+
+                return params
+            }
+        }
+        context?.let { VolleySingleton.getInstance(it).addToRequestQueue(stringRequestDataTickets) }
+        //FIN obtenemos perfil de usuario
     }
 
     private fun volleyRequestSortByTicketId(urlApi_SortByTicketId: String, edtFindTicketID: String){
@@ -230,6 +306,7 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.ontickteCl
                         MainActivity.nameLoginUser = "$technicianName $technicianLastName"
                         //obtenemos el id del solicitante(usuario logeado)
                         val idPositionResquester = DataTickets.getJSONObject("ID_REQUESTER")
+
                         val idRequester = idPositionResquester.getString("0")
                         playerModel.setTicketSortsIdRequester(idRequester)
 

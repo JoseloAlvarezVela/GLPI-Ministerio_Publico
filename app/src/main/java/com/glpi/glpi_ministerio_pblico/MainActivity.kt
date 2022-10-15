@@ -1,16 +1,20 @@
 package com.glpi.glpi_ministerio_pblico
 
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Build
 import android.os.Bundle
+import android.text.Editable
 import android.text.Html
 import android.text.Spanned
 import android.util.Log
 import android.util.TypedValue
 import android.view.KeyEvent
+import android.view.MotionEvent
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
@@ -54,6 +58,7 @@ class MainActivity : AppCompatActivity(){
         val urlApi_TicketSortByRequest: String = "http://181.176.145.174:8080/api/ticket_sorts/SortByRequest"
         val urlApi_TicketSorts: String = "http://181.176.145.174:8080/api/ticket_sorts/SortByStatus"
         val urlApi_SortByTicketId: String = "http://181.176.145.174:8080/api/ticket_sorts/SortByTicketId"
+        val urlApi_SortByRequester: String = "http://181.176.145.174:8080/api/ticket_sorts/SortByRequester"
         val urlApi_TasksUsers: String = "http://181.176.145.174:8080/api/task_users/" //para consultar id de: user,technician,requester
         val urlApi_TasksTemplate: String = "http://181.176.145.174:8080/api/task_templates"
         val urlApi_FollowupTemplates: String = "http://181.176.145.174:8080/api/followup_templates"
@@ -64,7 +69,12 @@ class MainActivity : AppCompatActivity(){
 
         var flag = false
         var flag_edtFindTicketID = false
+
         lateinit var edtFindTicketID: String
+
+        //variable para buscar por filtro apellido o nombre
+        lateinit var requesterSearch: Editable
+        var flag_requesterSearch = false
 
 
         //variables para filtrar tickets
@@ -231,6 +241,7 @@ class MainActivity : AppCompatActivity(){
         var flagFechaCierre = false
         binding.appBarMain.includeFiltroRight.btnUltModificacionFiltroRight.setOnClickListener {
             binding.appBarMain.includeModalCalendario.LinearLayoutFiltroCalendario.isVisible = true
+            binding.appBarMain.includeModalCalendario.tvFilterTitle.text = "Filtro por ultima modificación"
             flagUltimaModificacion = true
             flagFechaApertura = false
             flagFechaCierre = false
@@ -238,7 +249,7 @@ class MainActivity : AppCompatActivity(){
         //boton que abre calendario modal filtro por fecha de apertura
         binding.appBarMain.includeFiltroRight.btnFechaAperturaFiltroRight.setOnClickListener {
             binding.appBarMain.includeModalCalendario.LinearLayoutFiltroCalendario.isVisible = true
-            //binding.appBarMain.llyBackgroudAbm.isVisible = true
+            binding.appBarMain.includeModalCalendario.tvFilterTitle.text = "Filtro por apertura"
             flagUltimaModificacion = false
             flagFechaApertura = true
             flagFechaCierre = false
@@ -248,6 +259,7 @@ class MainActivity : AppCompatActivity(){
         //boton que abre calendario modal filtro por fecha de cierre
         binding.appBarMain.includeFiltroRight.btnFechaCierreFiltroRight.setOnClickListener {
             binding.appBarMain.includeModalCalendario.LinearLayoutFiltroCalendario.isVisible = true
+            binding.appBarMain.includeModalCalendario.tvFilterTitle.text = "Filtro por cierre"
             //binding.appBarMain.llyBackgroudAbm.isVisible = true
             flagUltimaModificacion = false
             flagFechaApertura = false
@@ -352,8 +364,20 @@ class MainActivity : AppCompatActivity(){
         binding.appBarMain.includeFiltroRight.btnBsActfr.setOnClickListener {
             binding.appBarMain.incMdbsfr.llyMdbsfr.isVisible = true
             binding.appBarMain.llyBackgroudAbm.isVisible = true
+
+
+            binding.appBarMain.incMdbsfr.btnRequesterSearch.setOnClickListener {
+                flag_requesterSearch = true
+                binding.appBarMain.includeFiltroRight.LinearLayoutActivityFiltroRight.isVisible = false
+                binding.appBarMain.incMdbsfr.llyMdbsfr.isVisible = false
+                binding.appBarMain.llyBackgroudAbm.isVisible = false
+                requesterSearch = binding.appBarMain.incMdbsfr.tvRequesterSearch.text
+                //cerramos y volvemos a abrir el fragment para recargar su contenido
+                replaceFragment(MisPeticionesFragment())
+            }
         }
-        //
+
+
 
 
         //fondo gris transparente que se muestra atras de los modals
@@ -611,7 +635,7 @@ class MainActivity : AppCompatActivity(){
                 return params
             }
         }
-        this?.let { VolleySingleton.getInstance(it).addToRequestQueue(stringRequestDataTickets) }
+        this.let { VolleySingleton.getInstance(it).addToRequestQueue(stringRequestDataTickets) }
         //FIN volley ------------------------------------------------------------
     }
 
@@ -692,6 +716,15 @@ class MainActivity : AppCompatActivity(){
         val navController = findNavController(R.id.nav_host_fragment_content_main)
         binding.navView.getHeaderView(0).findViewById<TextView>(R.id.txt_nameUser).text = nameLoginUser
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
+    }
+
+    //sobreescribimos el dipararador del teclado
+    override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
+        if (currentFocus != null) {
+            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(currentFocus!!.windowToken, 0)
+        }
+        return super.dispatchTouchEvent(ev)
     }
 
     //onKeyDown controlamos la pulsación del boton atras por defecto del celular para que cierre la app

@@ -50,7 +50,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/textView16"
+                    android:id="@+id/tvIdTicket"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/averia_sans_libre_light"
@@ -163,6 +163,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
+            android:background="@drawable/esq_redondeada_gris"
             android:orientation="vertical">
 
             <TextView

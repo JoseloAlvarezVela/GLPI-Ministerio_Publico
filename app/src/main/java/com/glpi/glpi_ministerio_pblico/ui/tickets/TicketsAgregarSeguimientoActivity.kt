@@ -34,6 +34,7 @@ class TicketsAgregarSeguimientoActivity : AppCompatActivity(), RecycleView_Adapt
         super.onCreate(savedInstanceState)
         binding = ActivityTicketsAgregarSeguimientoBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        ticketInfo()
 
         var flagTasks = MainActivity.flag
         recyclerView = binding.includeModalFollowupTemplate.recyclerFollowupTemplate
@@ -42,7 +43,9 @@ class TicketsAgregarSeguimientoActivity : AppCompatActivity(), RecycleView_Adapt
 
         if (flagTasks){
             val intent = intent.extras
+            val ticketId = intent!!.getString("ticketId")
             val tasksDescription = intent!!.getString("tasks_description","")
+            binding.tvIdTicket.text = "Petición #$ticketId"
             binding.edtFollowupDescription.setText(tasksDescription)
             MainActivity.flag = false
         }
@@ -50,13 +53,16 @@ class TicketsAgregarSeguimientoActivity : AppCompatActivity(), RecycleView_Adapt
         btn_fabs_taddsegact()
         btn_header_taddsegact()
     }
+
+    private fun ticketInfo(){
+        val bundle = intent.extras
+        binding.tvIdTicket.text = "Petición #${bundle!!.getString("TicketID")}"
+    }
     //INICIO - funcion de maneja los botones del header
     private fun btn_header_taddsegact() {
         //boton atras
         binding.btnAtrasActtaddseg.setOnClickListener {
-            val intent_atras = Intent(this, NavFooterTicketsActivity::class.java)
-            intent_atras.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            startActivity(intent_atras)
+            onBackPressed()
         }
         //boton agregar seguimiento
         binding.btnAddsegActtaddseg.setOnClickListener {

@@ -64,6 +64,8 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
 
     lateinit private var progressBarTicketConversation: ProgressBar
 
+    lateinit var TicketID_: String
+
     //INICIO toogle buton tickets
     var clickTickets: Boolean = false
     var clickConvezaciones: Boolean = false
@@ -101,17 +103,7 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
 
                 click_fab = true
             }else{
-                binding.includeFabs.fabSolucion.isVisible = false
-                binding.includeFabs.btnFabSolucion.isVisible = false
-                binding.includeFabs.fabDocumentos.isVisible = false
-                binding.includeFabs.btnFabDocumentos.isVisible = false
-                binding.includeFabs.fabTareas.isVisible = false
-                binding.includeFabs.btnFabTareas.isVisible = false
-                binding.includeFabs.fabSeguimiento.isVisible = false
-                binding.includeFabs.btnFabSeguimiento.isVisible = false
-                binding.fabBackground.isVisible = false
-
-                click_fab = false
+                hideFabs()
             }
         }
         binding.fabBackground.setOnClickListener {
@@ -132,26 +124,60 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
 
         //INICIO eventos click de fab_opciones
         binding.includeFabs.btnFabTareas.setOnClickListener {
-            val intent_agregar_tarea = Intent(this@NavFooterTicketsActivity, TicketsAgregarTareaActivity::class.java)
-            intent_agregar_tarea.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            startActivity(intent_agregar_tarea)
+            val intentAddTask = Intent(this@NavFooterTicketsActivity, TicketsAgregarTareaActivity::class.java)
+            val bundle = Bundle()
+            bundle.putString("TicketID", TicketID_)
+            intentAddTask.putExtras(bundle)
+            intentAddTask.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            startActivity(intentAddTask)
+
+            hideFabs()
         }
         binding.includeFabs.btnFabSeguimiento.setOnClickListener {
-            val intent_agregar_seguimiento = Intent(this@NavFooterTicketsActivity, TicketsAgregarSeguimientoActivity::class.java)
-            intent_agregar_seguimiento.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            startActivity(intent_agregar_seguimiento)
+            val intentAddFollowup = Intent(this@NavFooterTicketsActivity, TicketsAgregarSeguimientoActivity::class.java)
+            val bundle = Bundle()
+            bundle.putString("TicketID", TicketID_)
+            intentAddFollowup.putExtras(bundle)
+            intentAddFollowup.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            startActivity(intentAddFollowup)
+
+            hideFabs()
         }
         binding.includeFabs.btnFabSolucion.setOnClickListener {
-            val intent_agregar_seguimiento = Intent(this@NavFooterTicketsActivity, TicketsAgregarSolucionActivity::class.java)
-            intent_agregar_seguimiento.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            startActivity(intent_agregar_seguimiento)
+            val intentAddSolution = Intent(this@NavFooterTicketsActivity, TicketsAgregarSolucionActivity::class.java)
+            val bundle = Bundle()
+            bundle.putString("TicketID", TicketID_)
+            intentAddSolution.putExtras(bundle)
+            intentAddSolution.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            startActivity(intentAddSolution)
+
+            hideFabs()
         }
         binding.includeFabs.btnFabDocumentos.setOnClickListener {
-            val intent_agregar_documento = Intent(this@NavFooterTicketsActivity, TicketsAgregarDocumentosActivity::class.java)
-            intent_agregar_documento.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            startActivity(intent_agregar_documento)
+            val intentAddDocument = Intent(this@NavFooterTicketsActivity, TicketsAgregarDocumentosActivity::class.java)
+            val bundle = Bundle()
+            bundle.putString("TicketID", TicketID_)
+            intentAddDocument.putExtras(bundle)
+            intentAddDocument.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            startActivity(intentAddDocument)
+
+            hideFabs()
         }
         //fin eventos click de fab_opciones
+    }
+
+    private fun hideFabs(){
+        binding.includeFabs.fabSolucion.isVisible = false
+        binding.includeFabs.btnFabSolucion.isVisible = false
+        binding.includeFabs.fabDocumentos.isVisible = false
+        binding.includeFabs.btnFabDocumentos.isVisible = false
+        binding.includeFabs.fabTareas.isVisible = false
+        binding.includeFabs.btnFabTareas.isVisible = false
+        binding.includeFabs.fabSeguimiento.isVisible = false
+        binding.includeFabs.btnFabSeguimiento.isVisible = false
+        binding.fabBackground.isVisible = false
+
+        click_fab = false
     }
 
     private fun btnPetition(){
@@ -196,15 +222,6 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
         //boton atras - include de nav_header_tickets.xml
         binding.includeNavHeaderTickets.btnAtrasTickets.setOnClickListener {
             onBackPressed()
-            /*if (MainActivity.flagMisPeticionesFragment){
-                val intent_header_tickets = Intent(this@NavFooterTicketsActivity, MainActivity::class.java)
-                intent_header_tickets.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                startActivity(intent_header_tickets)
-            }else if(MainActivity.flagMisIncidenciasFragment){
-                val intent_header_tickets = Intent(this@NavFooterTicketsActivity, MisIncidenciasFragment::class.java)
-                intent_header_tickets.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                startActivity(intent_header_tickets)
-            }*/
         }
     }
 
@@ -435,7 +452,7 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
     private fun DataToTicketsHistoricoActivity() {
         val bundle = intent.extras
 
-        val TicketID_ = bundle!!.getString("TicketID")
+        TicketID_ = bundle!!.getString("TicketID").toString()
         val NameOperador_ = bundle!!.getString("NameOperador")//aun no hay
         val CurrentTime_ = bundle!!.getString("CurrentTime")
         val ModificationDate = bundle!!.getString("ModificationDate")
@@ -640,7 +657,14 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
     }
 
 
-    override fun onEditClick(glpiTasksDescripcion: String, glpiTasksTipo: String) {
+    override fun onEditClick(
+        glpiTasksDescripcion: String,
+        glpiTasksTipo: String
+    ) {
+        //recuperamos el id del ticket
+        val bundle = intent.extras
+        val ticketId = bundle!!.getString("TicketID")
+
         val intentTasks = (Intent(this,TicketsAgregarTareaActivity::class.java))
         intentTasks.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         val intentFollowUp = (Intent(this,TicketsAgregarSeguimientoActivity::class.java))
@@ -648,9 +672,11 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
         flag = true
         //Log.i("mensaje edit: ",""+glpiConversationTipo)
         if (glpiTasksTipo == "TASK"){
+            intentTasks.putExtra("ticketId",ticketId)
             intentTasks.putExtra("tasks_description",glpiTasksDescripcion)
             startActivity(intentTasks)
         }else{
+            intentFollowUp.putExtra("ticketId",ticketId)
             intentFollowUp.putExtra("tasks_description",glpiTasksDescripcion)
             startActivity(intentFollowUp)
         }
