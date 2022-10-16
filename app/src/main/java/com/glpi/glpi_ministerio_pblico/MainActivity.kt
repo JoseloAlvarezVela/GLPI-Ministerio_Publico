@@ -79,11 +79,6 @@ class MainActivity : AppCompatActivity(){
 
         //variables para filtrar tickets
         var flagFilter = false
-        var checkBoxNewTicket = false
-        var checkBoxAssignedTicket = false
-        var checkBoxPlannedTicket = false
-        var checkBoxWaitTicket = false
-        var checkBoxCloseTicket = false
         var checkNewTicket: String = "0"
         var checkAssignedTicket: String = "0"
         var checkPlannedTicket: String = "0"
@@ -117,18 +112,12 @@ class MainActivity : AppCompatActivity(){
         }
     }
 
-    //lateinit var jsonTicketResponse: JSONObject
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         setSupportActionBar(binding.appBarMain.toolbar)
-        /*binding.appBarMain.fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
-        }*/
 
         val drawerLayout: DrawerLayout = binding.drawerLayout
         val navView: NavigationView = binding.navView
@@ -203,6 +192,7 @@ class MainActivity : AppCompatActivity(){
             flagTicketSort = true
             flagFilter = false
             flagCalendar = false
+            flag_requesterSearch = false
             checkNewTicket = "0"
             checkAssignedTicket = "0"
             checkPlannedTicket = "0"
@@ -267,43 +257,55 @@ class MainActivity : AppCompatActivity(){
 
             //binding.appBarMain.incMdfcfr.llyBgMdfcfr.isVisible = true
         }
-        //boton dia inicio del calendario
+
+        //instanciamos el calendario
         val calendarView: CalendarView = binding.appBarMain.includeModalCalendario.calendarView
         val sdf = SimpleDateFormat("dd/MM/yyyy", Locale("es", "ES"))//obtenemos fecha actual
         sdf.timeZone = TimeZone.getTimeZone("UTC-5")
         val currentdate = sdf.format(Date()).replace("/",",")
         val textElements: ArrayList<String> = currentdate.split(",") as ArrayList
         val today = "${textElements[2]}/${textElements[1]}/${textElements[0]}"
-        Log.i("mensaje fechaObtenida","$today")
+        //Log.i("mensaje fechaObtenida","$today")
         val calendar = Calendar.getInstance()
         calendar.set(textElements[2].toInt(),textElements[1].toInt()-1,textElements[0].toInt())
         calendarView.maxDate = calendar.timeInMillis//asignamos la fecha maxima que puede seleccionar
-        calendarView.setOnDateChangeListener { calendarView, i, i2, i3 ->
 
+        //boton dia inicio del calendario
+        calendarView.setOnDateChangeListener { calendarView, year, month, day ->
             binding.appBarMain.includeModalCalendario.btnStarDay.setOnClickListener {
+
                 ultModifyEnd = currentDate()
-                val i2_ = i2+1//se le tiene que aumentar 1 ya que devuelve con un mes de retraso
+                val month1 = month + 1//se le tiene que aumentar 1 ya que devuelve con un mes de retraso
                 binding.appBarMain.includeModalCalendario.btnAceptarFecha.isEnabled = true
                 binding.appBarMain.includeModalCalendario.btnEndDay.isEnabled = true
 
                 binding.appBarMain.includeModalCalendario.fechaStart.text =
-                    "Dia Inicio: $i3/$i2_/$i"
-                utlModifyStar = "$i-$i2_-$i3"
+                    "Dia Inicio: $day/$month1/$year"
+                utlModifyStar = "$year-$month1-$day"
                 //Log.i("mensaje fechaInicia","$utlModifyStar")
             }
             binding.appBarMain.includeModalCalendario.btnEndDay.setOnClickListener {
-                val i2_ = i2+1//se le tiene que aumentar 1 ya que devuelve con un mes de retraso
-                //binding.appBarMain.includeModalCalendario.imgDelete.isVisible = true
-                binding.appBarMain.includeModalCalendario.fechaEnd.text =
-                    "   Dia Fin: $i3/$i2_/$i"
-                ultModifyEnd = "$i-$i2_-$i3"
-                //Log.i("mensaje fechaFin","$ultModifyEnd")
+                var arrayDate = utlModifyStar.split("-")
+                val month1 = month+1//se le tiene que aumentar 1 ya que devuelve con un mes de retraso
+                Log.i("mensaje date","$arrayDate")
+                Log.i("mensaje day","$day > ${arrayDate[2]} ")
+                Log.i("mensaje month","$month1 >= ${arrayDate[1]} ")
+                Log.i("mensaje year","$year >= ${arrayDate[0]} ")//TODO: no esta obteniendo el dia actual
+                if (day > arrayDate[2].toInt() && month1 >= arrayDate[1].toInt() && year >= arrayDate[0].toInt()){ //comparamos el dia de la fehca ya escogida con el dia fin que se esta escogiendo
+                    binding.appBarMain.includeModalCalendario.fechaEnd.text =
+                        "   Dia Fin: $day/$month1/$year"
+                    ultModifyEnd = "$year-$month1-$day"
+
+                }else{
+                    Toast.makeText(this, "no puedes escoger una fecha menor a la fecha de inicio que escogiste", Toast.LENGTH_LONG).show()
+                }
             }
         }
+        //boton para confirmar rango de fechas
         binding.appBarMain.includeModalCalendario.btnAceptarFecha.setOnClickListener {
-
             binding.appBarMain.includeModalCalendario.LinearLayoutFiltroCalendario.isVisible = false
             if (flagUltimaModificacion){
+                binding.appBarMain.includeFiltroRight.LinearLayoutActivityFiltroRight.isVisible = false
                 //flag tipos de filtro
                 flagCalendar = true
                 flagTicketSort = false
@@ -718,7 +720,7 @@ class MainActivity : AppCompatActivity(){
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
 
-    //sobreescribimos el dipararador del teclado
+    //sobreescribimos el dipararador del teclado virtual
     override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
         if (currentFocus != null) {
             val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
