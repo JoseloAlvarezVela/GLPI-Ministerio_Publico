@@ -140,13 +140,14 @@
                     android:orientation="vertical">
 
                     <Button
-                        android:id="@+id/btn_bs_actfr"
+                        android:id="@+id/btnTimeToSolveTask"
                         android:layout_width="140dp"
                         android:layout_height="35dp"
                         android:background="@drawable/esq_redondeada_gris"
-                        android:drawableLeft="@drawable/ic_reloj"
+                        android:drawableLeft="@drawable/ic_reloj_cronometro"
                         android:fontFamily="@font/averia_sans_libre_light"
-                        android:text="12:15 pm."
+                        android:text="5 minutos"
+                        android:textAllCaps="false"
                         android:textColor="#5E5959"
                         android:textSize="12sp"
                         app:backgroundTint="#ECECEC" />
@@ -517,5 +518,15 @@
             android:layout_height="wrap_content"
             android:text="Button" />
     </LinearLayout>
+
+    <include
+        layout="@layout/modal_time_to_solve_task"
+        android:id="@+id/includeTimeToSolveTask"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/linearLayout4" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

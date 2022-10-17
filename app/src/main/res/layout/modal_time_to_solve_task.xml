@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/modalTimeToSolveTask"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#FFFFFF"
+    android:clickable="true"
+    android:orientation="vertical"
+    android:visibility="gone">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/degradado_azul">
+
+        <Button
+            android:id="@+id/btnCloseModalTimeToSolveTask"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="4"
+            android:background="?android:attr/selectableItemBackground"
+            android:fontFamily="@font/averia_libre_light"
+            android:textColor="#FFFFFF"
+            app:icon="@drawable/ic_atras"
+            app:iconGravity="textStart"
+            app:iconTint="#FFFFFF" />
+
+        <TextView
+            android:id="@+id/textView62"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0.5"
+            android:fontFamily="@font/averia_libre_light"
+            android:gravity="center_vertical"
+            android:paddingLeft="10sp"
+            android:text="Establecer tiempo para resolver tarea"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            app:drawableTint="#000000" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btn5min"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10sp"
+        android:text="5 minutos"
+        android:textAllCaps="false"
+        android:textColor="#3A3636"
+        app:backgroundTint="#ccc" />
+
+    <Button
+        android:id="@+id/btn10min"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10sp"
+        android:text="10 minutos"
+        android:textAllCaps="false"
+        android:textColor="#3A3636"
+        app:backgroundTint="#ccc" />
+
+    <Button
+        android:id="@+id/btn15min"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10sp"
+        android:text="15 minutos"
+        android:textAllCaps="false"
+        android:textColor="#3A3636"
+        app:backgroundTint="#ccc" />
+
+    <Button
+        android:id="@+id/btn20min"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10sp"
+        android:text="20 minutos"
+        android:textAllCaps="false"
+        android:textColor="#3A3636"
+        app:backgroundTint="#ccc" />
+
+    <Button
+        android:id="@+id/btn25min"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10sp"
+        android:text="25 minutos"
+        android:textAllCaps="false"
+        android:textColor="#3A3636"
+        app:backgroundTint="#ccc" />
+
+    <Button
+        android:id="@+id/btn30min"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10sp"
+        android:text="30 minutos"
+        android:textAllCaps="false"
+        android:textColor="#3A3636"
+        app:backgroundTint="#ccc" />
+
+    <Button
+        android:id="@+id/btn35min"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10sp"
+        android:text="35 minutos"
+        android:textAllCaps="false"
+        android:textColor="#3A3636"
+        app:backgroundTint="#ccc" />
+
+    <Button
+        android:id="@+id/btn40min"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10sp"
+        android:text="40 minutos"
+        android:textAllCaps="false"
+        android:textColor="#3A3636"
+        app:backgroundTint="#ccc" />
+
+    <Button
+        android:id="@+id/btn45min"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10sp"
+        android:text="45 minutos"
+        android:textAllCaps="false"
+        android:textColor="#3A3636"
+        app:backgroundTint="#ccc" />
+
+    <Button
+        android:id="@+id/btn50min"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10sp"
+        android:text="50 minutos"
+        android:textAllCaps="false"
+        android:textColor="#3A3636"
+        app:backgroundTint="#ccc" />
+
+    <Button
+        android:id="@+id/btn55min"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10sp"
+        android:text="55 minutos"
+        android:textAllCaps="false"
+        android:textColor="#3A3636"
+        app:backgroundTint="#ccc" />
+
+    <Button
+        android:id="@+id/btn60min"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10sp"
+        android:text="60 minutos"
+        android:textAllCaps="false"
+        android:textColor="#3A3636"
+        app:backgroundTint="#ccc" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="#5999D1"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnCloseUnderModalTimeToSolveTask"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="?android:attr/selectableItemBackground"
+            android:fontFamily="@font/averia_sans_libre_light"
+            android:text="Salir"
+            android:textColor="#FFFFFF"
+            android:textSize="12sp" />
+    </LinearLayout>
+</LinearLayout>

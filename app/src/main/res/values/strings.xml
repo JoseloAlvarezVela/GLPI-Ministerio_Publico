@@ -15,9 +15,9 @@
     <string name="fragment_mispet_fecha">26 de jul. 2022 – 6:14 pm</string>
 
     <!--    string para nombre de los navs-->
-    <string name="menu_mis_peticiones">Mis Peticiones</string>
-    <string name="menu_MisSolicitudes">Mis Solicitudes</string>
-    <string name="menu_MisIncidencias">Mis Incidencias</string>
+    <string name="menu_mis_peticiones">Peticiones</string>
+    <string name="menu_MisSolicitudes">Solicitudes</string>
+    <string name="menu_MisIncidencias">Incidencias</string>
 
 
     <!--    strign para navigation drawer-->

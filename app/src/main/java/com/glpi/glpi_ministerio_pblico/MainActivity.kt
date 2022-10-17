@@ -67,6 +67,9 @@ class MainActivity : AppCompatActivity(){
         lateinit var jsonObjectResponse: JSONObject
         lateinit var jsonArrayResponse: JSONArray
 
+        //variable modo privado de ticket en seguimiento
+        lateinit var privateImgViewPadLock: String
+
         var flag = false
         var flag_edtFindTicketID = false
 
@@ -154,6 +157,12 @@ class MainActivity : AppCompatActivity(){
         binding.appBarMain.includeFiltroRight.btnApplyFilter.setOnClickListener {
             if (binding.appBarMain.includeFiltroRight.edtFindTicketID.text.toString() != ""){
                 flag_edtFindTicketID = true
+                binding.appBarMain.includeFiltroRight.checkBoxNewTicket.isChecked = false
+                binding.appBarMain.includeFiltroRight.checkBoxAssignedTicket.isChecked = false
+                binding.appBarMain.includeFiltroRight.checkBoxPlannedTicket.isChecked = false
+                binding.appBarMain.includeFiltroRight.checkBoxWaitTicket.isChecked = false
+                binding.appBarMain.includeFiltroRight.checkBoxSolvedTicket.isChecked = false
+                binding.appBarMain.includeFiltroRight.checkBoxCloseTicket.isChecked = false
                 edtFindTicketID = binding.appBarMain.includeFiltroRight.edtFindTicketID.text.toString()
                 //Toast.makeText(this, ""+binding.appBarMain.includeFiltroRight.edtFindTicketID.text.toString(), Toast.LENGTH_LONG).show()
             }else{
@@ -199,10 +208,11 @@ class MainActivity : AppCompatActivity(){
             checkWaitTicket = "0"
             checkSolvedTicket = "0"
             checkCloseTicket = "0"
-            binding.appBarMain.includeFiltroRight.checkBoxNewTicket.isChecked = false
-            binding.appBarMain.includeFiltroRight.checkBoxAssignedTicket.isChecked = false
-            binding.appBarMain.includeFiltroRight.checkBoxPlannedTicket.isChecked = false
+            binding.appBarMain.includeFiltroRight.checkBoxNewTicket.isChecked = true
+            binding.appBarMain.includeFiltroRight.checkBoxAssignedTicket.isChecked = true
+            binding.appBarMain.includeFiltroRight.checkBoxPlannedTicket.isChecked = true
             binding.appBarMain.includeFiltroRight.checkBoxWaitTicket.isChecked = false
+            binding.appBarMain.includeFiltroRight.checkBoxSolvedTicket.isChecked = false
             binding.appBarMain.includeFiltroRight.checkBoxCloseTicket.isChecked = false
 
             //cerramos y volvemos a abrir el fragment para recargar su contenido
@@ -288,13 +298,13 @@ class MainActivity : AppCompatActivity(){
                 var arrayDate = utlModifyStar.split("-")
                 val month1 = month+1//se le tiene que aumentar 1 ya que devuelve con un mes de retraso
                 Log.i("mensaje date","$arrayDate")
-                Log.i("mensaje day","$day > ${arrayDate[2]} ")
+                Log.i("mensaje day","$day >= ${arrayDate[2]} ")
                 Log.i("mensaje month","$month1 >= ${arrayDate[1]} ")
                 Log.i("mensaje year","$year >= ${arrayDate[0]} ")//TODO: no esta obteniendo el dia actual
-                if (day > arrayDate[2].toInt() && month1 >= arrayDate[1].toInt() && year >= arrayDate[0].toInt()){ //comparamos el dia de la fehca ya escogida con el dia fin que se esta escogiendo
+                if (day >= arrayDate[2].toInt() && month1 >= arrayDate[1].toInt() && year >= arrayDate[0].toInt()){ //comparamos el dia de la fehca ya escogida con el dia fin que se esta escogiendo
                     binding.appBarMain.includeModalCalendario.fechaEnd.text =
                         "   Dia Fin: $day/$month1/$year"
-                    ultModifyEnd = "$year-$month1-$day"
+                    ultModifyEnd = "$year-$month1-${day+1}"
 
                 }else{
                     Toast.makeText(this, "no puedes escoger una fecha menor a la fecha de inicio que escogiste", Toast.LENGTH_LONG).show()
@@ -303,9 +313,17 @@ class MainActivity : AppCompatActivity(){
         }
         //boton para confirmar rango de fechas
         binding.appBarMain.includeModalCalendario.btnAceptarFecha.setOnClickListener {
+            //escondemos el filtro right
+            binding.appBarMain.includeFiltroRight.LinearLayoutActivityFiltroRight.isVisible = false
+            //flaf estado de peticion
+            binding.appBarMain.includeFiltroRight.checkBoxNewTicket.isChecked = false
+            binding.appBarMain.includeFiltroRight.checkBoxAssignedTicket.isChecked = false
+            binding.appBarMain.includeFiltroRight.checkBoxPlannedTicket.isChecked = false
+            binding.appBarMain.includeFiltroRight.checkBoxWaitTicket.isChecked = false
+            binding.appBarMain.includeFiltroRight.checkBoxSolvedTicket.isChecked = false
+            binding.appBarMain.includeFiltroRight.checkBoxCloseTicket.isChecked = false
             binding.appBarMain.includeModalCalendario.LinearLayoutFiltroCalendario.isVisible = false
             if (flagUltimaModificacion){
-                binding.appBarMain.includeFiltroRight.LinearLayoutActivityFiltroRight.isVisible = false
                 //flag tipos de filtro
                 flagCalendar = true
                 flagTicketSort = false
@@ -373,6 +391,14 @@ class MainActivity : AppCompatActivity(){
                 binding.appBarMain.includeFiltroRight.LinearLayoutActivityFiltroRight.isVisible = false
                 binding.appBarMain.incMdbsfr.llyMdbsfr.isVisible = false
                 binding.appBarMain.llyBackgroudAbm.isVisible = false
+                //flaf estado de peticion
+                binding.appBarMain.includeFiltroRight.checkBoxNewTicket.isChecked = false
+                binding.appBarMain.includeFiltroRight.checkBoxAssignedTicket.isChecked = false
+                binding.appBarMain.includeFiltroRight.checkBoxPlannedTicket.isChecked = false
+                binding.appBarMain.includeFiltroRight.checkBoxWaitTicket.isChecked = false
+                binding.appBarMain.includeFiltroRight.checkBoxSolvedTicket.isChecked = false
+                binding.appBarMain.includeFiltroRight.checkBoxCloseTicket.isChecked = false
+
                 requesterSearch = binding.appBarMain.incMdbsfr.tvRequesterSearch.text
                 //cerramos y volvemos a abrir el fragment para recargar su contenido
                 replaceFragment(MisPeticionesFragment())

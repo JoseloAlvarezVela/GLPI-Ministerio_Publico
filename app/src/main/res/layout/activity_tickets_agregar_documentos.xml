@@ -108,6 +108,15 @@
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent" />
 
+    <ImageView
+        android:id="@+id/imgViewDocument"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout005"
+        tools:srcCompat="@tools:sample/avatars" />
+
     <include
         android:id="@+id/include_bggris_acttadddoc"
         layout="@layout/background_gris"

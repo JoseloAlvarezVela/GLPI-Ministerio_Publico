@@ -77,14 +77,19 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
         binding = ActivityNavFooterTicketsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        progressBarTicketConversation = binding.progressBarTicketConversation
+
         volleyRequestIdRecipient() //datos del operador
         volleyRequestIdTechnician() //datos del tecnico
         volleyRequestIdRequester() //datos del solicitante
         volleyRequestPost(urlApi_TicketID)
+
         activityHeader()
         btnPetition()
         btnFabs()
         toggleButtonFooter()
+
+        binding.ticketConversation.isVisible = true
     }
 
     private fun btnFabs(){
@@ -124,7 +129,7 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
 
         //INICIO eventos click de fab_opciones
         binding.includeFabs.btnFabTareas.setOnClickListener {
-            val intentAddTask = Intent(this@NavFooterTicketsActivity, TicketsAgregarTareaActivity::class.java)
+            val intentAddTask = Intent(this, TicketsAgregarTareaActivity::class.java)
             val bundle = Bundle()
             bundle.putString("TicketID", TicketID_)
             intentAddTask.putExtras(bundle)
@@ -134,7 +139,7 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
             hideFabs()
         }
         binding.includeFabs.btnFabSeguimiento.setOnClickListener {
-            val intentAddFollowup = Intent(this@NavFooterTicketsActivity, TicketsAgregarSeguimientoActivity::class.java)
+            val intentAddFollowup = Intent(this, TicketsAgregarSeguimientoActivity::class.java)
             val bundle = Bundle()
             bundle.putString("TicketID", TicketID_)
             intentAddFollowup.putExtras(bundle)
@@ -144,7 +149,7 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
             hideFabs()
         }
         binding.includeFabs.btnFabSolucion.setOnClickListener {
-            val intentAddSolution = Intent(this@NavFooterTicketsActivity, TicketsAgregarSolucionActivity::class.java)
+            val intentAddSolution = Intent(this, TicketsAgregarSolucionActivity::class.java)
             val bundle = Bundle()
             bundle.putString("TicketID", TicketID_)
             intentAddSolution.putExtras(bundle)
@@ -154,7 +159,7 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
             hideFabs()
         }
         binding.includeFabs.btnFabDocumentos.setOnClickListener {
-            val intentAddDocument = Intent(this@NavFooterTicketsActivity, TicketsAgregarDocumentosActivity::class.java)
+            val intentAddDocument = Intent(this, TicketsAgregarDocumentosActivity::class.java)
             val bundle = Bundle()
             bundle.putString("TicketID", TicketID_)
             intentAddDocument.putExtras(bundle)
@@ -294,7 +299,7 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
     }
 
     private fun volleyRequestPost(urlApi_: String) {
-        progressBarTicketConversation = binding.progressBarTicketConversation
+
 
         val bundle = intent.extras
         val TicketID_ = bundle!!.getString("TicketID")
@@ -303,8 +308,6 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
         val CurrentTime_ = bundle!!.getString("CurrentTime")
         val ModificationDate = bundle.getString("ModificationDate")
         val creationDateTicket = bundle!!.getString("creationDateTicket")
-
-
 
         jsonObjectResponse = JSONObject()
 
@@ -393,6 +396,7 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
 
                             dataModelArrayListConverdation.sortBy { it.getConversationCreation() }
                             dataModelArrayListConverdation.add(playerModel)
+
                         }else{
                             /*Log.i("mensaje creacionString",""+jsonObjectResponse.getJSONObject(iterador.toString()))
                             tasksIterador = jsonObjectResponse.getJSONObject(iterador.toString())
@@ -402,6 +406,9 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
                             //----------------------------------------------------------------------------
                         }
                     }
+
+                    progressBarTicketConversation.isVisible = false
+                    binding.includeTicketsHistorico.layoutHistorico.isVisible = true
                     setupRecyclerView()
                 } catch (e: Exception) {
                     e.printStackTrace()
@@ -417,13 +424,10 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
                 return params
             }
         }
-        Handler().postDelayed({
-            progressBarTicketConversation!!.isVisible = false
-            binding.ticketConversation.isVisible = true
-        },2000/* 5 second */)
         this?.let {
             VolleySingleton.getInstance(this).addToRequestQueue(stringRequestDataTickets)
         }
+
         DataToTicketsHistoricoActivity()
     }
 
@@ -543,6 +547,8 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
         //SECTION TASKS
         binding.includeTicketsHistorico.txtTaskNameLogin.text = taskName
         binding.includeTicketsHistorico.txtTaskDescription.text = taskDescription
+
+
     }
 
     private fun volleyRequestIdRecipient(){

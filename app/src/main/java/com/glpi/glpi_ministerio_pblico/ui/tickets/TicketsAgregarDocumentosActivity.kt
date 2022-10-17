@@ -1,12 +1,14 @@
 package com.glpi.glpi_ministerio_pblico.ui.tickets
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.MediaStore
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import com.glpi.glpi_ministerio_pblico.MainActivity
 import com.glpi.glpi_ministerio_pblico.databinding.ActivityTicketsAgregarDocumentosBinding
+
 
 class TicketsAgregarDocumentosActivity : AppCompatActivity() {
     private lateinit var binding: ActivityTicketsAgregarDocumentosBinding
@@ -40,11 +42,15 @@ class TicketsAgregarDocumentosActivity : AppCompatActivity() {
     }
     //FIN - funcion que contiene botones en la cabecera del layout
 
+
     //INICIO - fabs que abre camara del celular y archivos del celular
     private fun btn_fabs() {
         var click_desplegar = false
         //archivos del celular
         binding.fabArchivoActtadddoc.setOnClickListener {
+            val gallery = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI)
+            startActivityForResult(gallery, 100)//TODO: CONTINUAR ACA
+
             Toast.makeText(this, "abrir archivos del celular", Toast.LENGTH_SHORT).show()
         }
         //camara de celular

@@ -41,6 +41,22 @@ class TicketsAgregarSeguimientoActivity : AppCompatActivity(), RecycleView_Adapt
 
         volleyRequestFollowupTemplates(MainActivity.urlApi_FollowupTemplates)
 
+        var flagImgViewPadLock = false
+        binding.imgViewPadLock.setOnClickListener {
+            if(flagImgViewPadLock){
+                MainActivity.privateImgViewPadLock = 0.toString()
+                binding.imgViewPadLock.setImageResource(R.drawable.ic_candado_abierto)
+                flagImgViewPadLock = false
+                Log.i("mensaje padLock","${MainActivity.privateImgViewPadLock}")
+            }else{
+                MainActivity.privateImgViewPadLock = 1.toString()
+                binding.imgViewPadLock.setImageResource(R.drawable.ic_candado_cerrado)
+                flagImgViewPadLock = true
+                Log.i("mensaje padLock","${MainActivity.privateImgViewPadLock}")
+            }
+
+        }
+
         if (flagTasks){
             val intent = intent.extras
             val ticketId = intent!!.getString("ticketId")

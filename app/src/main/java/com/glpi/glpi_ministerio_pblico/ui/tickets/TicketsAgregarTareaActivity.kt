@@ -62,7 +62,110 @@ class TicketsAgregarTareaActivity : AppCompatActivity(), RecycleView_Adapter_Tas
         btn_atras()
         btn_agregarTarea()
         btn_agregarCat()
+        btnTimeToSolveTask()
 
+    }
+    
+    private fun btnTimeToSolveTask(){
+        binding.btnTimeToSolveTask.setOnClickListener {
+            binding.LayoutBackgroudAgregarTarea.isVisible = true
+            binding.includeTimeToSolveTask.modalTimeToSolveTask.isVisible = true
+            val timer = 5
+            binding.btnTimeToSolveTask.text = "$timer minutos"
+            //Log.i("mensaje TimeToSolveTask","${ binding.btnTimeToSolveTask.text.split(" ")}")
+        }
+        binding.includeTimeToSolveTask.btnCloseUnderModalTimeToSolveTask.setOnClickListener {
+            binding.includeTimeToSolveTask.modalTimeToSolveTask.isVisible = false
+            binding.LayoutBackgroudAgregarTarea.isVisible = false
+        }
+        binding.includeTimeToSolveTask.btnCloseModalTimeToSolveTask.setOnClickListener {
+            binding.includeTimeToSolveTask.modalTimeToSolveTask.isVisible = false
+            binding.LayoutBackgroudAgregarTarea.isVisible = false
+        }
+        binding.includeTimeToSolveTask.btn5min.setOnClickListener {
+            binding.includeTimeToSolveTask.modalTimeToSolveTask.isVisible = false
+            binding.LayoutBackgroudAgregarTarea.isVisible = false
+            binding.btnTimeToSolveTask.text = binding.includeTimeToSolveTask.btn5min.text
+            val timer = binding.btnTimeToSolveTask.text.split(" ")
+            Log.i("mensaje newTimer", timer[0])
+        }
+        binding.includeTimeToSolveTask.btn10min.setOnClickListener {
+            binding.includeTimeToSolveTask.modalTimeToSolveTask.isVisible = false
+            binding.LayoutBackgroudAgregarTarea.isVisible = false
+            binding.btnTimeToSolveTask.text = binding.includeTimeToSolveTask.btn10min.text
+            val timer = binding.btnTimeToSolveTask.text.split(" ")
+            Log.i("mensaje newTimer", timer[0])
+        }
+        binding.includeTimeToSolveTask.btn15min.setOnClickListener {
+            binding.includeTimeToSolveTask.modalTimeToSolveTask.isVisible = false
+            binding.LayoutBackgroudAgregarTarea.isVisible = false
+            binding.btnTimeToSolveTask.text = binding.includeTimeToSolveTask.btn15min.text
+            val timer = binding.btnTimeToSolveTask.text.split(" ")
+            Log.i("mensaje newTimer", timer[0])
+        }
+        binding.includeTimeToSolveTask.btn20min.setOnClickListener {
+            binding.includeTimeToSolveTask.modalTimeToSolveTask.isVisible = false
+            binding.LayoutBackgroudAgregarTarea.isVisible = false
+            binding.btnTimeToSolveTask.text = binding.includeTimeToSolveTask.btn20min.text
+            val timer = binding.btnTimeToSolveTask.text.split(" ")
+            Log.i("mensaje newTimer", timer[0])
+        }
+        binding.includeTimeToSolveTask.btn25min.setOnClickListener {
+            binding.includeTimeToSolveTask.modalTimeToSolveTask.isVisible = false
+            binding.LayoutBackgroudAgregarTarea.isVisible = false
+            binding.btnTimeToSolveTask.text = binding.includeTimeToSolveTask.btn25min.text
+            val timer = binding.btnTimeToSolveTask.text.split(" ")
+            Log.i("mensaje newTimer", timer[0])
+        }
+        binding.includeTimeToSolveTask.btn30min.setOnClickListener {
+            binding.includeTimeToSolveTask.modalTimeToSolveTask.isVisible = false
+            binding.LayoutBackgroudAgregarTarea.isVisible = false
+            binding.btnTimeToSolveTask.text = binding.includeTimeToSolveTask.btn30min.text
+            val timer = binding.btnTimeToSolveTask.text.split(" ")
+            Log.i("mensaje newTimer", timer[0])
+        }
+        binding.includeTimeToSolveTask.btn35min.setOnClickListener {
+            binding.includeTimeToSolveTask.modalTimeToSolveTask.isVisible = false
+            binding.LayoutBackgroudAgregarTarea.isVisible = false
+            binding.btnTimeToSolveTask.text = binding.includeTimeToSolveTask.btn35min.text
+            val timer = binding.btnTimeToSolveTask.text.split(" ")
+            Log.i("mensaje newTimer", timer[0])
+        }
+        binding.includeTimeToSolveTask.btn40min.setOnClickListener {
+            binding.includeTimeToSolveTask.modalTimeToSolveTask.isVisible = false
+            binding.LayoutBackgroudAgregarTarea.isVisible = false
+            binding.btnTimeToSolveTask.text = binding.includeTimeToSolveTask.btn40min.text
+            val timer = binding.btnTimeToSolveTask.text.split(" ")
+            Log.i("mensaje newTimer", timer[0])
+        }
+        binding.includeTimeToSolveTask.btn45min.setOnClickListener {
+            binding.includeTimeToSolveTask.modalTimeToSolveTask.isVisible = false
+            binding.LayoutBackgroudAgregarTarea.isVisible = false
+            binding.btnTimeToSolveTask.text = binding.includeTimeToSolveTask.btn45min.text
+            val timer = binding.btnTimeToSolveTask.text.split(" ")
+            Log.i("mensaje newTimer", timer[0])
+        }
+        binding.includeTimeToSolveTask.btn50min.setOnClickListener {
+            binding.includeTimeToSolveTask.modalTimeToSolveTask.isVisible = false
+            binding.LayoutBackgroudAgregarTarea.isVisible = false
+            binding.btnTimeToSolveTask.text = binding.includeTimeToSolveTask.btn50min.text
+            val timer = binding.btnTimeToSolveTask.text.split(" ")
+            Log.i("mensaje newTimer", timer[0])
+        }
+        binding.includeTimeToSolveTask.btn55min.setOnClickListener {
+            binding.includeTimeToSolveTask.modalTimeToSolveTask.isVisible = false
+            binding.LayoutBackgroudAgregarTarea.isVisible = false
+            binding.btnTimeToSolveTask.text = binding.includeTimeToSolveTask.btn55min.text
+            val timer = binding.btnTimeToSolveTask.text.split(" ")
+            Log.i("mensaje newTimer", timer[0])
+        }
+        binding.includeTimeToSolveTask.btn60min.setOnClickListener {
+            binding.includeTimeToSolveTask.modalTimeToSolveTask.isVisible = false
+            binding.LayoutBackgroudAgregarTarea.isVisible = false
+            binding.btnTimeToSolveTask.text = binding.includeTimeToSolveTask.btn60min.text
+            val timer = binding.btnTimeToSolveTask.text.split(" ")
+            Log.i("mensaje newTimer", timer[0])
+        }
     }
 
     private fun ticketInfo(){

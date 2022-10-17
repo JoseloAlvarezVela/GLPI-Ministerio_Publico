@@ -117,7 +117,7 @@ class LoginActivity : AppCompatActivity() {
             }) {
             override fun getParams(): Map<String, String>? {
                 val params: MutableMap<String, String> = HashMap()
-                params.put("session_token", prefer.getToken())
+                params["session_token"] = prefer.getToken()
                 return params
             }
         }
@@ -127,7 +127,7 @@ class LoginActivity : AppCompatActivity() {
             progressBarAction_!!.isVisible = false
             progressBarText_.isVisible = false
             layoutLogin_.isVisible = true
-        },10000/* 5 second */)
+        },10000/* 10 second */)
         stringRequest.retryPolicy = DefaultRetryPolicy(
             10000,
             DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
