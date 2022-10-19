@@ -17,6 +17,7 @@ import com.android.volley.toolbox.StringRequest
 import com.glpi.glpi_ministerio_pblico.MainActivity
 import com.glpi.glpi_ministerio_pblico.MainActivity.Companion.decodeHtml
 import com.glpi.glpi_ministerio_pblico.MainActivity.Companion.flagEdit
+import com.glpi.glpi_ministerio_pblico.MainActivity.Companion.urlApi_TasksCategory
 import com.glpi.glpi_ministerio_pblico.MainActivity.Companion.urlApi_TasksTemplate
 import com.glpi.glpi_ministerio_pblico.R
 import com.glpi.glpi_ministerio_pblico.VolleySingleton
@@ -297,7 +298,7 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
 
     private fun volleyRequestDataTasksCategory() {
         val stringRequestDataTickets = object : StringRequest(Method.POST,
-            urlApi_TasksTemplate, Response.Listener { response ->
+            urlApi_TasksCategory, Response.Listener { response ->
                 try {
                     dataModelArrayListTasksCategory = ArrayList()
 
@@ -307,7 +308,7 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
                         val nTemplate = jsonObjectResponse.getJSONObject(iterador)
                         val player = Data_TasksCategory()
                         player.setNameTasksCategories(nTemplate.getString("NOMBRE"))
-                        player.setContentTasksCategories(nTemplate.getString("CONTENIDO"))
+                        player.setContentTasksCategories(nTemplate.getString("COMPLETO"))
                         iterador++
                         Log.i("mensaje posicion",""+nTemplate.getString("NOMBRE"))
                         dataModelArrayListTasksCategory.add(player)

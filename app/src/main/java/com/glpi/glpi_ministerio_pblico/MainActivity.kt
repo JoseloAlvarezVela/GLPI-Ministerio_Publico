@@ -61,6 +61,7 @@ class MainActivity : AppCompatActivity(){
         val urlApi_SortByRequester: String = "http://181.176.145.174:8080/api/ticket_sorts/SortByRequester"
         val urlApi_TasksUsers: String = "http://181.176.145.174:8080/api/task_users/" //para consultar id de: user,technician,requester
         val urlApi_TasksTemplate: String = "http://181.176.145.174:8080/api/task_templates"
+        val urlApi_TasksCategory: String = "http://181.176.145.174:8080/api/task_categories"
         val urlApi_FollowupTemplates: String = "http://181.176.145.174:8080/api/followup_templates"
 
         //datos del usuario logeado
