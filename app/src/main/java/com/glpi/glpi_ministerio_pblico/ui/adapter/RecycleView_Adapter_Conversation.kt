@@ -22,7 +22,7 @@ class RecyclerAdapter(
     private val TICKET_ASSIGNED = 1
 
     interface onConversationClickListener{
-        fun onEditClick(glpiTasksDescripcion: String, glpiTasksTipo: String)
+        fun onEditClick(ticketInfoPrivate: String, glpiTasksDescripcion: String, glpiTasksTipo: String)
         fun onFabClick()
     }
 
@@ -77,6 +77,9 @@ class RecyclerAdapter(
             val stringCreationDate = "Fecha Cración ${item.getTicketSortsCreationDate()}"
             itemView.findViewById<TextView>(R.id.txt_currentTime).text =
                 stringCreationDate
+
+
+
             Log.i("mensajemodi",""+item.getTicketSortsCreationDate())
             if (item.getTicketSortsCreationDate() != item.getTicketSortsModificationDate()){
                 itemView.findViewById<TextView>(R.id.txt_modificationDate).isVisible = true
@@ -97,7 +100,7 @@ class RecyclerAdapter(
                 itemView.findViewById<TextView>(R.id.txt_creationTicketDate).text =
                     "${item.getTicketSortsCreationDate()} -> ${item.getTaskUsersEstimateDuration()}"
                 itemView.findViewById<TextView>(R.id.txt_estimatedHour).text = item.getTaskUsersMillisToHours()
-                itemView.findViewById<TextView>(R.id.txt_timeResolved).text = item.getTaskUsersMillisToHours()//TODO: borrar
+                //itemView.findViewById<TextView>(R.id.txt_timeResolved).text = item.getTaskUsersMillisToHours()
                 itemView.findViewById<TextView>(R.id.tv_conversation_estado).isVisible = false
                 val param = itemView.findViewById<LinearLayout>(R.id.ticket_estado_conversation).layoutParams as ViewGroup.MarginLayoutParams
                 param.setMargins(0,10,100,10)
@@ -131,13 +134,13 @@ class RecyclerAdapter(
             itemView.findViewById<TextView>(R.id.txt_currentTime_conversation).text =
                 item.getConversationCreation().toString()
 
-
             if(item.getGlpiTasksTipo() == "SOLUTION"){
                 itemView.findViewById<ImageButton>(R.id.btn_edit).isVisible = false
 
             }else{
                 itemView.findViewById<ImageButton>(R.id.btn_edit).setOnClickListener {
                     itemclickListener.onEditClick(
+                        item.getTicketInfo_Private(),
                         item.getGlpiTasksDescripcion(),
                         item.getGlpiTasksTipo()
                     )

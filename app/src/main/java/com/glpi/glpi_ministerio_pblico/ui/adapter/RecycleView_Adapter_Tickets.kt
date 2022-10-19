@@ -10,6 +10,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
+import com.glpi.glpi_ministerio_pblico.MainActivity
 import com.glpi.glpi_ministerio_pblico.R
 
 
@@ -103,10 +104,11 @@ class RecycleView_Adapter_Tickets(
         holder.txt_descripcionTicket.text = dataModelArrayList[position].getTicketSortsDescription()+"..."
 
         //-----------
-        holder.txt_Requester_Name.text = "Solicitante: null"
+        holder.txt_Requester_Name.text = "Solicitante: "+ dataModelArrayList[position].getTicketSortsNameByIdRequester()
 
         //-----------
-        holder.txt_Requester_Cargo.text = "Cargo: "+dataModelArrayList[position].getGlpiRequesterCargo()
+        holder.txt_Requester_Cargo.text = "Cargo: nulo"
+        //holder.txt_Requester_Cargo.text = "Cargo: "+dataModelArrayList[position].getGlpiRequesterCargo()
 
         //-----------
         holder.txt_glpi_currenttime.text = dataModelArrayList[position].getTicketSortsCreationDate()

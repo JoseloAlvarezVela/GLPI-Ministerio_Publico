@@ -24,4 +24,10 @@
         android:textSize="34sp"
         android:visibility="gone" />
 
+    <include
+        layout="@layout/not_found"
+        android:id="@+id/includeNotFound"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
 </FrameLayout>

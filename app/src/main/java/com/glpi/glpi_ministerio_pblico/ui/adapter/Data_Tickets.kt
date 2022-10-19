@@ -22,6 +22,8 @@ class Data_Tickets {
     private var ticketSortsModificationDate: String? = null
     //--------------------------------------------------
 
+    private var ticketSortsNameByIdRequester: String? = null
+
     private var taskUsersName: String? = null
     private var taskUsersPosition: String? = null //cargo
     private var taskUsersNameRequester: String? = null
@@ -42,10 +44,12 @@ class Data_Tickets {
     var glpiRequester_Cargo_: String? = null
     var GlpiTelefonoSolicitante_: String? = null
     //SECTION TASKS
+    var ticketInfoPrivate: String? = null
     var glpiTasksName_: String? = null
     var glpiTasksDescripcion_: String? = null
     var glpiTasksTipo_: String? = null
     var conversationCreation_: Date? = null
+
 
 
     /*Estos métodos getter y setter nos ayudarán a mantener los datos mientras
@@ -158,6 +162,14 @@ class Data_Tickets {
     }
 
     //----------datos solicitante------------------------
+    fun getTicketSortsNameByIdRequester(): String{
+        return  ticketSortsNameByIdRequester.toString()
+    }
+    fun setTicketSortsNameByIdRequester(ticketSortsNameByIdRequester_: String){
+        this.ticketSortsNameByIdRequester = ticketSortsNameByIdRequester_
+    }
+
+    //----------datos solicitante------------------------
     fun getTaskUsersNameRequester(): String{
         return taskUsersNameRequester.toString()
     }
@@ -240,12 +252,14 @@ class Data_Tickets {
     }
 
 
-
-
-
-
-
     //SECTION TASK
+    fun getTicketInfo_Private(): String{
+        return ticketInfoPrivate.toString()
+    }
+    fun setTicketInfo_Private(ticketInfoPrivate_: String){
+        this.ticketInfoPrivate = ticketInfoPrivate_
+    }
+
     fun getGlpiTasksName(): String{
         return glpiTasksName_.toString()
     }

@@ -16,7 +16,7 @@ import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.glpi.glpi_ministerio_pblico.MainActivity
 import com.glpi.glpi_ministerio_pblico.MainActivity.Companion.decodeHtml
-import com.glpi.glpi_ministerio_pblico.MainActivity.Companion.flag
+import com.glpi.glpi_ministerio_pblico.MainActivity.Companion.flagEdit
 import com.glpi.glpi_ministerio_pblico.MainActivity.Companion.urlApi_TasksTemplate
 import com.glpi.glpi_ministerio_pblico.VolleySingleton
 import com.glpi.glpi_ministerio_pblico.databinding.ActivityTicketsAgregarTareaBinding
@@ -41,7 +41,7 @@ class TicketsAgregarTareaActivity : AppCompatActivity(), RecycleView_Adapter_Tas
         binding = ActivityTicketsAgregarTareaBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        var flagTasks = flag
+        var flagTasks = flagEdit
         recyclerView = binding.includeModalPlantillaTarea.recyclerTasksTemplate
         //recyclerView = binding.recyclerTaskTemplate
 
@@ -52,10 +52,10 @@ class TicketsAgregarTareaActivity : AppCompatActivity(), RecycleView_Adapter_Tas
         if (flagTasks){
             val intent = intent.extras
             val ticketId = intent!!.getString("ticketId")
-            val tasksDescription = intent!!.getString("tasks_description","")
+            val tasksDescription = intent!!.getString("tasks_description")
             binding.tvIdTicket.text = "Petición #$ticketId"
             binding.edtTasksDescription.setText(tasksDescription)
-            flag = false
+            flagEdit = false
         }
 
         btn_fabs()

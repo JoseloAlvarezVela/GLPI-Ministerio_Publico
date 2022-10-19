@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.text.HtmlCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -99,6 +100,7 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.ontickteCl
                     MainActivity.checkWaitTicket,
                     MainActivity.checkSolvedTicket,
                     MainActivity.checkCloseTicket)
+
             }else if (MainActivity.flagCalendar){
                 if (MainActivity.flagCalendarUltModify){
                     Log.i("mensaje flag","${MainActivity.urlApi_SortByModDate} == SortByDate")
@@ -117,6 +119,7 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.ontickteCl
         /*Log.i("mensaje flagTicket","${MainActivity.flagTicketSort}")
         Log.i("mensaje flagfilter","${MainActivity.flagFilter}")
         Log.i("mensaje flagCalendar","${MainActivity.flagCalendar}")*/
+
 
 
         val root = binding.root
@@ -177,8 +180,13 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.ontickteCl
                     setupRecycler()
 
                 } catch (e: Exception) {
+                    MainActivity.flagNotFound = "true"
+                    if (MainActivity.flagNotFound == "true"){
+                        binding.recycler.isVisible = false
+                        binding.includeNotFound.notFount.isVisible = true
+                    }
                     e.printStackTrace()
-                    Toast.makeText(context, "token expirado_: $e", Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, "no hay datos para filtro aplicado: $e", Toast.LENGTH_LONG).show()
                     //Log.i("mensaje recycler e: ", "recycler ERROR: $e")
                 }
             }, Response.ErrorListener {
@@ -299,9 +307,12 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.ontickteCl
                         //obtenemos el id del tecnico(usuario logeado) y su nombre
                         val idTechnician = DataTickets.getJSONObject("ID_TECHNICIAN")
                         playerModel.setTicketSortsIdTechnician(idTechnician.getString("0"))
-                        //Log.i("mensaje idTechnician",""+idTechnician.getString("0"))
+                        MainActivity.idUserTechnician = idTechnician.getString("0")
+                        MainActivity.userTechnician = DataTickets.getString("USUARIO")
                         val technicianName = DataTickets.getString("NOMBRE")
+                        MainActivity.nameTechnician = technicianName
                         val technicianLastName = DataTickets.getString("APELLIDO")
+                        MainActivity.lastNameTechnician = technicianLastName
                         playerModel.setTechnicianName("$technicianName $technicianLastName")
                         MainActivity.nameLoginUser = "$technicianName $technicianLastName"
                         //obtenemos el id del solicitante(usuario logeado)
@@ -309,6 +320,8 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.ontickteCl
 
                         val idRequester = idPositionResquester.getString("0")
                         playerModel.setTicketSortsIdRequester(idRequester)
+                        //Log.i("mensaje idRequester: ", "$idRequester")
+                        //requestVolleyByIdRequester(idRequester)
 
                         playerModel.setTicketSortsCreationDate(DataTickets.getString("FECHA_CREACION"))//fecha de creación
                         playerModel.setTicketSortsModificationDate(DataTickets.getString("FECHA_MODIFICACION"))//fecha de creación
@@ -338,7 +351,6 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.ontickteCl
             override fun getParams(): Map<String, String>? {
                 val params: MutableMap<String, String> = HashMap()
                 params["session_token"] = token.prefer.getToken()
-
                 return params
             }
         }
@@ -346,9 +358,46 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.ontickteCl
         //FIN obtenemos perfil de usuario
     }
     
-    private fun requestVolleySortByStatus(){
-        Toast.makeText(context, "aplicar filtro con nuevo volley", Toast.LENGTH_SHORT).show()
+    private fun requestVolleyByIdRequester(id: String){
+        //metodo que nos devuelve los datos para los tickets
+        val stringRequestDataTickets = object : StringRequest(Method.POST,
+            MainActivity.urlApi_TasksUsers+id, Response.Listener { response ->
+                try {
+                    val JS_DataTickets = JSONArray(response) //obtenemos el objeto json
+
+                    dataModelArrayList = ArrayList()
+
+                    for (i in 0 until JS_DataTickets.length()){
+
+                        val DataTickets = JS_DataTickets.getJSONObject(i)
+                        //Log.i("mensaje tasks in",""+DataTickets)
+                        val playerModel = Data_Tickets()
+
+                        playerModel.setTicketSortsNameByIdRequester(DataTickets.getString("NOMBRE"))
+                        Log.i("mensaje nameRequester: ", "${DataTickets.getString("NOMBRE")}")
+                        dataModelArrayList.add(playerModel)
+                    }
+                    setupRecycler()
+
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    Toast.makeText(context, "token expirado_: $e", Toast.LENGTH_LONG).show()
+                    //Log.i("mensaje recycler e: ", "recycler ERROR: $e")
+                }
+            }, Response.ErrorListener {
+                Toast.makeText(context, "ERROR CON EL SERVIDOR", Toast.LENGTH_SHORT).show()
+            }) {
+            override fun getParams(): Map<String, String>? {
+                val params: MutableMap<String, String> = HashMap()
+                params["session_token"] = token.prefer.getToken()
+
+                return params
+            }
+        }
+        context?.let { VolleySingleton.getInstance(it).addToRequestQueue(stringRequestDataTickets) }
+        //FIN obtenemos perfil de usuario
     }
+
 
     private fun volleyRequestSortByStatus(
         urlApi_TicketSort: String,
@@ -360,11 +409,11 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.ontickteCl
         idStatus6: String
     ){
         //metodo que nos devuelve los datos para los tickets
-        val stringRequestDataTickets = @RequiresApi(Build.VERSION_CODES.N)
-        object : StringRequest(Request.Method.POST,
+        val stringRequestDataTickets = object : StringRequest(Request.Method.POST,
             urlApi_TicketSort, Response.Listener { response ->
                 try {
                     val JS_DataTickets = JSONObject(response) //obtenemos el objeto json
+
 
                     dataModelArrayList = ArrayList()
 
@@ -410,8 +459,13 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.ontickteCl
                     setupRecycler()
 
                 } catch (e: Exception) {
+                    MainActivity.flagNotFound = "true"
+                    if (MainActivity.flagNotFound == "true"){
+                        binding.recycler.isVisible = false
+                        binding.includeNotFound.notFount.isVisible = true
+                    }
                     e.printStackTrace()
-                    Toast.makeText(context, "token expirado_: $e", Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, "no hay datos para filtro aplicado: $e", Toast.LENGTH_LONG).show()
                     //Log.i("mensaje recycler e: ", "recycler ERROR: $e")
                 }
             }, Response.ErrorListener {
@@ -441,15 +495,10 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.ontickteCl
                     Log.i("mensaje idStatus5","${MainActivity.checkSolvedTicket}")
                 }
                 if (idStatus6 == "6"){
-                    params["idStatus1"] = MainActivity.checkNewTicket
-                    params["idStatus2"] = MainActivity.checkAssignedTicket
-                    params["idStatus3"] = MainActivity.checkPlannedTicket
-                    params["idStatus4"] = MainActivity.checkWaitTicket
-                    params["idStatus5"] = MainActivity.checkSolvedTicket
                     params["idStatus6"] = MainActivity.checkCloseTicket
-
-                    Log.i("mensaje idStatus6","$params")
+                    Log.i("mensaje idStatus6","${MainActivity.checkCloseTicket}")
                 }
+                Log.i("mensaje idStatus6","$params")
                 return params
             }
         }

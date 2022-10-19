@@ -29,7 +29,7 @@ import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.glpi.glpi_ministerio_pblico.MainActivity
-import com.glpi.glpi_ministerio_pblico.MainActivity.Companion.flag
+//import com.glpi.glpi_ministerio_pblico.MainActivity.Companion.flag
 import com.glpi.glpi_ministerio_pblico.MainActivity.Companion.jsonArrayResponse
 import com.glpi.glpi_ministerio_pblico.MainActivity.Companion.urlApi_TasksUsers
 import com.glpi.glpi_ministerio_pblico.MainActivity.Companion.urlApi_TicketID
@@ -65,6 +65,8 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
     lateinit private var progressBarTicketConversation: ProgressBar
 
     lateinit var TicketID_: String
+    //lateinit var ticketType: String
+    lateinit var ticketOrigin: String
 
     //INICIO toogle buton tickets
     var clickTickets: Boolean = false
@@ -140,8 +142,14 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
         }
         binding.includeFabs.btnFabSeguimiento.setOnClickListener {
             val intentAddFollowup = Intent(this, TicketsAgregarSeguimientoActivity::class.java)
+            val intent = intent.extras
+            val ticketStatus = intent!!.getString("TicketEstado")
             val bundle = Bundle()
             bundle.putString("TicketID", TicketID_)
+            //bundle.putString("ticketType", ticketType)//TODO: AGREGAR A LOS DEMAS
+            bundle.putString("ticketOrigin", ticketOrigin)//TODO: AGREGAR A LOS DEMAS
+            bundle.putString("ticketStatus", ticketStatus)
+            MainActivity.updateFollowup = true
             intentAddFollowup.putExtras(bundle)
             intentAddFollowup.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             startActivity(intentAddFollowup)
@@ -299,8 +307,6 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
     }
 
     private fun volleyRequestPost(urlApi_: String) {
-
-
         val bundle = intent.extras
         val TicketID_ = bundle!!.getString("TicketID")
         val Contenido_ = bundle!!.getString("Contenido")
@@ -327,6 +333,11 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
 
                             val tasksTipo = tasksIterador.getString("TIPO")
                             playerModel.setGlpiTasksTipo(tasksTipo)
+                            if(tasksIterador.getString("TIPO") != "SOLUTION"){
+                                val ticketPrivate = tasksIterador.getString("PRIVADO")
+                                playerModel.setTicketInfo_Private(ticketPrivate)
+                            }
+
                             val tasksNameOperador = tasksIterador.getString("NOMBRE")
                             val tasksApellidoOperador = tasksIterador.getString("APELLIDO")
                             playerModel.setGlpiTasktName("$tasksNameOperador $tasksApellidoOperador")
@@ -412,7 +423,7 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
                     setupRecyclerView()
                 } catch (e: Exception) {
                     e.printStackTrace()
-                    Toast.makeText(this, "token expirado_: $e", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, "sin valor para ...: $e", Toast.LENGTH_LONG).show()
                     //Log.i("mensaje entitis dentroE",""+response.get(0))
                 }
             }, Response.ErrorListener {
@@ -464,6 +475,7 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
         val Contenido_ = bundle!!.getString("Contenido")
         //-----
         val Tipo = bundle!!.getString("Tipo")
+        //ticketType = bundle!!.getString("Tipo").toString()
 
 
         val Ubicacion_ = bundle!!.getString("Ubicacion")
@@ -474,7 +486,8 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
         val LoginName_ = bundle!!.getString("LoginName")
         val TicketEstado_ = bundle!!.getString("TicketEstado")
         val TicketCategoria_ = bundle!!.getString("TicketCategoria")
-        val TicketOrigen_ = bundle!!.getString("TicketOrigen")
+        //val TicketOrigen_ = bundle!!.getString("TicketOrigen")
+        ticketOrigin = bundle!!.getString("TicketOrigen").toString()
         val TicketUrgencia_ = bundle!!.getString("TicketUrgencia")
         //SECTION TASKS
         val taskName = bundle!!.getString("taskName")
@@ -537,7 +550,8 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
         }
         binding.includeTickets.labelUbicacion.text = Ubicacion_
         //binding.includeTickets.labelEmail.text = Correo_
-        binding.includeTickets.labelOrigen.text = TicketOrigen_
+        //binding.includeTickets.labelOrigen.text = TicketOrigen_
+        binding.includeTickets.labelOrigen.text = ticketOrigin
         //binding.includeTickets.labelSolicitanteNombre.text = NameSolicitante_
         binding.includeTickets.labelSolicitanteCargo.text = CargoSolicitante_
         binding.includeTickets.labelSolicitanteCelular.text = TelefonoSolicitante_
@@ -626,7 +640,6 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
                     val nameId = dataId.getString("NOMBRE")
                     val lastNameId = dataId.getString("APELLIDO")
                     binding.includeTickets.labelSolicitanteNombre.text = "$nameId $lastNameId"
-
                     val placeId = dataId.getString("UBICACION")
                     binding.includeTickets.labelUbicacion.text = placeId
                     binding.includeNavHeaderTickets.txtUbicacion.text = placeId
@@ -664,25 +677,33 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
 
 
     override fun onEditClick(
+        ticketInfoPrivate: String,
         glpiTasksDescripcion: String,
         glpiTasksTipo: String
     ) {
         //recuperamos el id del ticket
         val bundle = intent.extras
         val ticketId = bundle!!.getString("TicketID")
+        val ticketStatus = bundle!!.getString("TicketEstado")
 
         val intentTasks = (Intent(this,TicketsAgregarTareaActivity::class.java))
         intentTasks.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         val intentFollowUp = (Intent(this,TicketsAgregarSeguimientoActivity::class.java))
         intentFollowUp.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        flag = true
+        MainActivity.flagEdit = true
         //Log.i("mensaje edit: ",""+glpiConversationTipo)
+
         if (glpiTasksTipo == "TASK"){
             intentTasks.putExtra("ticketId",ticketId)
+            intentTasks.putExtra("ticketStatus",ticketStatus)
+            intentTasks.putExtra("ticketPrivate",ticketInfoPrivate)
             intentTasks.putExtra("tasks_description",glpiTasksDescripcion)
             startActivity(intentTasks)
         }else{
+
             intentFollowUp.putExtra("ticketId",ticketId)
+            intentFollowUp.putExtra("ticketStatus",ticketStatus)
+            intentFollowUp.putExtra("ticketPrivate",ticketInfoPrivate)
             intentFollowUp.putExtra("tasks_description",glpiTasksDescripcion)
             startActivity(intentFollowUp)
         }

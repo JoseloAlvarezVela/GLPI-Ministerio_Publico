@@ -32,7 +32,7 @@
                 app:iconGravity="textStart" />
 
             <LinearLayout
-                android:layout_width="80sp"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="start|center_vertical"
                 android:layout_weight="1"
@@ -63,35 +63,49 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:gravity="center"
+                android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/textView17"
-                    android:layout_width="30sp"
-                    android:layout_height="30sp"
-                    android:layout_gravity="center_horizontal|center_vertical"
-                    android:layout_margin="10dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/ic_interrogacion"
-                    app:drawableTint="#28B6F6" />
+                <ImageButton
+                    android:id="@+id/imgBtnTicketRequest"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:padding="5sp"
+                    android:visibility="gone"
+                    app:srcCompat="@drawable/ic_interrogacion" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/circulo_incidencia"
+                    android:orientation="horizontal">
+
+                    <ImageButton
+                        android:id="@+id/imgBtnTicketIncident"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:background="?android:attr/selectableItemBackground"
+                        android:padding="5sp"
+                        android:visibility="gone"
+                        app:srcCompat="@drawable/ic_ticket_incident" />
+                </LinearLayout>
+
+                <ImageButton
+                    android:id="@+id/imgBtnStatusHeader"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:clickable="false"
+                    android:padding="5sp"
+                    app:srcCompat="@drawable/ic_circulo_verde" />
             </LinearLayout>
 
             <Button
-                android:id="@+id/button13"
-                android:layout_width="1sp"
-                android:layout_height="30sp"
-                android:layout_marginStart="10dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginEnd="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_weight="1"
-                android:background="@drawable/ic_circulo"
-                android:gravity="center_vertical"
-                app:backgroundTint="#3CE835"
-                app:buttonTint="#67D392" />
-
-            <Button
-                android:id="@+id/btn_addseg_acttaddseg"
+                android:id="@+id/btnAddFollowup"
                 android:layout_width="50dp"
                 android:layout_height="match_parent"
                 android:layout_marginStart="20dp"
@@ -118,7 +132,8 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginTop="5sp">
+            android:layout_marginTop="5sp"
+            android:padding="10sp">
 
 
             <Button
@@ -131,13 +146,25 @@
                 android:layout_marginRight="10dp"
                 android:background="@drawable/ic_circulo"
                 android:gravity="center_vertical"
+                android:visibility="gone"
                 app:backgroundTint="#3CE835"
                 app:buttonTint="#67D392" />
+
+            <ImageButton
+                android:id="@+id/imgBtnStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="?android:attr/selectableItemBackground"
+                android:clickable="false"
+                android:padding="15sp"
+                app:srcCompat="@drawable/ic_circulo_verde" />
 
             <ImageView
                 android:id="@+id/imgView_padLock"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:padding="15sp"
+                android:tag="SI"
                 app:srcCompat="@drawable/ic_candado_abierto" />
 
         </LinearLayout>
@@ -183,7 +210,7 @@
                 android:ems="10"
                 android:fontFamily="@font/averia_sans_libre_light"
                 android:hint="indicque la descripción"
-                android:inputType="textMultiLine|textPersonName"
+                android:inputType="textMultiLine"
                 android:textColor="#3F51B5"
                 android:textSize="12sp" />
 
@@ -342,14 +369,14 @@
     </LinearLayout>
 
     <include
-        layout="@layout/modal_plantilla_agregar_seguimiento"
         android:id="@+id/include_modal_followupTemplate"
+        layout="@layout/modal_plantilla_agregar_seguimiento"
         android:layout_width="350sp"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"  />
+        app:layout_constraintTop_toTopOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

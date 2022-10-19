@@ -183,7 +183,8 @@
                     android:gravity="center_vertical|end"
                     android:paddingRight="10sp"
                     android:shadowColor="#000000"
-                    android:text="tiempo_resuelto" />
+                    android:text="tiempo_resuelto"
+                    android:visibility="gone" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

@@ -63,17 +63,30 @@ class MainActivity : AppCompatActivity(){
         val urlApi_TasksTemplate: String = "http://181.176.145.174:8080/api/task_templates"
         val urlApi_FollowupTemplates: String = "http://181.176.145.174:8080/api/followup_templates"
 
+        //datos del usuario logeado
         lateinit var nameLoginUser: String
+        lateinit var nameTechnician: String
+        lateinit var lastNameTechnician: String
+        lateinit var userTechnician: String
+        lateinit var idUserTechnician: String
+
         lateinit var jsonObjectResponse: JSONObject
         lateinit var jsonArrayResponse: JSONArray
 
-        //variable modo privado de ticket en seguimiento
-        lateinit var privateImgViewPadLock: String
 
-        var flag = false
+        //variable para controlar actualizacion y nuevos seguimientos en activity_tickets_agregar_seguimiento.xml
+        var updateFollowup = false
+
+        //flag para edit ticket , para diferenciar entre editar tarea o seguimiento
+        var flagEdit = false
+
+        //flag para verificar que campo "Buscar por ID" este vacio
         var flag_edtFindTicketID = false
-
+        //variable para campo "Buscar por ID"
         lateinit var edtFindTicketID: String
+
+        //flag para verificar si no exite tickets en consulta
+        lateinit var flagNotFound: String
 
         //variable para buscar por filtro apellido o nombre
         lateinit var requesterSearch: Editable
@@ -139,6 +152,7 @@ class MainActivity : AppCompatActivity(){
         userEntities()
 
         userProfiles()
+
 
         //INICIO - boton filtro de la derecha - activity_filtro_right.xml
         binding.appBarMain.btnFiltroRight.setOnClickListener {
