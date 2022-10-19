@@ -132,8 +132,17 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
         //INICIO eventos click de fab_opciones
         binding.includeFabs.btnFabTareas.setOnClickListener {
             val intentAddTask = Intent(this, TicketsAgregarTareaActivity::class.java)
+
+            val intent = intent.extras
+            val idTicket = intent!!.getString("TicketID")
+            val ticketType = intent!!.getString("Tipo") //solicitud o incidente
+            val ticketStatus = intent!!.getString("TicketEstado") //en curso ,cerrado ...
+
             val bundle = Bundle()
-            bundle.putString("TicketID", TicketID_)
+            //bundle.putString("TicketID", TicketID_)
+            bundle.putString("TicketID", idTicket)
+            bundle.putString("ticketType", ticketType)
+            bundle.putString("ticketStatus", ticketStatus)
             intentAddTask.putExtras(bundle)
             intentAddTask.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             startActivity(intentAddTask)
@@ -144,6 +153,9 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
             val intentAddFollowup = Intent(this, TicketsAgregarSeguimientoActivity::class.java)
             val intent = intent.extras
             val ticketStatus = intent!!.getString("TicketEstado")
+            val ticketOrigin = intent!!.getString("TicketOrigen")
+            //Log.i("mensaje ticketOrigin1","$ticketOrigin")
+
             val bundle = Bundle()
             bundle.putString("TicketID", TicketID_)
             //bundle.putString("ticketType", ticketType)//TODO: AGREGAR A LOS DEMAS
@@ -685,6 +697,7 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
         val bundle = intent.extras
         val ticketId = bundle!!.getString("TicketID")
         val ticketStatus = bundle!!.getString("TicketEstado")
+        val ticketOrigin = bundle!!.getString("TicketOrigen")
 
         val intentTasks = (Intent(this,TicketsAgregarTareaActivity::class.java))
         intentTasks.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
@@ -705,6 +718,7 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
             intentFollowUp.putExtra("ticketStatus",ticketStatus)
             intentFollowUp.putExtra("ticketPrivate",ticketInfoPrivate)
             intentFollowUp.putExtra("tasks_description",glpiTasksDescripcion)
+            intentFollowUp.putExtra("ticketOrigin",ticketOrigin)
             startActivity(intentFollowUp)
         }
     }

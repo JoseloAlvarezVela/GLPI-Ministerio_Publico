@@ -18,23 +18,33 @@ import com.glpi.glpi_ministerio_pblico.MainActivity
 import com.glpi.glpi_ministerio_pblico.MainActivity.Companion.decodeHtml
 import com.glpi.glpi_ministerio_pblico.MainActivity.Companion.flagEdit
 import com.glpi.glpi_ministerio_pblico.MainActivity.Companion.urlApi_TasksTemplate
+import com.glpi.glpi_ministerio_pblico.R
 import com.glpi.glpi_ministerio_pblico.VolleySingleton
 import com.glpi.glpi_ministerio_pblico.databinding.ActivityTicketsAgregarTareaBinding
+import com.glpi.glpi_ministerio_pblico.ui.adapter.Data_TasksCategory
 import com.glpi.glpi_ministerio_pblico.ui.adapter.Data_TasksTemplate
+import com.glpi.glpi_ministerio_pblico.ui.adapter.RecycleView_Adapter_TasksCategory
 import com.glpi.glpi_ministerio_pblico.ui.adapter.RecycleView_Adapter_TasksTemplate
 import com.glpi.glpi_ministerio_pblico.ui.shared.token
 import org.json.JSONArray
+import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
-class TicketsAgregarTareaActivity : AppCompatActivity(), RecycleView_Adapter_TasksTemplate.onTasksTemplateClickListener {
+class TicketsAgregarTareaActivity : AppCompatActivity(),
+    RecycleView_Adapter_TasksTemplate.onTasksTemplateClickListener,
+    RecycleView_Adapter_TasksCategory.onTasksCategoryClickListener {
+
     lateinit var binding: ActivityTicketsAgregarTareaBinding //declaramos binding para acceder variables
     //creamos el objeto de la clase recyclerView
     private var recyclerView: RecyclerView? = null
+    private var recyclerViewCategory: RecyclerView? = null
     /*creamos la lista de arreglos que tendrá los objetos de la clase Data_Tickets
    esta lista de arreglos (dataModelArrayList) funcionará como fuente de datos*/
     internal lateinit var dataModelArrayListTasksTemplate: ArrayList<Data_TasksTemplate>
+    internal lateinit var dataModelArrayListTasksCategory: ArrayList<Data_TasksCategory>
     private var recyclerView_Adapter_TasksTemplate: RecycleView_Adapter_TasksTemplate? = null
+    private var recyclerView_Adapter_TasksCategory: RecycleView_Adapter_TasksCategory? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,11 +53,13 @@ class TicketsAgregarTareaActivity : AppCompatActivity(), RecycleView_Adapter_Tas
 
         var flagTasks = flagEdit
         recyclerView = binding.includeModalPlantillaTarea.recyclerTasksTemplate
+        recyclerViewCategory = binding.includeModalPlantillaAgregarCategoria.recyclerTasksCategory
         //recyclerView = binding.recyclerTaskTemplate
 
         ticketInfo()
         //setupRecycler()
         volleyRequestDataTasksTemplate()
+        volleyRequestDataTasksCategory()
 
         if (flagTasks){
             val intent = intent.extras
@@ -60,7 +72,7 @@ class TicketsAgregarTareaActivity : AppCompatActivity(), RecycleView_Adapter_Tas
 
         btn_fabs()
         btn_atras()
-        btn_agregarTarea()
+
         btn_agregarCat()
         btnTimeToSolveTask()
 
@@ -170,7 +182,68 @@ class TicketsAgregarTareaActivity : AppCompatActivity(), RecycleView_Adapter_Tas
 
     private fun ticketInfo(){
         val bundle = intent.extras
-        binding.tvIdTicket.text = "Petición #${bundle!!.getString("TicketID")}"
+        val idTicket = bundle!!.getString("TicketID")
+        val ticketType = bundle!!.getString("ticketType") //solicitud o incidente
+        val ticketStatus = bundle!!.getString("ticketStatus")//en curso ,cerrado ...
+        binding.tvIdTicket.text = "Petición $idTicket"
+
+        if(ticketType == "SOLICITUD"){
+            binding.imgBtnTypeTasks.setImageResource(R.drawable.ic_interrogacion)
+        }else{
+            binding.imgBtnTypeTasks.setImageResource(R.drawable.ic_incidencia)
+        }
+
+        if (ticketStatus == "EN CURSO (Asignada)"){
+            binding.imgBtnStatusTasks.setImageResource(R.drawable.ic_circulo_verde)
+            binding.imgBtnStatusTasksHeader.setImageResource(R.drawable.ic_circulo_verde)
+        }else if(ticketStatus == "ESPERA"){
+            binding.imgBtnStatusTasks.setImageResource(R.drawable.ic_circulo)
+            binding.imgBtnStatusTasksHeader.setImageResource(R.drawable.ic_circulo)
+        }else if (ticketStatus == "CERRADO"){
+            binding.imgBtnStatusTasks.setImageResource(R.drawable.ic_circulo_negro)
+            binding.imgBtnStatusTasksHeader.setImageResource(R.drawable.ic_circulo_negro)
+        }
+
+        imgBtnTicketStatus(ticketStatus)
+        btnAddTasks()
+
+    }
+
+    private fun imgBtnTicketStatus(ticketStatus: String?): String {
+        var flagTicketStatus: Boolean
+        var newTicketStatus = "EN CURSO (Asignada)"
+        if (ticketStatus == "EN CURSO (Asignada)"){
+            flagTicketStatus = true
+            binding.imgBtnStatusTasks.setOnClickListener {
+                if(flagTicketStatus){
+                    binding.imgBtnStatusTasks.setImageResource(R.drawable.ic_circulo)
+                    binding.imgBtnStatusTasksHeader.setImageResource(R.drawable.ic_circulo)
+                    newTicketStatus = "EN ESPERA"
+                    flagTicketStatus = false
+                }else{
+                    binding.imgBtnStatusTasks.setImageResource(R.drawable.ic_circulo_verde)
+                    binding.imgBtnStatusTasksHeader.setImageResource(R.drawable.ic_circulo_verde)
+                    newTicketStatus = "EN CURSO (Asignada)"
+                    flagTicketStatus = true
+                }
+            }
+        }else{
+            flagTicketStatus = false
+            binding.imgBtnStatusTasks.setOnClickListener {
+                if(flagTicketStatus){
+                    binding.imgBtnStatusTasks.setImageResource(R.drawable.ic_circulo)
+                    binding.imgBtnStatusTasksHeader.setImageResource(R.drawable.ic_circulo)
+                    newTicketStatus = "EN ESPERA"
+                    flagTicketStatus = false
+                }else{
+                    binding.imgBtnStatusTasks.setImageResource(R.drawable.ic_circulo_verde)
+                    binding.imgBtnStatusTasksHeader.setImageResource(R.drawable.ic_circulo_verde)
+                    newTicketStatus = "EN CURSO (Asignada)"
+                    flagTicketStatus = true
+                }
+            }
+        }
+        return newTicketStatus
     }
 
     private fun volleyRequestDataTasksTemplate() {
@@ -222,28 +295,107 @@ class TicketsAgregarTareaActivity : AppCompatActivity(), RecycleView_Adapter_Tas
         recyclerView!!.adapter = recyclerView_Adapter_TasksTemplate
     }
 
+    private fun volleyRequestDataTasksCategory() {
+        val stringRequestDataTickets = object : StringRequest(Method.POST,
+            urlApi_TasksTemplate, Response.Listener { response ->
+                try {
+                    dataModelArrayListTasksCategory = ArrayList()
+
+                    val jsonObjectResponse = JSONArray(response)
+                    var iterador = 0
+                    for (i in  0 until jsonObjectResponse.length()){
+                        val nTemplate = jsonObjectResponse.getJSONObject(iterador)
+                        val player = Data_TasksCategory()
+                        player.setNameTasksCategories(nTemplate.getString("NOMBRE"))
+                        player.setContentTasksCategories(nTemplate.getString("CONTENIDO"))
+                        iterador++
+                        Log.i("mensaje posicion",""+nTemplate.getString("NOMBRE"))
+                        dataModelArrayListTasksCategory.add(player)
+                    }
+                    setupRecyclerCategory()
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    Toast.makeText(this, "token expirado: $e", Toast.LENGTH_LONG).show()
+                }
+            }, Response.ErrorListener {
+                Toast.makeText(this, "ERROR CON EL SERVIDOR", Toast.LENGTH_SHORT).show()
+            }) {
+            override fun getParams(): Map<String, String>? {
+                val params: MutableMap<String, String> = HashMap()
+                params["session_token"] = token.prefer.getToken()
+                return params
+            }
+        }
+        this?.let {
+            VolleySingleton.getInstance(it).addToRequestQueue(stringRequestDataTickets)
+        }
+    }
+
+    private fun setupRecyclerCategory() {
+            val layoutManager =
+                LinearLayoutManager(this, LinearLayoutManager.VERTICAL, true,)
+            layoutManager.stackFromEnd = true
+
+        recyclerViewCategory!!.layoutManager = layoutManager
+
+            recyclerView_Adapter_TasksCategory =
+                RecycleView_Adapter_TasksCategory(this,dataModelArrayListTasksCategory,this)
+        recyclerViewCategory!!.adapter = recyclerView_Adapter_TasksCategory
+        }
+
     //INICIO - funcion que abre modal para escoger una tarea
     private fun btn_agregarCat() {
         //INICO - boton que abre modal_agregar_cat_tickets.xml
-        binding.btnAddcatActtaddt.setOnClickListener {
+        binding.btnAddCategory.setOnClickListener {
+
             binding.LayoutBackgroudAgregarTarea.isVisible = true //fondo gris casi transparente
-            binding.includeModalPlantillaAddcat.modalPlantillaAgregarCategoria.isVisible = true //modal
+            //binding.includeModalPlantillaAddcat.modalPlantillaAgregarCategoria.isVisible = true //modal
+            binding.includeModalPlantillaAgregarCategoria.modalPlantillaAgregarTarea.isVisible = true
         }
 
         //INICIO - boton que cierra modal_agregar_cat_tickets.xml
         binding.includeModalPlantillaAddcat.btnSalirModalAddcat.setOnClickListener {
-            binding.includeModalPlantillaAddcat.modalPlantillaAgregarCategoria.isVisible = false
+            binding.includeModalPlantillaAgregarCategoria.modalPlantillaAgregarTarea.isVisible = false
             binding.LayoutBackgroudAgregarTarea.isVisible = false
         }
     }
 
     //INICIO - función que añade la tarea y te devuelve al menu principal
-    private fun btn_agregarTarea() {
-        binding.btnAddtActtaddt.setOnClickListener {
-            Toast.makeText(this, "tarea añadida", Toast.LENGTH_LONG).show()
-            val intent_agregarTarea = Intent(this, MainActivity::class.java)
+    private fun btnAddTasks() {
+        binding.btnAddTasks.setOnClickListener {
+            Toast.makeText(this, "seguiemiento añadido", Toast.LENGTH_LONG).show()
+            val ticketPrivate = binding.chkboxPadLock.tag.toString()
+            val ticketId = binding.tvIdTicket.text
+            val tasksDescription = binding.edtTasksDescription.text
+            val durationToSolveTasks = binding.btnTimeToSolveTask.text
+            val category = binding.btnAddCategory.text
+
+            //fecha y hora actual
+            val sdf = SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale("es", "PE"))//obtenemos fecha actual
+            val currentdate = sdf.format(Date())
+            Log.i("mensaje",
+                "id de ticket: $ticketId \n" +
+                        "TIPO: TASKS\n"+
+                        "PRIVADO: $ticketPrivate\n" +
+                        "ID_USUARIO: ${MainActivity.idUserTechnician}\n" +
+                        "USUARIO: ${MainActivity.userTechnician}\n"+
+                        "NOMBRE: ${MainActivity.nameTechnician}\n"+
+                        "APELLIDO: ${MainActivity.lastNameTechnician}\n"+
+                        "FECHA: $currentdate\n"+
+                        "FECHA_CREACION: $currentdate\n"+
+                        "FECHA_MODIFICACION: $currentdate\n"+
+                        "CONTENIDO: $tasksDescription\n"+
+                        "FECHA_INICIO: null\n"+
+                        "FECHA_FIN: null\n"+
+                        "DURACION: $durationToSolveTasks\n"+
+                        "ESTADO: terminado/pendiente\n"+
+                        "CATEGORIA: $category\n"+
+                        "EDITOR: ${MainActivity.idUserTechnician}\n"+
+                        "TECNICO: idTecnico\n")
+            onBackPressed()
+            /*val intent_agregarTarea = Intent(this, MainActivity::class.java)
             intent_agregarTarea.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            startActivity(intent_agregarTarea)
+            startActivity(intent_agregarTarea)*/
         }
     }
 
@@ -323,7 +475,8 @@ class TicketsAgregarTareaActivity : AppCompatActivity(), RecycleView_Adapter_Tas
         //INICIO - evento click que cierra modals
         backGround.setOnClickListener {
             binding.includeModalPlantillaTarea.modalPlantillaAgregarTarea.isVisible = false
-            binding.includeModalPlantillaAddcat.modalPlantillaAgregarCategoria.isVisible = false
+            //binding.includeModalPlantillaAddcat.modalPlantillaAgregarCategoria.isVisible = false
+            binding.includeModalPlantillaAgregarCategoria.modalPlantillaAgregarTarea.isVisible = false
             layout_plantilla.isVisible = false
             layout_camara.isVisible = false
             layout_archivo.isVisible = false
@@ -357,4 +510,19 @@ class TicketsAgregarTareaActivity : AppCompatActivity(), RecycleView_Adapter_Tas
         //Log.i("mensaje html",""+ decodeHtml(decodeFullhtml[0]))
         //binding.edtTasksDescription.setText(decodeFullhtml.toString())
     }
+
+    override fun onTasksCategoryClick(nameTasksCategory: String, contentTasksCategory: String) {
+        binding.includeModalPlantillaAgregarCategoria.modalPlantillaAgregarTarea.isVisible = false
+        binding.LayoutBackgroudAgregarTarea.isVisible = false
+        binding.fabPlantilla.isVisible = false
+        binding.fabFoto.isVisible = false
+        binding.fabArchivo.isVisible = false
+        click = false
+        binding.LayoutFabAgregarTarea.isVisible = true
+
+        Toast.makeText(this, "$nameTasksCategory", Toast.LENGTH_SHORT).show()
+
+        binding.btnAddCategory.text = decodeHtml(contentTasksCategory)
+    }
+
 }

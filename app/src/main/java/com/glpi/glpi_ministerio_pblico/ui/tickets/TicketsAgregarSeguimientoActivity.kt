@@ -110,50 +110,29 @@ class TicketsAgregarSeguimientoActivity : AppCompatActivity(), RecycleView_Adapt
             binding.imgBtnStatus.setImageResource(R.drawable.ic_circulo_negro)
         }
 
-
-
         binding.tvIdTicket.text = "Petición #$ticketId"
-        //val followupDescription = binding.edtFollowupDescription.text
 
-        //var ticketStatus = "EN CURSO (Asignada)"
-        //imgBtnTicketStatus(ticketStatus)
+        btnAddFollowup(ticketId, ticketOrigin)
 
-        var sendTicketPrivate: String
-        //Log.i("mensaje imgViewPadLock", binding.imgViewPadLock.toString())
-
-        btnAddFollowup(
-            ticketId,
-            ticketOrigin
-        )
-        /*if (ticketPrivate == "NO"){
-            binding.imgViewPadLock.setImageResource(R.drawable.ic_candado_cerrado)
-        }else{
-            binding.imgViewPadLock.setImageResource(R.drawable.ic_candado_abierto)
-        }*/
-        //Log.i("mensaje type",ticketType.toString())
-        /*val ticketType = bundle!!.getString("ticketType")
-        if (ticketType == "SOLICITUD"){
-            binding.imgBtnTicketRequest.isVisible = true
-            binding.imgBtnTicketIncident.isVisible = false
-        }else if (ticketType == "INCIDENCIA"){
-            binding.imgBtnTicketRequest.isVisible = false
-            binding.imgBtnTicketIncident.isVisible = true
-        }*/
+        imgBtnTicketStatus(ticketStatus)
     }
 
     private fun updateFollowup(){
         var followupStatus = ""
 
         val bundle = intent.extras
-        val ticketId = bundle!!.getString("ticketId")
+        val ticketId = bundle!!.getString("ticketId").toString()
         val ticketStatus = bundle!!.getString("ticketStatus")
+        val ticketOrigin = bundle!!.getString("ticketOrigin")
         val ticketPrivate = bundle!!.getString("ticketPrivate")
         val tasksDescription = bundle!!.getString("tasks_description")
         var flagTicketPrivate = false
 
-        //imgBtnTicketStatus(ticketStatus)
+        imgBtnTicketStatus(ticketStatus)
         imgBtnPadLock()
-        btnUpdateFollowup(followupStatus, ticketPrivate.toString())
+        //btnUpdateFollowup(followupStatus, ticketPrivate.toString())
+        Log.i("mensaje ticketOrigin2","$ticketOrigin")
+        btnAddFollowup(ticketId, ticketOrigin)
 
         binding.tvIdTicket.text = "Petición #$ticketId"
         if (ticketStatus == "EN CURSO (Asignada)"){
@@ -176,7 +155,7 @@ class TicketsAgregarSeguimientoActivity : AppCompatActivity(), RecycleView_Adapt
             //Log.i("mensaje padLock","${MainActivity.privateImgViewPadLock}")
         }
 
-        //binding.edtFollowupDescription.setText(tasksDescription)
+        binding.edtFollowupDescription.setText(tasksDescription)
 
         MainActivity.flagEdit = false
     }
@@ -245,27 +224,26 @@ class TicketsAgregarSeguimientoActivity : AppCompatActivity(), RecycleView_Adapt
     private fun btnAddFollowup(ticketId: String, ticketOrigin: String?){
         //boton agregar seguimiento
         binding.btnAddFollowup.setOnClickListener {
-            Toast.makeText(this, "seguiemiento añadido", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "Tarea añadida", Toast.LENGTH_LONG).show()
             val ticketPrivate = binding.imgViewPadLock.tag.toString()
             val followupDescription = binding.edtFollowupDescription.text
 
             //fecha y hora actual
             val sdf = SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale("es", "PE"))//obtenemos fecha actual
             val currentdate = sdf.format(Date())
-            Log.i("mensaje",
-                   "id de ticket: $ticketId \n" +
-                        "TIPO: FOLLOWUP\n"+
+            Log.i("mensaje sendTaks",
+                "id de ticket: $ticketId \n" +
+                        "TIPO: TASKS\n"+
                         "PRIVADO: $ticketPrivate\n" +
                         "ID_USUARIO: ${MainActivity.idUserTechnician}\n" +
-                           "USUARIO: ${MainActivity.userTechnician}\n"+
-                           "NOMBRE: ${MainActivity.nameTechnician}\n"+
-                           "APELLIDO: ${MainActivity.lastNameTechnician}\n"+
-                           "FECHA: $currentdate\n"+
-                           "FECHA_CREACION: $currentdate\n"+
-                           "FECHA_MODIFICACION: $currentdate\n"+
-                           "CONTENIDO: $followupDescription\n"+
-                           "ORIGEN: $ticketOrigin\n"+
-                           "EDITOR: ${MainActivity.idUserTechnician}")
+                        "USUARIO: ${MainActivity.userTechnician}\n"+
+                        "NOMBRE: ${MainActivity.nameTechnician}\n"+
+                        "APELLIDO: ${MainActivity.lastNameTechnician}\n"+
+                        "FECHA: $currentdate\n"+
+                        "FECHA_CREACION: $currentdate\n"+
+                        "FECHA_MODIFICACION: $currentdate\n"+
+                        "CONTENIDO: $followupDescription\n"+
+                        "EDITOR: ${MainActivity.idUserTechnician}")
             onBackPressed()
             /*val intent_agregarSeguimiento = Intent(this, MainActivity::class.java)
             intent_agregarSeguimiento.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
