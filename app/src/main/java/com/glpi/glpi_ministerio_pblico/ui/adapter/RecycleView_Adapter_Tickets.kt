@@ -104,11 +104,10 @@ class RecycleView_Adapter_Tickets(
         holder.txt_descripcionTicket.text = dataModelArrayList[position].getTicketSortsDescription()+"..."
 
         //-----------
-        holder.txt_Requester_Name.text = "Solicitante: "+ dataModelArrayList[position].getTicketSortsNameByIdRequester()
+        holder.txt_Requester_Name.text = "Solicitante: "+ dataModelArrayList[position].getTicketSortsNameRequester()
 
         //-----------
-        holder.txt_Requester_Cargo.text = "Cargo: nulo"
-        //holder.txt_Requester_Cargo.text = "Cargo: "+dataModelArrayList[position].getGlpiRequesterCargo()
+        holder.txt_Requester_Cargo.text = "Cargo: ${dataModelArrayList[position].getTicketSortsPositionRequester()}"
 
         //-----------
         holder.txt_glpi_currenttime.text = dataModelArrayList[position].getTicketSortsCreationDate()
@@ -125,13 +124,10 @@ class RecycleView_Adapter_Tickets(
         }
     }
 
-
     //retornamos el tamaño de los datos obtenidos para mostrar en el recycleview
     override fun getItemCount(): Int {
         return dataModelArrayList.size
     }
-
-
 
     //inicializamos los componetes de nuestro ticket de la forma tradicional
     inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){

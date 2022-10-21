@@ -1,14 +1,10 @@
 package com.glpi.glpi_ministerio_pblico.ui.tickets
 
-import android.content.Intent
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.Html
-import android.text.Spanned
 import android.util.Log
 import android.widget.Toast
-import androidx.core.text.HtmlCompat
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -81,13 +77,13 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
 
     private fun btnDocuments(){
         var flagBtnShowDocuments = false
-        binding.includeDocuments.btnShowDocuments.setOnClickListener {
+        binding.includeDocumentsTaks.btnShowDocuments.setOnClickListener {
             if (!flagBtnShowDocuments){
                 Toast.makeText(this, "$flagBtnShowDocuments", Toast.LENGTH_SHORT).show()
-                binding.includeDocuments.contentDocuments.isVisible = true
+                binding.includeDocumentsTaks.contentDocuments.isVisible = true
                 flagBtnShowDocuments = true
             }else{
-                binding.includeDocuments.contentDocuments.isVisible = false
+                binding.includeDocumentsTaks.contentDocuments.isVisible = false
                 flagBtnShowDocuments = false
             }
 
@@ -274,16 +270,17 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
             urlApi_TasksTemplate, Response.Listener { response ->
                 try {
                     dataModelArrayListTasksTemplate = ArrayList()
-
                     val jsonObjectResponse = JSONArray(response)
-                    var iterador = 0
-                    for (i in  0 until jsonObjectResponse.length()){
-                        val nTemplate = jsonObjectResponse.getJSONObject(iterador)
+                    //var iterador = 0
+                    for(i in  0 until jsonObjectResponse.length()){
+                        val nTemplate = jsonObjectResponse.getJSONObject(i)
                         val player = Data_TasksTemplate()
-                        player.setNombreTasksTemplate(nTemplate.getString("NOMBRE"))
-                        player.setContentTasksTemplate(nTemplate.getString("CONTENIDO"))
-                        iterador++
-                        Log.i("mensaje posicion",""+nTemplate.getString("NOMBRE"))
+                        player.setNameTasksTemplates(nTemplate.getString("NOMBRE"))
+                        player.setContentTasksTemplates(nTemplate.getString("CONTENIDO"))
+                        player.setCategoryTasksTemplates(nTemplate.getString("CATEGORIA"))
+                        player.setTimeTasksTemplates(nTemplate.getString("TIEMPO"))
+                        //iterador++
+                        //Log.i("mensaje posicion",""+nTemplate.getString("NOMBRE"))
                         dataModelArrayListTasksTemplate.add(player)
                     }
                     setupRecycler()
@@ -525,7 +522,12 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
     //FIN - funcion que despliega los FAB's
 
 
-    override fun onTasksTemplateClick(nameTasksTemplate: String, contentTasksTemplate: String) {
+    override fun onTasksTemplateClick(
+        nameTasksTemplate: String,
+        contentTasksTemplate: String,
+        categoryTasksTemplates: String,
+        timeTasksTemplates: String
+    ) {
         binding.includeModalPlantillaTarea.modalPlantillaAgregarTarea.isVisible = false
         binding.LayoutBackgroudAgregarTarea.isVisible = false
         binding.fabPlantilla.isVisible = false
@@ -535,6 +537,8 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
         binding.LayoutFabAgregarTarea.isVisible = true
         binding.edtTasksDescription.setText(decodeHtml(contentTasksTemplate))
         binding.edtTasksDescription.setTextColor(Color.parseColor("#1D20DD"))
+        binding.btnAddCategory.text = categoryTasksTemplates
+        binding.btnTimeToSolveTask.text = timeTasksTemplates
         /*val fullHtml = "<h2 style=\"text-align: center;\"><span style=\"color: #0000ff;\">ACOMPAÑAMIENTO</span></h2><h4><span style=\"color: #0000ff;\"><span style=\"color: #ff0000;\">Evento:</span> </span></h4><h4><span style=\"color: #0000ff;\"><span style=\"color: #ff0000;\">Modalidad (pres./rem.):</span> </span></h4>"
         val decodeFullhtml = fullHtml.split("</span>") as ArrayList
         binding.edtTasksDescription.setText(decodeFullhtml.toString())

@@ -8,18 +8,27 @@ creamos una clase para la lista de tickets y declaramos los atributos que vamos 
 class Data_Tickets {
     private var ticketSortsId: String? = null
     private var ticketSortsType : String? = null
-    private var ticketSortsState : String? = null
     private var ticketSortsDescription: String? = null
+    private var ticketSortsContents: String? = null
+    private var ticketSortsState : String? = null
+    private var ticketSortsDate : String? = null
+    private var ticketSortsModificationDate: String? = null
+    private var ticketSortsCreationDate: String? = null
     private var ticketSortsIdRecipient: String? = null
     private var ticketSortsIdTechnician: String? = null
     private var technicianName: String? = null
     private var ticketSortsIdRequester: String? = null
-    private var ticketSortsCreationDate: String? = null
-    private var ticketSortsContents: String? = null
-    private var ticketSortsUrgency: String? = null
+    private var ticketSortsNameRequester: String? = null
+    private var ticketSortsPositionRequester: String? = null
+    private var ticketSortsUser: String? = null //usuario login del tecnico a quien se le asignó el ticket
+    private var ticketSortsNameUser: String? = null //nombre login del tecnico a quien se le asignó el ticket
+    private var ticketSortsLastNameUser: String? = null //apellido login del tecnico a quien se le asignó el ticket
     private var ticketSortsCategory: String? = null
-    private var ticketSortsSource: String? = null
-    private var ticketSortsModificationDate: String? = null
+    private var ticketSortsSource: String? = null //origen del ticket
+    private var ticketSortsUrgency: String? = null
+
+
+
     //--------------------------------------------------
 
     private var ticketSortsNameByIdRequester: String? = null
@@ -48,6 +57,7 @@ class Data_Tickets {
     var glpiTasksName_: String? = null
     var glpiTasksDescripcion_: String? = null
     var glpiTasksTipo_: String? = null
+    var conversationOrderByDate: Date? = null
     var conversationCreation_: Date? = null
 
 
@@ -108,6 +118,20 @@ class Data_Tickets {
     }
     fun setTicketSortsIdRequester(TicketSorts_IdRequester_: String){
         this.ticketSortsIdRequester = TicketSorts_IdRequester_
+    }
+
+    fun getTicketSortsNameRequester(): String{
+        return ticketSortsNameRequester.toString()
+    }
+    fun setTicketSortsNameRequester(ticketSortsNameRequester_: String){
+        this.ticketSortsNameRequester = ticketSortsNameRequester_
+    }
+
+    fun getTicketSortsPositionRequester():String{
+        return ticketSortsPositionRequester.toString()
+    }
+    fun setTicketSortsPositionRequester(ticketSortsPositionRequester_: String){
+        this.ticketSortsPositionRequester = ticketSortsPositionRequester_
     }
 
     fun getTicketSortsCreationDate(): String {
@@ -279,6 +303,13 @@ class Data_Tickets {
     }
     fun setGlpiTasksTipo(GlpiTasksTipo: String){
         this.glpiTasksTipo_ = GlpiTasksTipo
+    }
+
+    fun getConversationOrderByDates(): Date?{
+        return conversationOrderByDate
+    }
+    fun setConversationOrderByDates(conversationOrderByDate_: Date){
+        this.conversationOrderByDate = conversationOrderByDate_
     }
 
     fun getConversationCreation(): Date? {

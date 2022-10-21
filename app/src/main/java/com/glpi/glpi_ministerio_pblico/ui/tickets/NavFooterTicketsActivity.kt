@@ -359,6 +359,10 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
                             val tasksNameOperador = tasksIterador.getString("NOMBRE")
                             val tasksApellidoOperador = tasksIterador.getString("APELLIDO")
                             playerModel.setGlpiTasktName("$tasksNameOperador $tasksApellidoOperador")
+
+                            val tasksDate = tasksIterador.getString("FECHA") //para ordenar el historico
+
+
                             val tasksFechaCreacion = tasksIterador.getString("FECHA_CREACION")
                             val dateTime = tasksFechaCreacion.replace(" ","T")
                             val dateTimeiso1801 = dateTime+"Z"
@@ -373,10 +377,10 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
                             playerModel.setGlpiTasksDescripcion(decoded2.toString())
 
                             //----------
-                            val dataId = jsonArrayIdRecipient.getJSONObject(0)
+                            /*val dataId = jsonArrayIdRecipient.getJSONObject(0)
                             val nameId = dataId.getString("NOMBRE")
                             val lastNameId = dataId.getString("APELLIDO")
-                            playerModel.setTaskUserName("$nameId $lastNameId")
+                            playerModel.setTaskUserName("$nameId $lastNameId")*/
 
                             val dataTechnicianId = jsonArrayIdTechnician.getJSONObject(0)
                             val nameTechnicianId = dataTechnicianId.getString("NOMBRE")
@@ -628,6 +632,7 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
                 try {
                     jsonArrayIdTechnician = JSONArray()
                     jsonArrayIdTechnician = JSONArray(response)
+                    Log.i("mensaje idtechnician","$jsonArrayIdTechnician")
                     /*val dataId = jsonArrayIdTechnician.getJSONObject(0)
                     val nameId = dataId.getString("NOMBRE")
                     val lastNameId = dataId.getString("APELLIDO")

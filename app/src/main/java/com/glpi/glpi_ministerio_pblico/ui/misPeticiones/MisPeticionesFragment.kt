@@ -278,8 +278,7 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.ontickteCl
 
     private fun requestVolleyTicketSorts(urlApi_TicketSort: String){
         //metodo que nos devuelve los datos para los tickets
-        val stringRequestDataTickets = @RequiresApi(Build.VERSION_CODES.N)
-        object : StringRequest(Request.Method.POST,
+        val stringRequestDataTickets = object : StringRequest(Request.Method.POST,
             urlApi_TicketSort, Response.Listener { response ->
                 try {
                     val JS_DataTickets = JSONObject(response) //obtenemos el objeto json
@@ -299,9 +298,12 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.ontickteCl
                         //obtenemos el id del operador, creador del ticket
                         playerModel.setTicketSortsIdRecipient(DataTickets.getString("ID_RECIPIENT"))
                         //obtenemos el id del tecnico(usuario logeado) y su nombre
-                        val idTechnician = DataTickets.getJSONObject("ID_TECHNICIAN")
-                        playerModel.setTicketSortsIdTechnician(idTechnician.getString("0"))
-                        MainActivity.idUserTechnician = idTechnician.getString("0")
+                        val idPositionTechnician = DataTickets.getJSONObject("ID_TECHNICIAN")
+                        val dataTechnician = idPositionTechnician.getJSONObject("0")
+                        val technician = dataTechnician.getJSONObject("0")
+                        val idTechnician = technician.getString("ID_USER")
+                        playerModel.setTicketSortsIdTechnician(idTechnician)
+                        MainActivity.idUserTechnician = idTechnician
                         MainActivity.userTechnician = DataTickets.getString("USUARIO")
                         val technicianName = DataTickets.getString("NOMBRE")
                         MainActivity.nameTechnician = technicianName
@@ -310,12 +312,17 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.ontickteCl
                         playerModel.setTechnicianName("$technicianName $technicianLastName")
                         MainActivity.nameLoginUser = "$technicianName $technicianLastName"
                         //obtenemos el id del solicitante(usuario logeado)
-                        val idPositionResquester = DataTickets.getJSONObject("ID_REQUESTER")
 
-                        val idRequester = idPositionResquester.getString("0")
+                        val idPositionResquester = DataTickets.getJSONObject("ID_REQUESTER")
+                        val dataRequester = idPositionResquester.getJSONObject("0")
+                        val requester = dataRequester.getJSONObject("0")
+                        val idRequester = requester.getString("ID_USER")
                         playerModel.setTicketSortsIdRequester(idRequester)
-                        //Log.i("mensaje idRequester: ", "$idRequester")
-                        //requestVolleyByIdRequester(idRequester)
+                        val nameRequester = requester.getString("NOMBRE")
+                        playerModel.setTicketSortsNameRequester(nameRequester)
+                        val cargoRequester = requester.getString("CARGO")
+                        playerModel.setTicketSortsPositionRequester(cargoRequester)
+                        //Log.i("mensaje idRequester: ", "$cargoRequester")
 
                         playerModel.setTicketSortsCreationDate(DataTickets.getString("FECHA_CREACION"))//fecha de creación
                         playerModel.setTicketSortsModificationDate(DataTickets.getString("FECHA_MODIFICACION"))//fecha de creación
@@ -643,6 +650,7 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.ontickteCl
         bundle.putString("IdRecipient",IdRecipient)
         bundle.putString("IdTechnician",IdTechnician)
         bundle.putString("IdRequester",IdRequester)
+        //Log.i("mensaje id","$IdRequester")
         bundle.putString("Contenido", Contenido.toString())
         //-----
         bundle.putString("Tipo", Tipo)

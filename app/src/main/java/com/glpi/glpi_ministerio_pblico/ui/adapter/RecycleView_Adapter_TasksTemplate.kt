@@ -1,12 +1,9 @@
 package com.glpi.glpi_ministerio_pblico.ui.adapter
 
 import android.content.Context
-import android.graphics.Color
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.glpi.glpi_ministerio_pblico.R
@@ -25,7 +22,9 @@ class RecycleView_Adapter_TasksTemplate(
     interface onTasksTemplateClickListener{
         fun onTasksTemplateClick(
             nameTasksTemplate: String,
-            contentTasksTemplate: String
+            contentTasksTemplate: String,
+            categoryTasksTemplates: String,
+            timeTasksTemplates: String
         )
     }
 
@@ -41,11 +40,9 @@ class RecycleView_Adapter_TasksTemplate(
     override fun onBindViewHolder(
         holder: RecycleView_Adapter_TasksTemplate.MyViewTasksTemplateHolder,
         position: Int) {
-        //Log.i("mensaje adapter",""+dataModalArrayListTasksTemplate[position].getNombreTasksTemplate())
 
-        holder.nombreTasksTemplate.text =
-            dataModalArrayListTasksTemplate[position].getNombreTasksTemplate()
-
+        holder.nameTasksTemplate.text =
+            dataModalArrayListTasksTemplate[position].getNameTasksTemplates()
     }
 
     override fun getItemCount(): Int {
@@ -54,14 +51,16 @@ class RecycleView_Adapter_TasksTemplate(
     }
 
     inner class MyViewTasksTemplateHolder(itemTasksTemplate: View): RecyclerView.ViewHolder(itemTasksTemplate){
-        var nombreTasksTemplate: TextView = itemView.findViewById(R.id.nombreTasksTemplate) as TextView
+        var nameTasksTemplate: TextView = itemView.findViewById(R.id.nombreTasksTemplate) as TextView
 
 
         init {
             itemView.setOnClickListener {
                 itemTasksTemplateClickListener.onTasksTemplateClick(
-                    dataModalArrayListTasksTemplate[position].getNombreTasksTemplate(),
-                    dataModalArrayListTasksTemplate[position].getContentTasksTemplate()
+                    dataModalArrayListTasksTemplate[position].getNameTasksTemplates(),
+                    dataModalArrayListTasksTemplate[position].getContentTasksTemplates(),
+                    dataModalArrayListTasksTemplate[position].getCategoryTasksTemplates(),
+                    dataModalArrayListTasksTemplate[position].getTimeTasksTemplates()
                 )
             }
         }

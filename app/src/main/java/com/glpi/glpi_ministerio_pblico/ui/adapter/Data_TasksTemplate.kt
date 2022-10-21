@@ -1,52 +1,52 @@
 package com.glpi.glpi_ministerio_pblico.ui.adapter
 
 class Data_TasksTemplate {
-    var idTasksTemplate_: String? = null
-    var nombreTasksTemplate_: String? = null
-    var contentTasksTemplate_: String? = null
-    var id_categoryTasksTemplate_: String? = null
-    var categoryTasksTemplate_: String? = null
-    var timeTasksTemplate_: String? = null
+    private var idTasksTemplate: String? = null
+    var nameTasksTemplate: String? = null
+    var contentTasksTemplate: String? = null
+    var idCategoryTasksTemplate: String? = null
+    var categoryTasksTemplate: String? = null
+    var timeTasksTemplate: String? = null
 
-    fun getIdTasksTemplate():String{
-        return idTasksTemplate_.toString()
+    fun getIdTasksTemplates():String{
+        return idTasksTemplate.toString()
     }
-    fun setIdTasksTemplate(idTasksTemplate: String){
-        this.idTasksTemplate_ = idTasksTemplate
-    }
-
-    fun getNombreTasksTemplate():String{
-        return nombreTasksTemplate_.toString()
-    }
-    fun setNombreTasksTemplate(nombreTasksTemplate: String){
-        this.nombreTasksTemplate_ = nombreTasksTemplate
+    fun setIdTasksTemplates(idTasksTemplate: String){
+        this.idTasksTemplate = idTasksTemplate
     }
 
-    fun getContentTasksTemplate():String{
-        return contentTasksTemplate_.toString()
+    fun getNameTasksTemplates():String{
+        return nameTasksTemplate.toString()
     }
-    fun setContentTasksTemplate(contentTasksTemplate: String){
-        this.contentTasksTemplate_ = contentTasksTemplate
-    }
-
-    fun getId_categoryTasksTemplate():String{
-        return id_categoryTasksTemplate_.toString()
-    }
-    fun setId_categoryTasksTemplate(id_categoryTasksTemplate: String){
-        this.id_categoryTasksTemplate_ = id_categoryTasksTemplate
+    fun setNameTasksTemplates(nameTasksTemplate_: String){
+        this.nameTasksTemplate = nameTasksTemplate_
     }
 
-    fun getCategoryTasksTemplate():String{
-        return categoryTasksTemplate_.toString()
+    fun getContentTasksTemplates():String{
+        return contentTasksTemplate.toString()
     }
-    fun setCategoryTasksTemplate(categoryTasksTemplate: String){
-        this.categoryTasksTemplate_ = categoryTasksTemplate
+    fun setContentTasksTemplates(contentTasksTemplate_: String){
+        this.contentTasksTemplate = contentTasksTemplate_
     }
 
-    fun getTimeTasksTemplate():String{
-        return timeTasksTemplate_.toString()
+    fun getIdCategoryTasksTemplates():String{
+        return idCategoryTasksTemplate.toString()
     }
-    fun setTimeTasksTemplate(timeTasksTemplate: String){
-        this.timeTasksTemplate_ = timeTasksTemplate
+    fun setIdCategoryTasksTemplates(idCategoryTasksTemplate_: String){
+        this.idCategoryTasksTemplate = idCategoryTasksTemplate_
+    }
+
+    fun getCategoryTasksTemplates():String{
+        return categoryTasksTemplate.toString()
+    }
+    fun setCategoryTasksTemplates(categoryTasksTemplate_: String){
+        this.categoryTasksTemplate = categoryTasksTemplate_
+    }
+
+    fun getTimeTasksTemplates():String{
+        return timeTasksTemplate.toString()
+    }
+    fun setTimeTasksTemplates(timeTasksTemplate_: String){
+        this.timeTasksTemplate = timeTasksTemplate_
     }
 }
