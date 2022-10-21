@@ -116,12 +116,6 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.ontickteCl
 
             }
         }
-        /*Log.i("mensaje flagTicket","${MainActivity.flagTicketSort}")
-        Log.i("mensaje flagfilter","${MainActivity.flagFilter}")
-        Log.i("mensaje flagCalendar","${MainActivity.flagCalendar}")*/
-
-
-
         val root = binding.root
 
         return root

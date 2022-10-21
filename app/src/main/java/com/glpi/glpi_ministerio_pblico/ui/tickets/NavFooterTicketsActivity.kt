@@ -84,7 +84,7 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
         volleyRequestIdRecipient() //datos del operador
         volleyRequestIdTechnician() //datos del tecnico
         volleyRequestIdRequester() //datos del solicitante
-        volleyRequestPost(urlApi_TicketID)
+        volleyRequestTicketInfo(urlApi_TicketID)
 
         activityHeader()
         btnPetition()
@@ -133,16 +133,20 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
         binding.includeFabs.btnFabTareas.setOnClickListener {
             val intentAddTask = Intent(this, TicketsAgregarTareaActivity::class.java)
 
+
             val intent = intent.extras
             val idTicket = intent!!.getString("TicketID")
             val ticketType = intent!!.getString("Tipo") //solicitud o incidente
             val ticketStatus = intent!!.getString("TicketEstado") //en curso ,cerrado ...
+            val IdTechnician = intent!!.getString("IdTechnician")
 
             val bundle = Bundle()
             //bundle.putString("TicketID", TicketID_)
             bundle.putString("TicketID", idTicket)
             bundle.putString("ticketType", ticketType)
             bundle.putString("ticketStatus", ticketStatus)
+            bundle.putString("IdTechnician", IdTechnician)
+            //bundle.putString("flagBtnFabTasks", flagBtnFabTasks)
             intentAddTask.putExtras(bundle)
             intentAddTask.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             startActivity(intentAddTask)
@@ -179,9 +183,11 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
             hideFabs()
         }
         binding.includeFabs.btnFabDocumentos.setOnClickListener {
+            val flagBtnFabDocuments = "true"
             val intentAddDocument = Intent(this, TicketsAgregarDocumentosActivity::class.java)
             val bundle = Bundle()
             bundle.putString("TicketID", TicketID_)
+            bundle.putString("flagBtnFabDocuments", flagBtnFabDocuments)
             intentAddDocument.putExtras(bundle)
             intentAddDocument.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             startActivity(intentAddDocument)
@@ -318,7 +324,8 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
         //recyclerViewNews.setHasFixedSize(true)
     }
 
-    private fun volleyRequestPost(urlApi_: String) {
+    //consultamos la información de ticket por id del ticket
+    private fun volleyRequestTicketInfo(urlApi_: String) {
         val bundle = intent.extras
         val TicketID_ = bundle!!.getString("TicketID")
         val Contenido_ = bundle!!.getString("Contenido")
@@ -329,8 +336,7 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
 
         jsonObjectResponse = JSONObject()
 
-        val stringRequestDataTickets = @RequiresApi(Build.VERSION_CODES.N)
-        object : StringRequest(Method.POST,
+        val stringRequestDataTickets = object : StringRequest(Method.POST,
             urlApi_+TicketID_, Response.Listener { response ->
                 try {
                     dataModelArrayListConverdation = ArrayList()
@@ -591,6 +597,7 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
                 val lastNameId = dataId.getString("APELLIDO")
                 val cellPhone = dataId.getString("TELEFONO")
 
+
                 binding.includeTicketsHistorico.txtNameOperador.text = "$nameId $lastNameId"
                 binding.includeTickets.txtTasksUserName.text = "$nameId $lastNameId"
                 if (cellPhone != " " && cellPhone != "null"){
@@ -691,13 +698,16 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
     override fun onEditClick(
         ticketInfoPrivate: String,
         glpiTasksDescripcion: String,
-        glpiTasksTipo: String
+        glpiTasksTipo: String,
+        getTaskUsersEstimateDuration: String
     ) {
+        val flagOnEditClick = "true"
         //recuperamos el id del ticket
         val bundle = intent.extras
         val ticketId = bundle!!.getString("TicketID")
         val ticketStatus = bundle!!.getString("TicketEstado")
         val ticketOrigin = bundle!!.getString("TicketOrigen")
+        val IdTechnician = bundle!!.getString("IdTechnician")
 
         val intentTasks = (Intent(this,TicketsAgregarTareaActivity::class.java))
         intentTasks.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
@@ -711,9 +721,11 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
             intentTasks.putExtra("ticketStatus",ticketStatus)
             intentTasks.putExtra("ticketPrivate",ticketInfoPrivate)
             intentTasks.putExtra("tasks_description",glpiTasksDescripcion)
+            intentTasks.putExtra("IdTechnician",IdTechnician)
+            intentTasks.putExtra("flagOnEditClick",flagOnEditClick)
+            intentTasks.putExtra("getTaskUsersEstimateDuration",getTaskUsersEstimateDuration)
             startActivity(intentTasks)
         }else{
-
             intentFollowUp.putExtra("ticketId",ticketId)
             intentFollowUp.putExtra("ticketStatus",ticketStatus)
             intentFollowUp.putExtra("ticketPrivate",ticketInfoPrivate)

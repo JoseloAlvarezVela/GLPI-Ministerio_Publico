@@ -25,7 +25,13 @@ class TicketsAgregarDocumentosActivity : AppCompatActivity() {
 
     private fun ticketInfo(){
         val bundle = intent.extras
+        val flagBtnFabDocuments = bundle!!.getString("flagBtnFabDocuments")
         binding.tvIdTicket.text = "Petición #${bundle!!.getString("TicketID")}"
+
+        if (flagBtnFabDocuments == "true"){
+            binding.includeDocuments.contentDocuments.isVisible = true
+        }
+
     }
     //INICIO - funcion que contiene botones en la cabecera del layout
     private fun btn_header() {

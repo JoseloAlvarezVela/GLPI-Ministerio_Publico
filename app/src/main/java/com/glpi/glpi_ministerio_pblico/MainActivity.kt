@@ -77,6 +77,7 @@ class MainActivity : AppCompatActivity(){
 
         //variable para controlar actualizacion y nuevos seguimientos en activity_tickets_agregar_seguimiento.xml
         var updateFollowup = false
+        var updateTaks = false
 
         //flag para edit ticket , para diferenciar entre editar tarea o seguimiento
         var flagEdit = false

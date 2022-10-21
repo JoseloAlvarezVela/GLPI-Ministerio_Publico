@@ -144,7 +144,8 @@
                     android:background="#FFFFFF"
                     android:fontFamily="@font/averia_sans_libre_light"
                     android:hint="Usuario"
-                    android:text="mdios_usuario3" />
+                    android:text="mdios_usuario3"
+                    android:textColor="#000000" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout
@@ -166,7 +167,8 @@
                     android:fontFamily="@font/averia_sans_libre_light"
                     android:hint="Contraseña"
                     android:inputType="textPassword"
-                    android:text="123456**Mp" />
+                    android:text="123456**Mp"
+                    android:textColor="#000000" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <Button

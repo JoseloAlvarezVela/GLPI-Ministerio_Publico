@@ -22,7 +22,7 @@ class RecyclerAdapter(
     private val TICKET_ASSIGNED = 1
 
     interface onConversationClickListener{
-        fun onEditClick(ticketInfoPrivate: String, glpiTasksDescripcion: String, glpiTasksTipo: String)
+        fun onEditClick(ticketInfoPrivate: String, glpiTasksDescripcion: String, glpiTasksTipo: String, getTaskUsersEstimateDuration: String)
         fun onFabClick()
     }
 
@@ -142,7 +142,8 @@ class RecyclerAdapter(
                     itemclickListener.onEditClick(
                         item.getTicketInfo_Private(),
                         item.getGlpiTasksDescripcion(),
-                        item.getGlpiTasksTipo()
+                        item.getGlpiTasksTipo(),
+                        item.getTaskUsersEstimateDuration()
                     )
                 }
             }
