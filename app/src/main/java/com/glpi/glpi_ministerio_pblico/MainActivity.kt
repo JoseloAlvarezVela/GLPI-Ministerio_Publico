@@ -96,7 +96,7 @@ class MainActivity : AppCompatActivity(){
 
 
         //variables para filtrar tickets
-        var flagFilter = false
+        var flagFilterState = false
         var checkNewTicket: String = "0"
         var checkAssignedTicket: String = "0"
         var checkPlannedTicket: String = "0"
@@ -123,8 +123,8 @@ class MainActivity : AppCompatActivity(){
             return "${textElements[2]}/${textElements[1]}/${textElements[0]}"
         }
 
-        fun decodeHtml(contenido: String): String{
-            val decoded: String = Html.fromHtml(contenido).toString()
+        fun decodeHtml(content: String): String{
+            val decoded: String = Html.fromHtml(content).toString()
             val decoded2: Spanned = HtmlCompat.fromHtml(decoded, HtmlCompat.FROM_HTML_MODE_COMPACT)
             return decoded2.toString()
         }
@@ -172,7 +172,10 @@ class MainActivity : AppCompatActivity(){
 
         binding.appBarMain.includeFiltroRight.btnApplyFilter.setOnClickListener {
             if (binding.appBarMain.includeFiltroRight.edtFindTicketID.text.toString() != ""){
-                flag_edtFindTicketID = true
+                flag_edtFindTicketID = true //activamos la bandera para buscar por id
+                flagFilterState = false
+                flagTicketSort = false
+                flagCalendar = false
                 binding.appBarMain.includeFiltroRight.checkBoxNewTicket.isChecked = false
                 binding.appBarMain.includeFiltroRight.checkBoxAssignedTicket.isChecked = false
                 binding.appBarMain.includeFiltroRight.checkBoxPlannedTicket.isChecked = false
@@ -182,26 +185,44 @@ class MainActivity : AppCompatActivity(){
                 edtFindTicketID = binding.appBarMain.includeFiltroRight.edtFindTicketID.text.toString()
                 //Toast.makeText(this, ""+binding.appBarMain.includeFiltroRight.edtFindTicketID.text.toString(), Toast.LENGTH_LONG).show()
             }else{
-                flagFilter = true
                 flagTicketSort = false
                 flagCalendar = false
+                flag_edtFindTicketID = false
+                flagFilterState = true
                 if (binding.appBarMain.includeFiltroRight.checkBoxNewTicket.isChecked){
                     checkNewTicket = "1"
+                }else{
+                    checkNewTicket = "0"
                 }
+
                 if (binding.appBarMain.includeFiltroRight.checkBoxAssignedTicket.isChecked){
                     checkAssignedTicket = "2"
+                }else{
+                    checkAssignedTicket = "0"
                 }
+
                 if (binding.appBarMain.includeFiltroRight.checkBoxPlannedTicket.isChecked){
                     checkPlannedTicket = "3"
+                }else{
+                    checkPlannedTicket = "0"
                 }
+
                 if (binding.appBarMain.includeFiltroRight.checkBoxWaitTicket.isChecked){
                     checkWaitTicket = "4"
+                }else{
+                    checkWaitTicket = "0"
                 }
+
                 if (binding.appBarMain.includeFiltroRight.checkBoxSolvedTicket.isChecked){
                     checkSolvedTicket = "5"
+                }else{
+                    checkSolvedTicket = "0"
                 }
+
                 if (binding.appBarMain.includeFiltroRight.checkBoxCloseTicket.isChecked){
                     checkCloseTicket = "6"
+                }else{
+                    checkCloseTicket = "0"
                 }
             }
 
@@ -215,7 +236,7 @@ class MainActivity : AppCompatActivity(){
         binding.appBarMain.includeFiltroRight.btnClearFilter.setOnClickListener {
             flag_edtFindTicketID = false
             flagTicketSort = true
-            flagFilter = false
+            flagFilterState = false
             flagCalendar = false
             flag_requesterSearch = false
             checkNewTicket = "0"
@@ -343,14 +364,14 @@ class MainActivity : AppCompatActivity(){
                 //flag tipos de filtro
                 flagCalendar = true
                 flagTicketSort = false
-                flagFilter = false
+                flagFilterState = false
                 //flag tipos de busqueda en calendario
                 flagCalendarUltModify = true
                 flagCalendarOpenDate = false
                 flagCalendarCloseDate = false
                 //cerramos y volvemos a abrir el fragment para recargar su contenido
                 replaceFragment(MisPeticionesFragment())
-                Log.i("mensaje mainAct","$flagCalendar / $flagTicketSort / $flagFilter" )
+                Log.i("mensaje mainAct","$flagCalendar / $flagTicketSort / $flagFilterState" )
                 val dateRange = binding.appBarMain.includeModalCalendario.fechaStart.text.toString() +"\n"+
                         binding.appBarMain.includeModalCalendario.fechaEnd.text.toString()
                 Toast.makeText(this, "Ultima Modificación: $dateRange", Toast.LENGTH_SHORT).show()
@@ -358,7 +379,7 @@ class MainActivity : AppCompatActivity(){
                 //flag tipos de filtro
                 flagCalendar = true
                 flagTicketSort = false
-                flagFilter = false
+                flagFilterState = false
                 //flag tipos de busqueda en calendario
                 flagCalendarUltModify = false
                 flagCalendarOpenDate = true
@@ -372,7 +393,7 @@ class MainActivity : AppCompatActivity(){
                 //flag tipos de filtro
                 flagCalendar = true
                 flagTicketSort = false
-                flagFilter = false
+                flagFilterState = false
                 //flag tipos de busqueda en calendario
                 flagCalendarUltModify = false
                 flagCalendarOpenDate = false
@@ -403,6 +424,10 @@ class MainActivity : AppCompatActivity(){
 
 
             binding.appBarMain.incMdbsfr.btnRequesterSearch.setOnClickListener {
+                flag_edtFindTicketID = false
+                flagTicketSort = false
+                flagFilterState = false
+                flagCalendar = false
                 flag_requesterSearch = true
                 binding.appBarMain.includeFiltroRight.LinearLayoutActivityFiltroRight.isVisible = false
                 binding.appBarMain.incMdbsfr.llyMdbsfr.isVisible = false

@@ -43,6 +43,11 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
     private var recyclerView_Adapter_TasksTemplate: RecycleView_Adapter_TasksTemplate? = null
     private var recyclerView_Adapter_TasksCategory: RecycleView_Adapter_TasksCategory? = null
 
+    //para obetener id despues de cargar
+    /*companion object{
+        lateinit var idTemplate: String
+    }*/
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityTicketsAgregarTareaBinding.inflate(layoutInflater)
@@ -53,9 +58,10 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
         recyclerViewCategory = binding.includeModalPlantillaAgregarCategoria.recyclerTasksCategory
         //recyclerView = binding.recyclerTaskTemplate
 
-        ticketInfo()
         volleyRequestDataTasksTemplate()
         volleyRequestDataTasksCategory()
+        ticketInfo()
+
 
         if (flagTasks){
             val intent = intent.extras
@@ -91,13 +97,59 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
     }
 
     private fun btnTimeToSolveTask(){
+        val arrayHour = arrayListOf<String>("00","01","02","03","04","05","06","07","08","09","10","11","12")
+        val arrayMinutes = arrayListOf<String>("05","10","15","20","25","30","35","40","45","50","55")
+        var iHour = 0
+        var iMinutes = 0
         binding.btnTimeToSolveTask.setOnClickListener {
             binding.LayoutBackgroudAgregarTarea.isVisible = true
             binding.includeTimeToSolveTask.modalTimeToSolveTask.isVisible = true
             val timer = 5
             binding.btnTimeToSolveTask.text = "$timer minutos"
-            //Log.i("mensaje TimeToSolveTask","${ binding.btnTimeToSolveTask.text.split(" ")}")
+
+            binding.includeTimeToSolveTask.hours.text = arrayHour[0]
+
+            binding.includeTimeToSolveTask.imgBtnUpHour.setOnClickListener {
+                if (iHour < arrayHour.size-1){
+                    iHour++
+                    binding.includeTimeToSolveTask.hours.text = arrayHour[iHour]
+                }
+            }
+            binding.includeTimeToSolveTask.imgBtnDownHour.setOnClickListener {
+                if (iHour>0){
+                    iHour--
+                    binding.includeTimeToSolveTask.hours.text = arrayHour[iHour]
+                }
+            }
+
+
+            binding.includeTimeToSolveTask.imgBtnUpMinutes.setOnClickListener {
+                if (iMinutes < arrayMinutes.size-1){
+                    iMinutes++
+                    binding.includeTimeToSolveTask.minutes.text = arrayMinutes[iMinutes]
+                }
+            }
+            binding.includeTimeToSolveTask.imgBtnDownMinutes.setOnClickListener {
+                if (iMinutes>0){
+                    iMinutes--
+                    binding.includeTimeToSolveTask.minutes.text = arrayMinutes[iMinutes]
+                }
+            }
         }
+
+        var getHour = ""
+        var getMinutes = ""
+        binding.includeTimeToSolveTask.btnOkUnderModalTimeToSolveTask.setOnClickListener {
+            getHour = binding.includeTimeToSolveTask.hours.text.toString()
+            getMinutes = binding.includeTimeToSolveTask.minutes.text.toString()
+            Toast.makeText(this, "$getHour : $getMinutes para resolver tarea", Toast.LENGTH_SHORT).show()
+            binding.btnTimeToSolveTask.text = "$getHour : $getMinutes minutos"
+            binding.includeTimeToSolveTask.modalTimeToSolveTask.isVisible = false
+            binding.LayoutBackgroudAgregarTarea.isVisible = false
+            binding.includeTimeToSolveTask.hours.text = arrayHour[0]
+            binding.includeTimeToSolveTask.minutes.text = arrayMinutes[0]
+        }
+
         binding.includeTimeToSolveTask.btnCloseUnderModalTimeToSolveTask.setOnClickListener {
             binding.includeTimeToSolveTask.modalTimeToSolveTask.isVisible = false
             binding.LayoutBackgroudAgregarTarea.isVisible = false
@@ -106,128 +158,9 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
             binding.includeTimeToSolveTask.modalTimeToSolveTask.isVisible = false
             binding.LayoutBackgroudAgregarTarea.isVisible = false
         }
-        binding.includeTimeToSolveTask.btn5min.setOnClickListener {
-            binding.includeTimeToSolveTask.modalTimeToSolveTask.isVisible = false
-            binding.LayoutBackgroudAgregarTarea.isVisible = false
-            binding.btnTimeToSolveTask.text = binding.includeTimeToSolveTask.btn5min.text
-            val timer = binding.btnTimeToSolveTask.text.split(" ")
-            Log.i("mensaje newTimer", timer[0])
-        }
-        binding.includeTimeToSolveTask.btn10min.setOnClickListener {
-            binding.includeTimeToSolveTask.modalTimeToSolveTask.isVisible = false
-            binding.LayoutBackgroudAgregarTarea.isVisible = false
-            binding.btnTimeToSolveTask.text = binding.includeTimeToSolveTask.btn10min.text
-            val timer = binding.btnTimeToSolveTask.text.split(" ")
-            Log.i("mensaje newTimer", timer[0])
-        }
-        binding.includeTimeToSolveTask.btn15min.setOnClickListener {
-            binding.includeTimeToSolveTask.modalTimeToSolveTask.isVisible = false
-            binding.LayoutBackgroudAgregarTarea.isVisible = false
-            binding.btnTimeToSolveTask.text = binding.includeTimeToSolveTask.btn15min.text
-            val timer = binding.btnTimeToSolveTask.text.split(" ")
-            Log.i("mensaje newTimer", timer[0])
-        }
-        binding.includeTimeToSolveTask.btn20min.setOnClickListener {
-            binding.includeTimeToSolveTask.modalTimeToSolveTask.isVisible = false
-            binding.LayoutBackgroudAgregarTarea.isVisible = false
-            binding.btnTimeToSolveTask.text = binding.includeTimeToSolveTask.btn20min.text
-            val timer = binding.btnTimeToSolveTask.text.split(" ")
-            Log.i("mensaje newTimer", timer[0])
-        }
-        binding.includeTimeToSolveTask.btn25min.setOnClickListener {
-            binding.includeTimeToSolveTask.modalTimeToSolveTask.isVisible = false
-            binding.LayoutBackgroudAgregarTarea.isVisible = false
-            binding.btnTimeToSolveTask.text = binding.includeTimeToSolveTask.btn25min.text
-            val timer = binding.btnTimeToSolveTask.text.split(" ")
-            Log.i("mensaje newTimer", timer[0])
-        }
-        binding.includeTimeToSolveTask.btn30min.setOnClickListener {
-            binding.includeTimeToSolveTask.modalTimeToSolveTask.isVisible = false
-            binding.LayoutBackgroudAgregarTarea.isVisible = false
-            binding.btnTimeToSolveTask.text = binding.includeTimeToSolveTask.btn30min.text
-            val timer = binding.btnTimeToSolveTask.text.split(" ")
-            Log.i("mensaje newTimer", timer[0])
-        }
-        binding.includeTimeToSolveTask.btn35min.setOnClickListener {
-            binding.includeTimeToSolveTask.modalTimeToSolveTask.isVisible = false
-            binding.LayoutBackgroudAgregarTarea.isVisible = false
-            binding.btnTimeToSolveTask.text = binding.includeTimeToSolveTask.btn35min.text
-            val timer = binding.btnTimeToSolveTask.text.split(" ")
-            Log.i("mensaje newTimer", timer[0])
-        }
-        binding.includeTimeToSolveTask.btn40min.setOnClickListener {
-            binding.includeTimeToSolveTask.modalTimeToSolveTask.isVisible = false
-            binding.LayoutBackgroudAgregarTarea.isVisible = false
-            binding.btnTimeToSolveTask.text = binding.includeTimeToSolveTask.btn40min.text
-            val timer = binding.btnTimeToSolveTask.text.split(" ")
-            Log.i("mensaje newTimer", timer[0])
-        }
-        binding.includeTimeToSolveTask.btn45min.setOnClickListener {
-            binding.includeTimeToSolveTask.modalTimeToSolveTask.isVisible = false
-            binding.LayoutBackgroudAgregarTarea.isVisible = false
-            binding.btnTimeToSolveTask.text = binding.includeTimeToSolveTask.btn45min.text
-            val timer = binding.btnTimeToSolveTask.text.split(" ")
-            Log.i("mensaje newTimer", timer[0])
-        }
-        binding.includeTimeToSolveTask.btn50min.setOnClickListener {
-            binding.includeTimeToSolveTask.modalTimeToSolveTask.isVisible = false
-            binding.LayoutBackgroudAgregarTarea.isVisible = false
-            binding.btnTimeToSolveTask.text = binding.includeTimeToSolveTask.btn50min.text
-            val timer = binding.btnTimeToSolveTask.text.split(" ")
-            Log.i("mensaje newTimer", timer[0])
-        }
-        binding.includeTimeToSolveTask.btn55min.setOnClickListener {
-            binding.includeTimeToSolveTask.modalTimeToSolveTask.isVisible = false
-            binding.LayoutBackgroudAgregarTarea.isVisible = false
-            binding.btnTimeToSolveTask.text = binding.includeTimeToSolveTask.btn55min.text
-            val timer = binding.btnTimeToSolveTask.text.split(" ")
-            Log.i("mensaje newTimer", timer[0])
-        }
-        binding.includeTimeToSolveTask.btn60min.setOnClickListener {
-            binding.includeTimeToSolveTask.modalTimeToSolveTask.isVisible = false
-            binding.LayoutBackgroudAgregarTarea.isVisible = false
-            binding.btnTimeToSolveTask.text = binding.includeTimeToSolveTask.btn60min.text
-            val timer = binding.btnTimeToSolveTask.text.split(" ")
-            Log.i("mensaje newTimer", timer[0])
-        }
     }
 
-    private fun ticketInfo(){
-        val bundle = intent.extras
-        val idTicket = bundle!!.getString("TicketID")
-        val ticketType = bundle!!.getString("ticketType") //solicitud o incidente
-        val ticketStatus = bundle!!.getString("ticketStatus")//en curso ,cerrado ...
-        val getTaskUsersEstimateDuration = bundle!!.getString("getTaskUsersEstimateDuration")
-        binding.tvIdTicket.text = "Petición $idTicket"
 
-        if (getTaskUsersEstimateDuration != null){
-            binding.btnTimeToSolveTask.text = getTaskUsersEstimateDuration
-        }
-
-
-        if(ticketType == "SOLICITUD"){
-            binding.imgBtnTypeTasks.setImageResource(R.drawable.ic_interrogacion)
-        }else{
-            binding.imgBtnTypeTasks.setImageResource(R.drawable.ic_incidencia)
-        }
-
-        Log.i("mensaje","$ticketStatus")
-        if(ticketStatus == "EN CURSO (Asignada)"){
-            binding.imgBtnStatusTasks.setImageResource(R.drawable.ic_circulo_verde)
-            binding.imgBtnStatusTasksHeader.setImageResource(R.drawable.ic_circulo_verde)
-        }else if(ticketStatus == "EN ESPERA"){
-            Toast.makeText(this, "$ticketStatus", Toast.LENGTH_SHORT).show()
-            binding.imgBtnStatusTasks.setImageResource(R.drawable.ic_circulo)
-            binding.imgBtnStatusTasksHeader.setImageResource(R.drawable.ic_circulo)
-        }else if (ticketStatus == "CERRADO"){
-            binding.imgBtnStatusTasks.setImageResource(R.drawable.ic_circulo_negro)
-            binding.imgBtnStatusTasksHeader.setImageResource(R.drawable.ic_circulo_negro)
-        }
-
-        imgBtnTicketStatus(ticketStatus)
-        btnAddTasks()
-
-    }
 
     private fun imgBtnTicketStatus(ticketStatus: String?){
         var flagTicketStatus: Boolean
@@ -238,11 +171,13 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
                 if(flagTicketStatus){
                     binding.imgBtnStatusTasks.setImageResource(R.drawable.ic_circulo)
                     binding.imgBtnStatusTasksHeader.setImageResource(R.drawable.ic_circulo)
+                    binding.imgBtnStatusTasks.tag = 0
                     newTicketStatus = "EN ESPERA"
                     flagTicketStatus = false
                 }else{
                     binding.imgBtnStatusTasks.setImageResource(R.drawable.ic_circulo_verde)
                     binding.imgBtnStatusTasksHeader.setImageResource(R.drawable.ic_circulo_verde)
+                    binding.imgBtnStatusTasks.tag = 1
                     newTicketStatus = "EN CURSO (Asignada)"
                     flagTicketStatus = true
                 }
@@ -253,11 +188,13 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
                 if(flagTicketStatus){
                     binding.imgBtnStatusTasks.setImageResource(R.drawable.ic_circulo)
                     binding.imgBtnStatusTasksHeader.setImageResource(R.drawable.ic_circulo)
+                    binding.imgBtnStatusTasks.tag = 0
                     newTicketStatus = "EN ESPERA"
                     flagTicketStatus = false
                 }else{
                     binding.imgBtnStatusTasks.setImageResource(R.drawable.ic_circulo_verde)
                     binding.imgBtnStatusTasksHeader.setImageResource(R.drawable.ic_circulo_verde)
+                    binding.imgBtnStatusTasks.tag = 1
                     newTicketStatus = "EN CURSO (Asignada)"
                     flagTicketStatus = true
                 }
@@ -275,6 +212,7 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
                     for(i in  0 until jsonObjectResponse.length()){
                         val nTemplate = jsonObjectResponse.getJSONObject(i)
                         val player = Data_TasksTemplate()
+                        player.setIdTasksTemplates(nTemplate.getString("ID"))
                         player.setNameTasksTemplates(nTemplate.getString("NOMBRE"))
                         player.setContentTasksTemplates(nTemplate.getString("CONTENIDO"))
                         player.setCategoryTasksTemplates(nTemplate.getString("CATEGORIA"))
@@ -326,6 +264,7 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
                     for (i in  0 until jsonObjectResponse.length()){
                         val nTemplate = jsonObjectResponse.getJSONObject(iterador)
                         val player = Data_TasksCategory()
+                        player.setIdTasksCategories(nTemplate.getString("ID"))
                         player.setNameTasksCategories(nTemplate.getString("NOMBRE"))
                         player.setContentTasksCategories(nTemplate.getString("COMPLETO"))
                         iterador++
@@ -363,6 +302,59 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
         recyclerViewCategory!!.adapter = recyclerView_Adapter_TasksCategory
         }
 
+    private fun ticketInfo(){
+        val bundle = intent.extras
+        val idTicket = bundle!!.getString("TicketID")
+        val ticketType = bundle!!.getString("ticketType") //solicitud o incidente
+        val ticketStatus = bundle!!.getString("ticketStatus")//en curso ,cerrado ...
+        val getTaskUsersEstimateDuration = bundle!!.getString("getTaskUsersEstimateDuration")
+        val tasksStatus = bundle!!.getString("tasksStatus")
+        val tasksCategory = bundle!!.getString("tasksCategory")
+        binding.tvIdTicket.text = "Petición $idTicket"
+
+        val idTemplate = binding.idTemplate.text.toString()
+
+        if (tasksCategory != null){
+            binding.btnAddCategory.text = tasksCategory
+        }
+
+        if (getTaskUsersEstimateDuration != null){
+            binding.btnTimeToSolveTask.text = getTaskUsersEstimateDuration
+        }
+
+
+        if(ticketType == "SOLICITUD"){
+            binding.imgBtnTypeTasks.setImageResource(R.drawable.ic_interrogacion)
+        }else{
+            binding.imgBtnTypeTasks.setImageResource(R.drawable.ic_incidencia)
+        }
+
+        if (tasksStatus == "TERMINADO"){
+            binding.chkboxPadLock.isChecked = true
+
+        }
+
+        Log.i("mensaje","$ticketStatus")
+        if(ticketStatus == "EN CURSO (Asignada)"){
+            binding.imgBtnStatusTasks.setImageResource(R.drawable.ic_circulo_verde)
+            binding.imgBtnStatusTasksHeader.setImageResource(R.drawable.ic_circulo_verde)
+            binding.imgBtnStatusTasks.tag = 1
+        }else if(ticketStatus == "EN ESPERA"){
+            Toast.makeText(this, "$ticketStatus", Toast.LENGTH_SHORT).show()
+            binding.imgBtnStatusTasks.setImageResource(R.drawable.ic_circulo)
+            binding.imgBtnStatusTasksHeader.setImageResource(R.drawable.ic_circulo)
+            binding.imgBtnStatusTasks.tag = 0
+        }else if (ticketStatus == "CERRADO"){
+            binding.imgBtnStatusTasks.setImageResource(R.drawable.ic_circulo_negro)
+            binding.imgBtnStatusTasks.tag = 2
+            binding.imgBtnStatusTasksHeader.setImageResource(R.drawable.ic_circulo_negro)
+        }
+
+        imgBtnTicketStatus(ticketStatus)
+        btnAddTasks()
+
+    }
+
     //INICIO - funcion que abre modal para escoger una tarea
     private fun btn_agregarCat() {
         //INICO - boton que abre modal_agregar_cat_tickets.xml
@@ -387,26 +379,59 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
             val bundle = intent.extras
             var idTechnician = bundle!!.getString("IdTechnician")
             val flagOnEditClick = bundle!!.getString("flagOnEditClick")
+            val getTaskUsersEstimateDuration = bundle!!.getString("getTaskUsersEstimateDuration")
+            var ticketDate = bundle!!.getString("ticketDate")
 
             var ticketPrivate = binding.chkboxPadLock.tag.toString()
             val ticketId = binding.tvIdTicket.text.split(" ")[1].replace("#","")
             val tasksDescription = binding.edtTasksDescription.text
             val durationToSolveTasks = binding.btnTimeToSolveTask.text
             val category = binding.btnAddCategory.text
+            var ticketStatus = binding.imgBtnStatusTasks.tag.toString()
+            val idTemplates = binding.idTemplate.text
+            val idCategory = binding.idCategory.text
 
-
-            if (flagOnEditClick == "true"){
-                idTechnician = "0"
+            if (ticketStatus == "0"){
+                ticketStatus = "EN ESPERA"
+            }else{
+                ticketStatus = "EN CURSO (Asignada)"
             }
 
-            if (ticketPrivate == "PRIVADO"){
-                ticketPrivate = "NO PRIVADO"
+            var ticketTaSksStatus: String = if (binding.chkboxPadLock.isChecked){
+                "1"
+            }else{
+                "0"
             }
-
             //fecha y hora actual
             val sdf = SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale("es", "PE"))//obtenemos fecha actual
             val currentdate = sdf.format(Date())
-            Log.i("mensaje",
+
+            if (flagOnEditClick == "true"){
+                idTechnician = "0"
+            }else{
+                ticketDate = currentdate
+            }
+
+            ticketPrivate = if (ticketPrivate == "PRIVADO"){
+                "1"
+            }else{
+                "0"
+            }
+
+            Log.i("mensaje addTask",
+                "content: $tasksDescription\n"+
+                "private: $ticketPrivate\n" +
+                "user_tech: ${MainActivity.userTechnician}\n"+
+                "task_state: $ticketTaSksStatus\n"+
+                "templates_id: $idTemplates\n"+
+                "categories_id: $idCategory\n"+
+                "date_end: $currentdate\n"+
+                "date_begin: $ticketDate\n"+
+                "ticket_state: $ticketStatus\n"+ //incidente/solicitud
+                "id de ticket: $ticketId")
+
+
+            /*Log.i("mensaje",
                 "id de ticket: $ticketId \n" +
                         "TIPO: TASKS\n"+
                         "PRIVADO: $ticketPrivate\n" +
@@ -414,17 +439,17 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
                         "USUARIO: ${MainActivity.userTechnician}\n"+
                         "NOMBRE: ${MainActivity.nameTechnician}\n"+
                         "APELLIDO: ${MainActivity.lastNameTechnician}\n"+
-                        "FECHA: $currentdate\n"+
-                        "FECHA_CREACION: $currentdate\n"+
+                        "FECHA: $ticketDate\n"+
+                        "FECHA_CREACION: $ticketDate\n"+
                         "FECHA_MODIFICACION: $currentdate\n"+
                         "CONTENIDO: $tasksDescription\n"+
                         "FECHA_INICIO: null\n"+
                         "FECHA_FIN: null\n"+
                         "DURACION: $durationToSolveTasks\n"+
-                        "ESTADO: terminado/pendiente\n"+
+                        "ESTADO: $ticketTaSksStatus\n"+
                         "CATEGORIA: $category\n"+
                         "EDITOR: $idTechnician\n"+ //aca debe ir el id del que edita el ticket
-                        "TECNICO: $idTechnician\n")
+                        "TECNICO: $idTechnician\n")*/
             onBackPressed()
             /*val intent_agregarTarea = Intent(this, MainActivity::class.java)
             intent_agregarTarea.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
@@ -526,7 +551,8 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
         nameTasksTemplate: String,
         contentTasksTemplate: String,
         categoryTasksTemplates: String,
-        timeTasksTemplates: String
+        timeTasksTemplates: String,
+        idTasksTemplates: String
     ) {
         binding.includeModalPlantillaTarea.modalPlantillaAgregarTarea.isVisible = false
         binding.LayoutBackgroudAgregarTarea.isVisible = false
@@ -538,7 +564,8 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
         binding.edtTasksDescription.setText(decodeHtml(contentTasksTemplate))
         binding.edtTasksDescription.setTextColor(Color.parseColor("#1D20DD"))
         binding.btnAddCategory.text = categoryTasksTemplates
-        binding.btnTimeToSolveTask.text = timeTasksTemplates
+        binding.btnTimeToSolveTask.text = timeTasksTemplates.split(".")[0] +" minutos"
+        binding.idTemplate.text = idTasksTemplates
         /*val fullHtml = "<h2 style=\"text-align: center;\"><span style=\"color: #0000ff;\">ACOMPAÑAMIENTO</span></h2><h4><span style=\"color: #0000ff;\"><span style=\"color: #ff0000;\">Evento:</span> </span></h4><h4><span style=\"color: #0000ff;\"><span style=\"color: #ff0000;\">Modalidad (pres./rem.):</span> </span></h4>"
         val decodeFullhtml = fullHtml.split("</span>") as ArrayList
         binding.edtTasksDescription.setText(decodeFullhtml.toString())
@@ -551,7 +578,7 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
         //binding.edtTasksDescription.setText(decodeFullhtml.toString())
     }
 
-    override fun onTasksCategoryClick(nameTasksCategory: String, contentTasksCategory: String) {
+    override fun onTasksCategoryClick(nameTasksCategory: String, contentTasksCategory: String,idTasksCategories: String) {
         binding.includeModalPlantillaAgregarCategoria.modalPlantillaAgregarTarea.isVisible = false
         binding.LayoutBackgroudAgregarTarea.isVisible = false
         binding.fabPlantilla.isVisible = false
@@ -563,6 +590,7 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
         Toast.makeText(this, "$nameTasksCategory", Toast.LENGTH_SHORT).show()
 
         binding.btnAddCategory.text = decodeHtml(contentTasksCategory)
+        binding.idCategory.text = idTasksCategories
     }
 
 }

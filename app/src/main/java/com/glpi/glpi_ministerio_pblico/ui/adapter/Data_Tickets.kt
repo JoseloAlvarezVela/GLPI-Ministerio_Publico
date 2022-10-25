@@ -14,6 +14,7 @@ class Data_Tickets {
     private var ticketSortsDate : String? = null
     private var ticketSortsModificationDate: String? = null
     private var ticketSortsCreationDate: String? = null
+    private var ticketSortsTimeToFinish: String? = null
     private var ticketSortsIdRecipient: String? = null
     private var ticketSortsIdTechnician: String? = null
     private var technicianName: String? = null
@@ -38,6 +39,8 @@ class Data_Tickets {
     private var taskUsersNameRequester: String? = null
     private var taskUsersEstimateDuration: String? = null
     private var taskUsersMillisToHours: String? = null
+    private var taskUsersEstatus: String? = null
+    private var taskUsersCategory: String? = null
 
 
 
@@ -54,6 +57,7 @@ class Data_Tickets {
     var GlpiTelefonoSolicitante_: String? = null
     //SECTION TASKS
     var ticketInfoPrivate: String? = null
+    var ticketTasksDate: String? = null
     var glpiTasksName_: String? = null
     var glpiTasksDescripcion_: String? = null
     var glpiTasksTipo_: String? = null
@@ -141,6 +145,13 @@ class Data_Tickets {
         this.ticketSortsCreationDate = ticketSortsCreationDate_
     }
 
+    fun getTicketSortsTimeToFinish(): String {
+        return ticketSortsTimeToFinish.toString()
+    }
+    fun setTicketSortsTimeToFinish(ticketSortsTimeToFinish_: String) {
+        this.ticketSortsTimeToFinish = ticketSortsTimeToFinish_
+    }
+
     fun getTicketSortsContents(): String{
         return ticketSortsContents.toString()
     }
@@ -221,6 +232,20 @@ class Data_Tickets {
         this.taskUsersMillisToHours = taskUsersMillisToHours_
     }
 
+    fun getTaskUsersStatus(): String{
+        return taskUsersEstatus.toString()
+    }
+    fun setTaskUsersStatus(taskUsersEstatus_: String){
+        this.taskUsersEstatus = taskUsersEstatus_
+    }
+
+    fun getTaskUsersCategory(): String{
+        return taskUsersCategory.toString()
+    }
+    fun setTaskUsersCategory(taskUsersCategory_: String){
+        this.taskUsersCategory = taskUsersCategory_
+    }
+
 
 
 //-----------------
@@ -282,6 +307,13 @@ class Data_Tickets {
     }
     fun setTicketInfo_Private(ticketInfoPrivate_: String){
         this.ticketInfoPrivate = ticketInfoPrivate_
+    }
+
+    fun getTicketTasksDates(): String{
+        return ticketTasksDate.toString()
+    }
+    fun setTicketTasksDates(ticketTasksDate_: String){
+        this.ticketTasksDate = ticketTasksDate_
     }
 
     fun getGlpiTasksName(): String{

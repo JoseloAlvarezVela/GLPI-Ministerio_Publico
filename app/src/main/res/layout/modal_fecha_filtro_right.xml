@@ -31,7 +31,7 @@
                 android:fontFamily="@font/averia_sans_libre_light"
                 android:gravity="center"
                 android:padding="10sp"
-                android:textColor="@color/black"/>
+                android:textColor="@color/black" />
 
             <CalendarView
                 android:id="@+id/calendarView"

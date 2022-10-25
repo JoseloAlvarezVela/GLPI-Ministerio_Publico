@@ -24,7 +24,8 @@ class RecycleView_Adapter_TasksCategory(
     interface onTasksCategoryClickListener{
         fun onTasksCategoryClick(
             nameTasksCategory: String,
-            contentTasksCategory: String
+            contentTasksCategory: String,
+            idTasksCategories: String
         )
     }
 
@@ -60,7 +61,8 @@ class RecycleView_Adapter_TasksCategory(
             itemView.setOnClickListener {
                 itemTasksCategoryClickListener.onTasksCategoryClick(
                     dataModalArrayListTasksCategory[position].getNameTasksCategories(),
-                    dataModalArrayListTasksCategory[position].getContentTasksCategories()
+                    dataModalArrayListTasksCategory[position].getContentTasksCategories(),
+                    dataModalArrayListTasksCategory[position].getIdTasksCategories()
                 )
             }
         }

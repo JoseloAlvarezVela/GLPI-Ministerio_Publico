@@ -36,6 +36,7 @@ import com.glpi.glpi_ministerio_pblico.MainActivity.Companion.urlApi_TicketID
 import com.glpi.glpi_ministerio_pblico.R
 import com.glpi.glpi_ministerio_pblico.VolleySingleton
 import com.glpi.glpi_ministerio_pblico.databinding.ActivityNavFooterTicketsBinding
+import com.glpi.glpi_ministerio_pblico.ui.adapter.Data_TicketInfo
 import com.glpi.glpi_ministerio_pblico.ui.adapter.Data_Tickets
 import com.glpi.glpi_ministerio_pblico.ui.adapter.RecyclerAdapter
 import com.glpi.glpi_ministerio_pblico.ui.misIncidencias.MisIncidenciasFragment
@@ -315,6 +316,7 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
         val layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, true,)
         layoutManager.stackFromEnd = true
 
+        dataModelArrayListConverdation.sortBy { it.getTicketTasksDates()}//ordenar por fecha
         recyclerViewNews.adapter = newsAdapter
         recyclerViewNews.layoutManager = layoutManager
         if (newsAdapter.itemCount == 0){
@@ -327,7 +329,7 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
     //consultamos la información de ticket por id del ticket
     private fun volleyRequestTicketInfo(urlApi_: String) {
         val bundle = intent.extras
-        val TicketID_ = bundle!!.getString("TicketID")
+        val TicketID_ = bundle!!.getString("TicketID") //ID DEL TICKET
         val Contenido_ = bundle!!.getString("Contenido")
         val NameOperador_ = bundle!!.getString("NameOperador")
         val CurrentTime_ = bundle!!.getString("CurrentTime")
@@ -345,12 +347,16 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
                     var tasksIterador: JSONObject
                     for (i in  0 until jsonObjectResponse.length()){
                         val playerModel = Data_Tickets()
+                        val ticketInfo = Data_TicketInfo()
                         if (jsonObjectResponse.getString(iterador.toString())[2] == 'T'){
 
                             tasksIterador = jsonObjectResponse.getJSONObject(iterador.toString())
 
-                            val tasksTipo = tasksIterador.getString("TIPO")
-                            playerModel.setGlpiTasksTipo(tasksTipo)
+                            val tasksType = tasksIterador.getString("TIPO")
+                            playerModel.setGlpiTasksTipo(tasksType)
+                            val tasksId = tasksIterador.getString("ID")
+                            ticketInfo.ticketInfoId = tasksId
+
                             if(tasksIterador.getString("TIPO") != "SOLUTION"){
                                 val ticketPrivate = tasksIterador.getString("PRIVADO")
                                 playerModel.setTicketInfo_Private(ticketPrivate)
@@ -361,7 +367,7 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
                             playerModel.setGlpiTasktName("$tasksNameOperador $tasksApellidoOperador")
 
                             val tasksDate = tasksIterador.getString("FECHA") //para ordenar el historico
-
+                            playerModel.setTicketTasksDates(tasksDate)
 
                             val tasksFechaCreacion = tasksIterador.getString("FECHA_CREACION")
                             val dateTime = tasksFechaCreacion.replace(" ","T")
@@ -369,8 +375,8 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
                             val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
                             val tasks_dateTime: Date = format.parse(dateTimeiso1801)
                             //Log.i("mensaje creacionString",""+tasksFechaCreacion)
-
                             playerModel.setConversationCreation(tasks_dateTime)
+
                             val decoded: String = Html.fromHtml(tasksIterador.getString("CONTENIDO")).toString()
                             val decoded2: Spanned = HtmlCompat.fromHtml(decoded, HtmlCompat.FROM_HTML_MODE_COMPACT)
                             //Log.i("mensaje taskiterador",""+decoded2)
@@ -388,46 +394,57 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
                             playerModel.setTechnicianName("$nameTechnicianId $lastNameTechnicianId")
                             //binding.includeTickets.txtTasksUserName.text = "$nameId $lastNameId"
 
-                            if (tasksTipo == "TASK"){
-                                val estimatedTime = tasksIterador.getString("DURACION")
-                                val estimatedTimeConvert = estimatedTime.replace(".","").toLong()
-                                val milisToHours = String.format(
+                            if (tasksType == "TASK"){
+                                val estimatedTime = tasksIterador.getString("DURACION").split(".")[0]
+                                playerModel.setTaskUsersMillisToHours(estimatedTime)
+
+                                /*val milisToHours = String.format(
                                     "%02d:%02d:%02d", TimeUnit.MILLISECONDS.toHours(estimatedTimeConvert),
                                     TimeUnit.MILLISECONDS.toMinutes(estimatedTimeConvert) % TimeUnit.HOURS.toMinutes(1),
                                     TimeUnit.MILLISECONDS.toSeconds(estimatedTimeConvert) % TimeUnit.MINUTES.toSeconds(1)
                                 )
-                                playerModel.setTaskUsersMillisToHours(milisToHours)
+                                playerModel.setTaskUsersMillisToHours(milisToHours)*/
 
-                                val date = creationDateTicket.toString().split(" ")
-                                //val day = date[0]
+
+                                val date = tasksFechaCreacion.toString().split(" ")
                                 val hour = date[1].split(":")
                                 val secondsToMs1: Int = hour[2].toInt() * 1000
                                 val minutesToMs1: Int = hour[1].toInt() * 60000
                                 val hoursToMs1: Int = hour[0].toInt() * 3600000
                                 val total1 = secondsToMs1 + minutesToMs1 + hoursToMs1
-                                val estimatedTime_: Long = (total1 + estimatedTimeConvert.toInt()).toLong()
+                                val estimatedTime_: Long = (total1 + (estimatedTime.toInt()*60000)).toLong()
                                 //Log.i("mensaje split: ", "${date[1]}")
                                 val hms = String.format(
                                     "%02d:%02d:%02d", TimeUnit.MILLISECONDS.toHours(estimatedTime_),
                                     TimeUnit.MILLISECONDS.toMinutes(estimatedTime_) % TimeUnit.HOURS.toMinutes(1),
                                     TimeUnit.MILLISECONDS.toSeconds(estimatedTime_) % TimeUnit.MINUTES.toSeconds(1)
                                 )
-                                //Log.i("mensaje trans: ", "$hms")
+                                //Log.i("mensaje tiempo: ", "${tasks_dateTime} -> $hms")
+                                //playerModel.setTicketSortsTimeToFinish(hms)
                                 playerModel.setTaskUsersEstimateDuration(hms)
+
+                                val estadoTicket = tasksIterador.getString("ESTADO")
+                                playerModel.setTaskUsersStatus(estadoTicket)
+
+                                val categoryTicket = tasksIterador.getString("CATEGORIA")
+                                playerModel.setTaskUsersCategory(categoryTicket)
                             }
+
+
 
                             //----------
 
                             playerModel.setTicketSortsContents(Contenido_.toString())
                             playerModel.setGlpiOperadorName(NameOperador_.toString())
-                            playerModel.setTicketSortsCreationDate(CurrentTime_.toString())
+                            //playerModel.setTicketSortsCreationDate(CurrentTime_.toString())
+                            playerModel.setTicketSortsCreationDate(tasksFechaCreacion)
                             playerModel.setTicketSortsModificationDate(ModificationDate.toString())
                             playerModel.setTicketSortsModificationDate(ModificationDate.toString())
 
                             iterador++
 
 
-                            dataModelArrayListConverdation.sortBy { it.getConversationCreation() }
+                            //dataModelArrayListConverdation.sortBy { it.getConversationCreation() }
                             dataModelArrayListConverdation.add(playerModel)
 
                         }else{
@@ -704,7 +721,10 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
         ticketInfoPrivate: String,
         glpiTasksDescripcion: String,
         glpiTasksTipo: String,
-        getTaskUsersEstimateDuration: String
+        getTaskUsersEstimateDuration: String,
+        getTicketTasksDates: String,
+        getTaskUsersStatus: String,
+        getTaskUsersCategory: String
     ) {
         val flagOnEditClick = "true"
         //recuperamos el id del ticket
@@ -729,6 +749,9 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
             intentTasks.putExtra("IdTechnician",IdTechnician)
             intentTasks.putExtra("flagOnEditClick",flagOnEditClick)
             intentTasks.putExtra("getTaskUsersEstimateDuration",getTaskUsersEstimateDuration)
+            intentTasks.putExtra("ticketDate",getTicketTasksDates)
+            intentTasks.putExtra("tasksStatus",getTaskUsersStatus)
+            intentTasks.putExtra("tasksCategory",getTaskUsersCategory)
             startActivity(intentTasks)
         }else{
             intentFollowUp.putExtra("ticketId",ticketId)

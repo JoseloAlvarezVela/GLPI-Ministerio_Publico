@@ -218,12 +218,12 @@
 
                 <Button
                     android:id="@+id/btnAddCategory"
-                    android:layout_width="140sp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:drawableLeft="@drawable/ic_etiqueta"
                     android:fontFamily="@font/averia_sans_libre_light"
                     android:gravity="left|center_vertical"
-                    android:padding="2sp"
+                    android:padding="10sp"
                     android:text="Agregar Categoria"
                     android:textColor="#5E5959"
                     android:textSize="10sp"
@@ -240,7 +240,8 @@
                     app:icon="@drawable/ic_cerrar"
                     app:iconGravity="textStart"
                     app:iconPadding="0sp"
-                    app:iconTint="#000000" />
+                    app:iconTint="#000000"
+                    android:visibility="gone"/>
 
             </LinearLayout>
 
@@ -251,6 +252,12 @@
             android:layout_width="match_parent"
             android:layout_height="509dp"
             android:background="#FFFEFE">
+
+            <TextView
+                android:id="@+id/textView13"
+                android:layout_width="4dp"
+                android:layout_height="136dp"
+                android:layout_weight="1" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -354,6 +361,22 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent" />
+
+    <TextView
+        android:id="@+id/idTemplate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        app:layout_constraintBottom_toTopOf="@+id/includeDocumentsTaks"
+        app:layout_constraintTop_toTopOf="@+id/linearLayout4" />
+
+    <TextView
+        android:id="@+id/idCategory"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        app:layout_constraintBottom_toTopOf="@+id/includeDocumentsTaks"
+        app:layout_constraintTop_toTopOf="@+id/idTemplate" />
 
     <LinearLayout
         android:id="@+id/LayoutBackgroud_agregarTarea"

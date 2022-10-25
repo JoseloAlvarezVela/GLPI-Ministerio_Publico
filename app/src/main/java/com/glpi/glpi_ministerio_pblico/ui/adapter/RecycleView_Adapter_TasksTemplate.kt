@@ -24,7 +24,8 @@ class RecycleView_Adapter_TasksTemplate(
             nameTasksTemplate: String,
             contentTasksTemplate: String,
             categoryTasksTemplates: String,
-            timeTasksTemplates: String
+            timeTasksTemplates: String,
+            idTasksTemplates: String
         )
     }
 
@@ -60,7 +61,8 @@ class RecycleView_Adapter_TasksTemplate(
                     dataModalArrayListTasksTemplate[position].getNameTasksTemplates(),
                     dataModalArrayListTasksTemplate[position].getContentTasksTemplates(),
                     dataModalArrayListTasksTemplate[position].getCategoryTasksTemplates(),
-                    dataModalArrayListTasksTemplate[position].getTimeTasksTemplates()
+                    dataModalArrayListTasksTemplate[position].getTimeTasksTemplates(),
+                    dataModalArrayListTasksTemplate[position].getIdTasksTemplates()
                 )
             }
         }
