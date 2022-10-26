@@ -3,6 +3,7 @@ package com.glpi.glpi_ministerio_pblico.ui.tickets
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Editable
 import android.util.Log
 import android.widget.Toast
 import androidx.core.view.isVisible
@@ -15,12 +16,10 @@ import com.glpi.glpi_ministerio_pblico.MainActivity.Companion.decodeHtml
 import com.glpi.glpi_ministerio_pblico.R
 import com.glpi.glpi_ministerio_pblico.VolleySingleton
 import com.glpi.glpi_ministerio_pblico.databinding.ActivityTicketsAgregarSeguimientoBinding
-import com.glpi.glpi_ministerio_pblico.ui.adapter.Data_FollowupTemplate
-import com.glpi.glpi_ministerio_pblico.ui.adapter.Data_ListStatusAllowed
-import com.glpi.glpi_ministerio_pblico.ui.adapter.RecycleView_Adapter_FollowupTemplate
-import com.glpi.glpi_ministerio_pblico.ui.adapter.RecycleViw_Adapter_ListStatusAllowed
+import com.glpi.glpi_ministerio_pblico.ui.adapter.*
 import com.glpi.glpi_ministerio_pblico.ui.shared.token
 import org.json.JSONArray
+import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
@@ -47,6 +46,14 @@ class TicketsAgregarSeguimientoActivity : AppCompatActivity(),
         recyclerViewListStatusAllowed = binding.includeListStatusAllowed.recyclerFollowupListAllowed
 
         volleyRequestListStatusAllowed()
+
+        binding.btnStatusFollowup.setOnClickListener {
+            binding.includeListStatusAllowed.modalListStatusAllowed.isVisible = true
+        }
+
+        binding.includeListStatusAllowed.btnCloseModalListStatusAllowed.setOnClickListener {
+            binding.includeListStatusAllowed.modalListStatusAllowed.isVisible = false
+        }
 
         volleyRequestFollowupTemplates(MainActivity.urlApi_FollowupTemplates)
         //Log.i("mensaje updateFollowup", MainActivity.updateFollowup.toString())
@@ -77,11 +84,11 @@ class TicketsAgregarSeguimientoActivity : AppCompatActivity(),
                 if(flagImgViewPadLock){
                     binding.imgViewPadLock.setImageResource(R.drawable.ic_candado_cerrado)
                     Toast.makeText(this, "Segumiento Privado", Toast.LENGTH_SHORT).show()
-                    binding.imgViewPadLock.tag = "SI"
+                    binding.imgViewPadLock.tag = "1"
                     flagImgViewPadLock = false
                 }else{
                     binding.imgViewPadLock.setImageResource(R.drawable.ic_candado_abierto)
-                    binding.imgViewPadLock.tag = "NO"
+                    binding.imgViewPadLock.tag = "0"
                     flagImgViewPadLock = true
                 }
             }
@@ -92,10 +99,12 @@ class TicketsAgregarSeguimientoActivity : AppCompatActivity(),
                 if(flagImgViewPadLock){
                     binding.imgViewPadLock.setImageResource(R.drawable.ic_candado_cerrado)
                     Toast.makeText(this, "Segumiento Privado", Toast.LENGTH_SHORT).show()
+                    binding.imgViewPadLock.tag = "1"
                     newTicketPrivate = "NO"
                     flagImgViewPadLock = false
                 }else{
                     binding.imgViewPadLock.setImageResource(R.drawable.ic_candado_abierto)
+                    binding.imgViewPadLock.tag = "0"
                     newTicketPrivate = "SI"
                     flagImgViewPadLock = true
                 }
@@ -109,6 +118,7 @@ class TicketsAgregarSeguimientoActivity : AppCompatActivity(),
         val ticketOrigin = bundle!!.getString("ticketOrigin")
         //val ticketType = bundle!!.getString("ticketType")
         val ticketStatus = bundle!!.getString("ticketStatus")
+        val ticketPrivate = bundle!!.getString("ticketPrivate")
 
         Log.i("mensaje type",ticketStatus.toString())
         if (ticketStatus == "EN CURSO (Asignada)"){
@@ -118,6 +128,18 @@ class TicketsAgregarSeguimientoActivity : AppCompatActivity(),
         }else if (ticketStatus == "CERRADO"){
             binding.imgBtnStatus.setImageResource(R.drawable.ic_circulo_negro)
         }
+
+        if(ticketPrivate == "SI"){
+            binding.imgViewPadLock.tag = "1"
+            //Log.i("mensaje padLock","${MainActivity.privateImgViewPadLock}")
+        }else{
+            binding.imgViewPadLock.tag = "0"
+            //Log.i("mensaje padLock","${MainActivity.privateImgViewPadLock}")
+        }
+
+        Log.i("mensaje padLock","${binding.imgViewPadLock.tag.toString()}")
+
+
 
         binding.tvIdTicket.text = "Petición #$ticketSortsId"
 
@@ -155,15 +177,18 @@ class TicketsAgregarSeguimientoActivity : AppCompatActivity(),
         if(ticketPrivate == "SI"){
             //MainActivity.privateImgViewPadLock = 0.toString()
             binding.imgViewPadLock.setImageResource(R.drawable.ic_candado_cerrado)
+            binding.imgViewPadLock.setImageResource(R.drawable.ic_candado_cerrado)
+            binding.imgViewPadLock.tag = "1"
             flagTicketPrivate = false
             //Log.i("mensaje padLock","${MainActivity.privateImgViewPadLock}")
         }else{
             //MainActivity.privateImgViewPadLock = 1.toString()
             binding.imgViewPadLock.setImageResource(R.drawable.ic_candado_abierto)
+            binding.imgViewPadLock.tag = "0"
             flagTicketPrivate = true
             //Log.i("mensaje padLock","${MainActivity.privateImgViewPadLock}")
         }
-
+        Log.i("mensaje padLock","${binding.imgViewPadLock.tag.toString()}")
         binding.edtFollowupDescription.setText(tasksDescription)
 
         MainActivity.flagEdit = false
@@ -236,11 +261,14 @@ class TicketsAgregarSeguimientoActivity : AppCompatActivity(),
             Toast.makeText(this, "Tarea añadida", Toast.LENGTH_LONG).show()
             val ticketPrivate = binding.imgViewPadLock.tag.toString()
             val followupDescription = binding.edtFollowupDescription.text
+            val listStatusAllowedId = binding.btnStatusFollowup.tag.toString()
+            val imgBtnPadLock = binding.imgViewPadLock.tag.toString()
+
 
             //fecha y hora actual
             val sdf = SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale("es", "PE"))//obtenemos fecha actual
             val currentdate = sdf.format(Date())
-            Log.i("mensaje sendTaks",
+            /*Log.i("mensaje sendTaks",
                 "id de ticket: $ticketId \n" +
                         "TIPO: TASKS\n"+
                         "PRIVADO: $ticketPrivate\n" +
@@ -252,12 +280,52 @@ class TicketsAgregarSeguimientoActivity : AppCompatActivity(),
                         "FECHA_CREACION: $currentdate\n"+
                         "FECHA_MODIFICACION: $currentdate\n"+
                         "CONTENIDO: $followupDescription\n"+
-                        "EDITOR: ${MainActivity.idUserTechnician}")
+                        "EDITOR: ${MainActivity.idUserTechnician}")*/
             onBackPressed()
+            requestVolleyByIdRequester(ticketId, listStatusAllowedId,imgBtnPadLock,followupDescription)
             /*val intent_agregarSeguimiento = Intent(this, MainActivity::class.java)
             intent_agregarSeguimiento.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             startActivity(intent_agregarSeguimiento)*/
+
         }
+    }
+
+    private fun requestVolleyByIdRequester(
+        ticketId: String,
+        listStatusAllowedId: String,
+        imgBtnPadLock: String,
+        followupDescription: Editable
+    ) {
+        //metodo que nos devuelve los datos para los tickets
+        val stringRequestDataTickets = object : StringRequest(Method.POST,
+            MainActivity.urlApi_InsertFollowup, Response.Listener { response ->
+                try {
+                    val JS_DataTickets = JSONObject(response) //obtenemos el objeto json
+
+                    Log.i("mensaje","$JS_DataTickets")
+
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    Toast.makeText(this, "token expirado_: $e", Toast.LENGTH_LONG).show()
+                    //Log.i("mensaje recycler e: ", "recycler ERROR: $e")
+                }
+            }, Response.ErrorListener {
+                Toast.makeText(this, "ERROR CON EL SERVIDOR", Toast.LENGTH_SHORT).show()
+            }) {
+            override fun getParams(): Map<String, String>? {
+                val params: MutableMap<String, String> = HashMap()
+                params["session_token"] = token.prefer.getToken()
+                params["ticket_id"] = ticketId
+                params["ticket_state"] = listStatusAllowedId
+                params["private"] = imgBtnPadLock
+                params["content"] = followupDescription.toString()
+                params["request_type"] = "4"
+
+                return params
+            }
+        }
+        VolleySingleton.getInstance(this).addToRequestQueue(stringRequestDataTickets)
+        //FIN obtenemos perfil de usuario
     }
     //FIN - funcion de maneja los botones del header
 
@@ -415,6 +483,9 @@ class TicketsAgregarSeguimientoActivity : AppCompatActivity(),
 
     override fun onSelectStatusClick(listStatusAllowedId: String, listStatusAllowedName: String) {
         Toast.makeText(this, "$listStatusAllowedName seleccionado", Toast.LENGTH_SHORT).show()
+        binding.btnStatusFollowup.text = listStatusAllowedName
+        binding.btnStatusFollowup.tag = listStatusAllowedId
+        Log.i("mensaje tag","${binding.btnStatusFollowup.tag}")
     }
 
 }

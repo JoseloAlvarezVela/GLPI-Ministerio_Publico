@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/modalListStatusAllowed"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFFFFF"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:visibility="gone">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -12,7 +14,7 @@
         android:background="@drawable/degradado_azul">
 
         <Button
-            android:id="@+id/button123"
+            android:id="@+id/btnCloseModalListStatusAllowed"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="4"
