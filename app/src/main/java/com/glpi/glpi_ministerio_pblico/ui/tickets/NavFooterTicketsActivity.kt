@@ -9,12 +9,10 @@ import android.graphics.Typeface
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
 import android.text.Html
 import android.text.Spanned
 import android.util.Log
 import android.view.View
-import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
@@ -29,6 +27,7 @@ import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.glpi.glpi_ministerio_pblico.MainActivity
+import com.glpi.glpi_ministerio_pblico.MainActivity.Companion.decodeHtml
 //import com.glpi.glpi_ministerio_pblico.MainActivity.Companion.flag
 import com.glpi.glpi_ministerio_pblico.MainActivity.Companion.jsonArrayResponse
 import com.glpi.glpi_ministerio_pblico.MainActivity.Companion.urlApi_TasksUsers
@@ -56,8 +55,8 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
 
     /*creamos la lista de arreglos que tendrá los objetos de la clase Data_Tickets
    esta lista de arreglos (dataModelArrayList) funcionará como fuente de datos*/
-    internal lateinit var dataModelArrayListConverdation: ArrayList<Data_Tickets>
-    internal lateinit var dataModelArrayListConverzation: ArrayList<Data_Tickets>
+    internal lateinit var dataModelArrayListConversation: ArrayList<Data_TicketInfo>
+    //internal lateinit var dataModelArrayListConverzation: ArrayList<Data_Tickets>
 
     private lateinit var jsonArrayIdRecipient: JSONArray
     private lateinit var jsonArrayIdTechnician: JSONArray
@@ -65,7 +64,7 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
 
     lateinit private var progressBarTicketConversation: ProgressBar
 
-    lateinit var TicketID_: String
+    lateinit var ticketId: String
     //lateinit var ticketType: String
     lateinit var ticketOrigin: String
 
@@ -83,8 +82,8 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
         progressBarTicketConversation = binding.progressBarTicketConversation
 
         volleyRequestIdRecipient() //datos del operador
-        volleyRequestIdTechnician() //datos del tecnico
-        volleyRequestIdRequester() //datos del solicitante
+        //volleyRequestIdTechnician() //datos del tecnico
+        //volleyRequestIdRequester() //datos del solicitante
         volleyRequestTicketInfo(urlApi_TicketID)
 
         activityHeader()
@@ -136,14 +135,14 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
 
 
             val intent = intent.extras
-            val idTicket = intent!!.getString("TicketID")
+            val ticketSortsId = intent!!.getString("ticketSortsId")
             val ticketType = intent!!.getString("Tipo") //solicitud o incidente
             val ticketStatus = intent!!.getString("TicketEstado") //en curso ,cerrado ...
             val IdTechnician = intent!!.getString("IdTechnician")
 
             val bundle = Bundle()
             //bundle.putString("TicketID", TicketID_)
-            bundle.putString("TicketID", idTicket)
+            bundle.putString("ticketSortsId", ticketSortsId)
             bundle.putString("ticketType", ticketType)
             bundle.putString("ticketStatus", ticketStatus)
             bundle.putString("IdTechnician", IdTechnician)
@@ -162,7 +161,7 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
             //Log.i("mensaje ticketOrigin1","$ticketOrigin")
 
             val bundle = Bundle()
-            bundle.putString("TicketID", TicketID_)
+            bundle.putString("TicketID", ticketId)
             //bundle.putString("ticketType", ticketType)//TODO: AGREGAR A LOS DEMAS
             bundle.putString("ticketOrigin", ticketOrigin)//TODO: AGREGAR A LOS DEMAS
             bundle.putString("ticketStatus", ticketStatus)
@@ -176,7 +175,7 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
         binding.includeFabs.btnFabSolucion.setOnClickListener {
             val intentAddSolution = Intent(this, TicketsAgregarSolucionActivity::class.java)
             val bundle = Bundle()
-            bundle.putString("TicketID", TicketID_)
+            bundle.putString("TicketID", ticketId)
             intentAddSolution.putExtras(bundle)
             intentAddSolution.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             startActivity(intentAddSolution)
@@ -187,7 +186,7 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
             val flagBtnFabDocuments = "true"
             val intentAddDocument = Intent(this, TicketsAgregarDocumentosActivity::class.java)
             val bundle = Bundle()
-            bundle.putString("TicketID", TicketID_)
+            bundle.putString("TicketID", ticketId)
             bundle.putString("flagBtnFabDocuments", flagBtnFabDocuments)
             intentAddDocument.putExtras(bundle)
             intentAddDocument.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
@@ -311,12 +310,12 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
 
     private fun setupRecyclerView(){
         val recyclerViewNews = binding.recyclerViewConversation
-        val newsList = dataModelArrayListConverdation
-        val newsAdapter = RecyclerAdapter(this,newsList,this)
+        //val newsList = dataModelArrayListConversation
+        val newsAdapter = RecyclerAdapter(this,dataModelArrayListConversation,this)
         val layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, true,)
         layoutManager.stackFromEnd = true
 
-        dataModelArrayListConverdation.sortBy { it.getTicketTasksDates()}//ordenar por fecha
+        dataModelArrayListConversation.sortBy { it.ticketInfoDate}//ordenar por fecha
         recyclerViewNews.adapter = newsAdapter
         recyclerViewNews.layoutManager = layoutManager
         if (newsAdapter.itemCount == 0){
@@ -329,58 +328,50 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
     //consultamos la información de ticket por id del ticket
     private fun volleyRequestTicketInfo(urlApi_: String) {
         val bundle = intent.extras
-        val TicketID_ = bundle!!.getString("TicketID") //ID DEL TICKET
-        val Contenido_ = bundle!!.getString("Contenido")
-        val NameOperador_ = bundle!!.getString("NameOperador")
+        val ticketSortsId = bundle!!.getString("ticketSortsId")
+        val ticketSortsIdTechnician = bundle!!.getString("ticketSortsIdTechnician")
+
+        /*val Contenido_ = bundle!!.getString("Contenido")
+        val nameCarrier = bundle!!.getString("NameOperador")
         val CurrentTime_ = bundle!!.getString("CurrentTime")
         val ModificationDate = bundle.getString("ModificationDate")
-        val creationDateTicket = bundle!!.getString("creationDateTicket")
+        val creationDateTicket = bundle!!.getString("creationDateTicket")*/
 
         jsonObjectResponse = JSONObject()
 
         val stringRequestDataTickets = object : StringRequest(Method.POST,
-            urlApi_+TicketID_, Response.Listener { response ->
+            urlApi_+ticketSortsId, Response.Listener { response ->
                 try {
-                    dataModelArrayListConverdation = ArrayList()
+                    dataModelArrayListConversation = ArrayList()
                     jsonObjectResponse = JSONObject(response)
-                    var iterador = 0
-                    var tasksIterador: JSONObject
+                    var ticketInfoJson: JSONObject
                     for (i in  0 until jsonObjectResponse.length()){
-                        val playerModel = Data_Tickets()
                         val ticketInfo = Data_TicketInfo()
-                        if (jsonObjectResponse.getString(iterador.toString())[2] == 'T'){
+                        if (jsonObjectResponse.getString(i.toString())[2] == 'T'){
 
-                            tasksIterador = jsonObjectResponse.getJSONObject(iterador.toString())
+                            ticketInfoJson = jsonObjectResponse.getJSONObject(i.toString())
 
-                            val tasksType = tasksIterador.getString("TIPO")
-                            playerModel.setGlpiTasksTipo(tasksType)
-                            val tasksId = tasksIterador.getString("ID")
-                            ticketInfo.ticketInfoId = tasksId
+                            ticketInfo.ticketInfoType = ticketInfoJson.getString("TIPO")
 
-                            if(tasksIterador.getString("TIPO") != "SOLUTION"){
-                                val ticketPrivate = tasksIterador.getString("PRIVADO")
-                                playerModel.setTicketInfo_Private(ticketPrivate)
+                            ticketInfo.ticketInfoId = ticketInfoJson.getString("ID")
+
+                            if (ticketInfo.ticketInfoType != "SOLUTION"){
+                                ticketInfo.ticketInfoPrivate = ticketInfoJson.getString("PRIVADO")
                             }
 
-                            val tasksNameOperador = tasksIterador.getString("NOMBRE")
-                            val tasksApellidoOperador = tasksIterador.getString("APELLIDO")
-                            playerModel.setGlpiTasktName("$tasksNameOperador $tasksApellidoOperador")
+                            ticketInfo.ticketInfoIdUser = ticketInfoJson.getString("ID_USUARIO")
 
-                            val tasksDate = tasksIterador.getString("FECHA") //para ordenar el historico
-                            playerModel.setTicketTasksDates(tasksDate)
+                            ticketInfo.ticketInfoNameUser = ticketInfoJson.getString("NOMBRE")
+                            ticketInfo.ticketInfoLastNameUser = ticketInfoJson.getString("APELLIDO")
 
-                            val tasksFechaCreacion = tasksIterador.getString("FECHA_CREACION")
-                            val dateTime = tasksFechaCreacion.replace(" ","T")
-                            val dateTimeiso1801 = dateTime+"Z"
-                            val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'")
-                            val tasks_dateTime: Date = format.parse(dateTimeiso1801)
-                            //Log.i("mensaje creacionString",""+tasksFechaCreacion)
-                            playerModel.setConversationCreation(tasks_dateTime)
+                            ticketInfo.ticketInfoDate = ticketInfoJson.getString("FECHA") //para ordenar el historico
 
-                            val decoded: String = Html.fromHtml(tasksIterador.getString("CONTENIDO")).toString()
-                            val decoded2: Spanned = HtmlCompat.fromHtml(decoded, HtmlCompat.FROM_HTML_MODE_COMPACT)
-                            //Log.i("mensaje taskiterador",""+decoded2)
-                            playerModel.setGlpiTasksDescripcion(decoded2.toString())
+                            ticketInfo.ticketInfoCreationDate = ticketInfoJson.getString("FECHA_CREACION")
+                            if (ticketInfo.ticketInfoType == "FOLLOWUP"){
+                                ticketInfo.ticketInfoModificationDate = ticketInfoJson.getString("FECHA_MODIFICACION")
+                            }
+
+                            ticketInfo.ticketInfoContent = decodeHtml( ticketInfoJson.getString("CONTENIDO"))
 
                             //----------
                             /*val dataId = jsonArrayIdRecipient.getJSONObject(0)
@@ -388,72 +379,27 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
                             val lastNameId = dataId.getString("APELLIDO")
                             playerModel.setTaskUserName("$nameId $lastNameId")*/
 
-                            val dataTechnicianId = jsonArrayIdTechnician.getJSONObject(0)
+                            /*val dataTechnicianId = jsonArrayIdTechnician.getJSONObject(0)
                             val nameTechnicianId = dataTechnicianId.getString("NOMBRE")
                             val lastNameTechnicianId = dataTechnicianId.getString("APELLIDO")
-                            playerModel.setTechnicianName("$nameTechnicianId $lastNameTechnicianId")
+                            ticketInfo.setTechnicianName("$nameTechnicianId $lastNameTechnicianId")*/
+
                             //binding.includeTickets.txtTasksUserName.text = "$nameId $lastNameId"
 
-                            if (tasksType == "TASK"){
-                                val estimatedTime = tasksIterador.getString("DURACION").split(".")[0]
-                                playerModel.setTaskUsersMillisToHours(estimatedTime)
+                            if (ticketInfo.ticketInfoType == "TASK"){
+                                ticketInfo.ticketInfoModificationDate = ticketInfoJson.getString("FECHA_EDICION")
+                                ticketInfo.ticketInfoIdTechnician = ticketInfoJson.getString("TECNICO")
+                                ticketInfo.ticketInfoNameTechnician = binding.includeTickets.labelAsignadoNombre.text.toString()
+                                ticketInfo.ticketInfoTimeToSolve = ticketInfoJson.getString("DURACION").split(".")[0]
 
-                                /*val milisToHours = String.format(
-                                    "%02d:%02d:%02d", TimeUnit.MILLISECONDS.toHours(estimatedTimeConvert),
-                                    TimeUnit.MILLISECONDS.toMinutes(estimatedTimeConvert) % TimeUnit.HOURS.toMinutes(1),
-                                    TimeUnit.MILLISECONDS.toSeconds(estimatedTimeConvert) % TimeUnit.MINUTES.toSeconds(1)
-                                )
-                                playerModel.setTaskUsersMillisToHours(milisToHours)*/
+                                ticketInfo.ticketInfoStatus = ticketInfoJson.getString("ESTADO") //pendiente o terminado
 
+                                ticketInfo.ticketInfoIdCategory = ticketInfoJson.getString("ID_CATEGORIA")
+                                ticketInfo.ticketInfoCategory = ticketInfoJson.getString("CATEGORIA")
 
-                                val date = tasksFechaCreacion.toString().split(" ")
-                                val hour = date[1].split(":")
-                                val secondsToMs1: Int = hour[2].toInt() * 1000
-                                val minutesToMs1: Int = hour[1].toInt() * 60000
-                                val hoursToMs1: Int = hour[0].toInt() * 3600000
-                                val total1 = secondsToMs1 + minutesToMs1 + hoursToMs1
-                                val estimatedTime_: Long = (total1 + (estimatedTime.toInt()*60000)).toLong()
-                                //Log.i("mensaje split: ", "${date[1]}")
-                                val hms = String.format(
-                                    "%02d:%02d:%02d", TimeUnit.MILLISECONDS.toHours(estimatedTime_),
-                                    TimeUnit.MILLISECONDS.toMinutes(estimatedTime_) % TimeUnit.HOURS.toMinutes(1),
-                                    TimeUnit.MILLISECONDS.toSeconds(estimatedTime_) % TimeUnit.MINUTES.toSeconds(1)
-                                )
-                                //Log.i("mensaje tiempo: ", "${tasks_dateTime} -> $hms")
-                                //playerModel.setTicketSortsTimeToFinish(hms)
-                                playerModel.setTaskUsersEstimateDuration(hms)
-
-                                val estadoTicket = tasksIterador.getString("ESTADO")
-                                playerModel.setTaskUsersStatus(estadoTicket)
-
-                                val categoryTicket = tasksIterador.getString("CATEGORIA")
-                                playerModel.setTaskUsersCategory(categoryTicket)
                             }
+                            dataModelArrayListConversation.add(ticketInfo)
 
-
-
-                            //----------
-
-                            playerModel.setTicketSortsContents(Contenido_.toString())
-                            playerModel.setGlpiOperadorName(NameOperador_.toString())
-                            //playerModel.setTicketSortsCreationDate(CurrentTime_.toString())
-                            playerModel.setTicketSortsCreationDate(tasksFechaCreacion)
-                            playerModel.setTicketSortsModificationDate(ModificationDate.toString())
-                            playerModel.setTicketSortsModificationDate(ModificationDate.toString())
-
-                            iterador++
-
-
-                            //dataModelArrayListConverdation.sortBy { it.getConversationCreation() }
-                            dataModelArrayListConverdation.add(playerModel)
-
-                        }else{
-                            /*Log.i("mensaje creacionString",""+jsonObjectResponse.getJSONObject(iterador.toString()))
-                            tasksIterador = jsonObjectResponse.getJSONObject(iterador.toString())
-                            playerModel.setGlpiDescripcion(tasksIterador.getString("scalar"))
-
-                            iterador++*/
-                            //----------------------------------------------------------------------------
                         }
                     }
 
@@ -478,108 +424,110 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
             VolleySingleton.getInstance(this).addToRequestQueue(stringRequestDataTickets)
         }
 
-        DataToTicketsHistoricoActivity()
+        getTicketsConversationInfo()
     }
 
-    private fun createTextView(taskDescriptions: String): TextView {
-        val newTextView = TextView(this)
-        //*****************INICIO DISEÑO DEL TEXVIEW****************************
-        newTextView.text = taskDescriptions
-        newTextView.setTextColor(Color.parseColor("#000000"))
-        //--
-        val fontFamily = Typeface.createFromAsset(
-            assets,
-            "font/averia_sans_libre_light.ttf"
-        )
-        newTextView.setTypeface(fontFamily)
-        //--
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-            newTextView.textAlignment = View.TEXT_ALIGNMENT_TEXT_START
-        }
-        newTextView.setPadding(30,32,0,32)
-        //--
-        //*****************FIN DISEÑO DEL TEXVIEW*******************************
-        return newTextView
-    }
+
 
     @SuppressLint("SetTextI18n")
-    private fun DataToTicketsHistoricoActivity() {
+    private fun getTicketsConversationInfo(){
         val bundle = intent.extras
 
-        TicketID_ = bundle!!.getString("TicketID").toString()
-        val NameOperador_ = bundle!!.getString("NameOperador")//aun no hay
-        val CurrentTime_ = bundle!!.getString("CurrentTime")
-        val ModificationDate = bundle!!.getString("ModificationDate")
+        val ticketSortsId = bundle!!.getString("ticketSortsId")
+        val ticketSortsType = bundle!!.getString("ticketSortsType")
+        val ticketSortsContent = bundle!!.getString("ticketSortsContent")
+        val ticketSortsStatus = bundle!!.getString("ticketSortsStatus")
+        val ticketSortsCreationDate = bundle!!.getString("ticketSortsCreationDate")
+        val ticketSortsModificationDate = bundle!!.getString("ticketSortsModificationDate")
+        val ticketSortsIdRecipient = bundle!!.getString("ticketSortsIdRecipient")
 
-        val Contenido_ = bundle!!.getString("Contenido")
-        //-----
-        val Tipo = bundle!!.getString("Tipo")
-        //ticketType = bundle!!.getString("Tipo").toString()
+        val ticketSortsIdTechnician = bundle!!.getString("ticketSortsIdTechnician")
+        val ticketSortsNameTechnician = bundle!!.getString("ticketSortsNameTechnician")
+        val ticketSortsLastNameTechnician = bundle!!.getString("ticketSortsLastNameTechnician")
+        val ticketSortsPhoneTechnician = bundle!!.getString("ticketSortsPhoneTechnician")
+        val ticketSortsEmailTechnician = bundle!!.getString("ticketSortsEmailTechnician")
 
+        val ticketSortsIdRequester = bundle!!.getString("ticketSortsIdRequester")
+        val ticketSortsNameRequester = bundle!!.getString("ticketSortsNameRequester")
+        val ticketSortsLastNameRequester = bundle!!.getString("ticketSortsLastNameRequester")
+        val ticketSortsPhoneRequester = bundle!!.getString("ticketSortsPhoneRequester")
+        val ticketSortsPositionRequester = bundle!!.getString("ticketSortsPositionRequester")
+        val ticketSortsEmailRequester = bundle!!.getString("ticketSortsEmailRequester")
+        val ticketSortsLocationRequester = bundle!!.getString("ticketSortsLocationRequester")
 
-        val Ubicacion_ = bundle!!.getString("Ubicacion")
-        val Correo_ = bundle!!.getString("Correo")
-        val NameSolicitante_ = bundle!!.getString("NameSolicitante")
-        val CargoSolicitante_ = bundle!!.getString("CargoSolicitante")
-        val TelefonoSolicitante_ = bundle!!.getString("TelefonoSolicitante")
-        val LoginName_ = bundle!!.getString("LoginName")
-        val TicketEstado_ = bundle!!.getString("TicketEstado")
-        val TicketCategoria_ = bundle!!.getString("TicketCategoria")
-        //val TicketOrigen_ = bundle!!.getString("TicketOrigen")
-        ticketOrigin = bundle!!.getString("TicketOrigen").toString()
-        val TicketUrgencia_ = bundle!!.getString("TicketUrgencia")
-        //SECTION TASKS
-        val taskName = bundle!!.getString("taskName")
-        val taskDescription = bundle.getString("taskDescription")
+        val ticketSortsCategory = bundle!!.getString("ticketSortsCategory")
+        val ticketSortsSource = bundle!!.getString("ticketSortsSource")
+        val ticketSortsUrgency = bundle!!.getString("ticketSortsUrgency")
 
-        //jsonObjetcIdResponse = JSONObject()
-        //volleyRequestID(idRecipient.toString())
-        //val id = jsonObjetcIdResponse.getJSONObject("0")
+        //header
+        binding.includeNavHeaderTickets.txtTicketID.text = "Petición #$ticketSortsId"
+        when(ticketSortsStatus){
+            "EN CURSO (Asignada)" -> binding.includeNavHeaderTickets.txtTicketEstado.setBackgroundResource(R.drawable.ic_circulo_verde)
+            "EN ESPERA" -> binding.includeNavHeaderTickets.txtTicketEstado.setBackgroundResource(R.drawable.ic_circulo)
+            "CERRADO" -> binding.includeNavHeaderTickets.txtTicketEstado.setBackgroundResource(R.drawable.ic_circulo_negro)
+        }
+        binding.includeNavHeaderTickets.txtUbicacion.text = ticketSortsLocationRequester
 
+        //descripción del ticket
+        binding.includeTicketsHistorico.txtDescripcionTicketHistorico.text = ticketSortsContent
+        binding.includeTicketsHistorico.txtCurrentTime.text = "Fecha de Cración: $ticketSortsCreationDate"
+        binding.includeTicketsHistorico.txtModificationDate.text = "Ultima modificación: $ticketSortsModificationDate"
 
-        //val nameOperador = id.getString("NOMBRE")//OBTENEMOS EL NOMBRE DEL OPERADOR QUE ASIGNÓ EL TICKET
-
-        //--------------
-
-        //--------------
-
-        binding.includeNavHeaderTickets.txtTicketID.text = "Petición #$TicketID_"
-        binding.includeNavHeaderTickets.txtUbicacion.text = Ubicacion_
-        if (TicketEstado_ == "EN CURSO (Asignada)"){
-            binding.includeNavHeaderTickets.txtTicketEstado.setBackgroundResource(R.drawable.ic_circulo_verde)
-        }else{
-            binding.includeNavHeaderTickets.txtTicketEstado.setBackgroundResource(R.drawable.ic_circulo)
+        //info petición
+        binding.includeTickets.labelPrioridad.text = ticketSortsUrgency
+        when(ticketSortsUrgency){
+            "ALTA" -> {
+                val compoundDrawables: Array<Drawable> = binding.includeTickets.labelPrioridad.compoundDrawables
+                val drawableLeft = compoundDrawables[0].mutate()
+                drawableLeft.colorFilter =
+                    PorterDuffColorFilter(Color.parseColor("#FF8800"), PorterDuff.Mode.SRC_IN)
+            }
+            "MEDIA" -> {
+                val compoundDrawables: Array<Drawable> = binding.includeTickets.labelPrioridad.compoundDrawables
+                val drawableLeft = compoundDrawables[0].mutate()
+                drawableLeft.colorFilter =
+                    PorterDuffColorFilter(Color.parseColor("#FBFF0F"), PorterDuff.Mode.SRC_IN)
+            }
+            "BAJA" -> {
+                val compoundDrawables: Array<Drawable> = binding.includeTickets.labelPrioridad.compoundDrawables
+                val drawableLeft = compoundDrawables[0].mutate()
+                drawableLeft.colorFilter =
+                    PorterDuffColorFilter(Color.parseColor("#06B711"), PorterDuff.Mode.SRC_IN)
+            }
         }
 
-        binding.includeTicketsHistorico.txtCurrentTime.text = "Fecha Creación $CurrentTime_"
+        binding.includeTickets.labelSolicitudIncidencia.text = ticketSortsType
+        when(ticketSortsType){
+            "SOLICITUD" -> {
+                binding.includeTickets.txtSolicitud.text ="?"
+                binding.includeTickets.tvSolicitud.isVisible = true
+                binding.includeTickets.tvIncidencia.isVisible = false
+
+            }
+            "INCIDENCIA" -> {
+                binding.includeTickets.tvSolicitud.isVisible = false
+                binding.includeTickets.tvIncidencia.isVisible = true
+            }
+        }
+
+        binding.includeTickets.labelFechaOperadorApertura.text = "Fecha de Creación: $ticketSortsCreationDate"
+        binding.includeTickets.labelCategoria.text = ticketSortsCategory
+        binding.includeTickets.labelUbicacion.text = ticketSortsLocationRequester
+        binding.includeTickets.labelOrigen.text = ticketSortsSource
+        binding.includeTickets.labelDescrTicket.text = ticketSortsContent
+        binding.includeTickets.labelSolicitanteNombre.text = "$ticketSortsNameRequester $ticketSortsLastNameRequester"
+        binding.includeTickets.labelSolicitanteCargo.text = "$ticketSortsPositionRequester"
+        binding.includeTickets.labelAsignadoNombre.text = "$ticketSortsNameTechnician $ticketSortsLastNameTechnician"
+        //binding.includeTickets.labelSolicitanteNombre.text = "$ticketSortsNameRequester $ticketSortsLastNameRequester"
+        //binding.includeTicketsHistorico.txtNameOperador.text = ticketSortsIdRecipient
+
+       /* binding.includeTicketsHistorico.txtCurrentTime.text = "Fecha Creación $CurrentTime_"
         if (CurrentTime_ != ModificationDate){
             binding.includeTicketsHistorico.txtModificationDate.text = "Ult. Modificación $ModificationDate"
             binding.includeTicketsHistorico.txtModificationDate.isVisible = true
         }
-
-        binding.includeTicketsHistorico.txtDescripcionTicketHistorico.text = Contenido_
-        binding.includeTickets.labelFechaOperadorApertura.text = "$CurrentTime_ - "
-        binding.includeTickets.labelCategoria.text = TicketCategoria_
-
-        //CAMBIAR COLOR DE ESTADO DE URGENCIA-------------------------------------------------------
-        if (TicketUrgencia_ == "BAJA"){
-            val compoundDrawables: Array<Drawable> = binding.includeTickets.labelPrioridad.compoundDrawables
-            val drawableLeft = compoundDrawables[0].mutate()
-            drawableLeft.colorFilter =
-                PorterDuffColorFilter(Color.parseColor("#06B711"), PorterDuff.Mode.SRC_IN)
-        }else if(TicketUrgencia_ == "MEDIA"){
-            val compoundDrawables: Array<Drawable> = binding.includeTickets.labelPrioridad.compoundDrawables
-            val drawableLeft = compoundDrawables[0].mutate()
-            drawableLeft.colorFilter =
-                PorterDuffColorFilter(Color.parseColor("#FBFF0F"), PorterDuff.Mode.SRC_IN)
-        }else{
-            val compoundDrawables: Array<Drawable> = binding.includeTickets.labelPrioridad.compoundDrawables
-            val drawableLeft = compoundDrawables[0].mutate()
-            drawableLeft.colorFilter =
-                PorterDuffColorFilter(Color.parseColor("#FF8800"), PorterDuff.Mode.SRC_IN)
-        }
-        //------------------------------------------------------------------------------------------
-        binding.includeTickets.labelPrioridad.text = TicketUrgencia_
+        binding.includeTickets.labelFechaOperadorApertura.text = "$CurrentTime_ - "*/
+        /*binding.includeTickets.labelCategoria.text = TicketCategoria_
         binding.includeTickets.lableFechaMAXCierre.text = "fecha y hora de cierre estimado - $TicketUrgencia_"
         binding.includeTickets.labelSolicitudIncidencia.text = Tipo
         if (Tipo == "SOLICITUD"){
@@ -596,18 +544,15 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
         binding.includeTickets.labelSolicitanteCelular.text = TelefonoSolicitante_
         binding.includeTickets.labelAsignadoNombre.text = NameSolicitante_
         binding.includeTickets.labelDescrTicket.text = Contenido_
-
         //SECTION TASKS
         binding.includeTicketsHistorico.txtTaskNameLogin.text = taskName
-        binding.includeTicketsHistorico.txtTaskDescription.text = taskDescription
-
-
+        binding.includeTicketsHistorico.txtTaskDescription.text = taskDescription*/
     }
 
     private fun volleyRequestIdRecipient(){
         val bundle = intent.extras
-        val idRecipient = bundle!!.getString("IdRecipient")
-        Log.i("mensaje cel","$idRecipient")
+        val idRecipient = bundle!!.getString("ticketSortsIdRecipient")
+
         val stringRequestDataTickets = object : StringRequest(Method.POST,
             urlApi_TasksUsers+idRecipient, Response.Listener { response ->
             try {
@@ -618,9 +563,8 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
                 val lastNameId = dataId.getString("APELLIDO")
                 val cellPhone = dataId.getString("TELEFONO")
 
-
                 binding.includeTicketsHistorico.txtNameOperador.text = "$nameId $lastNameId"
-                binding.includeTickets.txtTasksUserName.text = "$nameId $lastNameId"
+                binding.includeTickets.txtTasksUserName.text = " - $nameId $lastNameId"
                 if (cellPhone != " " && cellPhone != "null"){
                     binding.includeTickets.labelAsignadoCelular.text = cellPhone
                     binding.includeTickets.labelAsignadoCelular.isVisible = true
@@ -643,18 +587,18 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
 
     private fun volleyRequestIdTechnician(){
         val bundle = intent.extras
-        val idRecipient = bundle!!.getString("IdTechnician")
+        val idTechnician = bundle!!.getString("ticketSortsIdTechnician")
         val stringRequestDataTickets = object : StringRequest(Method.POST,
-            urlApi_TasksUsers+idRecipient, Response.Listener { response ->
+            urlApi_TasksUsers+idTechnician, Response.Listener { response ->
                 try {
                     jsonArrayIdTechnician = JSONArray()
                     jsonArrayIdTechnician = JSONArray(response)
                     Log.i("mensaje idtechnician","$jsonArrayIdTechnician")
-                    /*val dataId = jsonArrayIdTechnician.getJSONObject(0)
+                    val dataId = jsonArrayIdTechnician.getJSONObject(0)
                     val nameId = dataId.getString("NOMBRE")
                     val lastNameId = dataId.getString("APELLIDO")
-                    binding.includeTicketsHistorico.txtNameOperador.text = "$nameId $lastNameId"
-                    binding.includeTickets.txtTasksUserName.text = "$nameId $lastNameId"*/
+                    //binding.includeTicketsHistorico.txtNameOperador.text = "$nameId $lastNameId"
+                    //binding.includeTickets.labelAsignadoNombre.text = "$nameId $lastNameId"
                 }catch (e:Exception){
                     e.printStackTrace()
                 }
@@ -671,26 +615,30 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
     }
     private fun volleyRequestIdRequester(){
         val bundle = intent.extras
-        val idRecipient = bundle!!.getString("IdRequester")
+        val idRecipient = bundle!!.getString("ticketSortsIdRequester")
         val stringRequestDataTickets = object : StringRequest(Method.POST,
             urlApi_TasksUsers+idRecipient, Response.Listener { response ->
                 try {
+                    dataModelArrayListConversation = ArrayList()
                     jsonArrayIdRequester = JSONArray()
                     jsonArrayIdRequester = JSONArray(response)
-                    val dataId = jsonArrayIdRequester.getJSONObject(0)
-                    val nameId = dataId.getString("NOMBRE")
-                    val lastNameId = dataId.getString("APELLIDO")
-                    binding.includeTickets.labelSolicitanteNombre.text = "$nameId $lastNameId"
-                    val placeId = dataId.getString("UBICACION")
-                    binding.includeTickets.labelUbicacion.text = placeId
+                    val ticketInfoJson: JSONObject
+                    val ticketInfo = Data_TicketInfo()
+
+                    ticketInfoJson = jsonArrayIdRequester.getJSONObject(0)
+                    ticketInfo.ticketInfoCompleteNameRequester =
+                        "${ticketInfoJson.getString("NOMBRE")} ${ticketInfoJson.getString("APELLIDO")}"
+
+
+                    //val placeId = dataId.getString("UBICACION")
+                    /*binding.includeTickets.labelUbicacion.text = placeId
                     binding.includeNavHeaderTickets.txtUbicacion.text = placeId
 
-                    val emailId = dataId.getString("CORREO")
+                    //val emailId = dataId.getString("CORREO")
                     if (emailId != "null" && emailId != "null"){
                         binding.includeTickets.labelEmail.isVisible = true
                         binding.includeTickets.labelEmail.text = emailId
                     }
-
 
                     val positionId = dataId.getString("CARGO")
                     binding.includeTickets.labelSolicitanteCargo.text = positionId
@@ -699,7 +647,8 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
                     if (cellphoneId != "null"){
                         binding.includeTickets.labelSolicitanteCelular.isVisible = true
                         binding.includeTickets.labelSolicitanteCelular.text = cellphoneId
-                    }
+                    }*/
+
 
                 }catch (e:Exception){
                     e.printStackTrace()
@@ -718,19 +667,22 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
 
 
     override fun onEditClick(
+        ticketInfoType: String,
+        ticketInfoContent: String,
         ticketInfoPrivate: String,
-        glpiTasksDescripcion: String,
-        glpiTasksTipo: String,
-        getTaskUsersEstimateDuration: String,
-        getTicketTasksDates: String,
-        getTaskUsersStatus: String,
-        getTaskUsersCategory: String
+        ticketInfoIdTechnician: String,
+        ticketInfoStatus: String,
+        ticketInfoIdTemplate: String,
+        ticketInfoIdCategory: String,
+        ticketInfoCategory: String,
+        ticketInfoId: String,
+        ticketInfoTimeToSolve: String
     ) {
         val flagOnEditClick = "true"
         //recuperamos el id del ticket
         val bundle = intent.extras
-        val ticketId = bundle!!.getString("TicketID")
-        val ticketStatus = bundle!!.getString("TicketEstado")
+        val ticketSortsId = bundle!!.getString("ticketSortsId")
+        val ticketSortsStatus = bundle!!.getString("ticketSortsStatus")
         val ticketOrigin = bundle!!.getString("TicketOrigen")
         val IdTechnician = bundle!!.getString("IdTechnician")
 
@@ -741,23 +693,25 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
         MainActivity.flagEdit = true
         //Log.i("mensaje edit: ",""+glpiConversationTipo)
 
-        if (glpiTasksTipo == "TASK"){
-            intentTasks.putExtra("ticketId",ticketId)
-            intentTasks.putExtra("ticketStatus",ticketStatus)
-            intentTasks.putExtra("ticketPrivate",ticketInfoPrivate)
-            intentTasks.putExtra("tasks_description",glpiTasksDescripcion)
-            intentTasks.putExtra("IdTechnician",IdTechnician)
+        if (ticketInfoType == "TASK"){
+            intentTasks.putExtra("ticketSortsId",ticketSortsId)
+            intentTasks.putExtra("ticketStatus",ticketSortsStatus)
+            intentTasks.putExtra("ticketInfoContent",ticketInfoContent)
+            intentTasks.putExtra("ticketInfoPrivate",ticketInfoPrivate)
+            intentTasks.putExtra("ticketInfoIdTechnician",ticketInfoIdTechnician)
+            intentTasks.putExtra("ticketInfoStatus",ticketInfoStatus)
+            intentTasks.putExtra("ticketInfoIdTemplate",ticketInfoIdTemplate)
+            intentTasks.putExtra("ticketInfoIdCategory",ticketInfoIdCategory)
+            intentTasks.putExtra("ticketInfoCategory",ticketInfoCategory)
+            intentTasks.putExtra("ticketInfoId",ticketInfoId)
+            intentTasks.putExtra("ticketInfoTimeToSolve",ticketInfoTimeToSolve)
             intentTasks.putExtra("flagOnEditClick",flagOnEditClick)
-            intentTasks.putExtra("getTaskUsersEstimateDuration",getTaskUsersEstimateDuration)
-            intentTasks.putExtra("ticketDate",getTicketTasksDates)
-            intentTasks.putExtra("tasksStatus",getTaskUsersStatus)
-            intentTasks.putExtra("tasksCategory",getTaskUsersCategory)
             startActivity(intentTasks)
         }else{
-            intentFollowUp.putExtra("ticketId",ticketId)
-            intentFollowUp.putExtra("ticketStatus",ticketStatus)
+            intentFollowUp.putExtra("ticketSortsId",ticketSortsId)
+            intentFollowUp.putExtra("ticketStatus",ticketSortsStatus)
             intentFollowUp.putExtra("ticketPrivate",ticketInfoPrivate)
-            intentFollowUp.putExtra("tasks_description",glpiTasksDescripcion)
+            //intentFollowUp.putExtra("tasks_description",glpiTasksDescripcion)
             intentFollowUp.putExtra("ticketOrigin",ticketOrigin)
             startActivity(intentFollowUp)
         }

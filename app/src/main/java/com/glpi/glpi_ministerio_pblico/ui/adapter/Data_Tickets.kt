@@ -6,27 +6,50 @@ import java.util.*
 /*1:
 creamos una clase para la lista de tickets y declaramos los atributos que vamos a obtener*/
 class Data_Tickets {
-    private var ticketSortsId: String? = null
-    private var ticketSortsType : String? = null
-    private var ticketSortsDescription: String? = null
-    private var ticketSortsContents: String? = null
-    private var ticketSortsState : String? = null
-    private var ticketSortsDate : String? = null
-    private var ticketSortsModificationDate: String? = null
-    private var ticketSortsCreationDate: String? = null
-    private var ticketSortsTimeToFinish: String? = null
-    private var ticketSortsIdRecipient: String? = null
-    private var ticketSortsIdTechnician: String? = null
-    private var technicianName: String? = null
-    private var ticketSortsIdRequester: String? = null
-    private var ticketSortsNameRequester: String? = null
-    private var ticketSortsPositionRequester: String? = null
-    private var ticketSortsUser: String? = null //usuario login del tecnico a quien se le asignó el ticket
-    private var ticketSortsNameUser: String? = null //nombre login del tecnico a quien se le asignó el ticket
-    private var ticketSortsLastNameUser: String? = null //apellido login del tecnico a quien se le asignó el ticket
-    private var ticketSortsCategory: String? = null
-    private var ticketSortsSource: String? = null //origen del ticket
-    private var ticketSortsUrgency: String? = null
+    var ticketSortsId: String? = null
+    var ticketSortsType : String? = null
+    var ticketSortsDescription: String? = null
+    var ticketSortsContent: String? = null
+    var ticketSortsStatus : String? = null
+    var ticketSortsDate : String? = null
+    var ticketSortsModificationDate: String? = null
+    var ticketSortsCloseDate: String? = null
+    var ticketSortsCreationDate: String? = null
+    var ticketSortsIdRecipient: String? = null
+
+    var ticketSortsIdTechnician: String? = null
+    var ticketSortsUserTechnician: String? = null
+    var ticketSortsNameTechnician: String? = null
+    var ticketSortsLastNameTechnician: String? = null
+    var ticketSortsPhoneTechnician: String? = null
+    var ticketSortsPositionTechnician: String? = null
+    var ticketSortsEmailTechnician: String? = null
+    var ticketSortsLocationTechnician: String? = null
+    var ticketSortsEntityTechnician: String? = null
+
+    var ticketSortsIdRequester: String? = null
+    var ticketSortsUserRequester: String? = null
+    var ticketSortsNameRequester: String? = null
+    var ticketSortsLastNameRequester: String? = null
+    var ticketSortsPhoneRequester: String? = null
+    var ticketSortsPositionRequester: String? = null
+    var ticketSortsEmailRequester: String? = null
+    var ticketSortsLocationRequester: String? = null
+    var ticketSortsEntityRequester: String? = null
+
+    var ticketSortsUser: String? = null //usuario login del tecnico a quien se le asignó el ticket
+    var ticketSortsNameUser: String? = null //nombre login del tecnico a quien se le asignó el ticket
+    var ticketSortsLastNameUser: String? = null //apellido login del tecnico a quien se le asignó el ticket
+    var ticketSortsCategory: String? = null
+    var ticketSortsSource: String? = null //origen del ticket
+    var ticketSortsUrgency: String? = null
+
+
+
+
+
+
+
 
 
 
@@ -68,7 +91,7 @@ class Data_Tickets {
 
     /*Estos métodos getter y setter nos ayudarán a mantener los datos mientras
     llenamos la vista Recycler en la clase Adapter.*/
-    fun getTicketSortsID(): String {
+    /*fun getTicketSortsID(): String {
         return ticketSortsId.toString()
     }
     fun setTicketSortsID(ticketSortsId_: String) {
@@ -186,7 +209,7 @@ class Data_Tickets {
     }
     fun setTicketSortsModificationDate(ticketSortsModificationDate_: String){
         this.ticketSortsModificationDate = ticketSortsModificationDate_
-    }
+    }*/
 
     //----------datos tecnico------------------------
     fun getTaskUserName(): String{

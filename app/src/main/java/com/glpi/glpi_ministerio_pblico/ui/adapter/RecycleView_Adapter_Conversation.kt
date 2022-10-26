@@ -1,5 +1,6 @@
 package com.glpi.glpi_ministerio_pblico.ui.adapter
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
@@ -16,148 +17,129 @@ import com.glpi.glpi_ministerio_pblico.ui.view.BaseViewHolder
 
 class RecyclerAdapter(
     val context: Context,
-    private var dataModelArrayListConverdation:ArrayList<Data_Tickets>,
-    private val itemclickListener:onConversationClickListener):RecyclerView.Adapter<BaseViewHolder<*>>() {
-    private val TICKET_INFO = 0
-    private val TICKET_ASSIGNED = 1
+    private var dataModelArrayListConversation: ArrayList<Data_TicketInfo>,
+    private val itemClickListener:onConversationClickListener
+    ):RecyclerView.Adapter<RecyclerAdapter.MyViewConversationHolder>() {
+
+    private val inflater: LayoutInflater = LayoutInflater.from(context)
 
     interface onConversationClickListener{
-        fun onEditClick(ticketInfoPrivate: String,
-                        glpiTasksDescripcion: String,
-                        glpiTasksTipo: String,
-                        getTaskUsersEstimateDuration: String,
-                        getTicketTasksDates: String,
-                        getTaskUsersStatus: String,
-                        getTaskUsersCategory: String)
+        fun onEditClick(
+            ticketInfoType: String,
+            ticketInfoContent: String,
+            ticketInfoPrivate: String,
+            ticketInfoIdTechnician: String,
+            ticketInfoStatus: String,
+            ticketInfoIdTemplate: String,
+            ticketInfoIdCategory: String,
+            ticketInfoCategory: String,
+            ticketInfoId: String,
+            ticketInfoTimeToSolve: String)
         fun onFabClick()
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<*> {
-        return if(viewType == TICKET_INFO) {
-            TicketInfo(LayoutInflater.from(context).inflate(
-                R.layout.activity_tickets_historico,parent,false))
-        } else if (viewType == TICKET_ASSIGNED) {
-            AssignedViewHolder(LayoutInflater.from(context).inflate(
-                R.layout.recycleview_ticket_conversation,parent,false))
-        }else {
-            TicketInfo(LayoutInflater.from(context).inflate(
-                R.layout.recycleview_ticket_conversation,parent,false))
-        }
-
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerAdapter.MyViewConversationHolder {
+        val view = inflater.inflate(R.layout.recycleview_ticket_conversation,parent,false)
+        return MyViewConversationHolder(view)
     }
 
-    override fun onBindViewHolder(holder: BaseViewHolder<*>, position: Int) {
-        when(holder){
-            is TicketInfo -> holder.bind(dataModelArrayListConverdation[position],position)
-            is AssignedViewHolder -> holder.bind(dataModelArrayListConverdation[position],position)
-            else -> throw IllegalArgumentException("se olvidó de pasar  el viewholder en el bind")
+    @SuppressLint("SetTextI18n")
+    override fun onBindViewHolder(holder: MyViewConversationHolder, position: Int) {
+        holder.nameCarrier.text =
+            "${dataModelArrayListConversation[position].ticketInfoNameUser} ${dataModelArrayListConversation[position].ticketInfoLastNameUser}"
+
+        holder.tasksDate.text = dataModelArrayListConversation[position].ticketInfoDate
+        holder.tasksCreationDate.text =
+            "${dataModelArrayListConversation[position].ticketInfoCreationDate} -> ${dataModelArrayListConversation[position].ticketInfoTimeToSolve}" //sumar a cration el time to solve
+
+        holder.tasksTimeToSolve.text = dataModelArrayListConversation[position].ticketInfoTimeToSolve+" minutos"
+
+        holder.conversationContent.text = dataModelArrayListConversation[position].ticketInfoContent
+
+        when(dataModelArrayListConversation[position].ticketInfoType){
+            "TASK" -> {
+                holder.linearLayoutTasksCarrierName.isVisible = true
+                holder.ticketInfoNameTechnician.text =
+                    dataModelArrayListConversation[position].ticketInfoNameTechnician
+                holder.param.setMargins(0, 10, 100, 10)
+                holder.conversationTicketStatus.layoutParams = holder.param
+                holder.conversationTicketStatus.setBackgroundResource(R.drawable.esq_redondeada_tasks)
+            }
+            "FOLLOWUP" -> {
+                holder.linearLayoutTasksCarrierName.isVisible = false
+                holder.followUpLinearLayoutTimeToSolve.isVisible = false
+                holder.param.setMargins(100,10,0,10)
+                holder.conversationTicketStatus.layoutParams = holder.param
+                holder.conversationTicketStatus.setBackgroundResource(R.drawable.esq_redondeada_followup)
+            }
+            "SOLUTION" -> {
+                holder.conversationStatus.isVisible = true
+                holder.solutionImageButtonEdit.isVisible = false
+                holder.followUpLinearLayoutTimeToSolve.isVisible = false
+                holder.linearLayoutTasksCarrierName.isVisible = false
+                holder.param.setMargins(100,10,0,10)
+                holder.conversationTicketStatus.layoutParams = holder.param
+                holder.conversationTicketStatus.setBackgroundResource(R.drawable.esq_redondeada_solution)
+            }
         }
     }
 
     override fun getItemCount(): Int {
-        return dataModelArrayListConverdation.size
+        return dataModelArrayListConversation.size
     }
 
-    override fun getItemViewType(position: Int): Int {
-        //return if (position == 0) TICKET_INFO   else TICKET_ASSIGNED
-        return TICKET_ASSIGNED
-    }
+    inner class MyViewConversationHolder(itemConversation: View):RecyclerView.ViewHolder(itemConversation){
 
-    inner class TicketInfo(itemTicketInfo: View): BaseViewHolder<Data_Tickets>(itemTicketInfo){
-        override fun bind(item: Data_Tickets, position: Int) {
+        var nameCarrier: TextView
+        var linearLayoutTasksCarrierName: LinearLayout
+        var ticketInfoNameTechnician: TextView
+        var tasksDate: TextView
+        var tasksCreationDate: TextView
+        var tasksTimeToSolve: TextView
+        var followUpLinearLayoutTimeToSolve: LinearLayout
+        var solutionLinearLayout: LinearLayout
+        var solutionImageButtonEdit: ImageButton
+        var conversationTicketStatus: LinearLayout
+        var conversationStatus: TextView
+        var conversationContent: TextView
 
-
-            //itemView.findViewById<LinearLayout>(R.id.linearLayout10).isVisible = false
-
-            itemView.findViewById<ConstraintLayout>(R.id.layout_historico).isVisible = true
-
-            itemView.findViewById<TextView>(R.id.txt_nameOperador).text =
-                item.getTaskUserName()
-            //itemView.findViewById<ImageButton>(R.id.btn_edit).isVisible = false
-            itemView.findViewById<TextView>(R.id.txt_descripcionTicketHistorico).text =
-                item.getTicketSortsContents()
-
-            /*itemView.findViewById<TextView>(R.id.txt_nameOperador).text =
-                item.getGlpiOperadorName()*/
-
-            val stringCreationDate = "Fecha Cración ${item.getTicketSortsCreationDate()}"
-            itemView.findViewById<TextView>(R.id.txt_currentTime).text =
-                stringCreationDate
+        var param: ViewGroup.MarginLayoutParams
 
 
+        init {
 
-            Log.i("mensajemodi",""+item.getTicketSortsCreationDate())
-            if (item.getTicketSortsCreationDate() != item.getTicketSortsModificationDate()){
-                itemView.findViewById<TextView>(R.id.txt_modificationDate).isVisible = true
-                itemView.findViewById<TextView>(R.id.txt_modificationDate).text =
-                    "Ult. Modificación "+item.getTicketSortsModificationDate()
+            nameCarrier = itemConversation.findViewById<TextView>(R.id.txt_nameOperador_conversation) as TextView
+            linearLayoutTasksCarrierName = itemConversation.findViewById(R.id.linearLayout_tasksOperadorName) as LinearLayout
+            ticketInfoNameTechnician = itemConversation.findViewById<TextView>(R.id.txt_tasksOperadorName) as TextView
+            tasksDate = itemConversation.findViewById<TextView>(R.id.txt_currentTime_conversation) as TextView
+            tasksCreationDate = itemConversation.findViewById<TextView>(R.id.txt_creationTicketDate) as TextView
+            tasksTimeToSolve = itemConversation.findViewById<TextView>(R.id.txt_estimatedHour) as TextView
+            followUpLinearLayoutTimeToSolve = itemConversation.findViewById<LinearLayout>(R.id.linearLayout_timeToResolve) as LinearLayout
+            solutionLinearLayout = itemConversation.findViewById<LinearLayout>(R.id.linearLayout_Solution) as LinearLayout
+            solutionImageButtonEdit = itemConversation.findViewById<ImageButton>(R.id.btn_edit) as ImageButton
+            conversationTicketStatus = itemConversation.findViewById<LinearLayout>(R.id.ticket_estado_conversation) as LinearLayout
+            conversationStatus = itemConversation.findViewById<TextView>(R.id.tv_conversation_estado) as TextView
+            conversationContent = itemConversation.findViewById<TextView>(R.id.txt_descripcionTicketHistorico_conversation) as TextView
+
+
+            param = itemView.findViewById<LinearLayout>(R.id.ticket_estado_conversation).layoutParams as ViewGroup.MarginLayoutParams
+
+            itemConversation.findViewById<ImageButton>(R.id.btn_edit).setOnClickListener {
+                itemClickListener.onEditClick(
+
+                    dataModelArrayListConversation[position].ticketInfoType.toString(),
+                    dataModelArrayListConversation[position].ticketInfoContent.toString(),
+                    dataModelArrayListConversation[position].ticketInfoPrivate.toString(),
+                    dataModelArrayListConversation[position].ticketInfoIdTechnician.toString(),
+                    dataModelArrayListConversation[position].ticketInfoStatus.toString(),
+                    dataModelArrayListConversation[position].ticketInfoIdTemplate.toString(),
+                    dataModelArrayListConversation[position].ticketInfoIdCategory.toString(),
+                    dataModelArrayListConversation[position].ticketInfoCategory.toString(),
+                    dataModelArrayListConversation[position].ticketInfoId.toString(),
+
+                    dataModelArrayListConversation[position].ticketInfoTimeToSolve.toString(),
+                )
             }
-        }
-
-    }
-
-    inner class AssignedViewHolder(itemAssigned: View): BaseViewHolder<Data_Tickets>(itemAssigned){
-        override fun bind(item: Data_Tickets, position: Int) {
-            //Log.i("mensajeAdapter",""+item.getGlpiTasksTipo())
-            if(item.getGlpiTasksTipo() == "TASK"){
-                itemView.findViewById<TextView>(R.id.linearLayout_tasksOperadorName).isVisible = true
-
-                itemView.findViewById<TextView>(R.id.txt_tasksOperadorName).text = item.getTechnicianName()
-                itemView.findViewById<TextView>(R.id.txt_creationTicketDate).text =
-                    "${item.getTicketSortsCreationDate()} -> ${item.getTaskUsersEstimateDuration()}"
-                itemView.findViewById<TextView>(R.id.txt_estimatedHour).text = item.getTaskUsersMillisToHours()+" minutos"
-                //itemView.findViewById<TextView>(R.id.txt_timeResolved).text = item.getTaskUsersMillisToHours()
-                itemView.findViewById<TextView>(R.id.tv_conversation_estado).isVisible = false
-                val param = itemView.findViewById<LinearLayout>(R.id.ticket_estado_conversation).layoutParams as ViewGroup.MarginLayoutParams
-                param.setMargins(0,10,100,10)
-                itemView.findViewById<LinearLayout>(R.id.ticket_estado_conversation).layoutParams = param
-
-                itemView.findViewById<LinearLayout>(R.id.ticket_estado_conversation).setBackgroundResource(R.drawable.esq_redondeada_tasks)
-                /*itemView.findViewById<TextView>(R.id.txt_descripcionTicketHistorico_conversation).text =
-                    item.getGlpiTasksDescripcion()*/
-            }else if(item.getGlpiTasksTipo() == "FOLLOWUP"){
-                itemView.findViewById<TextView>(R.id.linearLayout_timeToResolve).isVisible = false
-                itemView.findViewById<TextView>(R.id.tv_conversation_estado).isVisible = false
-                val param = itemView.findViewById<LinearLayout>(R.id.ticket_estado_conversation).layoutParams as ViewGroup.MarginLayoutParams
-                param.setMargins(100,10,0,10)
-                itemView.findViewById<LinearLayout>(R.id.ticket_estado_conversation).layoutParams = param
-                itemView.findViewById<LinearLayout>(R.id.ticket_estado_conversation).setBackgroundResource(R.drawable.esq_redondeada_followup)
-            }else if(item.getGlpiTasksTipo() == "SOLUTION"){
-                itemView.findViewById<TextView>(R.id.linearLayout_timeToResolve).isVisible = false
-                itemView.findViewById<LinearLayout>(R.id.linearLayout_Solution).isVisible = true
-                val param = itemView.findViewById<LinearLayout>(R.id.ticket_estado_conversation).layoutParams as ViewGroup.MarginLayoutParams
-                param.setMargins(100,10,0,10)
-                itemView.findViewById<LinearLayout>(R.id.ticket_estado_conversation).layoutParams = param
-                itemView.findViewById<LinearLayout>(R.id.ticket_estado_conversation).setBackgroundResource(R.drawable.esq_redondeada_solution)
-            }
-
-            itemView.findViewById<TextView>(R.id.txt_nameOperador_conversation).text =
-                item.getGlpiTasksName()
-
-            itemView.findViewById<TextView>(R.id.txt_descripcionTicketHistorico_conversation).text =
-                item.getGlpiTasksDescripcion()
-
-            itemView.findViewById<TextView>(R.id.txt_currentTime_conversation).text =
-                item.getConversationCreation().toString()
-
-            if(item.getGlpiTasksTipo() == "SOLUTION"){
-                itemView.findViewById<ImageButton>(R.id.btn_edit).isVisible = false
-
-            }else{
-                itemView.findViewById<ImageButton>(R.id.btn_edit).setOnClickListener {
-                    itemclickListener.onEditClick(
-                        item.getTicketInfo_Private(),
-                        item.getGlpiTasksDescripcion(),
-                        item.getGlpiTasksTipo(),
-                        //item.getTaskUsersEstimateDuration()
-                        item.getTaskUsersMillisToHours(),
-                        item.getTicketTasksDates(),
-                        item.getTaskUsersStatus(),
-                        item.getTaskUsersCategory()
-                    )
-                }
-            }
-
         }
     }
 }

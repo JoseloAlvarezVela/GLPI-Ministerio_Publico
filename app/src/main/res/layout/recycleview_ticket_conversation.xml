@@ -24,7 +24,8 @@
                 android:id="@+id/tv_conversation_estado"
                 android:layout_width="20dp"
                 android:layout_height="match_parent"
-                android:background="@drawable/esq_redondeada_verde" />
+                android:background="@drawable/esq_redondeada_verde"
+                android:visibility="gone" />
         </LinearLayout>
 
         <LinearLayout

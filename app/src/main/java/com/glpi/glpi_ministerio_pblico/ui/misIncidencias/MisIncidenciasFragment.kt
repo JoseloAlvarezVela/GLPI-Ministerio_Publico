@@ -28,12 +28,8 @@ import com.glpi.glpi_ministerio_pblico.ui.tickets.NavFooterTicketsActivity
 import org.json.JSONObject
 
 
-/**
- * A simple [Fragment] subclass.
- * Use the [MisIncidenciasFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class MisIncidenciasFragment : Fragment(), RecycleView_Adapter_Tickets.ontickteClickListener {
+
+class MisIncidenciasFragment : Fragment(), RecycleView_Adapter_Tickets.onTicketClickListener {
     /*creamos la lista de arreglos que tendrá los objetos de la clase Data_Tickets
        esta lista de arreglos (dataModelArrayList) funcionará como fuente de datos*/
     internal lateinit var dataModelArrayListIncident: ArrayList<Data_Tickets>
@@ -74,52 +70,80 @@ class MisIncidenciasFragment : Fragment(), RecycleView_Adapter_Tickets.ontickteC
 
     private fun volleyRequestSortByIncident(urlApi_TicketSortByIncident: String) {
         //metodo que nos devuelve los datos para los tickets
-        val stringRequestDataTickets = @RequiresApi(Build.VERSION_CODES.N)
-        object : StringRequest(Request.Method.POST,
+        val stringRequestDataTickets = object : StringRequest(Method.POST,
             urlApi_TicketSortByIncident, Response.Listener { response ->
                 try {
-                    val JS_DataTickets = JSONObject(response) //obtenemos el objeto json
+                    val dataTicketsJson = JSONObject(response) //obtenemos el objeto json
 
                     dataModelArrayListIncident = ArrayList()
 
-                    for (i in 0 until JS_DataTickets.length()){
+                    for (i in 0 until dataTicketsJson.length()){
 
-                        val DataTickets = JS_DataTickets.getJSONObject(i.toString())
-                        //Log.i("mensaje tasks in",""+DataTickets)
-                        val playerModel = Data_Tickets()
+                        val dataTickets = dataTicketsJson.getJSONObject(i.toString())
+                        val ticketsModel = Data_Tickets()
 
-                        playerModel.setTicketSortsID(DataTickets.getString("ID"))
-                        playerModel.setTicketSortsType(DataTickets.getString("TIPO"))
-                        playerModel.setTicketSortsState(DataTickets.getString("ESTADO"))
-                        playerModel.setTicketSortsDescription(DataTickets.getString("DESCRIPCION"))
+                        ticketsModel.ticketSortsId = dataTickets.getString("ID")
+                        ticketsModel.ticketSortsType = dataTickets.getString("TIPO")
+                        ticketsModel.ticketSortsDescription = dataTickets.getString("DESCRIPCION")
+                        ticketsModel.ticketSortsContent =
+                            MainActivity.decodeHtml(dataTickets.getString("CONTENIDO"))
+                        ticketsModel.ticketSortsStatus = dataTickets.getString("ESTADO")
+                        ticketsModel.ticketSortsDate = dataTickets.getString("FECHA")
+                        ticketsModel.ticketSortsModificationDate = dataTickets.getString("FECHA_MODIFICACION")
+                        ticketsModel.ticketSortsCloseDate = dataTickets.getString("FECHA_CIERRE")
+                        ticketsModel.ticketSortsCreationDate = dataTickets.getString("FECHA_CREACION")
+
                         //obtenemos el id del operador, creador del ticket
-                        playerModel.setTicketSortsIdRecipient(DataTickets.getString("ID_RECIPIENT"))
-                        //obtenemos el id del tecnico(usuario logeado) y su nombre
-                        val idTechnician = DataTickets.getJSONObject("ID_TECHNICIAN")
-                        playerModel.setTicketSortsIdTechnician(idTechnician.getString("0"))
-                        //Log.i("mensaje idTechnician",""+idTechnician.getString("0"))
-                        val technicianName = DataTickets.getString("NOMBRE")
-                        val technicianLastName = DataTickets.getString("APELLIDO")
-                        playerModel.setTechnicianName("$technicianName $technicianLastName")
-                        //obtenemos el id del solicitante(usuario logeado)
-                        val idPositionResquester = DataTickets.getJSONObject("ID_REQUESTER")
-                        val idRequester = idPositionResquester.getString("0")
-                        playerModel.setTicketSortsIdRequester(idRequester)
+                        ticketsModel.ticketSortsIdRecipient = dataTickets.getString("ID_RECIPIENT")
 
-                        playerModel.setTicketSortsCreationDate(DataTickets.getString("FECHA_CREACION"))//fecha de creación
-                        playerModel.setTicketSortsModificationDate(DataTickets.getString("FECHA_MODIFICACION"))//fecha de creación
+                        //obtenemos los datos del tecnico asigando al ticket
+                        val idPositionTechnician = dataTickets.getJSONObject("ID_TECHNICIAN")
+                        val dataTechnician = idPositionTechnician.getJSONObject("0")
+                        val technician = dataTechnician.getJSONObject("0")
+                        ticketsModel.ticketSortsIdTechnician = technician.getString("ID_USER")
+                        ticketsModel.ticketSortsUserTechnician = technician.getString("USUARIO")
+                        ticketsModel.ticketSortsNameTechnician = technician.getString("NOMBRE")
+                        ticketsModel.ticketSortsLastNameTechnician = technician.getString("APELLIDO")
+                        ticketsModel.ticketSortsPhoneTechnician = technician.getString("TELEFONO")
+                        ticketsModel.ticketSortsPositionTechnician = technician.getString("CARGO")
+                        ticketsModel.ticketSortsEmailTechnician = technician.getString("CORREO")
+                        ticketsModel.ticketSortsLocationTechnician = technician.getString("UBICACION")
+                        ticketsModel.ticketSortsEntityTechnician = technician.getString("ENTIDAD")
+                        //MainActivity.idUserTechnician = idTechnician
 
-                        //obtenemos la descripción completa del ticket - primero decodificamos el formato html
-                        val decoded: String = Html.fromHtml(DataTickets.getString("CONTENIDO")).toString()
-                        val decoded2: Spanned = HtmlCompat.fromHtml(decoded, HtmlCompat.FROM_HTML_MODE_COMPACT)
-                        playerModel.setTicketSortsContents(decoded2.toString())
-                        //urgencia del ticket
-                        playerModel.setTicketSortsUrgency(DataTickets.getString("URGENCIA"))
-                        //categoria del ticket
-                        playerModel.setTicketSortsCategory(DataTickets.getString("CATEGORIA"))
-                        //origen del ticket
-                        playerModel.setTicketSortsSource(DataTickets.getString("ORIGEN"))
-                        dataModelArrayListIncident.add(playerModel)
+
+                        //obtenemos los datos del solicitante
+                        val idPositionResquester = dataTickets.getJSONObject("ID_REQUESTER")
+                        val dataRequester = idPositionResquester.getJSONObject("0")
+                        val requester = dataRequester.getJSONObject("0")
+                        ticketsModel.ticketSortsIdRequester = requester.getString("ID_USER")
+                        ticketsModel.ticketSortsUserRequester = requester.getString("USUARIO")
+                        ticketsModel.ticketSortsNameRequester = requester.getString("NOMBRE")
+                        ticketsModel.ticketSortsLastNameRequester = requester.getString("APELLIDO")
+                        ticketsModel.ticketSortsPhoneRequester = requester.getString("TELEFONO")
+                        ticketsModel.ticketSortsPositionRequester = requester.getString("CARGO")
+                        ticketsModel.ticketSortsEmailRequester = requester.getString("CORREO")
+                        ticketsModel.ticketSortsLocationRequester = requester.getString("UBICACION")
+                        ticketsModel.ticketSortsEntityRequester = requester.getString("ENTIDAD")
+
+                        //obtenemos datos del tecnico asignado al ticket
+                        ticketsModel.ticketSortsUser = dataTickets.getString("USUARIO")
+                        ticketsModel.ticketSortsNameUser = dataTickets.getString("NOMBRE")
+                        ticketsModel.ticketSortsLastNameUser = dataTickets.getString("APELLIDO")
+
+                        /*MainActivity.userTechnician = dataTickets.getString("USUARIO")
+                        val technicianName = dataTickets.getString("NOMBRE")
+                        MainActivity.nameTechnician = technicianName
+                        val technicianLastName = dataTickets.getString("APELLIDO")
+                        MainActivity.lastNameTechnician = technicianLastName
+                        ticketsModel.setTechnicianName("$technicianName $technicianLastName")
+                        MainActivity.nameLoginUser = "$technicianName $technicianLastName"*/
+
+                        ticketsModel.ticketSortsCategory = dataTickets.getString("CATEGORIA")
+                        ticketsModel.ticketSortsSource = dataTickets.getString("ORIGEN")
+                        ticketsModel.ticketSortsUrgency = dataTickets.getString("URGENCIA")
+
+                        dataModelArrayListIncident.add(ticketsModel)
                     }
                     setupRecycler()
 
@@ -156,85 +180,68 @@ class MisIncidenciasFragment : Fragment(), RecycleView_Adapter_Tickets.ontickteC
         recyclerView!!.adapter = recycleView_Adapter_TicketsIncidencias
     }
 
-    /*companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment MisIncidenciasFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            MisIncidenciasFragment().apply {
-                arguments = Bundle().apply {
-                }
-            }
-    }*/
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
 
     override fun onTicketClick(
-        TicketID: String, //TODO : pasar id y hacer nueva consulta a la API para evitar sobreCargar la vista
-        NameOperador: Any,
-        CurrentTime: Any,
-        ModificationDate: String,
-        IdRecipient: String,
-        IdTechnician: String,
-        IdRequester: String,
-        Contenido: Any,
+        ticketSortsId: String,
+        ticketSortsType: String,
+        ticketSortsContent: String,
+        ticketSortsStatus: String,
+        ticketSortsCreationDate: String,
+        ticketSortsModificationDate: String,
+        ticketSortsIdRecipient: String,
 
-        //-----
-        Tipo: String,
-        creationDateTicket: String,
-        Ubicacion: String,
-        Correo: String,
-        NameSolicitante: String,
-        CargoSolicitante: String,
-        TelefonoSolicitante: String,
-        LoginName: String,
-        TicketEstado: String,
-        TicketCategoria: String,
-        TicketOrigen: String,
-        TicketUrgencia: String,
-        taskName: String,
-        taskDescription: String
+        ticketSortsIdTechnician: String,
+        ticketSortsNameTechnician: String,
+        ticketSortsLastNameTechnician: String,
+        ticketSortsPhoneTechnician: String,
+        ticketSortsEmailTechnician: String,
+
+        ticketSortsIdRequester: String,
+        ticketSortsNameRequester: String,
+        ticketSortsLastNameRequester: String,
+        ticketSortsPhoneRequester: String,
+        ticketSortsPositionRequester: String,
+        ticketSortsEmailRequester: String,
+        ticketSortsLocationRequester: String,
+
+        ticketSortsCategory: String,
+        ticketSortsSource: String,
+        ticketSortsUrgency: String
     ) {
         val intent = Intent(context, NavFooterTicketsActivity::class.java)
-
         val bundle = Bundle()
 
-        bundle.putString("TicketID", TicketID)
-        bundle.putString("NameOperador", NameOperador.toString())
-        bundle.putString("CurrentTime", CurrentTime.toString())
-        bundle.putString("ModificationDate", ModificationDate)
-        bundle.putString("IdRecipient",IdRecipient)
-        bundle.putString("IdTechnician",IdTechnician)
-        bundle.putString("IdRequester",IdRequester)
-        bundle.putString("Contenido", Contenido.toString())
-        //-----
-        bundle.putString("Tipo", Tipo)
-        bundle.putString("creationDateTicket", creationDateTicket)
-        bundle.putString("Ubicacion", Ubicacion)
-        bundle.putString("Correo", Correo)
-        bundle.putString("NameSolicitante", NameSolicitante)
-        bundle.putString("CargoSolicitante", CargoSolicitante)
-        bundle.putString("TelefonoSolicitante", TelefonoSolicitante)
-        bundle.putString("LoginName", LoginName)
-        bundle.putString("TicketEstado", TicketEstado)
-        bundle.putString("TicketCategoria", TicketCategoria)
-        bundle.putString("TicketOrigen", TicketOrigen)
-        bundle.putString("TicketUrgencia", TicketUrgencia)
-        bundle.putString("taskName", taskName)
-        bundle.putString("taskDescription", taskDescription)
+        bundle.putString("ticketSortsId", ticketSortsId)
+        bundle.putString("ticketSortsType", ticketSortsType)
+        bundle.putString("ticketSortsContent", ticketSortsContent)
+        bundle.putString("ticketSortsStatus", ticketSortsStatus)
+        bundle.putString("ticketSortsCreationDate", ticketSortsCreationDate)
+        bundle.putString("ticketSortsModificationDate", ticketSortsCreationDate)
+        bundle.putString("ticketSortsIdRecipient", ticketSortsIdRecipient)
+
+        bundle.putString("ticketSortsIdTechnician", ticketSortsIdTechnician)
+        bundle.putString("ticketSortsNameTechnician", ticketSortsNameTechnician)
+        bundle.putString("ticketSortsLastNameTechnician", ticketSortsLastNameTechnician)
+        bundle.putString("ticketSortsPhoneTechnician", ticketSortsPhoneTechnician)
+        bundle.putString("ticketSortsEmailTechnician", ticketSortsEmailTechnician)
+
+        bundle.putString("ticketSortsIdRequester", ticketSortsIdRequester)
+        bundle.putString("ticketSortsNameRequester", ticketSortsNameRequester)
+        bundle.putString("ticketSortsLastNameRequester", ticketSortsLastNameRequester)
+        bundle.putString("ticketSortsPhoneRequester", ticketSortsPhoneRequester)
+        bundle.putString("ticketSortsPositionRequester", ticketSortsPositionRequester)
+        bundle.putString("ticketSortsEmailRequester", ticketSortsEmailRequester)
+        bundle.putString("ticketSortsLocationRequester", ticketSortsLocationRequester)
+
+        bundle.putString("ticketSortsCategory", ticketSortsCategory)
+        bundle.putString("ticketSortsSource", ticketSortsSource)
+        bundle.putString("ticketSortsUrgency", ticketSortsUrgency)
 
         intent.putExtras(bundle)
-
         startActivity(intent)
-
     }
 }

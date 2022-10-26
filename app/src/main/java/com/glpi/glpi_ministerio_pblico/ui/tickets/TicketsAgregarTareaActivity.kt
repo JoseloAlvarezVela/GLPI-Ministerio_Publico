@@ -60,15 +60,39 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
 
         volleyRequestDataTasksTemplate()
         volleyRequestDataTasksCategory()
-        ticketInfo()
+        //ticketInfo()
 
 
         if (flagTasks){
             val intent = intent.extras
-            val ticketId = intent!!.getString("ticketId")
-            val tasksDescription = intent!!.getString("tasks_description")
-            binding.tvIdTicket.text = "Petición #$ticketId"
-            binding.edtTasksDescription.setText(tasksDescription)
+            val ticketSortsId = intent!!.getString("ticketSortsId")
+            val ticketSortsStatus = intent!!.getString("ticketSortsStatus")
+            val ticketInfoContent = intent!!.getString("ticketInfoContent")
+            val ticketInfoCategory = intent!!.getString("ticketInfoCategory")
+            val ticketInfoTimeToSolve = intent!!.getString("ticketInfoTimeToSolve")
+            val ticketInfoPrivate = intent!!.getString("ticketInfoPrivate")
+            val ticketInfoStatus = intent!!.getString("ticketInfoStatus")
+            //val ticketInfoIdTechnician = intent!!.getString("ticketInfoIdTechnician")
+            binding.tvIdTicket.text = "Petición #$ticketSortsId"
+            binding.edtTasksDescription.setText(ticketInfoContent)
+            binding.btnAddCategory.text = ticketInfoCategory
+            binding.btnTimeToSolveTask.text = "$ticketInfoTimeToSolve minutos"
+
+            when(ticketSortsStatus){
+                "EN CURSO (Asignada)" -> binding.imgBtnStatusTasks.setImageResource(R.drawable.ic_circulo_verde)
+                "EN ESPERA" -> binding.imgBtnStatusTasks.setImageResource(R.drawable.ic_circulo)
+            }
+
+            when(ticketInfoPrivate){
+                "SI" -> binding.imgBtnPadLockTask.setImageResource(R.drawable.ic_candado_cerrado)
+                "NO" -> binding.imgBtnPadLockTask.setImageResource(R.drawable.ic_candado_abierto)
+            }
+
+            when(ticketInfoStatus){
+                "PENDIENTE" -> binding.chkboxPadLock.isChecked = true
+                "TERMINADO" -> binding.chkboxPadLock.isChecked = false
+            }
+
             flagEdit = false
         }
 
@@ -304,13 +328,13 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
 
     private fun ticketInfo(){
         val bundle = intent.extras
-        val idTicket = bundle!!.getString("TicketID")
+        val ticketSortsId = bundle!!.getString("ticketSortsId")
         val ticketType = bundle!!.getString("ticketType") //solicitud o incidente
         val ticketStatus = bundle!!.getString("ticketStatus")//en curso ,cerrado ...
         val getTaskUsersEstimateDuration = bundle!!.getString("getTaskUsersEstimateDuration")
         val tasksStatus = bundle!!.getString("tasksStatus")
         val tasksCategory = bundle!!.getString("tasksCategory")
-        binding.tvIdTicket.text = "Petición $idTicket"
+        binding.tvIdTicket.text = "Petición $ticketSortsId"
 
         val idTemplate = binding.idTemplate.text.toString()
 
@@ -376,13 +400,17 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
     private fun btnAddTasks() {
         binding.btnAddTasks.setOnClickListener {
             Toast.makeText(this, "tarea añadido", Toast.LENGTH_LONG).show()
+            val ticketInfoContent = binding.edtTasksDescription.text
+            var ticketInfoPrivate = binding.chkboxPadLock.tag.toString()
+
             val bundle = intent.extras
-            var idTechnician = bundle!!.getString("IdTechnician")
             val flagOnEditClick = bundle!!.getString("flagOnEditClick")
+            var ticketInfoIdTechnician = bundle!!.getString("ticketInfoIdTechnician")
+
             val getTaskUsersEstimateDuration = bundle!!.getString("getTaskUsersEstimateDuration")
             var ticketDate = bundle!!.getString("ticketDate")
 
-            var ticketPrivate = binding.chkboxPadLock.tag.toString()
+            //var ticketPrivate = binding.chkboxPadLock.tag.toString()
             val ticketId = binding.tvIdTicket.text.split(" ")[1].replace("#","")
             val tasksDescription = binding.edtTasksDescription.text
             val durationToSolveTasks = binding.btnTimeToSolveTask.text
@@ -407,21 +435,21 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
             val currentdate = sdf.format(Date())
 
             if (flagOnEditClick == "true"){
-                idTechnician = "0"
+                ticketInfoIdTechnician = "0"
             }else{
                 ticketDate = currentdate
             }
 
-            ticketPrivate = if (ticketPrivate == "PRIVADO"){
+            ticketInfoPrivate = if (ticketInfoPrivate == "PRIVADO"){
                 "1"
             }else{
                 "0"
             }
 
             Log.i("mensaje addTask",
-                "content: $tasksDescription\n"+
-                "private: $ticketPrivate\n" +
-                "user_tech: ${MainActivity.userTechnician}\n"+
+                "content: $ticketInfoContent\n"+
+                "private: $ticketInfoPrivate\n" +
+                "user_tech: $ticketInfoIdTechnician\n"+
                 "task_state: $ticketTaSksStatus\n"+
                 "templates_id: $idTemplates\n"+
                 "categories_id: $idCategory\n"+

@@ -29,7 +29,7 @@ class RecycleView_Adapter_Entities(context: Context,
         holder: RecycleView_Adapter_Entities.MyViewHolderEntities,
         position: Int
     ) {
-        holder.btn_entities_.text = dataModelArrarListEntities[position].getTicketSortsDescription()
+        holder.btn_entities_.text = "dataModelArrarListEntities[position].getTicketSortsDescription()"
     }
 
     override fun getItemCount(): Int {

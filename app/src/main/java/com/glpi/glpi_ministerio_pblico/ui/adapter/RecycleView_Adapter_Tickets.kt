@@ -19,7 +19,7 @@ y llenará la vista del reciclador*/
 class RecycleView_Adapter_Tickets(
     context:Context,
     private val dataModelArrayList:ArrayList<Data_Tickets>,
-    private val itemClickListener_: ontickteClickListener
+    private val itemClickListener_: onTicketClickListener
     ):RecyclerView.Adapter<RecycleView_Adapter_Tickets.MyViewHolder>(){
 
     private val inflater: LayoutInflater
@@ -29,33 +29,33 @@ class RecycleView_Adapter_Tickets(
     }
 
     //interfaz que manejara los eventos click
-    interface ontickteClickListener{
+    interface onTicketClickListener{
         fun onTicketClick(
-            TicketID: String,
-            NameOperador: Any,
-            CurrentTime: Any,
-            ModificationDate: String,
-            IdRecipient: String,
-            IdTechnician: String,
-            IdRequester: String,
-            Contenido: Any,
-            Tipo: String,
-            creationDateTicket: String,
-            Ubicacion: String,
-            Correo: String,
-            NameSolicitante: String,
-            CargoSolicitante: String,
-            TelefonoSolicitante: String,
-            LoginName: String,
-            TicketEstado: String,
-            TicketCategoria: String,
-            TicketOrigen: String,
-            TicketUrgencia: String,
-            glpiTasksName: String,
-            glpiTasksDescripcion: String
-            //TelefonoTecnico: String, PEDIR ESTOS DATOS
-            /*GrupoTecnico: String,
-            NameObservador: String*/
+            ticketSortsId: String,
+            ticketSortsType: String,
+            ticketSortsContent: String,
+            ticketSortsStatus: String,
+            ticketSortsCreationDate: String,
+            ticketSortsModificationDate: String,
+            ticketSortsIdRecipient: String,
+
+            ticketSortsIdTechnician: String,
+            ticketSortsNameTechnician: String,
+            ticketSortsLastNameTechnician: String,
+            ticketSortsPhoneTechnician: String,
+            ticketSortsEmailTechnician: String,
+
+            ticketSortsIdRequester: String,
+            ticketSortsNameRequester: String,
+            ticketSortsLastNameRequester: String,
+            ticketSortsPhoneRequester: String,
+            ticketSortsPositionRequester: String,
+            ticketSortsEmailRequester: String,
+            ticketSortsLocationRequester: String,
+
+            ticketSortsCategory: String,
+            ticketSortsSource: String,
+            ticketSortsUrgency: String
         )
     }
 
@@ -76,51 +76,40 @@ class RecycleView_Adapter_Tickets(
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(
         holder: RecycleView_Adapter_Tickets.MyViewHolder, position: Int) {
-        //-----------
 
-
-        //-----------
-        if (dataModelArrayList[position].getTicketSortsState() == "EN CURSO (Asignada)"){
-            holder.txt_estado_ticket.setBackgroundResource(R.drawable.ic_circulo_verde)
-        }else if (dataModelArrayList[position].getTicketSortsState() == "CERRADO"){
-            holder.txt_estado_ticket.setBackgroundResource(R.drawable.ic_circulo_negro)
-        }else{
-            holder.txt_estado_ticket.setBackgroundResource(R.drawable.ic_circulo)
+        holder.tvTicketType.text = dataModelArrayList[position].ticketSortsType
+        when(dataModelArrayList[position].ticketSortsType){
+            "SOLICITUD" -> {
+                holder.tvTicketId.text = "?  #${dataModelArrayList[position].ticketSortsId}"
+                holder.tvTicketId.setBackgroundColor((Color.parseColor("#3DC7FF")))
+                holder.tvTicketType.setTextColor(Color.parseColor("#3DC7FF"))
+            }
+            "INCIDENCIA" -> {
+                holder.tvTicketId.text = "!  #"+dataModelArrayList[position].ticketSortsId
+                holder.tvTicketId.setBackgroundColor((Color.parseColor("#FEB300")))
+                holder.tvTicketType.setTextColor(Color.parseColor("#FEB300"))
+            }
         }
 
-        //-----------
-        holder.txt_tipo.text = dataModelArrayList[position].getTicketSortsType()
-        if (dataModelArrayList[position].getTicketSortsType() == "SOLICITUD"){
-            holder.txt_numero_ticket.text = "?  #"+dataModelArrayList[position].getTicketSortsID()
-            holder.txt_tipo.setTextColor(Color.parseColor("#3DC7FF"))
-            holder.txt_numero_ticket.setBackgroundColor((Color.parseColor("#3DC7FF")))
-        }else{
-            holder.txt_numero_ticket.text = "!  #"+dataModelArrayList[position].getTicketSortsID()
-            holder.txt_tipo.setTextColor(Color.parseColor("#FEB300"))
-            holder.txt_numero_ticket.setBackgroundColor((Color.parseColor("#FEB300")))
+        when(dataModelArrayList[position].ticketSortsStatus){
+            "EN CURSO (Asignada)" -> holder.tvTicketStatus.setBackgroundResource(R.drawable.ic_circulo_verde)
+            "EN ESPERA" -> holder.tvTicketStatus.setBackgroundResource(R.drawable.ic_circulo)
+            "CERRADO" -> holder.tvTicketStatus.setBackgroundResource(R.drawable.ic_circulo_negro)
         }
 
-        //-----------
-        holder.txt_descripcionTicket.text = dataModelArrayList[position].getTicketSortsDescription()+"..."
+        holder.tvTicketDescription.text = dataModelArrayList[position].ticketSortsDescription+"..."
 
-        //-----------
-        holder.txt_Requester_Name.text = "Solicitante: "+ dataModelArrayList[position].getTicketSortsNameRequester()
+        holder.tvRequesterName.text =
+            "Solicitante: ${dataModelArrayList[position].ticketSortsNameRequester} ${dataModelArrayList[position].ticketSortsLastNameRequester}"
 
-        //-----------
-        holder.txt_Requester_Cargo.text = "Cargo: ${dataModelArrayList[position].getTicketSortsPositionRequester()}"
+        holder.tvRequesterPosition.text = "Cargo: ${dataModelArrayList[position].ticketSortsPositionRequester}"
 
-        //-----------
-        holder.txt_glpi_currenttime.text = dataModelArrayList[position].getTicketSortsCreationDate()
+        holder.tvTicketCreationDate.text = dataModelArrayList[position].ticketSortsCreationDate
 
-        //urgencia del ticket
-        if(dataModelArrayList[position].getTicketSortsUrgency() == "ALTA"){
-            holder.txt_EstadoColor.setBackgroundResource(R.drawable.esq_redondeada_rojo)
-        }
-        else if(dataModelArrayList[position].getTicketSortsUrgency() == "MEDIA"){
-            holder.txt_EstadoColor.setBackgroundResource(R.drawable.esq_redondeada_amarillo)
-        }
-        else{
-            holder.txt_EstadoColor.setBackgroundResource(R.drawable.esq_redondeada_gris)
+        when(dataModelArrayList[position].ticketSortsUrgency){
+            "ALTA" -> holder.tvTicketUrgency.setBackgroundResource(R.drawable.esq_redondeada_rojo)
+            "MEDIA" -> holder.tvTicketUrgency.setBackgroundResource(R.drawable.esq_redondeada_amarillo)
+            "BAJA" -> holder.tvTicketUrgency.setBackgroundResource(R.drawable.esq_redondeada_gris)
         }
     }
 
@@ -132,60 +121,53 @@ class RecycleView_Adapter_Tickets(
     //inicializamos los componetes de nuestro ticket de la forma tradicional
     inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         var tickets : ConstraintLayout //para evento click
-        var txt_numero_ticket : TextView
-        var txt_estado_ticket : TextView
-        var txt_tipo : TextView
-        var txt_descripcionTicket: TextView
-        var txt_Requester_Name: TextView
-        var txt_Requester_Cargo: TextView
-        var txt_glpi_currenttime: TextView
-        var txt_EstadoColor: TextView
-        //SECTION TASKS
-        var txt_TaskNameLogin: String
-        var txt_TaskDescription: String
-        /*var txt_TaskNameLogin: TextView
-        var txt_TaskDescription: TextView*/
+        var tvTicketId : TextView
+        var tvTicketStatus : TextView
+        var tvTicketType : TextView
+        var tvTicketDescription: TextView
+        var tvRequesterName: TextView
+        var tvRequesterPosition: TextView
+        var tvTicketCreationDate: TextView
+        var tvTicketUrgency: TextView
 
         init {
             tickets = itemView.findViewById(R.id.tickets) as ConstraintLayout
-            txt_numero_ticket = itemView.findViewById(R.id.txt_numero_ticket) as TextView
-            txt_estado_ticket = itemView.findViewById(R.id.txt_estado_ticket) as TextView
-            txt_tipo = itemView.findViewById(R.id.txt_tipo) as TextView
-            txt_descripcionTicket = itemView.findViewById(R.id.txt_descripcionTicket) as TextView
-            txt_Requester_Name = itemView.findViewById(R.id.txt_requester_name) as TextView
-            txt_Requester_Cargo = itemView.findViewById(R.id.txt_requester_cargo) as TextView
-            txt_glpi_currenttime = itemView.findViewById(R.id.txt_fecha_apertura) as TextView
-            txt_EstadoColor = itemView.findViewById(R.id.txt_estadoColor) as TextView
-            /*txt_TaskNameLogin = itemView.findViewById(R.id.txt_TaskNameLogin) as TextView
-            txt_TaskDescription = itemView.findViewById(R.id.txt_TaskDescription) as TextView*/
-            txt_TaskNameLogin = "itemView.findViewById(R.id.txt_TaskNameLogin) as TextView"
-            txt_TaskDescription = "itemView.findViewById(R.id.txt_TaskDescription) as TextView"
-
+            tvTicketId = itemView.findViewById(R.id.txt_numero_ticket) as TextView
+            tvTicketStatus = itemView.findViewById(R.id.txt_estado_ticket) as TextView
+            tvTicketType = itemView.findViewById(R.id.txt_tipo) as TextView
+            tvTicketDescription = itemView.findViewById(R.id.txt_descripcionTicket) as TextView
+            tvRequesterName = itemView.findViewById(R.id.txt_requester_name) as TextView
+            tvRequesterPosition = itemView.findViewById(R.id.txt_requester_cargo) as TextView
+            tvTicketCreationDate = itemView.findViewById(R.id.txt_fecha_apertura) as TextView
+            tvTicketUrgency = itemView.findViewById(R.id.txt_estadoColor) as TextView
 
             itemView.setOnClickListener {
                 itemClickListener_.onTicketClick(
-                    dataModelArrayList[position].getTicketSortsID(),
-                    dataModelArrayList[position].getGlpiOperadorName(),
-                    dataModelArrayList[position].getTicketSortsCreationDate(),
-                    dataModelArrayList[position].getTicketSortsModificationDate(),
-                    dataModelArrayList[position].getTicketSortsIdRecipient(),
-                    dataModelArrayList[position].getTicketSortsIdTechnician(),
-                    dataModelArrayList[position].getTicketSortsIdRequester(),
-                    dataModelArrayList[position].getTicketSortsContents(),
-                    dataModelArrayList[position].getTicketSortsType(),
-                    dataModelArrayList[position].getTicketSortsCreationDate(),
-                    dataModelArrayList[position].getGlpiUbicacionSolicitante(),
-                    dataModelArrayList[position].getGlpiCorreoSolicitante(),
-                    dataModelArrayList[position].getTechnicianName(),
-                    dataModelArrayList[position].getGlpiRequesterCargo(),
-                    dataModelArrayList[position].getGlpiTelefonoSolicitante(),
-                    dataModelArrayList[position].getGlpiLoginName(),
-                    dataModelArrayList[position].getTicketSortsState(),
-                    dataModelArrayList[position].getTicketSortsCategory(),
-                    dataModelArrayList[position].getTicketSortsSource(),
-                    dataModelArrayList[position].getTicketSortsUrgency(),
-                    "dataModelArrayList[position].getGlpiTasksName()",
-                    "dataModelArrayList[position].getGlpiTasksDescripcion()"
+                    dataModelArrayList[bindingAdapterPosition].ticketSortsId.toString(),
+                    dataModelArrayList[position].ticketSortsType.toString(),
+                    dataModelArrayList[position].ticketSortsContent.toString(),
+                    dataModelArrayList[position].ticketSortsStatus.toString(),
+                    dataModelArrayList[position].ticketSortsCreationDate.toString(),
+                    dataModelArrayList[position].ticketSortsModificationDate.toString(),
+                    dataModelArrayList[position].ticketSortsIdRecipient.toString(),
+
+                    dataModelArrayList[position].ticketSortsIdTechnician.toString(),
+                    dataModelArrayList[position].ticketSortsNameTechnician.toString(),
+                    dataModelArrayList[position].ticketSortsLastNameTechnician.toString(),
+                    dataModelArrayList[position].ticketSortsPhoneTechnician.toString(),
+                    dataModelArrayList[position].ticketSortsEmailTechnician.toString(),
+
+                    dataModelArrayList[position].ticketSortsIdRequester.toString(),
+                    dataModelArrayList[position].ticketSortsNameRequester.toString(),
+                    dataModelArrayList[position].ticketSortsLastNameRequester.toString(),
+                    dataModelArrayList[position].ticketSortsPhoneRequester.toString(),
+                    dataModelArrayList[position].ticketSortsPositionRequester.toString(),
+                    dataModelArrayList[position].ticketSortsEmailRequester.toString(),
+                    dataModelArrayList[position].ticketSortsLocationRequester.toString(),
+
+                    dataModelArrayList[position].ticketSortsCategory.toString(),
+                    dataModelArrayList[position].ticketSortsSource.toString(),
+                    dataModelArrayList[position].ticketSortsUrgency.toString()
                 )
             }
         }
