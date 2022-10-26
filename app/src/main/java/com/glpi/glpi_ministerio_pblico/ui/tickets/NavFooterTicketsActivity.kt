@@ -709,7 +709,7 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
             startActivity(intentTasks)
         }else{
             intentFollowUp.putExtra("ticketSortsId",ticketSortsId)
-            intentFollowUp.putExtra("ticketStatus",ticketSortsStatus)
+            intentFollowUp.putExtra("ticketSortsStatus",ticketSortsStatus)
             intentFollowUp.putExtra("ticketPrivate",ticketInfoPrivate)
             //intentFollowUp.putExtra("tasks_description",glpiTasksDescripcion)
             intentFollowUp.putExtra("ticketOrigin",ticketOrigin)

@@ -63,6 +63,7 @@ class MainActivity : AppCompatActivity(){
         val urlApi_TasksTemplate: String = "http://181.176.145.174:8080/api/task_templates"
         val urlApi_TasksCategory: String = "http://181.176.145.174:8080/api/task_categories"
         val urlApi_FollowupTemplates: String = "http://181.176.145.174:8080/api/followup_templates"
+        val urlApi_ListStatusAllowed: String = "http://181.176.145.174:8080/api/profile_tickets_states"
 
         //datos del usuario logeado
         lateinit var nameLoginUser: String

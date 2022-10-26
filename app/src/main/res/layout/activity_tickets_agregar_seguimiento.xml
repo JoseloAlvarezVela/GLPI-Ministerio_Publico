@@ -169,6 +169,18 @@
 
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btnSourceFollowup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Button" />
+        </LinearLayout>
+
     </LinearLayout>
 
     <LinearLayout
@@ -219,6 +231,7 @@
     </LinearLayout>
 
     <include
+        android:id="@+id/include3"
         layout="@layout/activity_nav_footer_fab"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -374,6 +387,16 @@
         android:layout_width="350sp"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <include
+        android:id="@+id/includeListStatusAllowed"
+        layout="@layout/modal_list_allowed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

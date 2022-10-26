@@ -16,19 +16,25 @@ import com.glpi.glpi_ministerio_pblico.R
 import com.glpi.glpi_ministerio_pblico.VolleySingleton
 import com.glpi.glpi_ministerio_pblico.databinding.ActivityTicketsAgregarSeguimientoBinding
 import com.glpi.glpi_ministerio_pblico.ui.adapter.Data_FollowupTemplate
+import com.glpi.glpi_ministerio_pblico.ui.adapter.Data_ListStatusAllowed
 import com.glpi.glpi_ministerio_pblico.ui.adapter.RecycleView_Adapter_FollowupTemplate
+import com.glpi.glpi_ministerio_pblico.ui.adapter.RecycleViw_Adapter_ListStatusAllowed
 import com.glpi.glpi_ministerio_pblico.ui.shared.token
 import org.json.JSONArray
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
-class TicketsAgregarSeguimientoActivity : AppCompatActivity(), RecycleView_Adapter_FollowupTemplate.onFollowTemplateClickListener {
+class TicketsAgregarSeguimientoActivity : AppCompatActivity(),
+    RecycleView_Adapter_FollowupTemplate.onFollowTemplateClickListener,
+    RecycleViw_Adapter_ListStatusAllowed.onStatusAllowedClickListener{
     private var recyclerView: RecyclerView? = null
-    /*creamos la lista de arreglos que tendrá los objetos,
-   esta lista de arreglos (dataModelArrayList) funcionará como fuente de datos*/
+    private var recyclerViewListStatusAllowed: RecyclerView? = null
+
+    internal lateinit var dataModelArrayListStatusAllowed: ArrayList<Data_ListStatusAllowed>
     internal lateinit var dataModelArrayListFollowupTemplate: ArrayList<Data_FollowupTemplate>
     private var recyclerView_Adapter_FollowupTemplate: RecycleView_Adapter_FollowupTemplate? = null
+    private var recyclerView_Adapter_ListStatusAllowed: RecycleViw_Adapter_ListStatusAllowed? = null
     private lateinit var binding: ActivityTicketsAgregarSeguimientoBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,6 +44,9 @@ class TicketsAgregarSeguimientoActivity : AppCompatActivity(), RecycleView_Adapt
         //var followupStatus = "0"
 
         recyclerView = binding.includeModalFollowupTemplate.recyclerFollowupTemplate
+        recyclerViewListStatusAllowed = binding.includeListStatusAllowed.recyclerFollowupListAllowed
+
+        volleyRequestListStatusAllowed()
 
         volleyRequestFollowupTemplates(MainActivity.urlApi_FollowupTemplates)
         //Log.i("mensaje updateFollowup", MainActivity.updateFollowup.toString())
@@ -96,7 +105,7 @@ class TicketsAgregarSeguimientoActivity : AppCompatActivity(), RecycleView_Adapt
 
     private fun getTicketInfo(){
         val bundle = intent.extras
-        val ticketId = bundle!!.getString("TicketID").toString()
+        val ticketSortsId = bundle!!.getString("ticketSortsId").toString()
         val ticketOrigin = bundle!!.getString("ticketOrigin")
         //val ticketType = bundle!!.getString("ticketType")
         val ticketStatus = bundle!!.getString("ticketStatus")
@@ -110,9 +119,9 @@ class TicketsAgregarSeguimientoActivity : AppCompatActivity(), RecycleView_Adapt
             binding.imgBtnStatus.setImageResource(R.drawable.ic_circulo_negro)
         }
 
-        binding.tvIdTicket.text = "Petición #$ticketId"
+        binding.tvIdTicket.text = "Petición #$ticketSortsId"
 
-        btnAddFollowup(ticketId, ticketOrigin)
+        btnAddFollowup(ticketSortsId, ticketOrigin)
 
         imgBtnTicketStatus(ticketStatus)
     }
@@ -121,21 +130,21 @@ class TicketsAgregarSeguimientoActivity : AppCompatActivity(), RecycleView_Adapt
         var followupStatus = ""
 
         val bundle = intent.extras
-        val ticketId = bundle!!.getString("ticketId").toString()
-        val ticketStatus = bundle!!.getString("ticketStatus")
+        val ticketSortsId = bundle!!.getString("ticketSortsId").toString()
+        val ticketSortsStatus = bundle!!.getString("ticketSortsStatus")
         val ticketOrigin = bundle!!.getString("ticketOrigin")
         val ticketPrivate = bundle!!.getString("ticketPrivate")
         val tasksDescription = bundle!!.getString("tasks_description")
         var flagTicketPrivate = false
 
-        imgBtnTicketStatus(ticketStatus)
+        imgBtnTicketStatus(ticketSortsStatus)
         imgBtnPadLock()
         //btnUpdateFollowup(followupStatus, ticketPrivate.toString())
         Log.i("mensaje ticketOrigin2","$ticketOrigin")
-        btnAddFollowup(ticketId, ticketOrigin)
+        btnAddFollowup(ticketSortsId, ticketOrigin)
 
-        binding.tvIdTicket.text = "Petición #$ticketId"
-        if (ticketStatus == "EN CURSO (Asignada)"){
+        binding.tvIdTicket.text = "Petición #$ticketSortsId"
+        if (ticketSortsStatus == "EN CURSO (Asignada)"){
             binding.imgBtnStatus.setImageResource(R.drawable.ic_circulo_verde)
             binding.imgBtnStatusHeader.setImageResource(R.drawable.ic_circulo_verde)
         }else{
@@ -294,6 +303,8 @@ class TicketsAgregarSeguimientoActivity : AppCompatActivity(), RecycleView_Adapt
     }
 
     private fun volleyRequestFollowupTemplates(urlapiFollowuptemplates: String) {
+
+
         val stringRequestDataTickets = object : StringRequest(Method.POST,
             urlapiFollowuptemplates, Response.Listener { response ->
                 try {
@@ -330,6 +341,46 @@ class TicketsAgregarSeguimientoActivity : AppCompatActivity(), RecycleView_Adapt
         }
     }
 
+    private fun volleyRequestListStatusAllowed() {
+        val bundle = intent.extras
+        val ticketSortsId = bundle!!.getString("ticketSortsId")
+        val stringRequestDataTickets = object : StringRequest(Method.POST,
+            MainActivity.urlApi_ListStatusAllowed, Response.Listener { response ->
+                try {
+                    dataModelArrayListStatusAllowed = ArrayList()
+
+                    val jsonObjectResponse = JSONArray(response)
+                    Log.i("mensaje allowed",""+jsonObjectResponse)
+                    for (i in  0 until jsonObjectResponse.length()){
+                        val dataListStatusAllowed = jsonObjectResponse.getJSONObject(i)
+                        val listStatusAllowed = Data_ListStatusAllowed()
+
+                        listStatusAllowed.listStatusAllowedId = dataListStatusAllowed.getString("ID")
+                        listStatusAllowed.listStatusAllowedName = dataListStatusAllowed.getString("NAME")
+
+                        dataModelArrayListStatusAllowed.add(listStatusAllowed)
+                    }
+                    setupRecyclerListStatusAllowed()
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    Toast.makeText(this, "ListStatusAllowed: $e", Toast.LENGTH_LONG).show()
+                }
+            }, Response.ErrorListener {
+                Toast.makeText(this, "ERROR ListStatusAllowed", Toast.LENGTH_SHORT).show()
+            }) {
+            override fun getParams(): Map<String, String>? {
+                val params: MutableMap<String, String> = HashMap()
+                params["session_token"] = token.prefer.getToken()
+                params["ticket_id"] = ticketSortsId.toString()
+                params["profile_id"] = "6"
+                return params
+            }
+        }
+        this?.let {
+            VolleySingleton.getInstance(it).addToRequestQueue(stringRequestDataTickets)
+        }
+    }
+
     private fun setupRecycler() {
         val layoutManager =
             LinearLayoutManager(this, LinearLayoutManager.VERTICAL, true,)
@@ -342,12 +393,28 @@ class TicketsAgregarSeguimientoActivity : AppCompatActivity(), RecycleView_Adapt
         recyclerView!!.adapter = recyclerView_Adapter_FollowupTemplate
     }
 
+    private fun setupRecyclerListStatusAllowed() {
+        val layoutManager =
+            LinearLayoutManager(this, LinearLayoutManager.VERTICAL, true,)
+        layoutManager.stackFromEnd = true
+
+        recyclerViewListStatusAllowed!!.layoutManager = layoutManager
+
+        recyclerView_Adapter_ListStatusAllowed =
+            RecycleViw_Adapter_ListStatusAllowed(this,dataModelArrayListStatusAllowed,this)
+        recyclerViewListStatusAllowed!!.adapter = recyclerView_Adapter_ListStatusAllowed
+    }
+
     override fun onFollowupTemplateClick(nameFollowupTemplate: String, contentFollowupTemplate: String) {
         Toast.makeText(this, ""+nameFollowupTemplate, Toast.LENGTH_LONG).show()
         binding.edtFollowupDescription.setText(decodeHtml(contentFollowupTemplate))
         Log.i("mensaje clikc","${binding.edtFollowupDescription.text}")
         binding.includeModalFollowupTemplate.modalPlantillaAddFollowup.isVisible = false
         binding.includeBackgroundgrisAtctaddseg.clBackgroundgrisBggris.isVisible = false
+    }
+
+    override fun onSelectStatusClick(listStatusAllowedId: String, listStatusAllowedName: String) {
+        Toast.makeText(this, "$listStatusAllowedName seleccionado", Toast.LENGTH_SHORT).show()
     }
 
 }

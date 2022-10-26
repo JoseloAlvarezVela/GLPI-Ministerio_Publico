@@ -38,7 +38,9 @@ class RecyclerAdapter(
         fun onFabClick()
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerAdapter.MyViewConversationHolder {
+    override fun onCreateViewHolder(
+        parent: ViewGroup, viewType: Int
+    ): RecyclerAdapter.MyViewConversationHolder {
         val view = inflater.inflate(R.layout.recycleview_ticket_conversation,parent,false)
         return MyViewConversationHolder(view)
     }
