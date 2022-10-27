@@ -7,6 +7,7 @@ import android.text.Editable
 import android.util.Log
 import android.widget.Toast
 import androidx.core.view.isVisible
+import androidx.fragment.app.FragmentTransaction
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.Response
@@ -17,6 +18,7 @@ import com.glpi.glpi_ministerio_pblico.R
 import com.glpi.glpi_ministerio_pblico.VolleySingleton
 import com.glpi.glpi_ministerio_pblico.databinding.ActivityTicketsAgregarSeguimientoBinding
 import com.glpi.glpi_ministerio_pblico.ui.adapter.*
+import com.glpi.glpi_ministerio_pblico.ui.misPeticiones.MisPeticionesFragment
 import com.glpi.glpi_ministerio_pblico.ui.shared.token
 import org.json.JSONArray
 import org.json.JSONObject
@@ -39,13 +41,9 @@ class TicketsAgregarSeguimientoActivity : AppCompatActivity(),
         super.onCreate(savedInstanceState)
         binding = ActivityTicketsAgregarSeguimientoBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        //ticketInfo()
-        //var followupStatus = "0"
 
         recyclerView = binding.includeModalFollowupTemplate.recyclerFollowupTemplate
         recyclerViewListStatusAllowed = binding.includeListStatusAllowed.recyclerFollowupListAllowed
-
-
 
         volleyRequestListStatusAllowed()
         volleyRequestFollowupTemplates(MainActivity.urlApi_FollowupTemplates)
@@ -58,19 +56,7 @@ class TicketsAgregarSeguimientoActivity : AppCompatActivity(),
         modalListStatusAllowed()
         appBarHeaderFollowup()
         imgBtnPadLock()
-        btn_fabs_taddsegact()
-        /*if (MainActivity.updateFollowup){
-            appBarHeaderFollowup()
-            getTicketInfo()
-            imgBtnPadLock()
-            btn_fabs_taddsegact()
-            MainActivity.updateFollowup = false
-        }else{
-            appBarHeaderFollowup()
-            imgBtnPadLock()
-            updateFollowup()
-            btn_fabs_taddsegact()
-        }*/
+        btnDeployFab()
     }
 
     private fun btnAddFollowup(ticketId: String){
@@ -80,9 +66,25 @@ class TicketsAgregarSeguimientoActivity : AppCompatActivity(),
             val followupPrivate = binding.imgViewPadLock.tag.toString()
             val listStatusAllowedId = binding.btnStatusFollowup.tag.toString()
 
-            onBackPressed()
-
-            requestVolleyAddFollowup(ticketId, listStatusAllowedId,followupPrivate,followupDescription)
+            when(followupDescription.toString()){
+                "" -> Toast.makeText(this, "ingrese una descripción del seguimiento", Toast.LENGTH_SHORT).show()
+                " " -> Toast.makeText(this, "ingrese una descripción del seguimiento", Toast.LENGTH_SHORT).show()
+                "  " -> Toast.makeText(this, "ingrese una descripción del seguimiento", Toast.LENGTH_SHORT).show()
+                "   " -> Toast.makeText(this, "ingrese una descripción del seguimiento", Toast.LENGTH_SHORT).show()
+                "    " -> Toast.makeText(this, "ingrese una descripción del seguimiento", Toast.LENGTH_SHORT).show()
+                "     " -> Toast.makeText(this, "ingrese una descripción del seguimiento", Toast.LENGTH_SHORT).show()
+                "\n" -> Toast.makeText(this, "ingrese una descripción del seguimiento", Toast.LENGTH_SHORT).show()
+                "\n\n" -> Toast.makeText(this, "ingrese una descripción del seguimiento", Toast.LENGTH_SHORT).show()
+                else -> {
+                    requestVolleyAddFollowup(
+                        ticketId,
+                        listStatusAllowedId,
+                        followupPrivate,
+                        followupDescription
+                    )
+                    onBackPressed()
+                }
+            }
         }
     }
 
@@ -96,9 +98,13 @@ class TicketsAgregarSeguimientoActivity : AppCompatActivity(),
         Log.i("mensaje type",ticketSortsStatus.toString())
         if (ticketSortsStatus == "EN CURSO (Asignada)"){
             binding.imgBtnStatus.setImageResource(R.drawable.ic_circulo_verde)
+            binding.btnStatusFollowup.text = "EN CURSO (Asignada)"
+            binding.btnStatusFollowup.tag = "2"
             binding.imgBtnStatusHeader.setImageResource(R.drawable.ic_circulo_verde)
         }else if (ticketSortsStatus == "EN ESPERA"){
             binding.imgBtnStatus.setImageResource(R.drawable.ic_circulo)
+            binding.btnStatusFollowup.text = "EN ESPERA"
+            binding.btnStatusFollowup.tag = "4"
             binding.imgBtnStatusHeader.setImageResource(R.drawable.ic_circulo)
         }else if (ticketSortsStatus == "CERRADO"){
             binding.imgBtnStatus.setImageResource(R.drawable.ic_circulo_negro)
@@ -170,10 +176,6 @@ class TicketsAgregarSeguimientoActivity : AppCompatActivity(),
         }
     }
 
-
-
-
-
     private fun updateFollowup(){
         Toast.makeText(this, "updateFollowup", Toast.LENGTH_SHORT).show()
         val bundle = intent.extras
@@ -188,9 +190,11 @@ class TicketsAgregarSeguimientoActivity : AppCompatActivity(),
         binding.tvIdTicket.text = "Petición #$ticketSortsId"
         if (ticketSortsStatus == "EN CURSO (Asignada)"){
             binding.imgBtnStatus.setImageResource(R.drawable.ic_circulo_verde)
+            binding.btnStatusFollowup.text = "EN CURSO (Asignada)"
             binding.imgBtnStatusHeader.setImageResource(R.drawable.ic_circulo_verde)
         }else{
             binding.imgBtnStatus.setImageResource(R.drawable.ic_circulo)
+            binding.btnStatusFollowup.text = "EN ESPERA"
             binding.imgBtnStatusHeader.setImageResource(R.drawable.ic_circulo)
         }
 
@@ -213,7 +217,7 @@ class TicketsAgregarSeguimientoActivity : AppCompatActivity(),
         }
 
         btnAddFollowup(ticketSortsId)
-        MainActivity.flagEdit = false
+        //MainActivity.flagEdit = false
     }
 
     private fun imgBtnTicketStatus(ticketSortsStatus: String?): String {
@@ -253,20 +257,6 @@ class TicketsAgregarSeguimientoActivity : AppCompatActivity(),
         return newTicketStatus
     }
 
-    private fun btnUpdateFollowup(followupStatus: String, ticketPrivate: String){
-        //boton agregar seguimiento
-        binding.btnAddFollowup.setOnClickListener {
-            Toast.makeText(this, "seguiemiento añadido", Toast.LENGTH_LONG).show()
-            Log.i("mensaje",
-                "id de ticket: " +
-                        "estado de ticket: $followupStatus\n" +
-                        "Segumiento Privado: $ticketPrivate\n"+
-                        "descripción ticket: ${binding.edtFollowupDescription.text}")
-            val intent_agregarSeguimiento = Intent(this, MainActivity::class.java)
-            intent_agregarSeguimiento.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            startActivity(intent_agregarSeguimiento)
-        }
-    }
 
     //INICIO - funcion de maneja los botones del header
     private fun appBarHeaderFollowup() {
@@ -274,12 +264,7 @@ class TicketsAgregarSeguimientoActivity : AppCompatActivity(),
         binding.btnAtrasActtaddseg.setOnClickListener {
             onBackPressed()
         }
-        //btnAddFollowup()
     }
-
-
-
-
 
     private fun requestVolleyAddFollowup(
         ticketId: String,
@@ -321,7 +306,7 @@ class TicketsAgregarSeguimientoActivity : AppCompatActivity(),
     //FIN - funcion de maneja los botones del header
 
     //INICIO - funcion de fabs que abre camara del celular y archivos del celular
-    private fun btn_fabs_taddsegact() {
+    private fun btnDeployFab() {
         var click_desplegar = false
         //boton para desplegar y plegar los fabs
         binding.fabDesplegarAddseg.setOnClickListener {
@@ -363,8 +348,6 @@ class TicketsAgregarSeguimientoActivity : AppCompatActivity(),
     }
 
     private fun volleyRequestFollowupTemplates(urlapiFollowuptemplates: String) {
-
-
         val stringRequestDataTickets = object : StringRequest(Method.POST,
             urlapiFollowuptemplates, Response.Listener { response ->
                 try {
@@ -463,6 +446,20 @@ class TicketsAgregarSeguimientoActivity : AppCompatActivity(),
         recyclerView_Adapter_ListStatusAllowed =
             RecycleViw_Adapter_ListStatusAllowed(this,dataModelArrayListStatusAllowed,this)
         recyclerViewListStatusAllowed!!.adapter = recyclerView_Adapter_ListStatusAllowed
+    }
+
+    //nota:eliminar fragment de fondo
+    private fun replaceFragment(misPeticionesFragment: MisPeticionesFragment) {
+        val f2 = misPeticionesFragment
+        val transaction: FragmentTransaction = supportFragmentManager.beginTransaction()
+        transaction.replace(R.id.frameLayoutFragment, f2)
+        transaction.addToBackStack(null)
+        transaction.commit()
+
+        /*val fragmentManager = supportFragmentManager
+        val fragmentTransaction = fragmentManager.beginTransaction()
+        fragmentTransaction.replace(R.id.frameLayoutFragment,misPeticionesFragment).commit()*/
+
     }
 
     override fun onFollowupTemplateClick(nameFollowupTemplate: String, contentFollowupTemplate: String) {

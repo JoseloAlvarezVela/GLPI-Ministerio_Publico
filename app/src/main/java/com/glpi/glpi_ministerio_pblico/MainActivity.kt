@@ -50,21 +50,29 @@ class MainActivity : AppCompatActivity(){
 
     companion object{
         var flagTicketSort = true
-        const val urlApi_Entities: String = "http://181.176.145.174:8080/api/user_entities"
-        val urlApi_Profiles: String = "http://181.176.145.174:8080/api/user_profiles"
-        val urlApi_TicketID: String = "http://181.176.145.174:8080/api/ticket_info/" //consulta si el ticket tiene tareas,soluciones o seguimiente, pasarle id de ticket
-        val urlApi_Ticket: String = "http://181.176.145.174:8080/api/ticket_sorts/General"
-        val urlApi_TicketSortByIncident: String = "http://181.176.145.174:8080/api/ticket_sorts/SortByIncident"
-        val urlApi_TicketSortByRequest: String = "http://181.176.145.174:8080/api/ticket_sorts/SortByRequest"
-        val urlApi_TicketSorts: String = "http://181.176.145.174:8080/api/ticket_sorts/SortByStatus"
-        val urlApi_SortByTicketId: String = "http://181.176.145.174:8080/api/ticket_sorts/SortByTicketId"
-        val urlApi_SortByRequester: String = "http://181.176.145.174:8080/api/ticket_sorts/SortByRequester"
-        val urlApi_TasksUsers: String = "http://181.176.145.174:8080/api/task_users/" //para consultar id de: user,technician,requester
-        val urlApi_TasksTemplate: String = "http://181.176.145.174:8080/api/task_templates"
-        val urlApi_TasksCategory: String = "http://181.176.145.174:8080/api/task_categories"
-        val urlApi_FollowupTemplates: String = "http://181.176.145.174:8080/api/followup_templates"
-        val urlApi_ListStatusAllowed: String = "http://181.176.145.174:8080/api/profile_tickets_states"
-        val urlApi_InsertFollowup: String = "http://181.176.145.174:8080/api/insert_followups"
+        private const val protocol = "http"
+        private const val url = "181.176.145.174"
+        private const val port = "8080"
+
+        val urlApi_Entities: String = "$protocol://$url:$port/api/user_entities"
+        val urlApi_Profiles: String = "$protocol://$url:$port/api/user_profiles"
+        val urlApi_TicketID: String = "$protocol://$url:$port/api/ticket_info/" //consulta si el ticket tiene tareas,soluciones o seguimiente, pasarle id de ticket
+        val urlApi_Ticket: String = "$protocol://$url:$port/api/ticket_sorts/General"
+        val urlApi_TicketSortByIncident: String = "$protocol://$url:$port/api/ticket_sorts/SortByIncident"
+        val urlApi_TicketSortByRequest: String = "$protocol://$url:$port/api/ticket_sorts/SortByRequest"
+        val urlApi_TicketSorts: String = "$protocol://$url:$port/api/ticket_sorts/SortByStatus"
+        val urlApi_SortByTicketId: String = "$protocol://$url:$port/api/ticket_sorts/SortByTicketId"
+        val urlApi_SortByRequester: String = "$protocol://$url:$port/api/ticket_sorts/SortByRequester"
+        val urlApi_TasksUsers: String = "$protocol://$url:$port/api/task_users/" //para consultar id de: user,technician,requester
+        val urlApi_TasksTemplate: String = "$protocol://$url:$port/api/task_templates"
+        val urlApi_TasksCategory: String = "$protocol://$url:$port/api/task_categories"
+        val urlApi_FollowupTemplates: String = "$protocol://$url:$port/api/followup_templates"
+        val urlApi_ListStatusAllowed: String = "$protocol://$url:$port/api/profile_tickets_states"
+        val urlApi_ListTechnician: String = "$protocol://$url:$port/api/list_technicians_tasks"
+        val urlApi_InsertFollowup: String = "$protocol://$url:$port/api/insert_followups"
+        val urlApi_UpdateTasks: String = "$protocol://$url:$port/api/update_tasks/"
+        val urlApi_InsertTasks: String = "$protocol://$url:$port/api/insert_tasks/"
+
 
         //datos del usuario logeado
         lateinit var nameLoginUser: String
@@ -785,7 +793,7 @@ class MainActivity : AppCompatActivity(){
 
     override fun onSupportNavigateUp(): Boolean { //slide de la izquierda
         val navController = findNavController(R.id.nav_host_fragment_content_main)
-        binding.navView.getHeaderView(0).findViewById<TextView>(R.id.txt_nameUser).text = nameLoginUser
+        binding.navView.getHeaderView(0).findViewById<TextView>(R.id.txt_nameUser).text = "nameLoginUser"
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
 

@@ -1,52 +1,34 @@
 package com.glpi.glpi_ministerio_pblico.ui.tickets
 
+//import com.glpi.glpi_ministerio_pblico.MainActivity.Companion.flag
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
-import android.graphics.Typeface
 import android.graphics.drawable.Drawable
-import android.os.Build
 import android.os.Bundle
-import android.text.Html
-import android.text.Spanned
-import android.util.Log
-import android.view.View
 import android.widget.ProgressBar
-import android.widget.TextView
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.core.text.HtmlCompat
-import androidx.core.view.isEmpty
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.glpi.glpi_ministerio_pblico.MainActivity
 import com.glpi.glpi_ministerio_pblico.MainActivity.Companion.decodeHtml
-//import com.glpi.glpi_ministerio_pblico.MainActivity.Companion.flag
-import com.glpi.glpi_ministerio_pblico.MainActivity.Companion.jsonArrayResponse
 import com.glpi.glpi_ministerio_pblico.MainActivity.Companion.urlApi_TasksUsers
 import com.glpi.glpi_ministerio_pblico.MainActivity.Companion.urlApi_TicketID
 import com.glpi.glpi_ministerio_pblico.R
 import com.glpi.glpi_ministerio_pblico.VolleySingleton
 import com.glpi.glpi_ministerio_pblico.databinding.ActivityNavFooterTicketsBinding
 import com.glpi.glpi_ministerio_pblico.ui.adapter.Data_TicketInfo
-import com.glpi.glpi_ministerio_pblico.ui.adapter.Data_Tickets
 import com.glpi.glpi_ministerio_pblico.ui.adapter.RecyclerAdapter
-import com.glpi.glpi_ministerio_pblico.ui.misIncidencias.MisIncidenciasFragment
 import com.glpi.glpi_ministerio_pblico.ui.shared.token
-import com.glpi.glpi_ministerio_pblico.utilities.Utils_Global
 import org.json.JSONArray
 import org.json.JSONObject
-import java.text.SimpleDateFormat
 import java.util.*
-import java.util.concurrent.TimeUnit
-import kotlin.collections.ArrayList
 
 
 class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversationClickListener {
@@ -308,7 +290,7 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
         val recyclerViewNews = binding.recyclerViewConversation
         //val newsList = dataModelArrayListConversation
         val newsAdapter = RecyclerAdapter(this,dataModelArrayListConversation,this)
-        val layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, true,)
+        val layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, true)
         layoutManager.stackFromEnd = true
 
         dataModelArrayListConversation.sortBy { it.ticketInfoDate}//ordenar por fecha
@@ -326,7 +308,6 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
         val bundle = intent.extras
         val ticketSortsId = bundle!!.getString("ticketSortsId")
         val ticketSortsIdTechnician = bundle!!.getString("ticketSortsIdTechnician")
-
 
         jsonObjectResponse = JSONObject()
 
@@ -532,6 +513,8 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
         //FIN volley ------------------------------------------------------------
     }
 
+
+
     override fun onEditClick(
         ticketInfoType: String,
         ticketInfoContent: String,
@@ -550,18 +533,18 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
         val ticketSortsId = bundle!!.getString("ticketSortsId")
         val ticketSortsStatus = bundle!!.getString("ticketSortsStatus")
         val ticketOrigin = bundle!!.getString("TicketOrigen")
-        val idTechnician = bundle!!.getString("IdTechnician")
+        val ticketSortsIdTechnician = bundle!!.getString("ticketSortsIdTechnician")
+        val ticketSortsType = bundle!!.getString("ticketSortsType")
 
         val intentTasks = (Intent(this,TicketsAgregarTareaActivity::class.java))
         intentTasks.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         val intentFollowUp = (Intent(this,TicketsAgregarSeguimientoActivity::class.java))
         intentFollowUp.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        MainActivity.flagEdit = true
         //Log.i("mensaje edit: ",""+glpiConversationTipo)
 
         if (ticketInfoType == "TASK"){
             intentTasks.putExtra("ticketSortsId",ticketSortsId)
-            intentTasks.putExtra("ticketStatus",ticketSortsStatus)
+            intentTasks.putExtra("ticketSortsStatus",ticketSortsStatus)
             intentTasks.putExtra("ticketInfoContent",ticketInfoContent)
             intentTasks.putExtra("ticketInfoPrivate",ticketInfoPrivate)
             intentTasks.putExtra("ticketInfoIdTechnician",ticketInfoIdTechnician)
@@ -571,6 +554,7 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
             intentTasks.putExtra("ticketInfoCategory",ticketInfoCategory)
             intentTasks.putExtra("ticketInfoId",ticketInfoId)
             intentTasks.putExtra("ticketInfoTimeToSolve",ticketInfoTimeToSolve)
+            intentTasks.putExtra("ticketSortsType",ticketSortsType)
             intentTasks.putExtra("flagOnEditClick",flagOnEditClick)
             startActivity(intentTasks)
         }else{
@@ -579,6 +563,8 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
             intentFollowUp.putExtra("ticketPrivate",ticketInfoPrivate)
             intentFollowUp.putExtra("ticketInfoContent",ticketInfoContent)
             intentFollowUp.putExtra("ticketOrigin",ticketOrigin)
+            intentFollowUp.putExtra("ticketSortsIdTechnician",ticketSortsIdTechnician)
+            intentFollowUp.putExtra("ticketSortsType",ticketSortsType)
             intentFollowUp.putExtra("flagOnEditClick",flagOnEditClick)
             startActivity(intentFollowUp)
         }

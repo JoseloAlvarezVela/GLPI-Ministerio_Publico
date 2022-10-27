@@ -191,12 +191,11 @@
                     android:padding="5sp">
 
                     <CheckBox
-                        android:id="@+id/chkboxPadLock"
+                        android:id="@+id/chkBoxPadLockTask"
                         android:layout_width="40dp"
                         android:layout_height="35dp"
                         android:layout_gravity="center"
-                        android:background="@drawable/esq_redondeada_gris"
-                        android:tag="PRIVADO" />
+                        android:background="@drawable/esq_redondeada_gris" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -224,37 +223,79 @@
 
             <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="45sp"
+                android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:layout_marginBottom="5dp"
+                android:orientation="horizontal"
                 android:visibility="visible">
 
-                <Button
-                    android:id="@+id/btnAddCategory"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:drawableLeft="@drawable/ic_etiqueta"
-                    android:fontFamily="@font/averia_sans_libre_light"
-                    android:gravity="left|center_vertical"
-                    android:padding="10sp"
-                    android:text="Agregar Categoria"
-                    android:textColor="#5E5959"
-                    android:textSize="10sp"
-                    app:backgroundTint="#ECECEC"
-                    app:iconPadding="0sp" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:padding="5sp">
 
-                <Button
-                    android:id="@+id/button8"
-                    android:layout_width="25sp"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/averia_sans_libre_light"
-                    android:textSize="10sp"
-                    app:backgroundTint="#ECECEC"
-                    app:icon="@drawable/ic_cerrar"
-                    app:iconGravity="textStart"
-                    app:iconPadding="0sp"
-                    app:iconTint="#000000"
-                    android:visibility="gone"/>
+                    <Button
+                        android:id="@+id/btnAddCategory"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableLeft="@drawable/ic_etiqueta"
+                        android:fontFamily="@font/averia_sans_libre_light"
+                        android:gravity="left|center_vertical"
+                        android:padding="10sp"
+                        android:text="Agregar Categoria"
+                        android:textColor="#5E5959"
+                        android:textSize="10sp"
+                        app:backgroundTint="#ECECEC"
+                        app:iconPadding="0sp" />
+
+                    <Button
+                        android:id="@+id/button8"
+                        android:layout_width="25sp"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/averia_sans_libre_light"
+                        android:textSize="10sp"
+                        android:visibility="gone"
+                        app:backgroundTint="#ECECEC"
+                        app:icon="@drawable/ic_cerrar"
+                        app:iconGravity="textStart"
+                        app:iconPadding="0sp"
+                        app:iconTint="#000000" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:padding="5sp">
+
+                    <Button
+                        android:id="@+id/btnAddTechnician"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableLeft="@drawable/ic_etiqueta"
+                        android:fontFamily="@font/averia_sans_libre_light"
+                        android:gravity="left|center_vertical"
+                        android:padding="10sp"
+                        android:text="Asignar Técnico"
+                        android:textColor="#5E5959"
+                        android:textSize="10sp"
+                        app:backgroundTint="#ECECEC"
+                        app:iconPadding="0sp" />
+
+                    <Button
+                        android:id="@+id/button89"
+                        android:layout_width="25sp"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/averia_sans_libre_light"
+                        android:textSize="10sp"
+                        android:visibility="gone"
+                        app:backgroundTint="#ECECEC"
+                        app:icon="@drawable/ic_cerrar"
+                        app:iconGravity="textStart"
+                        app:iconPadding="0sp"
+                        app:iconTint="#000000" />
+                </LinearLayout>
 
             </LinearLayout>
 
@@ -608,6 +649,16 @@
         app:layout_constraintBottom_toBottomOf="@+id/linearLayout4"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <include
+        android:id="@+id/include_modal_list_technician"
+        layout="@layout/modal_list_technician"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/includeDocumentsTaks"
+        app:layout_constraintEnd_toEndOf="@+id/linearLayout4"
+        app:layout_constraintStart_toStartOf="@+id/idTemplate"
         app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

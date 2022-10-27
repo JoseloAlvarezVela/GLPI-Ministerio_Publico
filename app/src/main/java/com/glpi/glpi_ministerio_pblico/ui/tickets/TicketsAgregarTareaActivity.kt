@@ -12,36 +12,36 @@ import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.glpi.glpi_ministerio_pblico.MainActivity
 import com.glpi.glpi_ministerio_pblico.MainActivity.Companion.decodeHtml
-import com.glpi.glpi_ministerio_pblico.MainActivity.Companion.flagEdit
 import com.glpi.glpi_ministerio_pblico.MainActivity.Companion.urlApi_TasksCategory
 import com.glpi.glpi_ministerio_pblico.MainActivity.Companion.urlApi_TasksTemplate
 import com.glpi.glpi_ministerio_pblico.R
 import com.glpi.glpi_ministerio_pblico.VolleySingleton
 import com.glpi.glpi_ministerio_pblico.databinding.ActivityTicketsAgregarTareaBinding
-import com.glpi.glpi_ministerio_pblico.ui.adapter.Data_TasksCategory
-import com.glpi.glpi_ministerio_pblico.ui.adapter.Data_TasksTemplate
-import com.glpi.glpi_ministerio_pblico.ui.adapter.RecycleView_Adapter_TasksCategory
-import com.glpi.glpi_ministerio_pblico.ui.adapter.RecycleView_Adapter_TasksTemplate
+import com.glpi.glpi_ministerio_pblico.ui.adapter.*
 import com.glpi.glpi_ministerio_pblico.ui.shared.token
 import org.json.JSONArray
-import java.text.SimpleDateFormat
+import org.json.JSONObject
 import java.util.*
 import kotlin.collections.ArrayList
 
 class TicketsAgregarTareaActivity : AppCompatActivity(),
     RecycleView_Adapter_TasksTemplate.onTasksTemplateClickListener,
-    RecycleView_Adapter_TasksCategory.onTasksCategoryClickListener {
+    RecycleView_Adapter_TasksCategory.onTasksCategoryClickListener,
+    RecycleView_Adapter_ListTechnician.onListTechnicianClickListener{
 
     lateinit var binding: ActivityTicketsAgregarTareaBinding //declaramos binding para acceder variables
     //creamos el objeto de la clase recyclerView
     private var recyclerView: RecyclerView? = null
     private var recyclerViewCategory: RecyclerView? = null
+    private var recyclerViewListTechnician: RecyclerView? = null
     /*creamos la lista de arreglos que tendrá los objetos de la clase Data_Tickets
    esta lista de arreglos (dataModelArrayList) funcionará como fuente de datos*/
     internal lateinit var dataModelArrayListTasksTemplate: ArrayList<Data_TasksTemplate>
     internal lateinit var dataModelArrayListTasksCategory: ArrayList<Data_TasksCategory>
+    internal lateinit var dataModelArrayListTasksTechnician: ArrayList<Data_ListTechnician>
     private var recyclerView_Adapter_TasksTemplate: RecycleView_Adapter_TasksTemplate? = null
     private var recyclerView_Adapter_TasksCategory: RecycleView_Adapter_TasksCategory? = null
+    private var recyclerView_Adapter_ListTechnician: RecycleView_Adapter_ListTechnician? = null
 
     //para obetener id despues de cargar
     /*companion object{
@@ -53,56 +53,61 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
         binding = ActivityTicketsAgregarTareaBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        var flagTasks = flagEdit
         recyclerView = binding.includeModalPlantillaTarea.recyclerTasksTemplate
         recyclerViewCategory = binding.includeModalPlantillaAgregarCategoria.recyclerTasksCategory
-        //recyclerView = binding.recyclerTaskTemplate
+        recyclerViewListTechnician = binding.includeModalListTechnician.recyclerListTechnician
 
         volleyRequestDataTasksTemplate()
         volleyRequestDataTasksCategory()
-        //ticketInfo()
+        volleyRequestListTechnician()
 
-
-        if (flagTasks){
-            val intent = intent.extras
-            val ticketSortsId = intent!!.getString("ticketSortsId")
-            val ticketSortsStatus = intent!!.getString("ticketSortsStatus")
-            val ticketInfoContent = intent!!.getString("ticketInfoContent")
-            val ticketInfoCategory = intent!!.getString("ticketInfoCategory")
-            val ticketInfoTimeToSolve = intent!!.getString("ticketInfoTimeToSolve")
-            val ticketInfoPrivate = intent!!.getString("ticketInfoPrivate")
-            val ticketInfoStatus = intent!!.getString("ticketInfoStatus")
-            //val ticketInfoIdTechnician = intent!!.getString("ticketInfoIdTechnician")
-            binding.tvIdTicket.text = "Petición #$ticketSortsId"
-            binding.edtTasksDescription.setText(ticketInfoContent)
-            binding.btnAddCategory.text = ticketInfoCategory
-            binding.btnTimeToSolveTask.text = "$ticketInfoTimeToSolve minutos"
-
-            when(ticketSortsStatus){
-                "EN CURSO (Asignada)" -> binding.imgBtnStatusTasks.setImageResource(R.drawable.ic_circulo_verde)
-                "EN ESPERA" -> binding.imgBtnStatusTasks.setImageResource(R.drawable.ic_circulo)
-            }
-
-            when(ticketInfoPrivate){
-                "SI" -> binding.imgBtnPadLockTask.setImageResource(R.drawable.ic_candado_cerrado)
-                "NO" -> binding.imgBtnPadLockTask.setImageResource(R.drawable.ic_candado_abierto)
-            }
-
-            when(ticketInfoStatus){
-                "PENDIENTE" -> binding.chkboxPadLock.isChecked = true
-                "TERMINADO" -> binding.chkboxPadLock.isChecked = false
-            }
-
-            flagEdit = false
+        val bundle = intent.extras
+        when(bundle!!.getBoolean("flagOnEditClick")){
+            true -> updateTask()
+            false -> getInfoTask()
         }
-
+        Log.i("mensaje edit","${bundle!!.getBoolean("flagOnEditClick")}")
         btn_fabs()
         btn_atras()
-
         btn_agregarCat()
+        btnAssignTechnician()
         btnTimeToSolveTask()
         btnDocuments()
+    }
 
+    private fun volleyRequestListTechnician() {
+        val stringRequestDataTickets = object : StringRequest(Method.POST,
+            MainActivity.urlApi_ListTechnician, Response.Listener { response ->
+                try {
+                    dataModelArrayListTasksTechnician = ArrayList()
+
+                    val jsonObjectResponse = JSONArray(response)
+                    for (i in  0 until jsonObjectResponse.length()){
+                        val listTechnicianJson = jsonObjectResponse.getJSONObject(i)
+                        val dataListTechnician = Data_ListTechnician()
+                        dataListTechnician.listTechnicianId = listTechnicianJson.getString("ID")
+                        dataListTechnician.listTechnicianLastName = listTechnicianJson.getString("APELLIDO")
+                        dataListTechnician.listTechnicianName = listTechnicianJson.getString("NOMBRE")
+
+                        dataModelArrayListTasksTechnician.add(dataListTechnician)
+                    }
+                    setupRecyclerListTechnician()
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    //Toast.makeText(this, "token expirado: $e", Toast.LENGTH_LONG).show()
+                }
+            }, Response.ErrorListener {
+                Toast.makeText(this, "ERROR CON EL SERVIDOR _", Toast.LENGTH_SHORT).show()
+            }) {
+            override fun getParams(): Map<String, String>? {
+                val params: MutableMap<String, String> = HashMap()
+                params["session_token"] = token.prefer.getToken()
+                return params
+            }
+        }
+        this?.let {
+            VolleySingleton.getInstance(it).addToRequestQueue(stringRequestDataTickets)
+        }
     }
 
     private fun btnDocuments(){
@@ -271,10 +276,20 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
         layoutManager.stackFromEnd = true
 
         recyclerView!!.layoutManager = layoutManager
-
         recyclerView_Adapter_TasksTemplate =
             RecycleView_Adapter_TasksTemplate(this,dataModelArrayListTasksTemplate,this)
         recyclerView!!.adapter = recyclerView_Adapter_TasksTemplate
+    }
+
+    private fun setupRecyclerListTechnician() {
+        val layoutManager =
+            LinearLayoutManager(this, LinearLayoutManager.VERTICAL, true,)
+        layoutManager.stackFromEnd = true
+
+        recyclerViewListTechnician!!.layoutManager = layoutManager
+        recyclerView_Adapter_ListTechnician =
+            RecycleView_Adapter_ListTechnician(this,dataModelArrayListTasksTechnician,this)
+        recyclerViewListTechnician!!.adapter = recyclerView_Adapter_ListTechnician
     }
 
     private fun volleyRequestDataTasksCategory() {
@@ -326,9 +341,13 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
         recyclerViewCategory!!.adapter = recyclerView_Adapter_TasksCategory
         }
 
-    private fun ticketInfo(){
+    private fun getInfoTask(){
+        val flagGetInfoTask = true
         val bundle = intent.extras
-        val ticketSortsId = bundle!!.getString("ticketSortsId")
+        val ticketSortsId = bundle!!.getString("ticketSortsId").toString()
+        val ticketInfoId = bundle!!.getString("ticketInfoId").toString()
+        val ticketSortsIdTechnician = bundle!!.getString("ticketSortsIdTechnician").toString()
+
         val ticketType = bundle!!.getString("ticketType") //solicitud o incidente
         val ticketStatus = bundle!!.getString("ticketStatus")//en curso ,cerrado ...
         val getTaskUsersEstimateDuration = bundle!!.getString("getTaskUsersEstimateDuration")
@@ -354,7 +373,7 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
         }
 
         if (tasksStatus == "TERMINADO"){
-            binding.chkboxPadLock.isChecked = true
+            binding.chkBoxPadLockTask.isChecked = true
 
         }
 
@@ -362,21 +381,101 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
         if(ticketStatus == "EN CURSO (Asignada)"){
             binding.imgBtnStatusTasks.setImageResource(R.drawable.ic_circulo_verde)
             binding.imgBtnStatusTasksHeader.setImageResource(R.drawable.ic_circulo_verde)
-            binding.imgBtnStatusTasks.tag = 1
+            binding.imgBtnStatusTasks.tag = "2"
         }else if(ticketStatus == "EN ESPERA"){
-            Toast.makeText(this, "$ticketStatus", Toast.LENGTH_SHORT).show()
             binding.imgBtnStatusTasks.setImageResource(R.drawable.ic_circulo)
             binding.imgBtnStatusTasksHeader.setImageResource(R.drawable.ic_circulo)
-            binding.imgBtnStatusTasks.tag = 0
+            binding.imgBtnStatusTasks.tag = "4"
         }else if (ticketStatus == "CERRADO"){
             binding.imgBtnStatusTasks.setImageResource(R.drawable.ic_circulo_negro)
-            binding.imgBtnStatusTasks.tag = 2
+            //binding.imgBtnStatusTasks.tag = 2
             binding.imgBtnStatusTasksHeader.setImageResource(R.drawable.ic_circulo_negro)
         }
 
         imgBtnTicketStatus(ticketStatus)
-        btnAddTasks()
+        btnAddTasks(flagGetInfoTask, ticketSortsId,ticketInfoId,ticketSortsIdTechnician)
 
+    }
+
+    private fun updateTask(){
+        val flagUpdateTask = true
+        Toast.makeText(this, "updateTask", Toast.LENGTH_SHORT).show()
+        val bundle = intent.extras
+        val ticketSortsId = bundle!!.getString("ticketSortsId").toString()
+        val ticketInfoId = bundle!!.getString("ticketInfoId").toString()
+        val ticketInfoIdTechnician = bundle!!.getString("ticketInfoIdTechnician").toString()
+        //val ticketType = bundle!!.getString("ticketType")
+
+        val ticketSortsType = bundle!!.getString("ticketSortsType")//solicitud o incidente
+        val ticketSortsStatus = bundle!!.getString("ticketSortsStatus")
+        val ticketInfoCategory = bundle!!.getString("ticketInfoCategory")
+        val ticketInfoIdCategory = bundle!!.getString("ticketInfoIdCategory")
+        val ticketInfoStatus = bundle!!.getString("ticketInfoStatus")
+        val ticketInfoTimeToSolve = bundle!!.getString("ticketInfoTimeToSolve")
+
+        val ticketInfoPrivate = bundle!!.getString("ticketInfoPrivate")
+        val ticketInfoContent = bundle!!.getString("ticketInfoContent")
+
+        binding.tvIdTicket.text = "Petición #$ticketSortsId"
+        binding.edtTasksDescription.setText(ticketInfoContent)
+        binding.btnAddCategory.text = ticketInfoCategory
+        binding.btnAddCategory.tag = ticketInfoIdCategory
+        binding.btnTimeToSolveTask.text = "$ticketInfoTimeToSolve minutos"
+
+        when(ticketSortsType){
+            "SOLICITUD" -> binding.imgBtnTypeTasks.setImageResource(R.drawable.ic_interrogacion)
+            "INCIDENCIA" -> binding.imgBtnTypeTasks.setImageResource(R.drawable.ic_incidencia)
+        }
+
+        when(ticketInfoStatus){
+            "TERMINADO" -> {
+                binding.chkBoxPadLockTask.isChecked = true
+                binding.chkBoxPadLockTask.tag = "1"
+            }
+            "PENDIENTE" -> {
+                binding.chkBoxPadLockTask.isChecked = false
+                binding.chkBoxPadLockTask.tag = "0"
+            }
+            "INFORMACION" -> {
+                binding.chkBoxPadLockTask.isChecked = false
+                binding.chkBoxPadLockTask.tag = "2"
+            }
+        }
+
+        binding.chkBoxPadLockTask.setOnClickListener {
+            when(binding.chkBoxPadLockTask.isChecked){
+                true -> binding.chkBoxPadLockTask.tag = "1"
+                false -> binding.chkBoxPadLockTask.tag = "0"
+            }
+        }
+
+        when(ticketSortsStatus){
+            "EN CURSO (Asignada)" -> {
+                binding.imgBtnStatusTasks.setImageResource(R.drawable.ic_circulo_verde)
+                binding.imgBtnStatusTasksHeader.setImageResource(R.drawable.ic_circulo_verde)
+                binding.imgBtnStatusTasks.tag = "2"
+            }
+            "EN CURSO (Planificación)" -> {binding.imgBtnStatusTasks.tag = "3"}
+            "EN ESPERA" -> {
+                binding.imgBtnStatusTasks.setImageResource(R.drawable.ic_circulo)
+                binding.imgBtnStatusTasksHeader.setImageResource(R.drawable.ic_circulo)
+                binding.imgBtnStatusTasks.tag = "4"
+            }
+            "SOLUCIONADO" -> {binding.imgBtnStatusTasks.tag = "5"}
+        }
+
+        when(ticketInfoPrivate){
+            "SI" -> {
+                binding.imgBtnPadLockTask.setImageResource(R.drawable.ic_candado_cerrado)
+                binding.imgBtnPadLockTask.tag = "1"
+            }
+            "NO" -> {
+                binding.imgBtnPadLockTask.setImageResource(R.drawable.ic_candado_abierto)
+                binding.imgBtnPadLockTask.tag = "0"
+            }
+        }
+
+        btnAddTasks(flagUpdateTask, ticketSortsId,ticketInfoId,ticketInfoIdTechnician)
     }
 
     //INICIO - funcion que abre modal para escoger una tarea
@@ -396,94 +495,146 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
         }
     }
 
-    //INICIO - función que añade la tarea y te devuelve al menu principal
-    private fun btnAddTasks() {
-        binding.btnAddTasks.setOnClickListener {
-            Toast.makeText(this, "tarea añadido", Toast.LENGTH_LONG).show()
-            val ticketInfoContent = binding.edtTasksDescription.text
-            var ticketInfoPrivate = binding.chkboxPadLock.tag.toString()
+    private fun btnAssignTechnician() {
+        //INICO - boton que abre modal_agregar_cat_tickets.xml
+        binding.btnAddTechnician.setOnClickListener {
+            binding.LayoutBackgroudAgregarTarea.isVisible = true //fondo gris casi transparente
+            //binding.includeModalPlantillaAddcat.modalPlantillaAgregarCategoria.isVisible = true //modal
+            binding.includeModalListTechnician.modalListTechnician.isVisible = true
+        }
 
-            val bundle = intent.extras
-            val flagOnEditClick = bundle!!.getString("flagOnEditClick")
-            var ticketInfoIdTechnician = bundle!!.getString("ticketInfoIdTechnician")
-
-            val getTaskUsersEstimateDuration = bundle!!.getString("getTaskUsersEstimateDuration")
-            var ticketDate = bundle!!.getString("ticketDate")
-
-            //var ticketPrivate = binding.chkboxPadLock.tag.toString()
-            val ticketId = binding.tvIdTicket.text.split(" ")[1].replace("#","")
-            val tasksDescription = binding.edtTasksDescription.text
-            val durationToSolveTasks = binding.btnTimeToSolveTask.text
-            val category = binding.btnAddCategory.text
-            var ticketStatus = binding.imgBtnStatusTasks.tag.toString()
-            val idTemplates = binding.idTemplate.text
-            val idCategory = binding.idCategory.text
-
-            if (ticketStatus == "0"){
-                ticketStatus = "EN ESPERA"
-            }else{
-                ticketStatus = "EN CURSO (Asignada)"
-            }
-
-            var ticketTaSksStatus: String = if (binding.chkboxPadLock.isChecked){
-                "1"
-            }else{
-                "0"
-            }
-            //fecha y hora actual
-            val sdf = SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale("es", "PE"))//obtenemos fecha actual
-            val currentdate = sdf.format(Date())
-
-            if (flagOnEditClick == "true"){
-                ticketInfoIdTechnician = "0"
-            }else{
-                ticketDate = currentdate
-            }
-
-            ticketInfoPrivate = if (ticketInfoPrivate == "PRIVADO"){
-                "1"
-            }else{
-                "0"
-            }
-
-            Log.i("mensaje addTask",
-                "content: $ticketInfoContent\n"+
-                "private: $ticketInfoPrivate\n" +
-                "user_tech: $ticketInfoIdTechnician\n"+
-                "task_state: $ticketTaSksStatus\n"+
-                "templates_id: $idTemplates\n"+
-                "categories_id: $idCategory\n"+
-                "date_end: $currentdate\n"+
-                "date_begin: $ticketDate\n"+
-                "ticket_state: $ticketStatus\n"+ //incidente/solicitud
-                "id de ticket: $ticketId")
-
-
-            /*Log.i("mensaje",
-                "id de ticket: $ticketId \n" +
-                        "TIPO: TASKS\n"+
-                        "PRIVADO: $ticketPrivate\n" +
-                        "ID_USUARIO: ${MainActivity.idUserTechnician}\n" +
-                        "USUARIO: ${MainActivity.userTechnician}\n"+
-                        "NOMBRE: ${MainActivity.nameTechnician}\n"+
-                        "APELLIDO: ${MainActivity.lastNameTechnician}\n"+
-                        "FECHA: $ticketDate\n"+
-                        "FECHA_CREACION: $ticketDate\n"+
-                        "FECHA_MODIFICACION: $currentdate\n"+
-                        "CONTENIDO: $tasksDescription\n"+
-                        "FECHA_INICIO: null\n"+
-                        "FECHA_FIN: null\n"+
-                        "DURACION: $durationToSolveTasks\n"+
-                        "ESTADO: $ticketTaSksStatus\n"+
-                        "CATEGORIA: $category\n"+
-                        "EDITOR: $idTechnician\n"+ //aca debe ir el id del que edita el ticket
-                        "TECNICO: $idTechnician\n")*/
-            onBackPressed()
-            /*val intent_agregarTarea = Intent(this, MainActivity::class.java)
-            intent_agregarTarea.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            startActivity(intent_agregarTarea)*/
+        //INICIO - boton que cierra modal_agregar_cat_tickets.xml
+        binding.includeModalListTechnician.btnCloseModalListTechnician.setOnClickListener {
+            binding.includeModalPlantillaAgregarCategoria.modalPlantillaAgregarTarea.isVisible = false
+            binding.LayoutBackgroudAgregarTarea.isVisible = false
         }
     }
+
+    //INICIO - función que añade la tarea y te devuelve al menu principal
+    private fun btnAddTasks(flagUpdateTask: Boolean,ticketSortsId: String, ticketInfoId: String, ticketSortsIdTechnician: String) {
+        binding.btnAddTasks.setOnClickListener {
+            Toast.makeText(this, "Tarea añadida", Toast.LENGTH_LONG).show()
+            val taskDescription = binding.edtTasksDescription.text.toString()
+            val taskPrivate = binding.imgBtnPadLockTask.tag.toString()
+            val taskState = binding.chkBoxPadLockTask.tag.toString()
+            val templateId = binding.btnAddCategory.tag.toString()
+            val dateEnd = ""
+            val dateBegin = ""
+            val ticketStatus = binding.imgBtnStatusTasks.tag.toString()
+
+            when(flagUpdateTask){
+                true -> {
+                    requestVolleyUpdateTask(
+                        ticketInfoId,
+                        taskDescription,
+                        taskPrivate,
+                        ticketSortsIdTechnician,
+                        taskState,
+                        templateId,
+                        templateId,
+                        dateEnd,
+                        dateBegin,
+                        ticketStatus,
+                        ticketSortsId
+                    )
+                    onBackPressed()
+                }
+                false -> {
+                    //requestVolleyNewTask()
+                    onBackPressed()
+                }
+            }
+        }
+    }
+
+    private fun requestVolleyUpdateTask(
+        ticketInfoId: String,
+        taskDescription: String,
+        taskPrivate: String,
+        taskIdTech: String,
+        taskState: String,
+        templateId: String,
+        categoryId: String,
+        dateEnd: String,
+        dateBegin: String,
+        ticketStatus: String,
+        ticketSortsId: String
+    ) {
+        //metodo que nos devuelve los datos para los tickets
+        val stringRequestDataTickets = object : StringRequest(Method.POST,
+            MainActivity.urlApi_UpdateTasks+ticketInfoId, Response.Listener { response ->
+                try {
+                    val dataAddFollowup = JSONObject(response) //obtenemos el objeto json
+
+                    Log.i("mensaje","$dataAddFollowup")
+
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    Toast.makeText(this, "token expirado_: $e", Toast.LENGTH_LONG).show()
+                    //Log.i("mensaje recycler e: ", "recycler ERROR: $e")
+                }
+            }, Response.ErrorListener {
+                Toast.makeText(this, "ERROR CON EL SERVIDOR", Toast.LENGTH_SHORT).show()
+            }) {
+            override fun getParams(): Map<String, String>? {
+                val params: MutableMap<String, String> = HashMap()
+                params["session_token"] = token.prefer.getToken()
+                params["content"] = taskDescription
+                params["private"] = taskPrivate
+                params["user_tech"] = taskIdTech
+                params["task_state"] = taskState
+                params["template_id"] = templateId
+                params["categories_id"] = categoryId
+                params["date_end"] = dateEnd
+                params["date_begin"] = dateBegin
+                params["ticket_state"] = ticketStatus
+                params["ticket_id"] = ticketSortsId
+                Log.i("mensaje params","$params")
+                return params
+            }
+        }
+        VolleySingleton.getInstance(this).addToRequestQueue(stringRequestDataTickets)
+        //FIN obtenemos perfil de usuario
+    }
+
+    /*private fun requestVolleyNewTask() {
+        //metodo que nos devuelve los datos para los tickets
+        val stringRequestDataTickets = object : StringRequest(Method.POST,
+            MainActivity.urlApi_UpdateTasks+ticketInfoId, Response.Listener { response ->
+                try {
+                    val dataAddFollowup = JSONObject(response) //obtenemos el objeto json
+
+                    Log.i("mensaje","$dataAddFollowup")
+
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    Toast.makeText(this, "token expirado_: $e", Toast.LENGTH_LONG).show()
+                    //Log.i("mensaje recycler e: ", "recycler ERROR: $e")
+                }
+            }, Response.ErrorListener {
+                Toast.makeText(this, "ERROR CON EL SERVIDOR", Toast.LENGTH_SHORT).show()
+            }) {
+            override fun getParams(): Map<String, String>? {
+                val params: MutableMap<String, String> = HashMap()
+                params["session_token"] = token.prefer.getToken()
+                params["type"] = taskType //
+                params["content"] = taskDescription
+                params["private"] = taskPrivate
+                params["user_tech"] = taskIdTech
+                params["task_state"] = taskState
+                params["template_id"] = templateId
+                params["categories_id"] = categoryId
+                params["action_time"] = dateEnd
+                params["date_begin"] = dateBegin
+                params["ticket_state"] = ticketStatus
+                params["ticket_id"] = ticketSortsId
+                Log.i("mensaje params","$params")
+                return params
+            }
+        }
+        VolleySingleton.getInstance(this).addToRequestQueue(stringRequestDataTickets)
+        //FIN obtenemos perfil de usuario
+    }*/
 
     //INICIO - funcion que regresa a la vista anterior: activity_nav_footer_tickets.xml
     private fun btn_atras() {
@@ -563,6 +714,7 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
             binding.includeModalPlantillaTarea.modalPlantillaAgregarTarea.isVisible = false
             //binding.includeModalPlantillaAddcat.modalPlantillaAgregarCategoria.isVisible = false
             binding.includeModalPlantillaAgregarCategoria.modalPlantillaAgregarTarea.isVisible = false
+            binding.includeModalListTechnician.modalListTechnician.isVisible = false
             layout_plantilla.isVisible = false
             layout_camara.isVisible = false
             layout_archivo.isVisible = false
@@ -615,10 +767,27 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
         click = false
         binding.LayoutFabAgregarTarea.isVisible = true
 
-        Toast.makeText(this, "$nameTasksCategory", Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, "$nameTasksCategory, Id: $idTasksCategories", Toast.LENGTH_SHORT).show()
 
         binding.btnAddCategory.text = decodeHtml(contentTasksCategory)
         binding.idCategory.text = idTasksCategories
+    }
+
+    override fun onSelectTechnicianClick(
+        listStatusAllowedId: String,
+        listStatusAllowedName: String,
+        listTechnicianLastName: String
+    ) {
+        binding.btnAddTechnician.text = "$listStatusAllowedName $listTechnicianLastName"
+        binding.btnAddTechnician.tag = "$listStatusAllowedId"
+
+        binding.includeModalListTechnician.modalListTechnician.isVisible = false
+        binding.LayoutBackgroudAgregarTarea.isVisible = false
+        binding.fabPlantilla.isVisible = false
+        binding.fabFoto.isVisible = false
+        binding.fabArchivo.isVisible = false
+        click = false
+        binding.LayoutFabAgregarTarea.isVisible = true
     }
 
 }

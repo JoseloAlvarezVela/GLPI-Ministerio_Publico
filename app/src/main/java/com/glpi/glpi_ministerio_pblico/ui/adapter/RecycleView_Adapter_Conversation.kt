@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.CheckBox
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -58,11 +59,25 @@ class RecyclerAdapter(
 
         holder.conversationContent.text = dataModelArrayListConversation[position].ticketInfoContent
 
+
+
         when(dataModelArrayListConversation[position].ticketInfoType){
             "TASK" -> {
                 holder.linearLayoutTasksCarrierName.isVisible = true
-                holder.ticketInfoNameTechnician.text =
-                    dataModelArrayListConversation[position].ticketInfoNameTechnician
+                holder.imgBtnPrivateTask.isVisible = true
+                holder.chkBoxStatus.isVisible = true
+
+                when(dataModelArrayListConversation[position].ticketInfoPrivate){
+                    "SI" -> holder.imgBtnPrivateTask.setImageResource(R.drawable.ic_candado_cerrado)
+                    "NO" -> holder.imgBtnPrivateTask.setImageResource(R.drawable.ic_candado_abierto)
+                }
+
+                when(dataModelArrayListConversation[position].ticketInfoStatus){
+                    "PENDIENTE" -> holder.chkBoxStatus.isChecked = false
+                    "TERMINADO" -> holder.chkBoxStatus.isChecked = true
+                }
+
+                holder.ticketInfoNameTechnician.text = dataModelArrayListConversation[position].ticketInfoNameTechnician
                 holder.param.setMargins(0, 10, 100, 10)
                 holder.conversationTicketStatus.layoutParams = holder.param
                 holder.conversationTicketStatus.setBackgroundResource(R.drawable.esq_redondeada_tasks)
@@ -70,6 +85,8 @@ class RecyclerAdapter(
             "FOLLOWUP" -> {
                 holder.linearLayoutTasksCarrierName.isVisible = false
                 holder.followUpLinearLayoutTimeToSolve.isVisible = false
+                holder.imgBtnPrivateTask.isVisible = false
+                holder.chkBoxStatus.isVisible = false
                 holder.param.setMargins(100,10,0,10)
                 holder.conversationTicketStatus.layoutParams = holder.param
                 holder.conversationTicketStatus.setBackgroundResource(R.drawable.esq_redondeada_followup)
@@ -79,6 +96,8 @@ class RecyclerAdapter(
                 holder.solutionImageButtonEdit.isVisible = false
                 holder.followUpLinearLayoutTimeToSolve.isVisible = false
                 holder.linearLayoutTasksCarrierName.isVisible = false
+                holder.imgBtnPrivateTask.isVisible = false
+                holder.chkBoxStatus.isVisible = false
                 holder.param.setMargins(100,10,0,10)
                 holder.conversationTicketStatus.layoutParams = holder.param
                 holder.conversationTicketStatus.setBackgroundResource(R.drawable.esq_redondeada_solution)
@@ -105,6 +124,9 @@ class RecyclerAdapter(
         var conversationStatus: TextView
         var conversationContent: TextView
 
+        var imgBtnPrivateTask: ImageButton
+        var chkBoxStatus: CheckBox
+
         var param: ViewGroup.MarginLayoutParams
 
 
@@ -122,6 +144,9 @@ class RecyclerAdapter(
             conversationTicketStatus = itemConversation.findViewById<LinearLayout>(R.id.ticket_estado_conversation) as LinearLayout
             conversationStatus = itemConversation.findViewById<TextView>(R.id.tv_conversation_estado) as TextView
             conversationContent = itemConversation.findViewById<TextView>(R.id.txt_descripcionTicketHistorico_conversation) as TextView
+
+            imgBtnPrivateTask = itemConversation.findViewById<TextView>(R.id.imgBtnPrivateTask) as ImageButton
+            chkBoxStatus = itemConversation.findViewById<TextView>(R.id.chkBoxStatus) as CheckBox
 
 
             param = itemView.findViewById<LinearLayout>(R.id.ticket_estado_conversation).layoutParams as ViewGroup.MarginLayoutParams
