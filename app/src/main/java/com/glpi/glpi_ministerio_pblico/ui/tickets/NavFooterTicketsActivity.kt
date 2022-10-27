@@ -79,11 +79,11 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
         binding = ActivityNavFooterTicketsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+
+
         progressBarTicketConversation = binding.progressBarTicketConversation
 
         volleyRequestIdRecipient() //datos del operador
-        //volleyRequestIdTechnician() //datos del tecnico
-        //volleyRequestIdRequester() //datos del solicitante
         volleyRequestTicketInfo(urlApi_TicketID)
 
         activityHeader()
@@ -155,18 +155,14 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
         }
         binding.includeFabs.btnFabSeguimiento.setOnClickListener {
             val intentAddFollowup = Intent(this, TicketsAgregarSeguimientoActivity::class.java)
-            val intent = intent.extras
-            val ticketStatus = intent!!.getString("TicketEstado")
-            val ticketOrigin = intent!!.getString("TicketOrigen")
-            //Log.i("mensaje ticketOrigin1","$ticketOrigin")
+            val bundleIn = intent.extras
+            val ticketSortsId = bundleIn!!.getString("ticketSortsId")
+            val ticketSortsStatus = bundleIn!!.getString("ticketSortsStatus")
 
-            val bundle = Bundle()
-            bundle.putString("TicketID", ticketId)
-            //bundle.putString("ticketType", ticketType)//TODO: AGREGAR A LOS DEMAS
-            bundle.putString("ticketOrigin", ticketOrigin)//TODO: AGREGAR A LOS DEMAS
-            bundle.putString("ticketStatus", ticketStatus)
-            MainActivity.updateFollowup = true
-            intentAddFollowup.putExtras(bundle)
+            val bundleSend = Bundle()
+            bundleSend.putString("ticketSortsId", ticketSortsId)//TODO: AGREGAR A LOS DEMAS
+            bundleSend.putString("ticketSortsStatus", ticketSortsStatus)
+            intentAddFollowup.putExtras(bundleSend)
             intentAddFollowup.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             startActivity(intentAddFollowup)
 
@@ -331,11 +327,6 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
         val ticketSortsId = bundle!!.getString("ticketSortsId")
         val ticketSortsIdTechnician = bundle!!.getString("ticketSortsIdTechnician")
 
-        /*val Contenido_ = bundle!!.getString("Contenido")
-        val nameCarrier = bundle!!.getString("NameOperador")
-        val CurrentTime_ = bundle!!.getString("CurrentTime")
-        val ModificationDate = bundle.getString("ModificationDate")
-        val creationDateTicket = bundle!!.getString("creationDateTicket")*/
 
         jsonObjectResponse = JSONObject()
 
@@ -372,19 +363,6 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
                             }
 
                             ticketInfo.ticketInfoContent = decodeHtml( ticketInfoJson.getString("CONTENIDO"))
-
-                            //----------
-                            /*val dataId = jsonArrayIdRecipient.getJSONObject(0)
-                            val nameId = dataId.getString("NOMBRE")
-                            val lastNameId = dataId.getString("APELLIDO")
-                            playerModel.setTaskUserName("$nameId $lastNameId")*/
-
-                            /*val dataTechnicianId = jsonArrayIdTechnician.getJSONObject(0)
-                            val nameTechnicianId = dataTechnicianId.getString("NOMBRE")
-                            val lastNameTechnicianId = dataTechnicianId.getString("APELLIDO")
-                            ticketInfo.setTechnicianName("$nameTechnicianId $lastNameTechnicianId")*/
-
-                            //binding.includeTickets.txtTasksUserName.text = "$nameId $lastNameId"
 
                             if (ticketInfo.ticketInfoType == "TASK"){
                                 ticketInfo.ticketInfoModificationDate = ticketInfoJson.getString("FECHA_EDICION")
@@ -426,8 +404,6 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
 
         getTicketsConversationInfo()
     }
-
-
 
     @SuppressLint("SetTextI18n")
     private fun getTicketsConversationInfo(){
@@ -518,35 +494,6 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
         binding.includeTickets.labelSolicitanteNombre.text = "$ticketSortsNameRequester $ticketSortsLastNameRequester"
         binding.includeTickets.labelSolicitanteCargo.text = "$ticketSortsPositionRequester"
         binding.includeTickets.labelAsignadoNombre.text = "$ticketSortsNameTechnician $ticketSortsLastNameTechnician"
-        //binding.includeTickets.labelSolicitanteNombre.text = "$ticketSortsNameRequester $ticketSortsLastNameRequester"
-        //binding.includeTicketsHistorico.txtNameOperador.text = ticketSortsIdRecipient
-
-       /* binding.includeTicketsHistorico.txtCurrentTime.text = "Fecha Creación $CurrentTime_"
-        if (CurrentTime_ != ModificationDate){
-            binding.includeTicketsHistorico.txtModificationDate.text = "Ult. Modificación $ModificationDate"
-            binding.includeTicketsHistorico.txtModificationDate.isVisible = true
-        }
-        binding.includeTickets.labelFechaOperadorApertura.text = "$CurrentTime_ - "*/
-        /*binding.includeTickets.labelCategoria.text = TicketCategoria_
-        binding.includeTickets.lableFechaMAXCierre.text = "fecha y hora de cierre estimado - $TicketUrgencia_"
-        binding.includeTickets.labelSolicitudIncidencia.text = Tipo
-        if (Tipo == "SOLICITUD"){
-            binding.includeTickets.txtSolicitud.text ="?"
-            binding.includeTickets.tvIncidencia.isVisible = false
-            binding.includeTickets.tvSolicitud.isVisible = true
-        }
-        binding.includeTickets.labelUbicacion.text = Ubicacion_
-        //binding.includeTickets.labelEmail.text = Correo_
-        //binding.includeTickets.labelOrigen.text = TicketOrigen_
-        binding.includeTickets.labelOrigen.text = ticketOrigin
-        //binding.includeTickets.labelSolicitanteNombre.text = NameSolicitante_
-        binding.includeTickets.labelSolicitanteCargo.text = CargoSolicitante_
-        binding.includeTickets.labelSolicitanteCelular.text = TelefonoSolicitante_
-        binding.includeTickets.labelAsignadoNombre.text = NameSolicitante_
-        binding.includeTickets.labelDescrTicket.text = Contenido_
-        //SECTION TASKS
-        binding.includeTicketsHistorico.txtTaskNameLogin.text = taskName
-        binding.includeTicketsHistorico.txtTaskDescription.text = taskDescription*/
     }
 
     private fun volleyRequestIdRecipient(){
@@ -585,87 +532,6 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
         //FIN volley ------------------------------------------------------------
     }
 
-    private fun volleyRequestIdTechnician(){
-        val bundle = intent.extras
-        val idTechnician = bundle!!.getString("ticketSortsIdTechnician")
-        val stringRequestDataTickets = object : StringRequest(Method.POST,
-            urlApi_TasksUsers+idTechnician, Response.Listener { response ->
-                try {
-                    jsonArrayIdTechnician = JSONArray()
-                    jsonArrayIdTechnician = JSONArray(response)
-                    Log.i("mensaje idtechnician","$jsonArrayIdTechnician")
-                    val dataId = jsonArrayIdTechnician.getJSONObject(0)
-                    val nameId = dataId.getString("NOMBRE")
-                    val lastNameId = dataId.getString("APELLIDO")
-                    //binding.includeTicketsHistorico.txtNameOperador.text = "$nameId $lastNameId"
-                    //binding.includeTickets.labelAsignadoNombre.text = "$nameId $lastNameId"
-                }catch (e:Exception){
-                    e.printStackTrace()
-                }
-            }, Response.ErrorListener {
-                Toast.makeText(this, "ERROR CON EL SERVIDOR", Toast.LENGTH_SHORT).show()
-            }){
-            override fun getParams(): Map<String, String>? {
-                val params: MutableMap<String, String> = HashMap()
-                params["session_token"] = token.prefer.getToken()
-                return params
-            }
-        }
-        VolleySingleton.getInstance(this).addToRequestQueue(stringRequestDataTickets)
-    }
-    private fun volleyRequestIdRequester(){
-        val bundle = intent.extras
-        val idRecipient = bundle!!.getString("ticketSortsIdRequester")
-        val stringRequestDataTickets = object : StringRequest(Method.POST,
-            urlApi_TasksUsers+idRecipient, Response.Listener { response ->
-                try {
-                    dataModelArrayListConversation = ArrayList()
-                    jsonArrayIdRequester = JSONArray()
-                    jsonArrayIdRequester = JSONArray(response)
-                    val ticketInfoJson: JSONObject
-                    val ticketInfo = Data_TicketInfo()
-
-                    ticketInfoJson = jsonArrayIdRequester.getJSONObject(0)
-                    ticketInfo.ticketInfoCompleteNameRequester =
-                        "${ticketInfoJson.getString("NOMBRE")} ${ticketInfoJson.getString("APELLIDO")}"
-
-
-                    //val placeId = dataId.getString("UBICACION")
-                    /*binding.includeTickets.labelUbicacion.text = placeId
-                    binding.includeNavHeaderTickets.txtUbicacion.text = placeId
-
-                    //val emailId = dataId.getString("CORREO")
-                    if (emailId != "null" && emailId != "null"){
-                        binding.includeTickets.labelEmail.isVisible = true
-                        binding.includeTickets.labelEmail.text = emailId
-                    }
-
-                    val positionId = dataId.getString("CARGO")
-                    binding.includeTickets.labelSolicitanteCargo.text = positionId
-
-                    val cellphoneId = dataId.getString("TELEFONO")
-                    if (cellphoneId != "null"){
-                        binding.includeTickets.labelSolicitanteCelular.isVisible = true
-                        binding.includeTickets.labelSolicitanteCelular.text = cellphoneId
-                    }*/
-
-
-                }catch (e:Exception){
-                    e.printStackTrace()
-                }
-            }, Response.ErrorListener {
-                Toast.makeText(this, "ERROR CON EL SERVIDOR", Toast.LENGTH_SHORT).show()
-            }){
-            override fun getParams(): Map<String, String>? {
-                val params: MutableMap<String, String> = HashMap()
-                params["session_token"] = token.prefer.getToken()
-                return params
-            }
-        }
-        VolleySingleton.getInstance(this).addToRequestQueue(stringRequestDataTickets)
-    }
-
-
     override fun onEditClick(
         ticketInfoType: String,
         ticketInfoContent: String,
@@ -678,13 +544,13 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
         ticketInfoId: String,
         ticketInfoTimeToSolve: String
     ) {
-        val flagOnEditClick = "true"
+        val flagOnEditClick = true
         //recuperamos el id del ticket
         val bundle = intent.extras
         val ticketSortsId = bundle!!.getString("ticketSortsId")
         val ticketSortsStatus = bundle!!.getString("ticketSortsStatus")
         val ticketOrigin = bundle!!.getString("TicketOrigen")
-        val IdTechnician = bundle!!.getString("IdTechnician")
+        val idTechnician = bundle!!.getString("IdTechnician")
 
         val intentTasks = (Intent(this,TicketsAgregarTareaActivity::class.java))
         intentTasks.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
@@ -711,8 +577,9 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
             intentFollowUp.putExtra("ticketSortsId",ticketSortsId)
             intentFollowUp.putExtra("ticketSortsStatus",ticketSortsStatus)
             intentFollowUp.putExtra("ticketPrivate",ticketInfoPrivate)
-            //intentFollowUp.putExtra("tasks_description",glpiTasksDescripcion)
+            intentFollowUp.putExtra("ticketInfoContent",ticketInfoContent)
             intentFollowUp.putExtra("ticketOrigin",ticketOrigin)
+            intentFollowUp.putExtra("flagOnEditClick",flagOnEditClick)
             startActivity(intentFollowUp)
         }
     }

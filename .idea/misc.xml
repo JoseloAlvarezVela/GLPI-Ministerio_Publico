@@ -28,6 +28,7 @@
         <entry key="..\:/Users/JOSELO/AndroidStudioProjects/GLPIMinisterio_Pblico/app/src/main/res/drawable/ic_candado_cerrado.xml" value="0.1555" />
         <entry key="..\:/Users/JOSELO/AndroidStudioProjects/GLPIMinisterio_Pblico/app/src/main/res/drawable/ic_circulo.xml" value="0.145" />
         <entry key="..\:/Users/JOSELO/AndroidStudioProjects/GLPIMinisterio_Pblico/app/src/main/res/drawable/ic_circulo_negro.xml" value="0.13" />
+        <entry key="..\:/Users/JOSELO/AndroidStudioProjects/GLPIMinisterio_Pblico/app/src/main/res/drawable/ic_circulo_negro_cerrado.xml" value="0.1" />
         <entry key="..\:/Users/JOSELO/AndroidStudioProjects/GLPIMinisterio_Pblico/app/src/main/res/drawable/ic_circulo_verde.xml" value="0.2595" />
         <entry key="..\:/Users/JOSELO/AndroidStudioProjects/GLPIMinisterio_Pblico/app/src/main/res/drawable/ic_desplegar.xml" value="0.1265" />
         <entry key="..\:/Users/JOSELO/AndroidStudioProjects/GLPIMinisterio_Pblico/app/src/main/res/drawable/ic_email.xml" value="0.178" />
@@ -39,7 +40,9 @@
         <entry key="..\:/Users/JOSELO/AndroidStudioProjects/GLPIMinisterio_Pblico/app/src/main/res/drawable/ic_incidencia.xml" value="0.13" />
         <entry key="..\:/Users/JOSELO/AndroidStudioProjects/GLPIMinisterio_Pblico/app/src/main/res/drawable/ic_inteeeogacion.xml" value="0.13" />
         <entry key="..\:/Users/JOSELO/AndroidStudioProjects/GLPIMinisterio_Pblico/app/src/main/res/drawable/ic_interrogacion.xml" value="0.1265" />
+        <entry key="..\:/Users/JOSELO/AndroidStudioProjects/GLPIMinisterio_Pblico/app/src/main/res/drawable/ic_resuelto.xml" value="0.1" />
         <entry key="..\:/Users/JOSELO/AndroidStudioProjects/GLPIMinisterio_Pblico/app/src/main/res/drawable/ic_solicitud.xml" value="0.139" />
+        <entry key="..\:/Users/JOSELO/AndroidStudioProjects/GLPIMinisterio_Pblico/app/src/main/res/drawable/ic_solucion.xml" value="0.1" />
         <entry key="..\:/Users/JOSELO/AndroidStudioProjects/GLPIMinisterio_Pblico/app/src/main/res/drawable/ic_tecnico.xml" value="0.13" />
         <entry key="..\:/Users/JOSELO/AndroidStudioProjects/GLPIMinisterio_Pblico/app/src/main/res/drawable/ic_ticket_incident.xml" value="0.2595" />
         <entry key="..\:/Users/JOSELO/AndroidStudioProjects/GLPIMinisterio_Pblico/app/src/main/res/drawable/recycle_tickets.xml" value="0.118" />

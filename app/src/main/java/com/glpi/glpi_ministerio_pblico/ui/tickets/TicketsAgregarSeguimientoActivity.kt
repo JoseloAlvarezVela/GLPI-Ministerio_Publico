@@ -45,19 +45,21 @@ class TicketsAgregarSeguimientoActivity : AppCompatActivity(),
         recyclerView = binding.includeModalFollowupTemplate.recyclerFollowupTemplate
         recyclerViewListStatusAllowed = binding.includeListStatusAllowed.recyclerFollowupListAllowed
 
+
+
         volleyRequestListStatusAllowed()
-
-        binding.btnStatusFollowup.setOnClickListener {
-            binding.includeListStatusAllowed.modalListStatusAllowed.isVisible = true
-        }
-
-        binding.includeListStatusAllowed.btnCloseModalListStatusAllowed.setOnClickListener {
-            binding.includeListStatusAllowed.modalListStatusAllowed.isVisible = false
-        }
-
         volleyRequestFollowupTemplates(MainActivity.urlApi_FollowupTemplates)
-        //Log.i("mensaje updateFollowup", MainActivity.updateFollowup.toString())
-        if (MainActivity.updateFollowup){
+
+        val bundle = intent.extras
+        when(bundle!!.getBoolean("flagOnEditClick")){
+            true -> updateFollowup()
+            false -> getTicketInfo()
+        }
+        modalListStatusAllowed()
+        appBarHeaderFollowup()
+        imgBtnPadLock()
+        btn_fabs_taddsegact()
+        /*if (MainActivity.updateFollowup){
             appBarHeaderFollowup()
             getTicketInfo()
             imgBtnPadLock()
@@ -68,6 +70,62 @@ class TicketsAgregarSeguimientoActivity : AppCompatActivity(),
             imgBtnPadLock()
             updateFollowup()
             btn_fabs_taddsegact()
+        }*/
+    }
+
+    private fun btnAddFollowup(ticketId: String){
+        binding.btnAddFollowup.setOnClickListener {
+            Toast.makeText(this, "Tarea añadida", Toast.LENGTH_LONG).show()
+            val followupDescription = binding.edtFollowupDescription.text
+            val followupPrivate = binding.imgViewPadLock.tag.toString()
+            val listStatusAllowedId = binding.btnStatusFollowup.tag.toString()
+
+            onBackPressed()
+
+            requestVolleyAddFollowup(ticketId, listStatusAllowedId,followupPrivate,followupDescription)
+        }
+    }
+
+    private fun getTicketInfo(){
+        Toast.makeText(this, "getTicketInfo", Toast.LENGTH_LONG).show()
+        val bundle = intent.extras
+        val ticketSortsId = bundle!!.getString("ticketSortsId").toString()
+        val ticketSortsStatus = bundle!!.getString("ticketSortsStatus")
+        val ticketPrivate = bundle!!.getString("ticketPrivate")
+
+        Log.i("mensaje type",ticketSortsStatus.toString())
+        if (ticketSortsStatus == "EN CURSO (Asignada)"){
+            binding.imgBtnStatus.setImageResource(R.drawable.ic_circulo_verde)
+            binding.imgBtnStatusHeader.setImageResource(R.drawable.ic_circulo_verde)
+        }else if (ticketSortsStatus == "EN ESPERA"){
+            binding.imgBtnStatus.setImageResource(R.drawable.ic_circulo)
+            binding.imgBtnStatusHeader.setImageResource(R.drawable.ic_circulo)
+        }else if (ticketSortsStatus == "CERRADO"){
+            binding.imgBtnStatus.setImageResource(R.drawable.ic_circulo_negro)
+            binding.imgBtnStatusHeader.setImageResource(R.drawable.ic_circulo_negro)
+        }
+
+        if(ticketPrivate == "SI"){
+            binding.imgViewPadLock.tag = "1"
+        }else{
+            binding.imgViewPadLock.tag = "0"
+        }
+
+        binding.tvIdTicket.text = "Petición #$ticketSortsId"
+
+        imgBtnTicketStatus(ticketSortsStatus)
+        btnAddFollowup(ticketSortsId)
+    }
+
+    private fun modalListStatusAllowed(){
+        binding.btnStatusFollowup.setOnClickListener {
+            binding.includeListStatusAllowed.modalListStatusAllowed.isVisible = true
+            binding.includeBackgroundgrisAtctaddseg.clBackgroundgrisBggris.isVisible = true
+        }
+
+        binding.includeListStatusAllowed.btnCloseModalListStatusAllowed.setOnClickListener {
+            binding.includeListStatusAllowed.modalListStatusAllowed.isVisible = false
+            binding.includeBackgroundgrisAtctaddseg.clBackgroundgrisBggris.isVisible = false
         }
     }
 
@@ -78,12 +136,12 @@ class TicketsAgregarSeguimientoActivity : AppCompatActivity(),
         var flagImgViewPadLock = false
         Log.i("mensaje type",ticketPrivate.toString())
         if (ticketPrivate == "SI"){
-            Toast.makeText(this, "Segumiento Privado", Toast.LENGTH_SHORT).show()
+            //Toast.makeText(this, "Segumiento Privado", Toast.LENGTH_SHORT).show()
             flagImgViewPadLock = false
             binding.imgViewPadLock.setOnClickListener {
                 if(flagImgViewPadLock){
                     binding.imgViewPadLock.setImageResource(R.drawable.ic_candado_cerrado)
-                    Toast.makeText(this, "Segumiento Privado", Toast.LENGTH_SHORT).show()
+
                     binding.imgViewPadLock.tag = "1"
                     flagImgViewPadLock = false
                 }else{
@@ -112,58 +170,20 @@ class TicketsAgregarSeguimientoActivity : AppCompatActivity(),
         }
     }
 
-    private fun getTicketInfo(){
-        val bundle = intent.extras
-        val ticketSortsId = bundle!!.getString("ticketSortsId").toString()
-        val ticketOrigin = bundle!!.getString("ticketOrigin")
-        //val ticketType = bundle!!.getString("ticketType")
-        val ticketStatus = bundle!!.getString("ticketStatus")
-        val ticketPrivate = bundle!!.getString("ticketPrivate")
-
-        Log.i("mensaje type",ticketStatus.toString())
-        if (ticketStatus == "EN CURSO (Asignada)"){
-            binding.imgBtnStatus.setImageResource(R.drawable.ic_circulo_verde)
-        }else if (ticketStatus == "EN ESPERA"){
-            binding.imgBtnStatus.setImageResource(R.drawable.ic_circulo)
-        }else if (ticketStatus == "CERRADO"){
-            binding.imgBtnStatus.setImageResource(R.drawable.ic_circulo_negro)
-        }
-
-        if(ticketPrivate == "SI"){
-            binding.imgViewPadLock.tag = "1"
-            //Log.i("mensaje padLock","${MainActivity.privateImgViewPadLock}")
-        }else{
-            binding.imgViewPadLock.tag = "0"
-            //Log.i("mensaje padLock","${MainActivity.privateImgViewPadLock}")
-        }
-
-        Log.i("mensaje padLock","${binding.imgViewPadLock.tag.toString()}")
 
 
 
-        binding.tvIdTicket.text = "Petición #$ticketSortsId"
-
-        btnAddFollowup(ticketSortsId, ticketOrigin)
-
-        imgBtnTicketStatus(ticketStatus)
-    }
 
     private fun updateFollowup(){
-        var followupStatus = ""
-
+        Toast.makeText(this, "updateFollowup", Toast.LENGTH_SHORT).show()
         val bundle = intent.extras
         val ticketSortsId = bundle!!.getString("ticketSortsId").toString()
         val ticketSortsStatus = bundle!!.getString("ticketSortsStatus")
-        val ticketOrigin = bundle!!.getString("ticketOrigin")
         val ticketPrivate = bundle!!.getString("ticketPrivate")
-        val tasksDescription = bundle!!.getString("tasks_description")
-        var flagTicketPrivate = false
+        val ticketInfoContent = bundle!!.getString("ticketInfoContent")
 
         imgBtnTicketStatus(ticketSortsStatus)
         imgBtnPadLock()
-        //btnUpdateFollowup(followupStatus, ticketPrivate.toString())
-        Log.i("mensaje ticketOrigin2","$ticketOrigin")
-        btnAddFollowup(ticketSortsId, ticketOrigin)
 
         binding.tvIdTicket.text = "Petición #$ticketSortsId"
         if (ticketSortsStatus == "EN CURSO (Asignada)"){
@@ -175,29 +195,31 @@ class TicketsAgregarSeguimientoActivity : AppCompatActivity(),
         }
 
         if(ticketPrivate == "SI"){
-            //MainActivity.privateImgViewPadLock = 0.toString()
-            binding.imgViewPadLock.setImageResource(R.drawable.ic_candado_cerrado)
             binding.imgViewPadLock.setImageResource(R.drawable.ic_candado_cerrado)
             binding.imgViewPadLock.tag = "1"
-            flagTicketPrivate = false
-            //Log.i("mensaje padLock","${MainActivity.privateImgViewPadLock}")
         }else{
-            //MainActivity.privateImgViewPadLock = 1.toString()
             binding.imgViewPadLock.setImageResource(R.drawable.ic_candado_abierto)
             binding.imgViewPadLock.tag = "0"
-            flagTicketPrivate = true
-            //Log.i("mensaje padLock","${MainActivity.privateImgViewPadLock}")
-        }
-        Log.i("mensaje padLock","${binding.imgViewPadLock.tag.toString()}")
-        binding.edtFollowupDescription.setText(tasksDescription)
 
+        }
+
+        binding.edtFollowupDescription.setText(ticketInfoContent)
+        binding.btnStatusFollowup.text = ticketSortsStatus
+        when(ticketSortsStatus){
+            "EN CURSO (Asignada)" -> binding.btnStatusFollowup.tag = "2"
+            "EN CURSO (Planificación)" -> binding.btnStatusFollowup.tag = "3"
+            "EN ESPERA" -> binding.btnStatusFollowup.tag = "4"
+            "SOLUCIONADO" -> binding.btnStatusFollowup.tag = "5"
+        }
+
+        btnAddFollowup(ticketSortsId)
         MainActivity.flagEdit = false
     }
 
-    private fun imgBtnTicketStatus(ticketStatus: String?): String {
+    private fun imgBtnTicketStatus(ticketSortsStatus: String?): String {
         var flagTicketStatus: Boolean
         var newTicketStatus = "EN CURSO (Asignada)"
-        if (ticketStatus == "EN CURSO (Asignada)"){
+        if (ticketSortsStatus == "EN CURSO (Asignada)"){
             flagTicketStatus = true
             binding.imgBtnStatus.setOnClickListener {
                 if(flagTicketStatus){
@@ -255,54 +277,23 @@ class TicketsAgregarSeguimientoActivity : AppCompatActivity(),
         //btnAddFollowup()
     }
 
-    private fun btnAddFollowup(ticketId: String, ticketOrigin: String?){
-        //boton agregar seguimiento
-        binding.btnAddFollowup.setOnClickListener {
-            Toast.makeText(this, "Tarea añadida", Toast.LENGTH_LONG).show()
-            val ticketPrivate = binding.imgViewPadLock.tag.toString()
-            val followupDescription = binding.edtFollowupDescription.text
-            val listStatusAllowedId = binding.btnStatusFollowup.tag.toString()
-            val imgBtnPadLock = binding.imgViewPadLock.tag.toString()
 
 
-            //fecha y hora actual
-            val sdf = SimpleDateFormat("yyyy/MM/dd HH:mm:ss", Locale("es", "PE"))//obtenemos fecha actual
-            val currentdate = sdf.format(Date())
-            /*Log.i("mensaje sendTaks",
-                "id de ticket: $ticketId \n" +
-                        "TIPO: TASKS\n"+
-                        "PRIVADO: $ticketPrivate\n" +
-                        "ID_USUARIO: ${MainActivity.idUserTechnician}\n" +
-                        "USUARIO: ${MainActivity.userTechnician}\n"+
-                        "NOMBRE: ${MainActivity.nameTechnician}\n"+
-                        "APELLIDO: ${MainActivity.lastNameTechnician}\n"+
-                        "FECHA: $currentdate\n"+
-                        "FECHA_CREACION: $currentdate\n"+
-                        "FECHA_MODIFICACION: $currentdate\n"+
-                        "CONTENIDO: $followupDescription\n"+
-                        "EDITOR: ${MainActivity.idUserTechnician}")*/
-            onBackPressed()
-            requestVolleyByIdRequester(ticketId, listStatusAllowedId,imgBtnPadLock,followupDescription)
-            /*val intent_agregarSeguimiento = Intent(this, MainActivity::class.java)
-            intent_agregarSeguimiento.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            startActivity(intent_agregarSeguimiento)*/
 
-        }
-    }
 
-    private fun requestVolleyByIdRequester(
+    private fun requestVolleyAddFollowup(
         ticketId: String,
         listStatusAllowedId: String,
-        imgBtnPadLock: String,
+        followupPrivate: String,
         followupDescription: Editable
     ) {
         //metodo que nos devuelve los datos para los tickets
         val stringRequestDataTickets = object : StringRequest(Method.POST,
             MainActivity.urlApi_InsertFollowup, Response.Listener { response ->
                 try {
-                    val JS_DataTickets = JSONObject(response) //obtenemos el objeto json
+                    val dataAddFollowup = JSONObject(response) //obtenemos el objeto json
 
-                    Log.i("mensaje","$JS_DataTickets")
+                    Log.i("mensaje","$dataAddFollowup")
 
                 } catch (e: Exception) {
                     e.printStackTrace()
@@ -315,11 +306,11 @@ class TicketsAgregarSeguimientoActivity : AppCompatActivity(),
             override fun getParams(): Map<String, String>? {
                 val params: MutableMap<String, String> = HashMap()
                 params["session_token"] = token.prefer.getToken()
-                params["ticket_id"] = ticketId
-                params["ticket_state"] = listStatusAllowedId
-                params["private"] = imgBtnPadLock
                 params["content"] = followupDescription.toString()
+                params["private"] = followupPrivate
                 params["request_type"] = "4"
+                params["ticket_state"] = listStatusAllowedId
+                params["ticket_id"] = ticketId
 
                 return params
             }
@@ -365,6 +356,7 @@ class TicketsAgregarSeguimientoActivity : AppCompatActivity(),
             binding.lyFabsActtaddseg.isVisible = false
             binding.includeBackgroundgrisAtctaddseg.clBackgroundgrisBggris.isVisible = false
             binding.includeModalFollowupTemplate.modalPlantillaAddFollowup.isVisible = false
+            binding.includeListStatusAllowed.modalListStatusAllowed.isVisible = false
             click_desplegar = false
         }
         //FIN - funcion de fabs que abre camara del celular y archivos del celular
@@ -485,7 +477,17 @@ class TicketsAgregarSeguimientoActivity : AppCompatActivity(),
         Toast.makeText(this, "$listStatusAllowedName seleccionado", Toast.LENGTH_SHORT).show()
         binding.btnStatusFollowup.text = listStatusAllowedName
         binding.btnStatusFollowup.tag = listStatusAllowedId
+
+        when(listStatusAllowedName){
+            "EN CURSO (Asignada)" -> binding.imgBtnStatus.setImageResource(R.drawable.ic_circulo_verde)
+            "EN CURSO (Planificación)" -> binding.imgBtnStatus.setImageResource(R.drawable.ic_calendar_range)
+            "EN ESPERA" -> binding.imgBtnStatus.setImageResource(R.drawable.ic_circulo)
+            "SOLUCIONADO" -> binding.imgBtnStatus.setImageResource(R.drawable.ic_circulo_negro)
+            "CERRADO" -> binding.imgBtnStatus.setImageResource(R.drawable.ic_circulo_negro_cerrado)
+        }
         Log.i("mensaje tag","${binding.btnStatusFollowup.tag}")
+        binding.includeListStatusAllowed.modalListStatusAllowed.isVisible = false
+        binding.includeBackgroundgrisAtctaddseg.clBackgroundgrisBggris.isVisible = false
     }
 
 }
