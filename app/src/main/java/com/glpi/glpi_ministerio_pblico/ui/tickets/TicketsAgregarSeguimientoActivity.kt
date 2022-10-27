@@ -59,14 +59,36 @@ class TicketsAgregarSeguimientoActivity : AppCompatActivity(),
         btnDeployFab()
     }
 
-    private fun btnAddFollowup(ticketId: String){
+    private fun btnAddFollowup(flagUpdateFollow: Boolean, ticketId: String, ticketInfoId: String){
         binding.btnAddFollowup.setOnClickListener {
             Toast.makeText(this, "Tarea añadida", Toast.LENGTH_LONG).show()
             val followupDescription = binding.edtFollowupDescription.text
             val followupPrivate = binding.imgViewPadLock.tag.toString()
             val listStatusAllowedId = binding.btnStatusFollowup.tag.toString()
 
-            when(followupDescription.toString()){
+            when(flagUpdateFollow){
+                true -> {
+                    requestVolleyUpdateFollowup(
+                        ticketInfoId,
+                        ticketId,
+                        listStatusAllowedId,
+                        followupPrivate,
+                        followupDescription
+                    )
+                    onBackPressed()
+                }
+                false -> {
+                    requestVolleyInsertFollowup(
+                        ticketId,
+                        listStatusAllowedId,
+                        followupPrivate,
+                        followupDescription
+                    )
+                    onBackPressed()
+                }
+            }
+
+            /*when(followupDescription.toString()){
                 "" -> Toast.makeText(this, "ingrese una descripción del seguimiento", Toast.LENGTH_SHORT).show()
                 " " -> Toast.makeText(this, "ingrese una descripción del seguimiento", Toast.LENGTH_SHORT).show()
                 "  " -> Toast.makeText(this, "ingrese una descripción del seguimiento", Toast.LENGTH_SHORT).show()
@@ -84,16 +106,18 @@ class TicketsAgregarSeguimientoActivity : AppCompatActivity(),
                     )
                     onBackPressed()
                 }
-            }
+            }*/
         }
     }
 
     private fun getTicketInfo(){
+        val flagGetTicketInfo = false
         Toast.makeText(this, "getTicketInfo", Toast.LENGTH_LONG).show()
         val bundle = intent.extras
         val ticketSortsId = bundle!!.getString("ticketSortsId").toString()
         val ticketSortsStatus = bundle!!.getString("ticketSortsStatus")
         val ticketPrivate = bundle!!.getString("ticketPrivate")
+        val ticketInfoId = bundle!!.getString("ticketInfoId").toString()
 
         Log.i("mensaje type",ticketSortsStatus.toString())
         if (ticketSortsStatus == "EN CURSO (Asignada)"){
@@ -120,7 +144,7 @@ class TicketsAgregarSeguimientoActivity : AppCompatActivity(),
         binding.tvIdTicket.text = "Petición #$ticketSortsId"
 
         imgBtnTicketStatus(ticketSortsStatus)
-        btnAddFollowup(ticketSortsId)
+        btnAddFollowup(flagGetTicketInfo,ticketSortsId,ticketInfoId)
     }
 
     private fun modalListStatusAllowed(){
@@ -177,12 +201,14 @@ class TicketsAgregarSeguimientoActivity : AppCompatActivity(),
     }
 
     private fun updateFollowup(){
+        val flagUpdateFollow = true
         Toast.makeText(this, "updateFollowup", Toast.LENGTH_SHORT).show()
         val bundle = intent.extras
         val ticketSortsId = bundle!!.getString("ticketSortsId").toString()
         val ticketSortsStatus = bundle!!.getString("ticketSortsStatus")
         val ticketPrivate = bundle!!.getString("ticketPrivate")
         val ticketInfoContent = bundle!!.getString("ticketInfoContent")
+        val ticketInfoId = bundle!!.getString("ticketInfoId").toString()
 
         imgBtnTicketStatus(ticketSortsStatus)
         imgBtnPadLock()
@@ -216,7 +242,7 @@ class TicketsAgregarSeguimientoActivity : AppCompatActivity(),
             "SOLUCIONADO" -> binding.btnStatusFollowup.tag = "5"
         }
 
-        btnAddFollowup(ticketSortsId)
+        btnAddFollowup(flagUpdateFollow,ticketSortsId,ticketInfoId)
         //MainActivity.flagEdit = false
     }
 
@@ -266,7 +292,46 @@ class TicketsAgregarSeguimientoActivity : AppCompatActivity(),
         }
     }
 
-    private fun requestVolleyAddFollowup(
+    private fun requestVolleyUpdateFollowup(
+        ticketInfoId: String,
+        ticketId: String,
+        listStatusAllowedId: String,
+        followupPrivate: String,
+        followupDescription: Editable
+    ) {
+        //metodo que nos devuelve los datos para los tickets
+        val stringRequestDataTickets = object : StringRequest(Method.POST,
+            MainActivity.urlApi_UpdateFollowup+ticketInfoId, Response.Listener { response ->
+                try {
+                    val dataAddFollowup = JSONObject(response) //obtenemos el objeto json
+
+                    Log.i("mensaje","$dataAddFollowup")
+
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    Toast.makeText(this, "token expirado_: $e", Toast.LENGTH_LONG).show()
+                    //Log.i("mensaje recycler e: ", "recycler ERROR: $e")
+                }
+            }, Response.ErrorListener {
+                Toast.makeText(this, "ERROR CON EL SERVIDOR", Toast.LENGTH_SHORT).show()
+            }) {
+            override fun getParams(): Map<String, String>? {
+                val params: MutableMap<String, String> = HashMap()
+                params["session_token"] = token.prefer.getToken()
+                params["content"] = followupDescription.toString()
+                params["private"] = followupPrivate
+                params["request_type"] = "4"
+                params["ticket_state"] = listStatusAllowedId
+                params["ticket_id"] = ticketId
+
+                return params
+            }
+        }
+        VolleySingleton.getInstance(this).addToRequestQueue(stringRequestDataTickets)
+        //FIN obtenemos perfil de usuario
+    }
+
+    private fun requestVolleyInsertFollowup(
         ticketId: String,
         listStatusAllowedId: String,
         followupPrivate: String,
@@ -303,7 +368,6 @@ class TicketsAgregarSeguimientoActivity : AppCompatActivity(),
         VolleySingleton.getInstance(this).addToRequestQueue(stringRequestDataTickets)
         //FIN obtenemos perfil de usuario
     }
-    //FIN - funcion de maneja los botones del header
 
     //INICIO - funcion de fabs que abre camara del celular y archivos del celular
     private fun btnDeployFab() {

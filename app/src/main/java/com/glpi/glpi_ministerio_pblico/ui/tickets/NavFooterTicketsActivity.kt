@@ -565,6 +565,7 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
             intentFollowUp.putExtra("ticketOrigin",ticketOrigin)
             intentFollowUp.putExtra("ticketSortsIdTechnician",ticketSortsIdTechnician)
             intentFollowUp.putExtra("ticketSortsType",ticketSortsType)
+            intentFollowUp.putExtra("ticketInfoId",ticketInfoId)
             intentFollowUp.putExtra("flagOnEditClick",flagOnEditClick)
             startActivity(intentFollowUp)
         }

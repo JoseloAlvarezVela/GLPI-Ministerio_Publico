@@ -69,6 +69,7 @@ class MainActivity : AppCompatActivity(){
         val urlApi_FollowupTemplates: String = "$protocol://$url:$port/api/followup_templates"
         val urlApi_ListStatusAllowed: String = "$protocol://$url:$port/api/profile_tickets_states"
         val urlApi_ListTechnician: String = "$protocol://$url:$port/api/list_technicians_tasks"
+        val urlApi_UpdateFollowup: String = "$protocol://$url:$port/api/update_followups/"
         val urlApi_InsertFollowup: String = "$protocol://$url:$port/api/insert_followups"
         val urlApi_UpdateTasks: String = "$protocol://$url:$port/api/update_tasks/"
         val urlApi_InsertTasks: String = "$protocol://$url:$port/api/insert_tasks/"
