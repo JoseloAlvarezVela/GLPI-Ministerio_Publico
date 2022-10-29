@@ -184,8 +184,10 @@
                     android:id="@+id/btnStatusFollowup"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:padding="5sp"
                     android:text="estado del ticket" />
+
             </LinearLayout>
 
             <LinearLayout
@@ -193,13 +195,14 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:orientation="horizontal"
-                android:padding="5sp">
+                android:padding="5sp"
+                android:visibility="gone">
 
                 <Button
                     android:id="@+id/btnSourceTypes"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="origen" />
+                    android:text="origen(ya no se va a usar)" />
             </LinearLayout>
         </LinearLayout>
 

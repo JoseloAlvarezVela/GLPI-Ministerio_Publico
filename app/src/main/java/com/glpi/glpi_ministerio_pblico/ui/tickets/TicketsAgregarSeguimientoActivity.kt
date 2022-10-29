@@ -80,7 +80,7 @@ class TicketsAgregarSeguimientoActivity : AppCompatActivity(),
 
             when{
                 followupDescription.isNullOrBlank() -> Toast.makeText(this, "sin descripción", Toast.LENGTH_SHORT).show()
-                requestType == "null" -> Toast.makeText(this, "Seleccionar origen del seguimiento", Toast.LENGTH_SHORT).show()
+                //requestType == "null" -> Toast.makeText(this, "Seleccionar origen del seguimiento", Toast.LENGTH_SHORT).show()
                 flagUpdateFollow -> {
                     requestVolleyUpdateFollowup(
                         requestType,
@@ -389,7 +389,7 @@ class TicketsAgregarSeguimientoActivity : AppCompatActivity(),
                 params["session_token"] = token.prefer.getToken()
                 params["content"] = followupDescription.toString()
                 params["private"] = followupPrivate
-                params["request_type"] = requestType
+                params["request_type"] = "4"
                 params["ticket_state"] = listStatusAllowedId
                 params["ticket_id"] = ticketId
 

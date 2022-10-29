@@ -170,10 +170,12 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
             hideFabs()
         }
         binding.includeFabs.btnFabDocumentos.setOnClickListener {
+            val bundleIn = intent.extras
+            val ticketSortsId = bundleIn!!.getString("ticketSortsId")
             val flagBtnFabDocuments = "true"
             val intentAddDocument = Intent(this, TicketsAgregarDocumentosActivity::class.java)
             val bundle = Bundle()
-            bundle.putString("TicketID", ticketId)
+            bundle.putString("TicketID", ticketSortsId)
             bundle.putString("flagBtnFabDocuments", flagBtnFabDocuments)
             intentAddDocument.putExtras(bundle)
             intentAddDocument.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
