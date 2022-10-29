@@ -27,6 +27,7 @@ import com.glpi.glpi_ministerio_pblico.ui.adapter.Data_TaskUsers
 import com.glpi.glpi_ministerio_pblico.ui.adapter.Data_Tickets
 import com.glpi.glpi_ministerio_pblico.ui.adapter.RecycleView_Adapter_Tickets
 import com.glpi.glpi_ministerio_pblico.ui.shared.token
+import com.glpi.glpi_ministerio_pblico.ui.shared.token.Companion.prefer
 import com.glpi.glpi_ministerio_pblico.ui.tickets.NavFooterTicketsActivity
 import org.json.JSONArray
 import org.json.JSONObject
@@ -281,6 +282,9 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.onTicketCl
         ticketsModel.ticketSortsNameUser = dataTickets.getString("NOMBRE")
         ticketsModel.ticketSortsLastNameUser = dataTickets.getString("APELLIDO")
 
+        val completeName = "${dataTickets.getString("NOMBRE")} ${dataTickets.getString("APELLIDO")}"
+        prefer.saveNameUser(completeName)
+
         /*MainActivity.userTechnician = dataTickets.getString("USUARIO")
         val technicianName = dataTickets.getString("NOMBRE")
         MainActivity.nameTechnician = technicianName
@@ -514,6 +518,8 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.onTicketCl
         ticketSortsSource: String,
         ticketSortsUrgency: String
     ) {
+        prefer.saveTicketSortsId(ticketSortsId)
+        prefer.saveRecipientId(ticketSortsIdRecipient)
         val intent = Intent(context, NavFooterTicketsActivity::class.java)
         val bundle = Bundle()
 

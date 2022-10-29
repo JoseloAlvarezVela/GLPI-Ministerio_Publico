@@ -48,6 +48,8 @@ class MainActivity : AppCompatActivity(){
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
 
+    lateinit var nameUser: String
+
     companion object{
         var flagTicketSort = true
         private const val protocol = "http"
@@ -794,8 +796,9 @@ class MainActivity : AppCompatActivity(){
 
 
     override fun onSupportNavigateUp(): Boolean { //slide de la izquierda
+        nameUser = prefer.getNameUser().toString()
         val navController = findNavController(R.id.nav_host_fragment_content_main)
-        binding.navView.getHeaderView(0).findViewById<TextView>(R.id.txt_nameUser).text = "nameLoginUser"
+        binding.navView.getHeaderView(0).findViewById<TextView>(R.id.txt_nameUser).text = nameUser
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
 

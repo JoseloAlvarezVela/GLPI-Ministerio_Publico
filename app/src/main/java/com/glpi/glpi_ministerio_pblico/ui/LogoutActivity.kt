@@ -28,12 +28,15 @@ class LogoutActivity : AppCompatActivity() {
 
         deleteToken()
 
+
+
         onBackPressed()
     }
 
     private fun deleteToken() {
         val auxiliar = prefer.getToken()
         prefer.deleteToken()
+        prefer.deleteNameUser()
         //INICIO - volley para invalidar toke creado
         val url = "http://181.176.145.174:8080/api/user_logout" //online
         Log.i("mensaje: ",""+ prefer.getToken())

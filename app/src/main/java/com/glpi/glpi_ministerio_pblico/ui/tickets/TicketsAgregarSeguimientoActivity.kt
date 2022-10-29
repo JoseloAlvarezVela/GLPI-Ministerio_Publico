@@ -41,6 +41,9 @@ class TicketsAgregarSeguimientoActivity : AppCompatActivity(),
     private var recyclerView_Adapter_FollowupTemplate: RecycleView_Adapter_FollowupTemplate? = null
     private var recyclerView_Adapter_ListStatusAllowed: RecycleViw_Adapter_ListStatusAllowed? = null
     private var recyclerView_Adapter_ListSourceTypes: RecycleView_Adapter_SourceTypes? = null
+
+
+
     private lateinit var binding: ActivityTicketsAgregarSeguimientoBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -97,12 +100,12 @@ class TicketsAgregarSeguimientoActivity : AppCompatActivity(),
                         followupPrivate,
                         followupDescription
                     )
-                    val intentOnBack = Intent(this, NavFooterTicketsActivity::class.java)
-                    val bundle = Bundle()
-                    bundle.putString("ticketId",ticketId)
+
+                    /*val intentOnBack = Intent(this, NavFooterTicketsActivity::class.java)
                     intentOnBack.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                    startActivity(intentOnBack)
-                    //onBackPressed()
+                    startActivity(intentOnBack)*/
+                    onBackPressed()
+
                 }
             }
         }

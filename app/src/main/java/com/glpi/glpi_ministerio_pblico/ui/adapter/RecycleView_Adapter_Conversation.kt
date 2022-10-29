@@ -38,7 +38,8 @@ class RecyclerAdapter(
             ticketInfoId: String,
             ticketInfoIdSource: String,
             ticketInfoSource: String,
-            ticketInfoTimeToSolve: String)
+            ticketInfoTimeToSolve: String,
+            adapterPosition: Int)
         fun onFabClick()
     }
 
@@ -203,6 +204,7 @@ class RecyclerAdapter(
                     dataModelArrayListConversation[position].ticketInfoSource.toString(),
 
                     dataModelArrayListConversation[position].ticketInfoTimeToSolve.toString(),
+                    adapterPosition
                 )
             }
         }

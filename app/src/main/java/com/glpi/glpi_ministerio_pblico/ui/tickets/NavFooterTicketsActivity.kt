@@ -8,6 +8,7 @@ import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.util.Log
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -26,6 +27,7 @@ import com.glpi.glpi_ministerio_pblico.databinding.ActivityNavFooterTicketsBindi
 import com.glpi.glpi_ministerio_pblico.ui.adapter.Data_TicketInfo
 import com.glpi.glpi_ministerio_pblico.ui.adapter.RecyclerAdapter
 import com.glpi.glpi_ministerio_pblico.ui.shared.token
+import com.glpi.glpi_ministerio_pblico.ui.shared.token.Companion.prefer
 import org.json.JSONArray
 import org.json.JSONObject
 import java.util.*
@@ -50,10 +52,15 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
     //lateinit var ticketType: String
     lateinit var ticketOrigin: String
 
+    lateinit var adapter: RecyclerAdapter
+
     //INICIO toogle buton tickets
     var clickTickets: Boolean = false
     var clickConvezaciones: Boolean = false
     var click_fab:Boolean = false //fab_opciones de layout activity_tickets_historico.xml
+
+    var isEditFollowup = false
+    var positionFollowup = -1
 
     @SuppressLint("ResourceAsColor")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -151,9 +158,11 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
             hideFabs()
         }
         binding.includeFabs.btnFabSolucion.setOnClickListener {
+            val bundleIn = intent.extras
+            val ticketSortsId = bundleIn!!.getString("ticketSortsId")
             val intentAddSolution = Intent(this, TicketsAgregarSolucionActivity::class.java)
             val bundle = Bundle()
-            bundle.putString("TicketID", ticketId)
+            bundle.putString("TicketID", ticketSortsId)
             intentAddSolution.putExtras(bundle)
             intentAddSolution.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             startActivity(intentAddSolution)
@@ -288,17 +297,23 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
 
 
 
-    private fun setupRecyclerView(){
+    fun setupRecyclerView(){
         val recyclerViewNews = binding.recyclerViewConversation
         //val newsList = dataModelArrayListConversation
-        val newsAdapter = RecyclerAdapter(this,dataModelArrayListConversation,this)
+        adapter = RecyclerAdapter(this,dataModelArrayListConversation,this)
+        //val newsAdapter = RecyclerAdapter(this,dataModelArrayListConversation,this)
         val layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, true)
         layoutManager.stackFromEnd = true
 
         dataModelArrayListConversation.sortBy { it.ticketInfoDate}//ordenar por fecha
-        recyclerViewNews.adapter = newsAdapter
+        //recyclerViewNews.adapter = newsAdapter
+        recyclerViewNews.adapter = adapter
         recyclerViewNews.layoutManager = layoutManager
-        if (newsAdapter.itemCount == 0){
+
+        adapter.notifyItemInserted(0)
+        //newsAdapter.notifyItemChanged(positionFollowup)
+
+        if (adapter.itemCount == 0){
             binding.recyclerViewConversation.isVisible = false
             binding.includeTicketsHistorico.layoutHistorico.isVisible = true
         }
@@ -309,13 +324,14 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
     private fun volleyRequestTicketInfo(urlApi_: String) {
         val bundle = intent.extras
         val ticketSortsId = bundle!!.getString("ticketSortsId")
-        val ticketSortsIdTechnician = bundle!!.getString("ticketSortsIdTechnician")
 
         jsonObjectResponse = JSONObject()
 
+        Log.i("mensaje prefer","$urlApi_${ticketSortsId}")
         val stringRequestDataTickets = object : StringRequest(Method.POST,
             urlApi_+ticketSortsId, Response.Listener { response ->
                 try {
+
                     dataModelArrayListConversation = ArrayList()
                     jsonObjectResponse = JSONObject(response)
                     var ticketInfoJson: JSONObject
@@ -485,6 +501,7 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
         val bundle = intent.extras
         val idRecipient = bundle!!.getString("ticketSortsIdRecipient")
 
+        Log.i("mensaje prefer","$urlApi_TasksUsers${prefer.getRecipientId()} ")
         val stringRequestDataTickets = object : StringRequest(Method.POST,
             urlApi_TasksUsers+idRecipient, Response.Listener { response ->
             try {
@@ -517,7 +534,11 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
         //FIN volley ------------------------------------------------------------
     }
 
-
+    override fun onBackPressed() {
+        super.onBackPressed()
+        prefer.deleteTicketSortsId()
+        prefer.deleteRecipientId()
+    }
 
     override fun onEditClick(
         ticketInfoType: String,
@@ -531,7 +552,8 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
         ticketInfoId: String,
         ticketInfoIdSource: String,
         ticketInfoSource: String,
-        ticketInfoTimeToSolve: String
+        ticketInfoTimeToSolve: String,
+        adapterPosition: Int
     ) {
         val flagOnEditClick = true
         //recuperamos el id del ticket
@@ -579,6 +601,9 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
             intentFollowUp.putExtra("flagOnEditClick",flagOnEditClick)
             startActivity(intentFollowUp)
         }
+
+        isEditFollowup = true
+        positionFollowup = adapterPosition
     }
 
     override fun onFabClick() {
