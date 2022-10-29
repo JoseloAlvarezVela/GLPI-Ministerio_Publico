@@ -472,7 +472,7 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.onTicketCl
 
         //dataModelArrayList.sortBy { it. }
         recyclerView!!.layoutManager = layoutManager
-
+        recycleView_Adapter_Tickets?.notifyDataSetChanged()
         recycleView_Adapter_Tickets =
             context?.let { RecycleView_Adapter_Tickets(it,dataModelArrayList,this) }
         recyclerView!!.adapter = recycleView_Adapter_Tickets

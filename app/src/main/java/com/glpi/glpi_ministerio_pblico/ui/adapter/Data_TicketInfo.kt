@@ -13,7 +13,7 @@ class Data_TicketInfo {
     var ticketInfoModificationDate: String? = null
     var ticketInfoContent: String? = null
     var ticketInfoIdSource: String? = null //id de origen del ticket: 2, telefono,.. SEGUMIENTO
-    var ticketInfoSource: String? = null //id de origen del ticket: correo electrónico, whatsapp, telefono,.. SEGUMIENTO
+    var ticketInfoSource: String? = null //id de origen del segumiento: correo electrónico, whatsapp, telefono,.. SEGUMIENTO
     var ticketInfoDateBegin: String? = null
     var ticketInfoDateEnd: String? = null
     var ticketInfoTimeToSolve: String? = null

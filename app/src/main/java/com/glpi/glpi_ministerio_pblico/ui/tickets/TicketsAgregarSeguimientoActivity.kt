@@ -28,14 +28,19 @@ import kotlin.collections.ArrayList
 
 class TicketsAgregarSeguimientoActivity : AppCompatActivity(),
     RecycleView_Adapter_FollowupTemplate.onFollowTemplateClickListener,
-    RecycleViw_Adapter_ListStatusAllowed.onStatusAllowedClickListener{
+    RecycleViw_Adapter_ListStatusAllowed.onStatusAllowedClickListener,
+    RecycleView_Adapter_SourceTypes.onSourceTypesClickListener{
     private var recyclerView: RecyclerView? = null
     private var recyclerViewListStatusAllowed: RecyclerView? = null
+    private var recyclerViewListSourceTypes: RecyclerView? = null
 
     internal lateinit var dataModelArrayListStatusAllowed: ArrayList<Data_ListStatusAllowed>
     internal lateinit var dataModelArrayListFollowupTemplate: ArrayList<Data_FollowupTemplate>
+    internal lateinit var dataModelArrayListSourceTypes: ArrayList<Data_SourceTypes>
+
     private var recyclerView_Adapter_FollowupTemplate: RecycleView_Adapter_FollowupTemplate? = null
     private var recyclerView_Adapter_ListStatusAllowed: RecycleViw_Adapter_ListStatusAllowed? = null
+    private var recyclerView_Adapter_ListSourceTypes: RecycleView_Adapter_SourceTypes? = null
     private lateinit var binding: ActivityTicketsAgregarSeguimientoBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,16 +49,19 @@ class TicketsAgregarSeguimientoActivity : AppCompatActivity(),
 
         recyclerView = binding.includeModalFollowupTemplate.recyclerFollowupTemplate
         recyclerViewListStatusAllowed = binding.includeListStatusAllowed.recyclerFollowupListAllowed
+        recyclerViewListSourceTypes = binding.includeModalListSourceTypes.recyclerListSourceTypes
 
         volleyRequestListStatusAllowed()
         volleyRequestFollowupTemplates(MainActivity.urlApi_FollowupTemplates)
+        volleyRequestListSourceTypes()
 
         val bundle = intent.extras
         when(bundle!!.getBoolean("flagOnEditClick")){
             true -> updateFollowup()
-            false -> getTicketInfo()
+            false -> getInfoFollowup()
         }
         modalListStatusAllowed()
+        modalListSourceTypes()
         appBarHeaderFollowup()
         imgBtnPadLock()
         btnDeployFab()
@@ -65,10 +73,14 @@ class TicketsAgregarSeguimientoActivity : AppCompatActivity(),
             val followupDescription = binding.edtFollowupDescription.text
             val followupPrivate = binding.imgViewPadLock.tag.toString()
             val listStatusAllowedId = binding.btnStatusFollowup.tag.toString()
+            val requestType = binding.btnSourceTypes.tag.toString()
 
-            when(flagUpdateFollow){
-                true -> {
+            when{
+                followupDescription.isNullOrBlank() -> Toast.makeText(this, "sin descripción", Toast.LENGTH_SHORT).show()
+                requestType == "null" -> Toast.makeText(this, "Seleccionar origen del seguimiento", Toast.LENGTH_SHORT).show()
+                flagUpdateFollow -> {
                     requestVolleyUpdateFollowup(
+                        requestType,
                         ticketInfoId,
                         ticketId,
                         listStatusAllowedId,
@@ -77,40 +89,26 @@ class TicketsAgregarSeguimientoActivity : AppCompatActivity(),
                     )
                     onBackPressed()
                 }
-                false -> {
+                !flagUpdateFollow -> {
                     requestVolleyInsertFollowup(
+                        requestType,
                         ticketId,
                         listStatusAllowedId,
                         followupPrivate,
                         followupDescription
                     )
-                    onBackPressed()
+                    val intentOnBack = Intent(this, NavFooterTicketsActivity::class.java)
+                    val bundle = Bundle()
+                    bundle.putString("ticketId",ticketId)
+                    intentOnBack.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                    startActivity(intentOnBack)
+                    //onBackPressed()
                 }
             }
-
-            /*when(followupDescription.toString()){
-                "" -> Toast.makeText(this, "ingrese una descripción del seguimiento", Toast.LENGTH_SHORT).show()
-                " " -> Toast.makeText(this, "ingrese una descripción del seguimiento", Toast.LENGTH_SHORT).show()
-                "  " -> Toast.makeText(this, "ingrese una descripción del seguimiento", Toast.LENGTH_SHORT).show()
-                "   " -> Toast.makeText(this, "ingrese una descripción del seguimiento", Toast.LENGTH_SHORT).show()
-                "    " -> Toast.makeText(this, "ingrese una descripción del seguimiento", Toast.LENGTH_SHORT).show()
-                "     " -> Toast.makeText(this, "ingrese una descripción del seguimiento", Toast.LENGTH_SHORT).show()
-                "\n" -> Toast.makeText(this, "ingrese una descripción del seguimiento", Toast.LENGTH_SHORT).show()
-                "\n\n" -> Toast.makeText(this, "ingrese una descripción del seguimiento", Toast.LENGTH_SHORT).show()
-                else -> {
-                    requestVolleyAddFollowup(
-                        ticketId,
-                        listStatusAllowedId,
-                        followupPrivate,
-                        followupDescription
-                    )
-                    onBackPressed()
-                }
-            }*/
         }
     }
 
-    private fun getTicketInfo(){
+    private fun getInfoFollowup(){
         val flagGetTicketInfo = false
         Toast.makeText(this, "getTicketInfo", Toast.LENGTH_LONG).show()
         val bundle = intent.extras
@@ -135,6 +133,8 @@ class TicketsAgregarSeguimientoActivity : AppCompatActivity(),
             binding.imgBtnStatusHeader.setImageResource(R.drawable.ic_circulo_negro)
         }
 
+        binding.btnSourceTypes.tag = "null"
+
         if(ticketPrivate == "SI"){
             binding.imgViewPadLock.tag = "1"
         }else{
@@ -143,7 +143,7 @@ class TicketsAgregarSeguimientoActivity : AppCompatActivity(),
 
         binding.tvIdTicket.text = "Petición #$ticketSortsId"
 
-        imgBtnTicketStatus(ticketSortsStatus)
+        //imgBtnTicketStatus(ticketSortsStatus)
         btnAddFollowup(flagGetTicketInfo,ticketSortsId,ticketInfoId)
     }
 
@@ -155,6 +155,18 @@ class TicketsAgregarSeguimientoActivity : AppCompatActivity(),
 
         binding.includeListStatusAllowed.btnCloseModalListStatusAllowed.setOnClickListener {
             binding.includeListStatusAllowed.modalListStatusAllowed.isVisible = false
+            binding.includeBackgroundgrisAtctaddseg.clBackgroundgrisBggris.isVisible = false
+        }
+    }
+
+    private fun modalListSourceTypes(){
+        binding.btnSourceTypes.setOnClickListener {
+            binding.includeModalListSourceTypes.modalListSourceTypes.isVisible = true
+            binding.includeBackgroundgrisAtctaddseg.clBackgroundgrisBggris.isVisible = true
+        }
+
+        binding.includeModalListSourceTypes.btnCloseModalSourceTypes.setOnClickListener {
+            binding.includeModalListSourceTypes.modalListSourceTypes.isVisible = false
             binding.includeBackgroundgrisAtctaddseg.clBackgroundgrisBggris.isVisible = false
         }
     }
@@ -209,9 +221,20 @@ class TicketsAgregarSeguimientoActivity : AppCompatActivity(),
         val ticketPrivate = bundle!!.getString("ticketPrivate")
         val ticketInfoContent = bundle!!.getString("ticketInfoContent")
         val ticketInfoId = bundle!!.getString("ticketInfoId").toString()
+        val ticketSortsSource = bundle!!.getString("ticketSortsSource").toString()
+        val ticketInfoSource = bundle!!.getString("ticketInfoSource").toString()
 
-        imgBtnTicketStatus(ticketSortsStatus)
+        //imgBtnTicketStatus(ticketSortsStatus)
         imgBtnPadLock()
+
+        binding.btnSourceTypes.text = ticketInfoSource
+        when(ticketInfoSource){
+            "Correo electrónico" -> binding.btnSourceTypes.tag = "2"
+            "Documento" -> binding.btnSourceTypes.tag = "5"
+            "Formcreator" -> binding.btnSourceTypes.tag = "8"
+            "Teléfono" -> binding.btnSourceTypes.tag = "3"
+            "Whatsapp" -> binding.btnSourceTypes.tag = "4"
+        }
 
         binding.tvIdTicket.text = "Petición #$ticketSortsId"
         if (ticketSortsStatus == "EN CURSO (Asignada)"){
@@ -292,7 +315,9 @@ class TicketsAgregarSeguimientoActivity : AppCompatActivity(),
         }
     }
 
+
     private fun requestVolleyUpdateFollowup(
+        requestType: String,
         ticketInfoId: String,
         ticketId: String,
         listStatusAllowedId: String,
@@ -300,6 +325,7 @@ class TicketsAgregarSeguimientoActivity : AppCompatActivity(),
         followupDescription: Editable
     ) {
         //metodo que nos devuelve los datos para los tickets
+        Log.i("mensaje link","${MainActivity.urlApi_UpdateFollowup+ticketInfoId}")
         val stringRequestDataTickets = object : StringRequest(Method.POST,
             MainActivity.urlApi_UpdateFollowup+ticketInfoId, Response.Listener { response ->
                 try {
@@ -320,10 +346,11 @@ class TicketsAgregarSeguimientoActivity : AppCompatActivity(),
                 params["session_token"] = token.prefer.getToken()
                 params["content"] = followupDescription.toString()
                 params["private"] = followupPrivate
-                params["request_type"] = "4"
+                params["request_type"] = requestType
                 params["ticket_state"] = listStatusAllowedId
                 params["ticket_id"] = ticketId
 
+                Log.i("mensaje paramsupfoll", " $params")
                 return params
             }
         }
@@ -332,6 +359,7 @@ class TicketsAgregarSeguimientoActivity : AppCompatActivity(),
     }
 
     private fun requestVolleyInsertFollowup(
+        requestType: String,
         ticketId: String,
         listStatusAllowedId: String,
         followupPrivate: String,
@@ -358,7 +386,7 @@ class TicketsAgregarSeguimientoActivity : AppCompatActivity(),
                 params["session_token"] = token.prefer.getToken()
                 params["content"] = followupDescription.toString()
                 params["private"] = followupPrivate
-                params["request_type"] = "4"
+                params["request_type"] = requestType
                 params["ticket_state"] = listStatusAllowedId
                 params["ticket_id"] = ticketId
 
@@ -406,6 +434,7 @@ class TicketsAgregarSeguimientoActivity : AppCompatActivity(),
             binding.includeBackgroundgrisAtctaddseg.clBackgroundgrisBggris.isVisible = false
             binding.includeModalFollowupTemplate.modalPlantillaAddFollowup.isVisible = false
             binding.includeListStatusAllowed.modalListStatusAllowed.isVisible = false
+            binding.includeModalListSourceTypes.modalListSourceTypes.isVisible = false
             click_desplegar = false
         }
         //FIN - funcion de fabs que abre camara del celular y archivos del celular
@@ -436,6 +465,43 @@ class TicketsAgregarSeguimientoActivity : AppCompatActivity(),
                 }
             }, Response.ErrorListener {
                 Toast.makeText(this, "ERROR CON EL SERVIDOR", Toast.LENGTH_SHORT).show()
+            }) {
+            override fun getParams(): Map<String, String>? {
+                val params: MutableMap<String, String> = HashMap()
+                params["session_token"] = token.prefer.getToken()
+                return params
+            }
+        }
+        this?.let {
+            VolleySingleton.getInstance(it).addToRequestQueue(stringRequestDataTickets)
+        }
+    }
+
+    private fun volleyRequestListSourceTypes() {
+        val stringRequestDataTickets = object : StringRequest(Method.POST,
+            MainActivity.urlApi_GetRequestTypes, Response.Listener { response ->
+                try {
+                    dataModelArrayListSourceTypes = ArrayList()
+
+                    val jsonObjectResponse = JSONArray(response)
+                    Log.i("mensaje allowed",""+jsonObjectResponse)
+                    for (i in  0 until jsonObjectResponse.length()){
+
+                        val dataListSourceTypes = jsonObjectResponse.getJSONObject(i)
+                        val listSourceTypes = Data_SourceTypes()
+
+                        listSourceTypes.sourceTypesId = dataListSourceTypes.getString("ID")
+                        listSourceTypes.sourceTypesName = dataListSourceTypes.getString("NAME")
+
+                        dataModelArrayListSourceTypes.add(listSourceTypes)
+                    }
+                    setupRecyclerListSourceTypes()
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    Toast.makeText(this, "ListSourceTypes: $e", Toast.LENGTH_LONG).show()
+                }
+            }, Response.ErrorListener {
+                Toast.makeText(this, "ERROR ListSourceTypes", Toast.LENGTH_SHORT).show()
             }) {
             override fun getParams(): Map<String, String>? {
                 val params: MutableMap<String, String> = HashMap()
@@ -512,6 +578,18 @@ class TicketsAgregarSeguimientoActivity : AppCompatActivity(),
         recyclerViewListStatusAllowed!!.adapter = recyclerView_Adapter_ListStatusAllowed
     }
 
+    private fun setupRecyclerListSourceTypes() {
+        val layoutManager =
+            LinearLayoutManager(this, LinearLayoutManager.VERTICAL, true,)
+        layoutManager.stackFromEnd = true
+
+        recyclerViewListSourceTypes!!.layoutManager = layoutManager
+
+        recyclerView_Adapter_ListSourceTypes =
+            RecycleView_Adapter_SourceTypes(this,dataModelArrayListSourceTypes,this)
+        recyclerViewListSourceTypes!!.adapter = recyclerView_Adapter_ListSourceTypes
+    }
+
     //nota:eliminar fragment de fondo
     private fun replaceFragment(misPeticionesFragment: MisPeticionesFragment) {
         val f2 = misPeticionesFragment
@@ -529,7 +607,7 @@ class TicketsAgregarSeguimientoActivity : AppCompatActivity(),
     override fun onFollowupTemplateClick(nameFollowupTemplate: String, contentFollowupTemplate: String) {
         Toast.makeText(this, ""+nameFollowupTemplate, Toast.LENGTH_LONG).show()
         binding.edtFollowupDescription.setText(decodeHtml(contentFollowupTemplate))
-        Log.i("mensaje clikc","${binding.edtFollowupDescription.text}")
+        //Log.i("mensaje clikc","${binding.edtFollowupDescription.text}")
         binding.includeModalFollowupTemplate.modalPlantillaAddFollowup.isVisible = false
         binding.includeBackgroundgrisAtctaddseg.clBackgroundgrisBggris.isVisible = false
     }
@@ -546,8 +624,15 @@ class TicketsAgregarSeguimientoActivity : AppCompatActivity(),
             "SOLUCIONADO" -> binding.imgBtnStatus.setImageResource(R.drawable.ic_circulo_negro)
             "CERRADO" -> binding.imgBtnStatus.setImageResource(R.drawable.ic_circulo_negro_cerrado)
         }
-        Log.i("mensaje tag","${binding.btnStatusFollowup.tag}")
+        //Log.i("mensaje tag","${binding.btnStatusFollowup.tag}")
         binding.includeListStatusAllowed.modalListStatusAllowed.isVisible = false
+        binding.includeBackgroundgrisAtctaddseg.clBackgroundgrisBggris.isVisible = false
+    }
+
+    override fun onSelectSourceTypesClick(sourceTypesId: String, sourceTypesName: String) {
+        binding.btnSourceTypes.text = sourceTypesName
+        binding.btnSourceTypes.tag = sourceTypesId
+        binding.includeModalListSourceTypes.modalListSourceTypes.isVisible = false
         binding.includeBackgroundgrisAtctaddseg.clBackgroundgrisBggris.isVisible = false
     }
 

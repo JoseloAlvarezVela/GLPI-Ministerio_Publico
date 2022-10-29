@@ -73,6 +73,7 @@ class MainActivity : AppCompatActivity(){
         val urlApi_InsertFollowup: String = "$protocol://$url:$port/api/insert_followups"
         val urlApi_UpdateTasks: String = "$protocol://$url:$port/api/update_tasks/"
         val urlApi_InsertTasks: String = "$protocol://$url:$port/api/insert_tasks/"
+        val urlApi_GetRequestTypes: String = "$protocol://$url:$port/api/get_request_types"
 
 
         //datos del usuario logeado

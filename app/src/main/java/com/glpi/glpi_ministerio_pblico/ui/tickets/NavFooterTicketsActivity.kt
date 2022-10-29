@@ -115,20 +115,20 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
         binding.includeFabs.btnFabTareas.setOnClickListener {
             val intentAddTask = Intent(this, TicketsAgregarTareaActivity::class.java)
 
-
             val intent = intent.extras
             val ticketSortsId = intent!!.getString("ticketSortsId")
-            val ticketType = intent!!.getString("Tipo") //solicitud o incidente
-            val ticketStatus = intent!!.getString("TicketEstado") //en curso ,cerrado ...
-            val IdTechnician = intent!!.getString("IdTechnician")
+            val ticketSortsType = intent!!.getString("ticketSortsType") //solicitud o incidente
+            val ticketSortsStatus = intent!!.getString("ticketSortsStatus") //en curso ,cerrado ...
+            val ticketSortsIdTechnician = intent!!.getString("ticketSortsIdTechnician")
 
+            val flagOnEditClick = false
             val bundle = Bundle()
-            //bundle.putString("TicketID", TicketID_)
             bundle.putString("ticketSortsId", ticketSortsId)
-            bundle.putString("ticketType", ticketType)
-            bundle.putString("ticketStatus", ticketStatus)
-            bundle.putString("IdTechnician", IdTechnician)
-            //bundle.putString("flagBtnFabTasks", flagBtnFabTasks)
+            bundle.putString("ticketSortsType", ticketSortsType)
+            bundle.putString("ticketSortsStatus", ticketSortsStatus)
+            bundle.putString("ticketSortsIdTechnician", ticketSortsIdTechnician)
+            bundle.putBoolean("flagOnEditClick", flagOnEditClick)
+
             intentAddTask.putExtras(bundle)
             intentAddTask.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             startActivity(intentAddTask)
@@ -286,6 +286,8 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
         //FIN toogle buton
     }
 
+
+
     private fun setupRecyclerView(){
         val recyclerViewNews = binding.recyclerViewConversation
         //val newsList = dataModelArrayListConversation
@@ -341,6 +343,8 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
                             ticketInfo.ticketInfoCreationDate = ticketInfoJson.getString("FECHA_CREACION")
                             if (ticketInfo.ticketInfoType == "FOLLOWUP"){
                                 ticketInfo.ticketInfoModificationDate = ticketInfoJson.getString("FECHA_MODIFICACION")
+                                ticketInfo.ticketInfoIdSource = ticketInfoJson.getString("ID_ORIGEN")
+                                ticketInfo.ticketInfoSource = ticketInfoJson.getString("ORIGEN")
                             }
 
                             ticketInfo.ticketInfoContent = decodeHtml( ticketInfoJson.getString("CONTENIDO"))
@@ -525,6 +529,8 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
         ticketInfoIdCategory: String,
         ticketInfoCategory: String,
         ticketInfoId: String,
+        ticketInfoIdSource: String,
+        ticketInfoSource: String,
         ticketInfoTimeToSolve: String
     ) {
         val flagOnEditClick = true
@@ -535,6 +541,7 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
         val ticketOrigin = bundle!!.getString("TicketOrigen")
         val ticketSortsIdTechnician = bundle!!.getString("ticketSortsIdTechnician")
         val ticketSortsType = bundle!!.getString("ticketSortsType")
+        val ticketSortsSource = bundle!!.getString("ticketSortsSource")
 
         val intentTasks = (Intent(this,TicketsAgregarTareaActivity::class.java))
         intentTasks.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
@@ -552,7 +559,7 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
             intentTasks.putExtra("ticketInfoIdTemplate",ticketInfoIdTemplate)
             intentTasks.putExtra("ticketInfoIdCategory",ticketInfoIdCategory)
             intentTasks.putExtra("ticketInfoCategory",ticketInfoCategory)
-            intentTasks.putExtra("ticketInfoId",ticketInfoId)
+            intentTasks.putExtra("ticketInfoId",ticketInfoId) //origen del
             intentTasks.putExtra("ticketInfoTimeToSolve",ticketInfoTimeToSolve)
             intentTasks.putExtra("ticketSortsType",ticketSortsType)
             intentTasks.putExtra("flagOnEditClick",flagOnEditClick)
@@ -566,6 +573,9 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
             intentFollowUp.putExtra("ticketSortsIdTechnician",ticketSortsIdTechnician)
             intentFollowUp.putExtra("ticketSortsType",ticketSortsType)
             intentFollowUp.putExtra("ticketInfoId",ticketInfoId)
+            intentFollowUp.putExtra("ticketSortsSource",ticketSortsSource)
+            intentFollowUp.putExtra("ticketInfoIdSource",ticketInfoIdSource)
+            intentFollowUp.putExtra("ticketInfoSource",ticketInfoSource)
             intentFollowUp.putExtra("flagOnEditClick",flagOnEditClick)
             startActivity(intentFollowUp)
         }

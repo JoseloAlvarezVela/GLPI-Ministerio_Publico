@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.core.view.isVisible
+import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.Response
@@ -61,18 +62,20 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
         volleyRequestDataTasksCategory()
         volleyRequestListTechnician()
 
+
         val bundle = intent.extras
+        Log.i("mensaje flag","${bundle!!.getBoolean("flagOnEditClick")}")
         when(bundle!!.getBoolean("flagOnEditClick")){
             true -> updateTask()
-            false -> getInfoTask()
+            false -> insertTask()
         }
-        Log.i("mensaje edit","${bundle!!.getBoolean("flagOnEditClick")}")
         btn_fabs()
         btn_atras()
         btn_agregarCat()
         btnAssignTechnician()
         btnTimeToSolveTask()
         btnDocuments()
+        imgBtnPadLockTask()
     }
 
     private fun volleyRequestListTechnician() {
@@ -171,8 +174,11 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
         binding.includeTimeToSolveTask.btnOkUnderModalTimeToSolveTask.setOnClickListener {
             getHour = binding.includeTimeToSolveTask.hours.text.toString()
             getMinutes = binding.includeTimeToSolveTask.minutes.text.toString()
-            Toast.makeText(this, "$getHour : $getMinutes para resolver tarea", Toast.LENGTH_SHORT).show()
+            val hourToMinutes = (getHour.toInt()*60)
+            val minutesToSeconds = (hourToMinutes+getMinutes.toInt())*60
+            Toast.makeText(this, "$minutesToSeconds para resolver tarea", Toast.LENGTH_SHORT).show()
             binding.btnTimeToSolveTask.text = "$getHour : $getMinutes minutos"
+            binding.btnTimeToSolveTask.tag = minutesToSeconds
             binding.includeTimeToSolveTask.modalTimeToSolveTask.isVisible = false
             binding.LayoutBackgroudAgregarTarea.isVisible = false
             binding.includeTimeToSolveTask.hours.text = arrayHour[0]
@@ -226,6 +232,47 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
                     binding.imgBtnStatusTasks.tag = 1
                     newTicketStatus = "EN CURSO (Asignada)"
                     flagTicketStatus = true
+                }
+            }
+        }
+    }
+
+    private fun imgBtnPadLockTask(){
+        val bundle = intent.extras
+        var ticketPrivate = bundle!!.getString("ticketInfoPrivate")
+        var newTicketPrivate = "NO"
+        var flagImgViewPadLock = false
+        Log.i("mensaje type",ticketPrivate.toString())
+        if (ticketPrivate == "SI"){
+            //Toast.makeText(this, "Segumiento Privado", Toast.LENGTH_SHORT).show()
+            flagImgViewPadLock = false
+            binding.imgBtnPadLockTask.setOnClickListener {
+                if(flagImgViewPadLock){
+                    binding.imgBtnPadLockTask.setImageResource(R.drawable.ic_candado_cerrado)
+
+                    binding.imgBtnPadLockTask.tag = "1"
+                    flagImgViewPadLock = false
+                }else{
+                    binding.imgBtnPadLockTask.setImageResource(R.drawable.ic_candado_abierto)
+                    binding.imgBtnPadLockTask.tag = "0"
+                    flagImgViewPadLock = true
+                }
+            }
+        }else{
+            flagImgViewPadLock = true
+
+            binding.imgBtnPadLockTask.setOnClickListener {
+                if(flagImgViewPadLock){
+                    binding.imgBtnPadLockTask.setImageResource(R.drawable.ic_candado_cerrado)
+                    Toast.makeText(this, "Segumiento Privado", Toast.LENGTH_SHORT).show()
+                    binding.imgBtnPadLockTask.tag = "1"
+                    newTicketPrivate = "NO"
+                    flagImgViewPadLock = false
+                }else{
+                    binding.imgBtnPadLockTask.setImageResource(R.drawable.ic_candado_abierto)
+                    binding.imgBtnPadLockTask.tag = "0"
+                    newTicketPrivate = "SI"
+                    flagImgViewPadLock = true
                 }
             }
         }
@@ -341,30 +388,17 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
         recyclerViewCategory!!.adapter = recyclerView_Adapter_TasksCategory
         }
 
-    private fun getInfoTask(){
-        val flagGetInfoTask = true
+    private fun insertTask(){
+        val flagInsertTask = false
         val bundle = intent.extras
         val ticketSortsId = bundle!!.getString("ticketSortsId").toString()
-        val ticketInfoId = bundle!!.getString("ticketInfoId").toString()
+        val ticketType = bundle!!.getString("ticketSortsType") //solicitud o incidente
+        var ticketSortsStatus = bundle!!.getString("ticketSortsStatus").toString() //en curso(asignado), en espera ...
         val ticketSortsIdTechnician = bundle!!.getString("ticketSortsIdTechnician").toString()
+        //val ticketInfoId = bundle!!.getString("ticketInfoId").toString()
+        val ticketInfoId = "tarea será agregada"
 
-        val ticketType = bundle!!.getString("ticketType") //solicitud o incidente
-        val ticketStatus = bundle!!.getString("ticketStatus")//en curso ,cerrado ...
-        val getTaskUsersEstimateDuration = bundle!!.getString("getTaskUsersEstimateDuration")
-        val tasksStatus = bundle!!.getString("tasksStatus")
-        val tasksCategory = bundle!!.getString("tasksCategory")
         binding.tvIdTicket.text = "Petición $ticketSortsId"
-
-        val idTemplate = binding.idTemplate.text.toString()
-
-        if (tasksCategory != null){
-            binding.btnAddCategory.text = tasksCategory
-        }
-
-        if (getTaskUsersEstimateDuration != null){
-            binding.btnTimeToSolveTask.text = getTaskUsersEstimateDuration
-        }
-
 
         if(ticketType == "SOLICITUD"){
             binding.imgBtnTypeTasks.setImageResource(R.drawable.ic_interrogacion)
@@ -372,28 +406,35 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
             binding.imgBtnTypeTasks.setImageResource(R.drawable.ic_incidencia)
         }
 
-        if (tasksStatus == "TERMINADO"){
-            binding.chkBoxPadLockTask.isChecked = true
-
-        }
-
-        Log.i("mensaje","$ticketStatus")
-        if(ticketStatus == "EN CURSO (Asignada)"){
+        Log.i("mensaje status","${ticketSortsStatus}")
+        if(ticketSortsStatus == "EN CURSO (Asignada)"){
             binding.imgBtnStatusTasks.setImageResource(R.drawable.ic_circulo_verde)
             binding.imgBtnStatusTasksHeader.setImageResource(R.drawable.ic_circulo_verde)
             binding.imgBtnStatusTasks.tag = "2"
-        }else if(ticketStatus == "EN ESPERA"){
+            ticketSortsStatus = "2"
+        }else if(ticketSortsStatus == "EN ESPERA"){
             binding.imgBtnStatusTasks.setImageResource(R.drawable.ic_circulo)
             binding.imgBtnStatusTasksHeader.setImageResource(R.drawable.ic_circulo)
             binding.imgBtnStatusTasks.tag = "4"
-        }else if (ticketStatus == "CERRADO"){
+            ticketSortsStatus = "4"
+        }else if (ticketSortsStatus == "CERRADO"){
             binding.imgBtnStatusTasks.setImageResource(R.drawable.ic_circulo_negro)
             //binding.imgBtnStatusTasks.tag = 2
             binding.imgBtnStatusTasksHeader.setImageResource(R.drawable.ic_circulo_negro)
         }
 
-        imgBtnTicketStatus(ticketStatus)
-        btnAddTasks(flagGetInfoTask, ticketSortsId,ticketInfoId,ticketSortsIdTechnician)
+        binding.btnTimeToSolveTask.text = "30 minutos"
+        binding.btnTimeToSolveTask.tag = "1800"
+
+        binding.chkBoxPadLockTask.tag = "0" // estado de la tarea: hecho, por hacer, informativo
+        binding.imgBtnPadLockTask.tag = "0" // tarea privado = 1, público 0
+        binding.edtTasksDescription.tag = "0"
+        binding.btnAddCategory.tag = false
+        //Log.i("mensaje categoryId","${binding.btnAddCategory.tag}")
+
+        Log.i("mensaje flag insert","${flagInsertTask}")
+        imgBtnTicketStatus(ticketSortsStatus)
+        btnAddTasks(flagInsertTask, ticketSortsId,ticketInfoId,ticketSortsIdTechnician,ticketSortsStatus)
 
     }
 
@@ -407,7 +448,7 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
         //val ticketType = bundle!!.getString("ticketType")
 
         val ticketSortsType = bundle!!.getString("ticketSortsType")//solicitud o incidente
-        val ticketSortsStatus = bundle!!.getString("ticketSortsStatus")
+        val ticketSortsStatus = bundle!!.getString("ticketSortsStatus").toString()
         val ticketInfoCategory = bundle!!.getString("ticketInfoCategory")
         val ticketInfoIdCategory = bundle!!.getString("ticketInfoIdCategory")
         val ticketInfoStatus = bundle!!.getString("ticketInfoStatus")
@@ -418,10 +459,12 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
 
         binding.tvIdTicket.text = "Petición #$ticketSortsId"
         binding.edtTasksDescription.setText(ticketInfoContent)
+        binding.edtTasksDescription.tag = "0"
         binding.btnAddCategory.text = ticketInfoCategory
         binding.btnAddCategory.tag = ticketInfoIdCategory
         binding.btnTimeToSolveTask.text = "$ticketInfoTimeToSolve minutos"
-
+        val minutesToSeconds = (ticketInfoTimeToSolve?.toInt()?.times(60))
+        binding.btnTimeToSolveTask.tag = minutesToSeconds.toString()
         when(ticketSortsType){
             "SOLICITUD" -> binding.imgBtnTypeTasks.setImageResource(R.drawable.ic_interrogacion)
             "INCIDENCIA" -> binding.imgBtnTypeTasks.setImageResource(R.drawable.ic_incidencia)
@@ -474,8 +517,8 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
                 binding.imgBtnPadLockTask.tag = "0"
             }
         }
-
-        btnAddTasks(flagUpdateTask, ticketSortsId,ticketInfoId,ticketInfoIdTechnician)
+        Log.i("mensaje flag update","${flagUpdateTask}")
+        btnAddTasks(flagUpdateTask, ticketSortsId,ticketInfoId,ticketInfoIdTechnician,ticketSortsStatus)
     }
 
     //INICIO - funcion que abre modal para escoger una tarea
@@ -511,17 +554,27 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
     }
 
     //INICIO - función que añade la tarea y te devuelve al menu principal
-    private fun btnAddTasks(flagUpdateTask: Boolean,ticketSortsId: String, ticketInfoId: String, ticketSortsIdTechnician: String) {
+    private fun btnAddTasks(flagUpdateTask: Boolean,ticketSortsId: String, ticketInfoId: String, ticketSortsIdTechnician: String, ticketSortsStatus: String) {
+        Log.i("mensaje flag taskOut","${flagUpdateTask}")
         binding.btnAddTasks.setOnClickListener {
             Toast.makeText(this, "Tarea añadida", Toast.LENGTH_LONG).show()
-            val taskDescription = binding.edtTasksDescription.text.toString()
-            val taskPrivate = binding.imgBtnPadLockTask.tag.toString()
+
+
             val taskState = binding.chkBoxPadLockTask.tag.toString()
-            val templateId = binding.btnAddCategory.tag.toString()
-            val dateEnd = ""
-            val dateBegin = ""
+            val taskPrivate = binding.imgBtnPadLockTask.tag.toString()
             val ticketStatus = binding.imgBtnStatusTasks.tag.toString()
 
+            val taskType = "1" // 1 no planificada, 2 planificada
+
+            val categoryId = binding.btnAddCategory.tag.toString()
+
+            val templateId = binding.edtTasksDescription.tag.toString() // id de plantillas
+            val taskDescription = binding.edtTasksDescription.text.toString()
+
+            val dateEnd = ""
+            val dateBegin = ""
+
+            Log.i("mensaje flag task","${flagUpdateTask}")
             when(flagUpdateTask){
                 true -> {
                     requestVolleyUpdateTask(
@@ -531,19 +584,81 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
                         ticketSortsIdTechnician,
                         taskState,
                         templateId,
-                        templateId,
+                        categoryId,
                         dateEnd,
                         dateBegin,
                         ticketStatus,
-                        ticketSortsId
-                    )
+                        ticketSortsId)
+
                     onBackPressed()
                 }
                 false -> {
-                    //requestVolleyNewTask()
+                    val technicianId = binding.btnAddTechnician.tag.toString()
+                    val actionTime = binding.btnTimeToSolveTask.tag.toString()
+                    val ticketSortsStatusTag = binding.imgBtnStatusTasks.tag.toString()
+                    requestVolleyInsertTask(
+                        taskType,
+                        taskDescription,
+                        taskPrivate,
+                        technicianId,
+                        taskState,
+                        templateId,
+                        categoryId,
+                        actionTime,
+                        ticketSortsStatusTag,
+                        ticketSortsId
+                    )
+
                     onBackPressed()
                 }
             }
+
+
+            /*when(categoryId == null){
+                true -> Toast.makeText(this, "Agregar Categoria", Toast.LENGTH_SHORT).show()
+                else -> {
+                    Log.i("mensaje flag task","${flagUpdateTask}")
+                    when(flagUpdateTask){
+                        true -> {
+                            requestVolleyUpdateTask(
+                                ticketInfoId,
+                                taskDescription,
+                                taskPrivate,
+                                ticketSortsIdTechnician,
+                                taskState,
+                                templateId,
+                                categoryId,
+                                dateEnd,
+                                dateBegin,
+                                ticketStatus,
+                                ticketSortsId)
+
+                            onBackPressed()
+                        }
+                        false -> {
+                            requestVolleyInsertTask(
+                                taskType,
+                                taskDescription,
+                                taskPrivate,
+                                technicianId,
+                                taskState,
+                                templateId,
+                                categoryId,
+                                actionTime,
+                                ticketSortsStatusTag,
+                                ticketSortsId
+                            )
+
+                            onBackPressed()
+                        }
+                    }
+                }
+            }*/
+
+
+
+
+
         }
     }
 
@@ -597,10 +712,21 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
         //FIN obtenemos perfil de usuario
     }
 
-    /*private fun requestVolleyNewTask() {
+    private fun requestVolleyInsertTask(
+        taskType: String,
+        taskDescription: String,
+        taskPrivate: String,
+        ticketSortsIdTechnician: String,
+        taskState: String,
+        templateId: String,
+        categoryId: String,
+        actionTime: String,
+        ticketSortsStatus: String,
+        ticketSortsId: String
+    ) {
         //metodo que nos devuelve los datos para los tickets
         val stringRequestDataTickets = object : StringRequest(Method.POST,
-            MainActivity.urlApi_UpdateTasks+ticketInfoId, Response.Listener { response ->
+            MainActivity.urlApi_InsertTasks+ticketSortsId, Response.Listener { response ->
                 try {
                     val dataAddFollowup = JSONObject(response) //obtenemos el objeto json
 
@@ -617,24 +743,22 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
             override fun getParams(): Map<String, String>? {
                 val params: MutableMap<String, String> = HashMap()
                 params["session_token"] = token.prefer.getToken()
-                params["type"] = taskType //
+                params["type"] = taskType
                 params["content"] = taskDescription
                 params["private"] = taskPrivate
-                params["user_tech"] = taskIdTech
+                params["user_tech"] = ticketSortsIdTechnician
                 params["task_state"] = taskState
-                params["template_id"] = templateId
+                params["templates_id"] = templateId
                 params["categories_id"] = categoryId
-                params["action_time"] = dateEnd
-                params["date_begin"] = dateBegin
-                params["ticket_state"] = ticketStatus
-                params["ticket_id"] = ticketSortsId
+                params["action_time"] = actionTime
+                params["ticket_state"] = ticketSortsStatus
                 Log.i("mensaje params","$params")
                 return params
             }
         }
         VolleySingleton.getInstance(this).addToRequestQueue(stringRequestDataTickets)
         //FIN obtenemos perfil de usuario
-    }*/
+    }
 
     //INICIO - funcion que regresa a la vista anterior: activity_nav_footer_tickets.xml
     private fun btn_atras() {
@@ -743,9 +867,10 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
         binding.LayoutFabAgregarTarea.isVisible = true
         binding.edtTasksDescription.setText(decodeHtml(contentTasksTemplate))
         binding.edtTasksDescription.setTextColor(Color.parseColor("#1D20DD"))
+        binding.edtTasksDescription.tag = idTasksTemplates
         binding.btnAddCategory.text = categoryTasksTemplates
         binding.btnTimeToSolveTask.text = timeTasksTemplates.split(".")[0] +" minutos"
-        binding.idTemplate.text = idTasksTemplates
+        //binding.idTemplate.text = idTasksTemplates
         /*val fullHtml = "<h2 style=\"text-align: center;\"><span style=\"color: #0000ff;\">ACOMPAÑAMIENTO</span></h2><h4><span style=\"color: #0000ff;\"><span style=\"color: #ff0000;\">Evento:</span> </span></h4><h4><span style=\"color: #0000ff;\"><span style=\"color: #ff0000;\">Modalidad (pres./rem.):</span> </span></h4>"
         val decodeFullhtml = fullHtml.split("</span>") as ArrayList
         binding.edtTasksDescription.setText(decodeFullhtml.toString())
@@ -767,10 +892,11 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
         click = false
         binding.LayoutFabAgregarTarea.isVisible = true
 
-        Toast.makeText(this, "$nameTasksCategory, Id: $idTasksCategories", Toast.LENGTH_SHORT).show()
+        //Toast.makeText(this, "$nameTasksCategory, Id: $idTasksCategories", Toast.LENGTH_SHORT).show()
 
         binding.btnAddCategory.text = decodeHtml(contentTasksCategory)
-        binding.idCategory.text = idTasksCategories
+        binding.btnAddCategory.tag = idTasksCategories
+        //Toast.makeText(this, "${binding.idCategory.text} con nombre ${binding.btnAddCategory.text}", Toast.LENGTH_SHORT).show()
     }
 
     override fun onSelectTechnicianClick(

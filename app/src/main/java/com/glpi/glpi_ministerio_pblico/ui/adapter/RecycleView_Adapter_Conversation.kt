@@ -15,6 +15,7 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.glpi.glpi_ministerio_pblico.R
 import com.glpi.glpi_ministerio_pblico.ui.view.BaseViewHolder
+import java.util.concurrent.TimeUnit
 
 class RecyclerAdapter(
     val context: Context,
@@ -35,6 +36,8 @@ class RecyclerAdapter(
             ticketInfoIdCategory: String,
             ticketInfoCategory: String,
             ticketInfoId: String,
+            ticketInfoIdSource: String,
+            ticketInfoSource: String,
             ticketInfoTimeToSolve: String)
         fun onFabClick()
     }
@@ -52,6 +55,8 @@ class RecyclerAdapter(
             "${dataModelArrayListConversation[position].ticketInfoNameUser} ${dataModelArrayListConversation[position].ticketInfoLastNameUser}"
 
         holder.tasksDate.text = dataModelArrayListConversation[position].ticketInfoDate
+
+
         holder.tasksCreationDate.text =
             "${dataModelArrayListConversation[position].ticketInfoCreationDate} -> ${dataModelArrayListConversation[position].ticketInfoTimeToSolve}" //sumar a cration el time to solve
 
@@ -59,13 +64,44 @@ class RecyclerAdapter(
 
         holder.conversationContent.text = dataModelArrayListConversation[position].ticketInfoContent
 
-
+        /*when(dataModelArrayListConversation[position].ticketInfoIdUser == dataModelArrayListConversation[position].ticketInfoIdTechnician){
+            true -> {
+                holder.param.setMargins(0, 10, 100, 10)
+                holder.conversationTicketStatus.layoutParams = holder.param
+            }
+            false -> {
+                holder.param.setMargins(100,10,0,10)
+                holder.conversationTicketStatus.layoutParams = holder.param
+            }
+        }*/
 
         when(dataModelArrayListConversation[position].ticketInfoType){
             "TASK" -> {
+                val time = dataModelArrayListConversation[position].ticketInfoCreationDate.toString().split(" ")[1]
+                val minutesToAdd: Int = dataModelArrayListConversation[position].ticketInfoTimeToSolve.toString().toInt()
+                val minutesToMillis = minutesToAdd* 60000
+                //CONVERTIR DE HORA A MILISEGUNDOS Y LUEGO VOLVER A HORA
+                //val date = ticketInfo.ticketInfoTimeToSolve.toString().split(" ")
+                //val hour = time
+                val secondsToMs1: Int = time[2].toInt() * 1000
+                val minutesToMs1: Int = time[1].toInt() * 60000
+                val hoursToMs1: Int = time[0].toInt() * 3600000
+                val total1 = secondsToMs1 + minutesToMs1 + hoursToMs1
+                val estimatedTime_: Long = (total1 + (minutesToAdd.toInt()*60000)).toLong()
+                //Log.i("mensaje split: ", "${date[1]}")
+                val milisToHours = String.format(
+                    "%02d:%02d:%02d", TimeUnit.MILLISECONDS.toHours(estimatedTime_),
+                    TimeUnit.MILLISECONDS.toMinutes(estimatedTime_) % TimeUnit.HOURS.toMinutes(1),
+                    TimeUnit.MILLISECONDS.toSeconds(estimatedTime_) % TimeUnit.MINUTES.toSeconds(1)
+                )
+
+                Log.i("mensaje split","$$time en milisegundos es $total1")
+                Log.i("mensaje split","$time + $minutesToAdd minutos es $milisToHours")
+
                 holder.linearLayoutTasksCarrierName.isVisible = true
                 holder.imgBtnPrivateTask.isVisible = true
                 holder.chkBoxStatus.isVisible = true
+                holder.followUpLinearLayoutTimeToSolve.isVisible = true
 
                 when(dataModelArrayListConversation[position].ticketInfoPrivate){
                     "SI" -> holder.imgBtnPrivateTask.setImageResource(R.drawable.ic_candado_cerrado)
@@ -163,6 +199,8 @@ class RecyclerAdapter(
                     dataModelArrayListConversation[position].ticketInfoIdCategory.toString(),
                     dataModelArrayListConversation[position].ticketInfoCategory.toString(),
                     dataModelArrayListConversation[position].ticketInfoId.toString(),
+                    dataModelArrayListConversation[position].ticketInfoIdSource.toString(),
+                    dataModelArrayListConversation[position].ticketInfoSource.toString(),
 
                     dataModelArrayListConversation[position].ticketInfoTimeToSolve.toString(),
                 )

@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.glpi.glpi_ministerio_pblico.R
 
 class RecycleView_Adapter_Entities(context: Context,
-    private val dataModelArrarListEntities:ArrayList<Data_Tickets>
+    private val dataModelArrayListEntities:ArrayList<Data_Tickets>
     ):RecyclerView.Adapter<RecycleView_Adapter_Entities.MyViewHolderEntities>(){
     private val inflater: LayoutInflater
 
@@ -33,7 +33,7 @@ class RecycleView_Adapter_Entities(context: Context,
     }
 
     override fun getItemCount(): Int {
-        return dataModelArrarListEntities.size
+        return dataModelArrayListEntities.size
     }
 
     inner class MyViewHolderEntities(itemEntities: View):RecyclerView.ViewHolder(itemEntities){

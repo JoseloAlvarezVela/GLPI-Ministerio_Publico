@@ -170,21 +170,37 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <Button
-                android:id="@+id/btnStatusFollowup"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Button" />
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                android:padding="5sp">
 
-            <TextView
-                android:id="@+id/statusFollowup"
-                android:layout_width="wrap_content"
+                <Button
+                    android:id="@+id/btnStatusFollowup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5sp"
+                    android:text="estado del ticket" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="TextView" />
+                android:orientation="horizontal"
+                android:padding="5sp">
+
+                <Button
+                    android:id="@+id/btnSourceTypes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="origen" />
+            </LinearLayout>
         </LinearLayout>
 
     </LinearLayout>
@@ -396,6 +412,16 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <include
+        android:id="@+id/includeModalListSourceTypes"
+        layout="@layout/modal_list_source_types"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/include3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout5" />
 
     <include
         android:id="@+id/includeListStatusAllowed"
