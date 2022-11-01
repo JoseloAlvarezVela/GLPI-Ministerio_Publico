@@ -14,7 +14,11 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
+import androidx.fragment.app.FragmentTransaction
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.room.Room
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.glpi.glpi_ministerio_pblico.MainActivity
@@ -23,11 +27,14 @@ import com.glpi.glpi_ministerio_pblico.MainActivity.Companion.urlApi_TasksUsers
 import com.glpi.glpi_ministerio_pblico.MainActivity.Companion.urlApi_TicketID
 import com.glpi.glpi_ministerio_pblico.R
 import com.glpi.glpi_ministerio_pblico.VolleySingleton
+import com.glpi.glpi_ministerio_pblico.data.database.DBTicketInfo
 import com.glpi.glpi_ministerio_pblico.databinding.ActivityNavFooterTicketsBinding
 import com.glpi.glpi_ministerio_pblico.ui.adapter.Data_TicketInfo
 import com.glpi.glpi_ministerio_pblico.ui.adapter.RecyclerAdapter
+import com.glpi.glpi_ministerio_pblico.ui.misPeticiones.MisPeticionesFragment
 import com.glpi.glpi_ministerio_pblico.ui.shared.token
 import com.glpi.glpi_ministerio_pblico.ui.shared.token.Companion.prefer
+import kotlinx.coroutines.launch
 import org.json.JSONArray
 import org.json.JSONObject
 import java.util.*
@@ -73,14 +80,40 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
         progressBarTicketConversation = binding.progressBarTicketConversation
 
         volleyRequestIdRecipient() //datos del operador
-        volleyRequestTicketInfo(urlApi_TicketID)
+        //volleyRequestTicketInfo(urlApi_TicketID)
+
+        if(MainActivity.updateFragmentFlag){
+            Log.i("mensaje replace","fragemn ")
+            replaceFragment(TicketInfoFragment())
+            MainActivity.updateFragmentFlag = false
+        }
+
 
         activityHeader()
         btnPetition()
         btnFabs()
         toggleButtonFooter()
 
-        binding.ticketConversation.isVisible = true
+        getTicketsConversationInfo()
+
+        //binding.ticketConversation.isVisible = true
+        /*binding.includeTicketInfoFragment.ticketInfoFragment.isVisible = true
+        binding.includeTicketInfoFragment.tvTest.text = "esto es escrito desde una activity dentro de un fragment"
+        binding.includeTicketInfoFragment.recyclerViewTicketInfoFragment*/
+    }
+
+    //nota:eliminar fragment de fondo
+    fun replaceFragment(ticketInfoFragment: TicketInfoFragment) {
+        val f2 = ticketInfoFragment
+        val transaction: FragmentTransaction = supportFragmentManager.beginTransaction()
+        transaction.replace(R.id.ticketInfoFragment, f2)
+        transaction.addToBackStack(null)
+        transaction.commit()
+
+        /*val fragmentManager = supportFragmentManager
+        val fragmentTransaction = fragmentManager.beginTransaction()
+        fragmentTransaction.replace(R.id.frameLayoutFragment,misPeticionesFragment).commit()*/
+
     }
 
     private fun btnFabs(){
@@ -144,15 +177,15 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
         }
         binding.includeFabs.btnFabSeguimiento.setOnClickListener {
             val intentAddFollowup = Intent(this, TicketsAgregarSeguimientoActivity::class.java)
-            val bundleIn = intent.extras
+            /*val bundleIn = intent.extras
             val ticketSortsId = bundleIn!!.getString("ticketSortsId")
-            val ticketSortsStatus = bundleIn!!.getString("ticketSortsStatus")
+            val ticketSortsStatus = bundleIn!!.getString("ticketSortsStatus")*/
 
             val bundleSend = Bundle()
-            bundleSend.putString("ticketSortsId", ticketSortsId)//TODO: AGREGAR A LOS DEMAS
-            bundleSend.putString("ticketSortsStatus", ticketSortsStatus)
+            bundleSend.putString("ticketSortsId", prefer.getTicketSortsId())//TODO: AGREGAR A LOS DEMAS
+            bundleSend.putString("ticketSortsStatus", prefer.getTicketSortsStatus())
             intentAddFollowup.putExtras(bundleSend)
-            intentAddFollowup.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            //intentAddFollowup.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             startActivity(intentAddFollowup)
 
             hideFabs()
@@ -312,7 +345,7 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
         recyclerViewNews.adapter = adapter
         recyclerViewNews.layoutManager = layoutManager
 
-        adapter.notifyItemInserted(0)
+        //adapter.notifyItemInserted(0)
         //newsAdapter.notifyItemChanged(positionFollowup)
 
         if (adapter.itemCount == 0){
@@ -322,190 +355,81 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
         //recyclerViewNews.setHasFixedSize(true)
     }
 
-    //consultamos la información de ticket por id del ticket
-    private fun volleyRequestTicketInfo(urlApi_: String) {
-        val bundle = intent.extras
-        val ticketSortsId = bundle!!.getString("ticketSortsId")
-
-        jsonObjectResponse = JSONObject()
-
-        Log.i("mensaje prefer","$urlApi_${ticketSortsId}")
-        val stringRequestDataTickets = object : StringRequest(Method.POST,
-            urlApi_+ticketSortsId, Response.Listener { response ->
-                try {
-
-                    dataModelArrayListConversation = ArrayList()
-                    jsonObjectResponse = JSONObject(response)
-                    var ticketInfoJson: JSONObject
-                    for (i in  0 until jsonObjectResponse.length()){
-                        val ticketInfo = Data_TicketInfo()
-                        if (jsonObjectResponse.getString(i.toString())[2] == 'T'){
-
-                            ticketInfoJson = jsonObjectResponse.getJSONObject(i.toString())
-
-                            ticketInfo.ticketInfoType = ticketInfoJson.getString("TIPO")
-
-                            ticketInfo.ticketInfoId = ticketInfoJson.getString("ID")
-
-                            if (ticketInfo.ticketInfoType != "SOLUTION"){
-                                ticketInfo.ticketInfoPrivate = ticketInfoJson.getString("PRIVADO")
-                            }
-
-                            ticketInfo.ticketInfoIdUser = ticketInfoJson.getString("ID_USUARIO")
-
-                            ticketInfo.ticketInfoNameUser = ticketInfoJson.getString("NOMBRE")
-                            ticketInfo.ticketInfoLastNameUser = ticketInfoJson.getString("APELLIDO")
-
-                            ticketInfo.ticketInfoDate = ticketInfoJson.getString("FECHA") //para ordenar el historico
-
-                            ticketInfo.ticketInfoCreationDate = ticketInfoJson.getString("FECHA_CREACION")
-                            if (ticketInfo.ticketInfoType == "FOLLOWUP"){
-                                ticketInfo.ticketInfoModificationDate = ticketInfoJson.getString("FECHA_MODIFICACION")
-                                ticketInfo.ticketInfoIdSource = ticketInfoJson.getString("ID_ORIGEN")
-                                ticketInfo.ticketInfoSource = ticketInfoJson.getString("ORIGEN")
-                            }
-
-                            ticketInfo.ticketInfoContent = decodeHtml( ticketInfoJson.getString("CONTENIDO"))
-
-                            if (ticketInfo.ticketInfoType == "TASK"){
-                                ticketInfo.ticketInfoModificationDate = ticketInfoJson.getString("FECHA_EDICION")
-                                ticketInfo.ticketInfoIdTechnician = ticketInfoJson.getString("TECNICO")
-                                ticketInfo.ticketInfoNameTechnician = binding.includeTickets.labelAsignadoNombre.text.toString()
-                                ticketInfo.ticketInfoTimeToSolve = ticketInfoJson.getString("DURACION").split(".")[0]
-
-                                ticketInfo.ticketInfoStatus = ticketInfoJson.getString("ESTADO") //pendiente o terminado
-
-                                ticketInfo.ticketInfoIdCategory = ticketInfoJson.getString("ID_CATEGORIA")
-                                ticketInfo.ticketInfoCategory = ticketInfoJson.getString("CATEGORIA")
-
-                            }
-                            dataModelArrayListConversation.add(ticketInfo)
-
-                        }
-                    }
-
-                    progressBarTicketConversation.isVisible = false
-                    binding.includeTicketsHistorico.layoutHistorico.isVisible = true
-                    setupRecyclerView()
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                    Toast.makeText(this, "sin valor para ...: $e", Toast.LENGTH_LONG).show()
-                    //Log.i("mensaje entitis dentroE",""+response.get(0))
-                }
-            }, Response.ErrorListener {
-                Toast.makeText(this, "ERROR CON EL SERVIDOR", Toast.LENGTH_SHORT).show()
-            }) {
-            override fun getParams(): Map<String, String>? {
-                val params: MutableMap<String, String> = HashMap()
-                params["session_token"] = token.prefer.getToken()
-                return params
-            }
-        }
-        this?.let {
-            VolleySingleton.getInstance(this).addToRequestQueue(stringRequestDataTickets)
-        }
-
-        getTicketsConversationInfo()
-    }
-
     @SuppressLint("SetTextI18n")
     private fun getTicketsConversationInfo(){
-        val bundle = intent.extras
 
-        val ticketSortsId = bundle!!.getString("ticketSortsId")
-        val ticketSortsType = bundle!!.getString("ticketSortsType")
-        val ticketSortsContent = bundle!!.getString("ticketSortsContent")
-        val ticketSortsStatus = bundle!!.getString("ticketSortsStatus")
-        val ticketSortsCreationDate = bundle!!.getString("ticketSortsCreationDate")
-        val ticketSortsModificationDate = bundle!!.getString("ticketSortsModificationDate")
-        val ticketSortsIdRecipient = bundle!!.getString("ticketSortsIdRecipient")
+        val room  = Room.databaseBuilder(this, DBTicketInfo::class.java,"ticketInfoBD").build()
+        lifecycleScope.launch{
+            val getTicketInfoDB = room.daoTicketInfo().getTicketInfo()
+            for (item in getTicketInfoDB){
+                /*binding.includeNavHeaderTickets.txtTicketID.text = "Petición #${item.ticketSortsID}"
+                when(item.ticketSortsStatus){
+                    "EN CURSO (Asignada)" -> binding.includeNavHeaderTickets.txtTicketEstado.setBackgroundResource(R.drawable.ic_circulo_verde)
+                    "EN ESPERA" -> binding.includeNavHeaderTickets.txtTicketEstado.setBackgroundResource(R.drawable.ic_circulo)
+                    "CERRADO" -> binding.includeNavHeaderTickets.txtTicketEstado.setBackgroundResource(R.drawable.ic_circulo_negro)
+                }
 
-        val ticketSortsIdTechnician = bundle!!.getString("ticketSortsIdTechnician")
-        val ticketSortsNameTechnician = bundle!!.getString("ticketSortsNameTechnician")
-        val ticketSortsLastNameTechnician = bundle!!.getString("ticketSortsLastNameTechnician")
-        val ticketSortsPhoneTechnician = bundle!!.getString("ticketSortsPhoneTechnician")
-        val ticketSortsEmailTechnician = bundle!!.getString("ticketSortsEmailTechnician")
+                //descripción del ticket
+                //binding.includeTicketsHistorico.txtDescripcionTicketHistorico.text = item.ticketSortsContent
+                binding.includeNavHeaderTickets.txtUbicacion.text = item.ticketSortsLocationRequester*/
 
-        val ticketSortsIdRequester = bundle!!.getString("ticketSortsIdRequester")
-        val ticketSortsNameRequester = bundle!!.getString("ticketSortsNameRequester")
-        val ticketSortsLastNameRequester = bundle!!.getString("ticketSortsLastNameRequester")
-        val ticketSortsPhoneRequester = bundle!!.getString("ticketSortsPhoneRequester")
-        val ticketSortsPositionRequester = bundle!!.getString("ticketSortsPositionRequester")
-        val ticketSortsEmailRequester = bundle!!.getString("ticketSortsEmailRequester")
-        val ticketSortsLocationRequester = bundle!!.getString("ticketSortsLocationRequester")
 
-        val ticketSortsCategory = bundle!!.getString("ticketSortsCategory")
-        val ticketSortsSource = bundle!!.getString("ticketSortsSource")
-        val ticketSortsUrgency = bundle!!.getString("ticketSortsUrgency")
+                //info petición
+                binding.includeTickets.labelPrioridad.text = item.ticketSortsUrgency
+                when(item.ticketSortsUrgency){
+                    "ALTA" -> {
+                        val compoundDrawables: Array<Drawable> = binding.includeTickets.labelPrioridad.compoundDrawables
+                        val drawableLeft = compoundDrawables[0].mutate()
+                        drawableLeft.colorFilter =
+                            PorterDuffColorFilter(Color.parseColor("#FF8800"), PorterDuff.Mode.SRC_IN)
+                    }
+                    "MEDIA" -> {
+                        val compoundDrawables: Array<Drawable> = binding.includeTickets.labelPrioridad.compoundDrawables
+                        val drawableLeft = compoundDrawables[0].mutate()
+                        drawableLeft.colorFilter =
+                            PorterDuffColorFilter(Color.parseColor("#FBFF0F"), PorterDuff.Mode.SRC_IN)
+                    }
+                    "BAJA" -> {
+                        val compoundDrawables: Array<Drawable> = binding.includeTickets.labelPrioridad.compoundDrawables
+                        val drawableLeft = compoundDrawables[0].mutate()
+                        drawableLeft.colorFilter =
+                            PorterDuffColorFilter(Color.parseColor("#06B711"), PorterDuff.Mode.SRC_IN)
+                    }
+                }
 
-        //header
-        binding.includeNavHeaderTickets.txtTicketID.text = "Petición #$ticketSortsId"
-        when(ticketSortsStatus){
-            "EN CURSO (Asignada)" -> binding.includeNavHeaderTickets.txtTicketEstado.setBackgroundResource(R.drawable.ic_circulo_verde)
-            "EN ESPERA" -> binding.includeNavHeaderTickets.txtTicketEstado.setBackgroundResource(R.drawable.ic_circulo)
-            "CERRADO" -> binding.includeNavHeaderTickets.txtTicketEstado.setBackgroundResource(R.drawable.ic_circulo_negro)
-        }
-        binding.includeNavHeaderTickets.txtUbicacion.text = ticketSortsLocationRequester
+                binding.includeTickets.labelSolicitudIncidencia.text = item.ticketSortsType
+                when(item.ticketSortsType){
+                    "SOLICITUD" -> {
+                        binding.includeTickets.txtSolicitud.text ="?"
+                        binding.includeTickets.tvSolicitud.isVisible = true
+                        binding.includeTickets.tvIncidencia.isVisible = false
 
-        //descripción del ticket
-        binding.includeTicketsHistorico.txtDescripcionTicketHistorico.text = ticketSortsContent
-        binding.includeTicketsHistorico.txtCurrentTime.text = "Fecha de Cración: $ticketSortsCreationDate"
-        binding.includeTicketsHistorico.txtModificationDate.text = "Ultima modificación: $ticketSortsModificationDate"
+                    }
+                    "INCIDENCIA" -> {
+                        binding.includeTickets.tvSolicitud.isVisible = false
+                        binding.includeTickets.tvIncidencia.isVisible = true
+                    }
+                }
 
-        //info petición
-        binding.includeTickets.labelPrioridad.text = ticketSortsUrgency
-        when(ticketSortsUrgency){
-            "ALTA" -> {
-                val compoundDrawables: Array<Drawable> = binding.includeTickets.labelPrioridad.compoundDrawables
-                val drawableLeft = compoundDrawables[0].mutate()
-                drawableLeft.colorFilter =
-                    PorterDuffColorFilter(Color.parseColor("#FF8800"), PorterDuff.Mode.SRC_IN)
-            }
-            "MEDIA" -> {
-                val compoundDrawables: Array<Drawable> = binding.includeTickets.labelPrioridad.compoundDrawables
-                val drawableLeft = compoundDrawables[0].mutate()
-                drawableLeft.colorFilter =
-                    PorterDuffColorFilter(Color.parseColor("#FBFF0F"), PorterDuff.Mode.SRC_IN)
-            }
-            "BAJA" -> {
-                val compoundDrawables: Array<Drawable> = binding.includeTickets.labelPrioridad.compoundDrawables
-                val drawableLeft = compoundDrawables[0].mutate()
-                drawableLeft.colorFilter =
-                    PorterDuffColorFilter(Color.parseColor("#06B711"), PorterDuff.Mode.SRC_IN)
-            }
-        }
-
-        binding.includeTickets.labelSolicitudIncidencia.text = ticketSortsType
-        when(ticketSortsType){
-            "SOLICITUD" -> {
-                binding.includeTickets.txtSolicitud.text ="?"
-                binding.includeTickets.tvSolicitud.isVisible = true
-                binding.includeTickets.tvIncidencia.isVisible = false
-
-            }
-            "INCIDENCIA" -> {
-                binding.includeTickets.tvSolicitud.isVisible = false
-                binding.includeTickets.tvIncidencia.isVisible = true
+                binding.includeTickets.labelFechaOperadorApertura.text = "Fecha de Creación: ${item.ticketSortsCreationDate}"
+                binding.includeTickets.labelCategoria.text = item.ticketSortsCategory
+                binding.includeTickets.labelUbicacion.text = item.ticketSortsLocationRequester
+                binding.includeTickets.labelOrigen.text = item.ticketSortsSource
+                binding.includeTickets.labelDescrTicket.text = item.ticketSortsContent
+                binding.includeTickets.labelSolicitanteNombre.text = "${item.ticketSortsNameRequester} ${item.ticketSortsLastNameRequester}"
+                binding.includeTickets.labelSolicitanteCargo.text = "${item.ticketSortsPositionRequester}"
+                binding.includeTickets.labelAsignadoNombre.text = "${item.ticketSortsNameTechnician} ${item.ticketSortsLastNameTechnician}"
             }
         }
-
-        binding.includeTickets.labelFechaOperadorApertura.text = "Fecha de Creación: $ticketSortsCreationDate"
-        binding.includeTickets.labelCategoria.text = ticketSortsCategory
-        binding.includeTickets.labelUbicacion.text = ticketSortsLocationRequester
-        binding.includeTickets.labelOrigen.text = ticketSortsSource
-        binding.includeTickets.labelDescrTicket.text = ticketSortsContent
-        binding.includeTickets.labelSolicitanteNombre.text = "$ticketSortsNameRequester $ticketSortsLastNameRequester"
-        binding.includeTickets.labelSolicitanteCargo.text = "$ticketSortsPositionRequester"
-        binding.includeTickets.labelAsignadoNombre.text = "$ticketSortsNameTechnician $ticketSortsLastNameTechnician"
     }
 
     private fun volleyRequestIdRecipient(){
-        val bundle = intent.extras
-        val idRecipient = bundle!!.getString("ticketSortsIdRecipient")
+        /*val bundle = intent.extras
+        val idRecipient = bundle!!.getString("ticketSortsIdRecipient")*/
 
         Log.i("mensaje prefer","$urlApi_TasksUsers${prefer.getRecipientId()} ")
         val stringRequestDataTickets = object : StringRequest(Method.POST,
-            urlApi_TasksUsers+idRecipient, Response.Listener { response ->
+            urlApi_TasksUsers+prefer.getRecipientId(), Response.Listener { response ->
             try {
                 jsonArrayIdRecipient = JSONArray()
                 jsonArrayIdRecipient = JSONArray(response)
@@ -538,8 +462,23 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
 
     override fun onBackPressed() {
         super.onBackPressed()
+
+        val room  = Room.databaseBuilder(this, DBTicketInfo::class.java,"ticketInfoBD").build()
+        lifecycleScope.launch{
+            room.daoTicketInfo().deleteTicketInfo(prefer.getTicketSortsId())
+
+            if (room.daoTicketInfo().getTicketInfo().isEmpty()){
+                Toast.makeText(applicationContext, "se borró los datos de la base de datos", Toast.LENGTH_SHORT).show()
+            }
+        }
         prefer.deleteTicketSortsId()
         prefer.deleteRecipientId()
+        prefer.deleteTicketSortsStatus()
+
+
+        val intentOnBack = Intent(this, MainActivity::class.java)
+        intentOnBack.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        startActivity(intentOnBack)
     }
 
     override fun onEditClick(

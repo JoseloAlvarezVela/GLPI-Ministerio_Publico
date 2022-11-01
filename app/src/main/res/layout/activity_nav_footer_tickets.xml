@@ -16,17 +16,47 @@
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="gone"/>
 
     <ProgressBar
-        android:id="@+id/progressBarTicketConversation"
+        android:id="@+id/progressBarTicketConversation_"
         style="?android:attr/progressBarStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout7"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/includeNavHeaderTickets" />
+
+    <fragment
+        android:id="@+id/FragmentTicketInfo"
+        android:name="com.glpi.glpi_ministerio_pblico.ui.tickets.TicketInfoFragment"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout7"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/includeNavHeaderTickets" />
+
+    <include
+        android:id="@+id/include_fabs"
+        layout="@layout/activity_fabs_conversation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="50dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <include
+        android:id="@+id/include_tickets_historico"
+        layout="@layout/activity_tickets_historico"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout7"
+        app:layout_constraintTop_toBottomOf="@+id/FragmentTicketInfo" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/ticket_conversation"
@@ -60,13 +90,6 @@
                     android:layout_height="wrap_content"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
-                <include
-                    android:id="@+id/include_tickets_historico"
-                    layout="@layout/activity_tickets_historico"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5sp"
-                    android:visibility="visible" />
             </LinearLayout>
         </ScrollView>
 
@@ -86,7 +109,7 @@
         </LinearLayout>
 
         <include
-            android:id="@+id/include_fabs"
+            android:id="@+id/include_fabs_"
             layout="@layout/activity_fabs_conversation"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

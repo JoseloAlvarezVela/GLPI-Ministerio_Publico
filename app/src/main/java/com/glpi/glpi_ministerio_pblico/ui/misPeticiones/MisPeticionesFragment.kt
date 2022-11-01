@@ -2,18 +2,18 @@ package com.glpi.glpi_ministerio_pblico.ui.misPeticiones
 
 import android.content.Intent
 import android.os.Bundle
-import android.text.Html
-import android.text.Spanned
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
 import android.widget.Toast
-import androidx.core.text.HtmlCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.room.Room
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
@@ -22,6 +22,8 @@ import com.glpi.glpi_ministerio_pblico.MainActivity.Companion.decodeHtml
 import com.glpi.glpi_ministerio_pblico.MainActivity.Companion.urlApi_Ticket
 import com.glpi.glpi_ministerio_pblico.MainActivity.Companion.urlApi_TicketSorts
 import com.glpi.glpi_ministerio_pblico.VolleySingleton
+import com.glpi.glpi_ministerio_pblico.data.database.DBTicketInfo
+import com.glpi.glpi_ministerio_pblico.data.database.TicketInfo_DataBase
 import com.glpi.glpi_ministerio_pblico.databinding.FragmentMisPeticionesBinding
 import com.glpi.glpi_ministerio_pblico.ui.adapter.Data_TaskUsers
 import com.glpi.glpi_ministerio_pblico.ui.adapter.Data_Tickets
@@ -29,6 +31,7 @@ import com.glpi.glpi_ministerio_pblico.ui.adapter.RecycleView_Adapter_Tickets
 import com.glpi.glpi_ministerio_pblico.ui.shared.token
 import com.glpi.glpi_ministerio_pblico.ui.shared.token.Companion.prefer
 import com.glpi.glpi_ministerio_pblico.ui.tickets.NavFooterTicketsActivity
+import kotlinx.coroutines.launch
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -49,6 +52,8 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.onTicketCl
 
     lateinit var jsonTicketResponse: JSONArray
 
+    lateinit private var progressBarMyPetitions: ProgressBar
+
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
@@ -60,6 +65,7 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.onTicketCl
 
         }
     }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -69,14 +75,22 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.onTicketCl
         _binding = FragmentMisPeticionesBinding.inflate(inflater, container, false)
 
 
-        if (MainActivity.flag_edtFindTicketID){//si el EditText de Ticket por Id tiene contenido
-            volleyRequestSortByTicketId(MainActivity.urlApi_SortByTicketId,MainActivity.edtFindTicketID)
-        }else if (MainActivity.flag_requesterSearch) {
+
+
+
+        progressBarMyPetitions = binding.progressBarMisPeticiones
+
+        if (MainActivity.flag_edtFindTicketID) {//si el EditText de Ticket por Id tiene contenido
+            volleyRequestSortByTicketId(
+                MainActivity.urlApi_SortByTicketId,
+                MainActivity.edtFindTicketID
+            )
+        } else if (MainActivity.flag_requesterSearch) {
             requestVolleySortByRequester(MainActivity.urlApi_SortByRequester)
-        }else{
-            if (MainActivity.flagTicketSort){
+        } else {
+            if (MainActivity.flagTicketSort) {
                 requestVolleyTicketSorts(urlApi_Ticket)
-            }else if(MainActivity.flagFilterState){
+            } else if (MainActivity.flagFilterState) {
 
                 volleyRequestSortByStatus(
                     urlApi_TicketSorts,
@@ -85,17 +99,24 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.onTicketCl
                     MainActivity.checkPlannedTicket,
                     MainActivity.checkWaitTicket,
                     MainActivity.checkSolvedTicket,
-                    MainActivity.checkCloseTicket)
+                    MainActivity.checkCloseTicket
+                )
 
-            }else if (MainActivity.flagCalendar){
-                if (MainActivity.flagCalendarUltModify){
-                    Log.i("mensaje flag","${MainActivity.urlApi_SortByModDate} == SortByDate")
+            } else if (MainActivity.flagCalendar) {
+                if (MainActivity.flagCalendarUltModify) {
+                    Log.i("mensaje flag", "${MainActivity.urlApi_SortByModDate} == SortByDate")
                     volleyRequestSortByDate(MainActivity.urlApi_SortByModDate)
-                }else if (MainActivity.flagCalendarOpenDate){
-                    Log.i("mensaje flag","${MainActivity.urlApi_SortByCreationDate} == SortByCreationDate")
+                } else if (MainActivity.flagCalendarOpenDate) {
+                    Log.i(
+                        "mensaje flag",
+                        "${MainActivity.urlApi_SortByCreationDate} == SortByCreationDate"
+                    )
                     volleyRequestSortByDate(MainActivity.urlApi_SortByCreationDate)
-                }else if (MainActivity.flagCalendarCloseDate){
-                    Log.i("mensaje flag","${MainActivity.urlApi_SortByCloseDate} == SortByCloseDate")
+                } else if (MainActivity.flagCalendarCloseDate) {
+                    Log.i(
+                        "mensaje flag",
+                        "${MainActivity.urlApi_SortByCloseDate} == SortByCloseDate"
+                    )
                     volleyRequestSortByDate(MainActivity.urlApi_SortByCloseDate)
                 }
 
@@ -106,8 +127,8 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.onTicketCl
         return root
     }
 
-    private fun requestVolleySortByRequester(urlApi_SortByRequester: String){
-        Log.i("mensajeFlag","${MainActivity.urlApi_SortByRequester} == SortByRequester")
+    private fun requestVolleySortByRequester(urlApi_SortByRequester: String) {
+        Log.i("mensajeFlag", "${MainActivity.urlApi_SortByRequester} == SortByRequester")
         //metodo que nos devuelve los datos para los tickets
         val stringRequestDataTickets = object : StringRequest(Method.POST,
             urlApi_SortByRequester, Response.Listener { response ->
@@ -116,23 +137,27 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.onTicketCl
 
                     dataModelArrayList = ArrayList()
 
-                    for (i in 0 until dataTicketsJson.length()){
+                    for (i in 0 until dataTicketsJson.length()) {
 
                         val dataTickets = dataTicketsJson.getJSONObject(i.toString())
                         val ticketsModel = Data_Tickets()
 
-                        getDataTicketsJson(dataTickets,ticketsModel)
+                        getDataTicketsJson(dataTickets, ticketsModel)
                     }
                     setupRecycler()
 
                 } catch (e: Exception) {
                     MainActivity.flagNotFound = "true"
-                    if (MainActivity.flagNotFound == "true"){
+                    if (MainActivity.flagNotFound == "true") {
                         binding.recycler.isVisible = false
                         binding.includeNotFound.notFount.isVisible = true
                     }
                     e.printStackTrace()
-                    Toast.makeText(context, "no hay datos para filtro aplicado: $e", Toast.LENGTH_LONG).show()
+                    Toast.makeText(
+                        context,
+                        "no hay datos para filtro aplicado: $e",
+                        Toast.LENGTH_LONG
+                    ).show()
                     //Log.i("mensaje recycler e: ", "recycler ERROR: $e")
                 }
             }, Response.ErrorListener {
@@ -151,33 +176,45 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.onTicketCl
         //FIN obtenemos perfil de usuario
     }
 
-    private fun volleyRequestSortByTicketId(urlApi_SortByTicketId: String, edtFindTicketID: String){
+    private fun volleyRequestSortByTicketId(
+        urlApi_SortByTicketId: String,
+        edtFindTicketID: String
+    ) {
         //metodo que nos devuelve los datos para los tickets
-        Log.i("mensajeFlag","${MainActivity.urlApi_SortByTicketId} == SortByTicketId")
+        Log.i("mensajeFlag", "${MainActivity.urlApi_SortByTicketId} == SortByTicketId")
         val stringRequestDataTickets = object : StringRequest(Method.POST,
             urlApi_SortByTicketId, Response.Listener { response ->
                 try {
                     val dataTicketsJson = JSONObject(response) //obtenemos el objeto json
 
-                    if (dataTicketsJson.toString()[2] == 'm'){
-                        Toast.makeText(context, "Id de Ticket No Existe: "+dataTicketsJson.toString(), Toast.LENGTH_LONG).show()
+                    if (dataTicketsJson.toString()[2] == 'm') {
+                        Toast.makeText(
+                            context,
+                            "Id de Ticket No Existe: " + dataTicketsJson.toString(),
+                            Toast.LENGTH_LONG
+                        ).show()
                         requestVolleyTicketSorts(urlApi_Ticket)
                         MainActivity.flag_edtFindTicketID = false
-                    }else{
+                    } else {
                         dataModelArrayList = ArrayList()
 
-                        for (i in 0 until dataTicketsJson.length()){
+                        for (i in 0 until dataTicketsJson.length()) {
 
                             val dataTickets = dataTicketsJson.getJSONObject(i.toString())
                             val ticketsModel = Data_Tickets()
 
-                            getDataTicketsJson(dataTickets,ticketsModel)
+                            getDataTicketsJson(dataTickets, ticketsModel)
                         }
                         setupRecycler()
+                        progressBarMyPetitions.isVisible = false
                     }
                 } catch (e: Exception) {
                     e.printStackTrace()
-                    Toast.makeText(context, "No Exite Id de Ticket Ingresado: $e", Toast.LENGTH_LONG).show()
+                    Toast.makeText(
+                        context,
+                        "No Exite Id de Ticket Ingresado: $e",
+                        Toast.LENGTH_LONG
+                    ).show()
 
                 }
             }, Response.ErrorListener {
@@ -195,8 +232,8 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.onTicketCl
         //FIN obtenemos perfil de usuario
     }
 
-    private fun requestVolleyTicketSorts(urlApi_TicketSort: String){
-        Log.i("mensajeFlag","$urlApi_Ticket == GENERAL")
+    private fun requestVolleyTicketSorts(urlApi_TicketSort: String) {
+        Log.i("mensajeFlag", "$urlApi_Ticket == GENERAL")
         //metodo que nos devuelve los datos para los tickets
         val stringRequestDataTickets = object : StringRequest(Request.Method.POST,
             urlApi_TicketSort, Response.Listener { response ->
@@ -205,12 +242,12 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.onTicketCl
 
                     dataModelArrayList = ArrayList()
 
-                    for (i in 0 until dataTicketsJson.length()){
+                    for (i in 0 until dataTicketsJson.length()) {
 
                         val dataTickets = dataTicketsJson.getJSONObject(i.toString())
                         val ticketsModel = Data_Tickets()
 
-                        getDataTicketsJson(dataTickets,ticketsModel)
+                        getDataTicketsJson(dataTickets, ticketsModel)
                     }
                     setupRecycler()
 
@@ -300,16 +337,16 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.onTicketCl
         dataModelArrayList.add(ticketsModel)
     }
 
-    private fun requestVolleyByIdRequester(id: String){
+    private fun requestVolleyByIdRequester(id: String) {
         //metodo que nos devuelve los datos para los tickets
         val stringRequestDataTickets = object : StringRequest(Method.POST,
-            MainActivity.urlApi_TasksUsers+id, Response.Listener { response ->
+            MainActivity.urlApi_TasksUsers + id, Response.Listener { response ->
                 try {
                     val JS_DataTickets = JSONArray(response) //obtenemos el objeto json
 
                     dataModelArrayList = ArrayList()
 
-                    for (i in 0 until JS_DataTickets.length()){
+                    for (i in 0 until JS_DataTickets.length()) {
 
                         val DataTickets = JS_DataTickets.getJSONObject(i)
                         //Log.i("mensaje tasks in",""+DataTickets)
@@ -349,8 +386,8 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.onTicketCl
         idStatus4: String,
         idStatus5: String,
         idStatus6: String
-    ){
-        Log.i("mensajeURL","$urlApi_TicketSorts == SortByStatus")
+    ) {
+        Log.i("mensajeURL", "$urlApi_TicketSorts == SortByStatus")
         //metodo que nos devuelve los datos para los tickets
         val stringRequestDataTickets = object : StringRequest(Request.Method.POST,
             urlApi_TicketSort, Response.Listener { response ->
@@ -359,23 +396,27 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.onTicketCl
 
                     dataModelArrayList = ArrayList()
 
-                    for (i in 0 until dataTicketsJson.length()){
+                    for (i in 0 until dataTicketsJson.length()) {
 
                         val dataTickets = dataTicketsJson.getJSONObject(i.toString())
                         val ticketsModel = Data_Tickets()
 
-                        getDataTicketsJson(dataTickets,ticketsModel)
+                        getDataTicketsJson(dataTickets, ticketsModel)
                     }
                     setupRecycler()
 
                 } catch (e: Exception) {
                     MainActivity.flagNotFound = "true"
-                    if (MainActivity.flagNotFound == "true"){
+                    if (MainActivity.flagNotFound == "true") {
                         binding.recycler.isVisible = false
                         binding.includeNotFound.notFount.isVisible = true
                     }
                     e.printStackTrace()
-                    Toast.makeText(context, "no hay datos para filtro aplicado: $e", Toast.LENGTH_LONG).show()
+                    Toast.makeText(
+                        context,
+                        "no hay datos para filtro aplicado: $e",
+                        Toast.LENGTH_LONG
+                    ).show()
                     //Log.i("mensaje recycler e: ", "recycler ERROR: $e")
                 }
             }, Response.ErrorListener {
@@ -384,31 +425,31 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.onTicketCl
             override fun getParams(): Map<String, String>? {
                 val params: MutableMap<String, String> = HashMap()
                 params["session_token"] = token.prefer.getToken()
-                if (idStatus1 == "1"){
+                if (idStatus1 == "1") {
                     params["idStatus1"] = MainActivity.checkNewTicket
-                    Log.i("mensaje idStatus1","${MainActivity.checkNewTicket}")
+                    Log.i("mensaje idStatus1", "${MainActivity.checkNewTicket}")
                 }
-                if (idStatus2 == "2"){
+                if (idStatus2 == "2") {
                     params["idStatus2"] = MainActivity.checkAssignedTicket
-                    Log.i("mensaje idStatus2","${MainActivity.checkAssignedTicket}")
+                    Log.i("mensaje idStatus2", "${MainActivity.checkAssignedTicket}")
                 }
-                if (idStatus3 == "3"){
+                if (idStatus3 == "3") {
                     params["idStatus3"] = MainActivity.checkPlannedTicket
-                    Log.i("mensaje idStatus3","${MainActivity.checkPlannedTicket}")
+                    Log.i("mensaje idStatus3", "${MainActivity.checkPlannedTicket}")
                 }
-                if (idStatus4 == "4"){
+                if (idStatus4 == "4") {
                     params["idStatus4"] = MainActivity.checkWaitTicket
-                    Log.i("mensaje idStatus4","${MainActivity.checkWaitTicket}")
+                    Log.i("mensaje idStatus4", "${MainActivity.checkWaitTicket}")
                 }
-                if (idStatus5 == "5"){
+                if (idStatus5 == "5") {
                     params["idStatus5"] = MainActivity.checkSolvedTicket
-                    Log.i("mensaje idStatus5","${MainActivity.checkSolvedTicket}")
+                    Log.i("mensaje idStatus5", "${MainActivity.checkSolvedTicket}")
                 }
-                if (idStatus6 == "6"){
+                if (idStatus6 == "6") {
                     params["idStatus6"] = MainActivity.checkCloseTicket
-                    Log.i("mensaje idStatus6","${MainActivity.checkCloseTicket}")
+                    Log.i("mensaje idStatus6", "${MainActivity.checkCloseTicket}")
                 }
-                Log.i("mensaje idStatus6","$params")
+                Log.i("mensaje idStatus6", "$params")
                 return params
             }
         }
@@ -416,7 +457,7 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.onTicketCl
         //FIN obtenemos perfil de usuario
     }
 
-    private fun volleyRequestSortByDate(urlApi_Calendar: String){
+    private fun volleyRequestSortByDate(urlApi_Calendar: String) {
         //metodo que nos devuelve los datos para los tickets
         val stringRequestDataTickets = object : StringRequest(Method.POST,
             urlApi_Calendar, Response.Listener { response ->
@@ -425,12 +466,12 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.onTicketCl
 
                     dataModelArrayList = ArrayList()
 
-                    for (i in 0 until dataTicketsJson.length()){
+                    for (i in 0 until dataTicketsJson.length()) {
 
                         val dataTickets = dataTicketsJson.getJSONObject(i.toString())
                         val ticketsModel = Data_Tickets()
 
-                        getDataTicketsJson(dataTickets,ticketsModel)
+                        getDataTicketsJson(dataTickets, ticketsModel)
                     }
                     setupRecycler()
 
@@ -444,21 +485,24 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.onTicketCl
             }) {
             override fun getParams(): Map<String, String>? {
                 val params: MutableMap<String, String> = HashMap()
-                if (MainActivity.flagCalendarUltModify){
+                if (MainActivity.flagCalendarUltModify) {
                     params["session_token"] = token.prefer.getToken()
                     params["mod_date_start"] = MainActivity.utlModifyStar
                     params["mod_date_end"] = MainActivity.ultModifyEnd
-                }else if (MainActivity.flagCalendarOpenDate){
+                } else if (MainActivity.flagCalendarOpenDate) {
                     params["session_token"] = token.prefer.getToken()
                     params["opening_date_start"] = MainActivity.utlModifyStar
                     params["opening_date_end"] = MainActivity.ultModifyEnd
-                }else if (MainActivity.flagCalendarCloseDate){
+                } else if (MainActivity.flagCalendarCloseDate) {
                     params["session_token"] = token.prefer.getToken()
                     params["close_date_start"] = MainActivity.utlModifyStar
                     params["close_date_end"] = MainActivity.ultModifyEnd
                 }
 
-                Log.i("mensaje fechaParam","${MainActivity.utlModifyStar} hasta ${MainActivity.ultModifyEnd}")
+                Log.i(
+                    "mensaje fechaParam",
+                    "${MainActivity.utlModifyStar} hasta ${MainActivity.ultModifyEnd}"
+                )
 
                 return params
             }
@@ -478,7 +522,7 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.onTicketCl
         recyclerView!!.layoutManager = layoutManager
         recycleView_Adapter_Tickets?.notifyDataSetChanged()
         recycleView_Adapter_Tickets =
-            context?.let { RecycleView_Adapter_Tickets(it,dataModelArrayList,this) }
+            context?.let { RecycleView_Adapter_Tickets(it, dataModelArrayList, this) }
         recyclerView!!.adapter = recycleView_Adapter_Tickets
     }
     /*override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -518,38 +562,51 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.onTicketCl
         ticketSortsSource: String,
         ticketSortsUrgency: String
     ) {
+        val room =
+            Room.databaseBuilder(requireContext(), DBTicketInfo::class.java, "ticketInfoBD").build()
+        lifecycleScope.launch {
+            room.daoTicketInfo().insertTicketInfo(
+                TicketInfo_DataBase(
+                    0,
+                    ticketSortsId,
+                    ticketSortsType,
+                    ticketSortsContent,
+                    ticketSortsStatus,
+                    ticketSortsCreationDate,
+                    ticketSortsModificationDate,
+                    ticketSortsIdRecipient,
+
+                    ticketSortsIdTechnician,
+                    ticketSortsNameTechnician,
+                    ticketSortsLastNameTechnician,
+                    ticketSortsPhoneTechnician,
+                    ticketSortsEmailTechnician,
+
+                    ticketSortsIdRequester,
+                    ticketSortsNameRequester,
+                    ticketSortsLastNameRequester,
+                    ticketSortsPhoneRequester,
+                    ticketSortsPositionRequester,
+                    ticketSortsEmailRequester,
+                    ticketSortsLocationRequester,
+
+                    ticketSortsCategory,
+                    ticketSortsSource,
+                    ticketSortsUrgency,
+                )
+            )
+
+            val getTicketInfoDB = room.daoTicketInfo().getTicketInfo()
+            for (element in getTicketInfoDB) {
+                Log.i(
+                    "mensaje dbTicketInfo",
+                    "$element\n"
+                )
+            }
+        }
         prefer.saveTicketSortsId(ticketSortsId)
         prefer.saveRecipientId(ticketSortsIdRecipient)
         val intent = Intent(context, NavFooterTicketsActivity::class.java)
-        val bundle = Bundle()
-
-        bundle.putString("ticketSortsId", ticketSortsId)
-        bundle.putString("ticketSortsType", ticketSortsType)
-        bundle.putString("ticketSortsContent", ticketSortsContent)
-        bundle.putString("ticketSortsStatus", ticketSortsStatus)
-        bundle.putString("ticketSortsCreationDate", ticketSortsCreationDate)
-        bundle.putString("ticketSortsModificationDate", ticketSortsModificationDate)
-        bundle.putString("ticketSortsIdRecipient", ticketSortsIdRecipient)
-
-        bundle.putString("ticketSortsIdTechnician", ticketSortsIdTechnician)
-        bundle.putString("ticketSortsNameTechnician", ticketSortsNameTechnician)
-        bundle.putString("ticketSortsLastNameTechnician", ticketSortsLastNameTechnician)
-        bundle.putString("ticketSortsPhoneTechnician", ticketSortsPhoneTechnician)
-        bundle.putString("ticketSortsEmailTechnician", ticketSortsEmailTechnician)
-
-        bundle.putString("ticketSortsIdRequester", ticketSortsIdRequester)
-        bundle.putString("ticketSortsNameRequester", ticketSortsNameRequester)
-        bundle.putString("ticketSortsLastNameRequester", ticketSortsLastNameRequester)
-        bundle.putString("ticketSortsPhoneRequester", ticketSortsPhoneRequester)
-        bundle.putString("ticketSortsPositionRequester", ticketSortsPositionRequester)
-        bundle.putString("ticketSortsEmailRequester", ticketSortsEmailRequester)
-        bundle.putString("ticketSortsLocationRequester", ticketSortsLocationRequester)
-
-        bundle.putString("ticketSortsCategory", ticketSortsCategory)
-        bundle.putString("ticketSortsSource", ticketSortsSource)
-        bundle.putString("ticketSortsUrgency", ticketSortsUrgency)
-
-        intent.putExtras(bundle)
         startActivity(intent)
     }
 }

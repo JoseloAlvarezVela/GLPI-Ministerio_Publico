@@ -164,6 +164,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:padding="15sp"
+                android:tag="0"
                 app:srcCompat="@drawable/ic_candado_abierto" />
 
         </LinearLayout>

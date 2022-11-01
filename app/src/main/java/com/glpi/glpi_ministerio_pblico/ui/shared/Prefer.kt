@@ -10,8 +10,15 @@ class Prefer(val context: Context) {
     val SHARED_USER = "MyUSER"
     val SHARED_VALIDATE = "myTokenValidate"
     val TOKEN_DB = "noToken"
+    //---
     val TICKET_ID = "noTicket"
+    val TICKET_STATUS = "noTICKET_STATUS"
+    val TICKET_INFO = "noTICKET_INFO"
+    val TICKET_LOCATION = "noTICKET_INFO"
+    val TICKET_CONTENT = "noTICKET_INFO"
     val RECIPIENT_ID = "noRecipiend"
+
+    //---
     val USER_PERFIL = "noPERFIL"
     val USER_ID = "noUserID"
 
@@ -22,6 +29,8 @@ class Prefer(val context: Context) {
     val storage = context.getSharedPreferences(SHARED_DB,0)
     val storageTicketSortsId = context.getSharedPreferences(SHARED_ID,0)
     val storageRecipientId = context.getSharedPreferences(SHARED_ID,0)
+    val storageTicketSortsStatus = context.getSharedPreferences(TICKET_STATUS,0)
+    val storageTicketInfo = context.getSharedPreferences(TICKET_INFO,0)
     val storageNameUser = context.getSharedPreferences(SHARED_USER,0)
 
 
@@ -64,6 +73,37 @@ class Prefer(val context: Context) {
     }
     fun deleteRecipientId(){
         storageRecipientId.edit().clear().apply()
+    }
+    //binding.includeFabs.btnFabSeguimiento.setOnClickListener line 166 NavfooterTicketsActivity.kt
+    fun saveTicketSortsStatus(RecipientId: String){
+        storageTicketSortsStatus.edit().putString(TICKET_STATUS,RecipientId).apply()
+    }
+    fun getTicketSortsStatus(): String{
+        return storageTicketSortsStatus.getString(TICKET_STATUS,"noTicketSortsStatus")!!
+    }
+    fun deleteTicketSortsStatus(){
+        storageTicketSortsStatus.edit().clear().apply()
+    }
+    //TICKETINFO
+        //ubicación del solicitante
+    fun saveTicketSortsLocationRequester(ticketSortsLocationRequester_: String){
+        storageTicketInfo.edit().putString(TICKET_LOCATION,ticketSortsLocationRequester_).apply()
+    }
+    fun getTicketSortsLocationRequester(): String{
+        return storageTicketInfo.getString(TICKET_LOCATION,"noTicketSortsLocationRequester_")!!
+    }
+    fun deleteTicketSortsLocationRequester(){
+        storageTicketInfo.edit().clear().apply()
+    }
+        //descripcion completa del ticket
+    fun saveTicketSortsContent(ticketSortsContent: String){
+        storageTicketInfo.edit().putString(TICKET_CONTENT,ticketSortsContent).apply()
+    }
+    fun getTicketSortsContent(): String{
+        return storageTicketInfo.getString(TICKET_CONTENT,"noTicketSortsContent")!!
+    }
+    fun deleteTicketSortsContent(){
+        storageTicketInfo.edit().clear().apply()
     }
 
 

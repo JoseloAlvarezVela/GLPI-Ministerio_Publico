@@ -93,8 +93,8 @@ class MainActivity : AppCompatActivity(){
         var updateFollowup = false
         var updateTaks = false
 
-        //flag para edit ticket , para diferenciar entre editar tarea o seguimiento
-        var flagEdit = false
+        //actualiza fragment si se insertó algun dato
+        var updateFragmentFlag = false
 
         //flag para verificar que campo "Buscar por ID" este vacio
         var flag_edtFindTicketID = false
@@ -164,6 +164,11 @@ class MainActivity : AppCompatActivity(){
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+
+        when(updateFragmentFlag){
+            true -> replaceFragment(MisPeticionesFragment())
+            false -> Toast.makeText(this, "no se actualizó el fragment", Toast.LENGTH_SHORT).show()
+        }
 
         userEntities()
 
@@ -480,13 +485,14 @@ class MainActivity : AppCompatActivity(){
     }
 
     //nota:eliminar fragment de fondo
-    private fun replaceFragment(misPeticionesFragment: MisPeticionesFragment) {
+    fun replaceFragment(misPeticionesFragment: MisPeticionesFragment) {
         val f2 = misPeticionesFragment
         val transaction: FragmentTransaction = supportFragmentManager.beginTransaction()
         transaction.replace(R.id.frameLayoutFragment, f2)
         transaction.addToBackStack(null)
         transaction.commit()
 
+        Log.i("mensaje replace","reemplazando")
         /*val fragmentManager = supportFragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()
         fragmentTransaction.replace(R.id.frameLayoutFragment,misPeticionesFragment).commit()*/
