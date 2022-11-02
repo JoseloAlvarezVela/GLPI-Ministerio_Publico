@@ -43,6 +43,9 @@
         <entry key="..\:/Users/JOSELO/AndroidStudioProjects/GLPIMinisterio_Pblico/app/src/main/res/drawable/ic_resuelto.xml" value="0.1" />
         <entry key="..\:/Users/JOSELO/AndroidStudioProjects/GLPIMinisterio_Pblico/app/src/main/res/drawable/ic_solicitud.xml" value="0.139" />
         <entry key="..\:/Users/JOSELO/AndroidStudioProjects/GLPIMinisterio_Pblico/app/src/main/res/drawable/ic_solucion.xml" value="0.1" />
+        <entry key="..\:/Users/JOSELO/AndroidStudioProjects/GLPIMinisterio_Pblico/app/src/main/res/drawable/ic_task_done.xml" value="0.2825" />
+        <entry key="..\:/Users/JOSELO/AndroidStudioProjects/GLPIMinisterio_Pblico/app/src/main/res/drawable/ic_task_information.xml" value="0.2825" />
+        <entry key="..\:/Users/JOSELO/AndroidStudioProjects/GLPIMinisterio_Pblico/app/src/main/res/drawable/ic_task_to_do.xml" value="0.3675" />
         <entry key="..\:/Users/JOSELO/AndroidStudioProjects/GLPIMinisterio_Pblico/app/src/main/res/drawable/ic_tecnico.xml" value="0.13" />
         <entry key="..\:/Users/JOSELO/AndroidStudioProjects/GLPIMinisterio_Pblico/app/src/main/res/drawable/ic_ticket_incident.xml" value="0.2595" />
         <entry key="..\:/Users/JOSELO/AndroidStudioProjects/GLPIMinisterio_Pblico/app/src/main/res/drawable/recycle_tickets.xml" value="0.118" />
@@ -60,7 +63,7 @@
         <entry key="..\:/Users/JOSELO/AndroidStudioProjects/GLPIMinisterio_Pblico/app/src/main/res/layout/activity_tickets_agregar_documentos.xml" value="0.264" />
         <entry key="..\:/Users/JOSELO/AndroidStudioProjects/GLPIMinisterio_Pblico/app/src/main/res/layout/activity_tickets_agregar_seguimiento.xml" value="0.264" />
         <entry key="..\:/Users/JOSELO/AndroidStudioProjects/GLPIMinisterio_Pblico/app/src/main/res/layout/activity_tickets_agregar_solucion.xml" value="0.264" />
-        <entry key="..\:/Users/JOSELO/AndroidStudioProjects/GLPIMinisterio_Pblico/app/src/main/res/layout/activity_tickets_agregar_tarea.xml" value="0.264" />
+        <entry key="..\:/Users/JOSELO/AndroidStudioProjects/GLPIMinisterio_Pblico/app/src/main/res/layout/activity_tickets_agregar_tarea.xml" value="0.4" />
         <entry key="..\:/Users/JOSELO/AndroidStudioProjects/GLPIMinisterio_Pblico/app/src/main/res/layout/activity_tickets_historico.xml" value="0.264" />
         <entry key="..\:/Users/JOSELO/AndroidStudioProjects/GLPIMinisterio_Pblico/app/src/main/res/layout/app_bar_main.xml" value="0.16666666666666666" />
         <entry key="..\:/Users/JOSELO/AndroidStudioProjects/GLPIMinisterio_Pblico/app/src/main/res/layout/background_gris.xml" value="0.17864583333333334" />

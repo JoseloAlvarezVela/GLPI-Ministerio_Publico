@@ -23,9 +23,11 @@ class RecycleView_Adapter_TasksTemplate(
         fun onTasksTemplateClick(
             nameTasksTemplate: String,
             contentTasksTemplate: String,
+            idCategoryTasksTemplates: String,
             categoryTasksTemplates: String,
             timeTasksTemplates: String,
-            idTasksTemplates: String
+            idTasksTemplates: String,
+            statusTasksTemplates: String
         )
     }
 
@@ -60,9 +62,11 @@ class RecycleView_Adapter_TasksTemplate(
                 itemTasksTemplateClickListener.onTasksTemplateClick(
                     dataModalArrayListTasksTemplate[position].getNameTasksTemplates(),
                     dataModalArrayListTasksTemplate[position].getContentTasksTemplates(),
+                    dataModalArrayListTasksTemplate[position].getIdCategoryTasksTemplates(),
                     dataModalArrayListTasksTemplate[position].getCategoryTasksTemplates(),
                     dataModalArrayListTasksTemplate[position].getTimeTasksTemplates(),
-                    dataModalArrayListTasksTemplate[position].getIdTasksTemplates()
+                    dataModalArrayListTasksTemplate[position].getIdTasksTemplates(),
+                    dataModalArrayListTasksTemplate[position].getStatusTasksTemplates()
                 )
             }
         }

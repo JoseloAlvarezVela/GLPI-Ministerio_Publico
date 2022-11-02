@@ -138,34 +138,29 @@
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
+                    android:gravity="center"
                     android:orientation="vertical"
                     android:padding="5sp">
 
-                    <RadioButton
-                        android:layout_width="33dp"
-                        android:layout_height="30dp"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginEnd="10dp"
-                        android:layout_marginRight="10dp"
-                        android:background="@drawable/esq_redondeada_gris"
-                        android:visibility="gone"
-                        app:buttonTint="#67D392" />
-
                     <ImageButton
-                        android:id="@+id/imgBtnStatusTasks"
+                        android:id="@+id/imgBtnTaskStatus"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="?android:attr/selectableItemBackground"
-                        app:srcCompat="@drawable/ic_circulo_verde" />
+                        app:srcCompat="@drawable/ic_task_to_do" />
 
+                    <CheckBox
+                        android:id="@+id/chkBoxPadLockTask"
+                        android:layout_width="40dp"
+                        android:layout_height="35dp"
+                        android:layout_gravity="center"
+                        android:background="@drawable/esq_redondeada_gris"
+                        android:visibility="gone" />
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
+                    android:gravity="center"
                     android:orientation="vertical"
                     android:padding="5sp">
 
@@ -184,23 +179,9 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:padding="5sp">
-
-                    <CheckBox
-                        android:id="@+id/chkBoxPadLockTask"
-                        android:layout_width="40dp"
-                        android:layout_height="35dp"
-                        android:layout_gravity="center"
-                        android:background="@drawable/esq_redondeada_gris" />
-                </LinearLayout>
-
-                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:gravity="center"
                     android:orientation="horizontal">
 
                     <ImageButton
@@ -226,12 +207,31 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:layout_marginBottom="5dp"
-                android:orientation="horizontal"
+                android:orientation="vertical"
                 android:visibility="visible">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:padding="5sp">
+
+                    <Button
+                        android:id="@+id/btnStatusTask"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:padding="5sp"
+                        android:text="estado del ticket"
+                        android:textSize="10sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
                     android:orientation="horizontal"
                     android:padding="5sp">
 
@@ -266,6 +266,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:gravity="center"
                     android:orientation="horizontal"
                     android:padding="5sp">
 
@@ -415,22 +416,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent" />
-
-    <TextView
-        android:id="@+id/idTemplate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TextView"
-        app:layout_constraintBottom_toTopOf="@+id/includeDocumentsTaks"
-        app:layout_constraintTop_toTopOf="@+id/linearLayout4" />
-
-    <TextView
-        android:id="@+id/idCategory"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="TextView"
-        app:layout_constraintBottom_toTopOf="@+id/includeDocumentsTaks"
-        app:layout_constraintTop_toTopOf="@+id/idTemplate" />
 
     <LinearLayout
         android:id="@+id/LayoutBackgroud_agregarTarea"
@@ -658,7 +643,12 @@
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@+id/includeDocumentsTaks"
         app:layout_constraintEnd_toEndOf="@+id/linearLayout4"
-        app:layout_constraintStart_toStartOf="@+id/idTemplate"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <include
+        android:id="@+id/includeListStatusAllowed"
+        layout="@layout/modal_list_allowed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

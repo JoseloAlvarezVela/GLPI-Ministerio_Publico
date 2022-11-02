@@ -22,7 +22,7 @@ class Data_TicketInfo {
     var ticketInfoIdCategory: String? = null
     var ticketInfoCategory: String? = null
     var ticketInfoIdEditor: String? = null //id del que esta editando la tarea
-    var ticketInfoIdTechnician: String? = null
+    var ticketInfoIdTechnician: String? = null //id del tecnico que esta asignado a la tarea
 
     var ticketInfoNameTechnician: String? = null
     var ticketInfoCompleteNameTechnician: String? = null

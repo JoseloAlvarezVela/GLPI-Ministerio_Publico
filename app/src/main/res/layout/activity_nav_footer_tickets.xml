@@ -14,10 +14,10 @@
         layout="@layout/activity_nav_header_tickets"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:visibility="gone"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ProgressBar
         android:id="@+id/progressBarTicketConversation_"
@@ -30,15 +30,35 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/includeNavHeaderTickets" />
 
-    <fragment
-        android:id="@+id/FragmentTicketInfo"
-        android:name="com.glpi.glpi_ministerio_pblico.ui.tickets.TicketInfoFragment"
+    <LinearLayout
+        android:id="@+id/fragmentTicketInfoLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:orientation="vertical"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout7"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/includeNavHeaderTickets" />
+        app:layout_constraintTop_toBottomOf="@+id/includeNavHeaderTickets">
+
+        <fragment
+            android:id="@+id/FragmentTicketInfo"
+            android:name="com.glpi.glpi_ministerio_pblico.ui.tickets.TicketInfoFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/fab_background"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="#75575757"
+        android:gravity="end"
+        android:orientation="vertical"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/fragmentTicketInfoLayout"
+        app:layout_constraintTop_toBottomOf="@+id/includeNavHeaderTickets">
+
+    </LinearLayout>
 
     <include
         android:id="@+id/include_fabs"
@@ -92,21 +112,6 @@
 
             </LinearLayout>
         </ScrollView>
-
-        <LinearLayout
-            android:id="@+id/fab_background"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:background="#75575757"
-            android:gravity="end"
-            android:orientation="vertical"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-        </LinearLayout>
 
         <include
             android:id="@+id/include_fabs_"

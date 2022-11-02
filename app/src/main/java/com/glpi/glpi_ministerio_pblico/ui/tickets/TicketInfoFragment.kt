@@ -1,5 +1,7 @@
 package com.glpi.glpi_ministerio_pblico.ui.tickets
 
+import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -9,7 +11,6 @@ import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.core.view.isVisible
-import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -17,17 +18,13 @@ import androidx.room.Room
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.glpi.glpi_ministerio_pblico.MainActivity
-import com.glpi.glpi_ministerio_pblico.MainActivity.Companion.jsonObjectResponse
 
 import com.glpi.glpi_ministerio_pblico.R
 import com.glpi.glpi_ministerio_pblico.VolleySingleton
-import com.glpi.glpi_ministerio_pblico.data.database.DBTicketInfo
-import com.glpi.glpi_ministerio_pblico.databinding.FragmentMisPeticionesBinding
+import com.glpi.glpi_ministerio_pblico.data.database.TicketInfoDB
 import com.glpi.glpi_ministerio_pblico.databinding.FragmentTicketInfoBinding
 import com.glpi.glpi_ministerio_pblico.ui.adapter.Data_TicketInfo
-import com.glpi.glpi_ministerio_pblico.ui.adapter.RecycleView_Adapter_Tickets
 import com.glpi.glpi_ministerio_pblico.ui.adapter.RecyclerAdapter
-import com.glpi.glpi_ministerio_pblico.ui.misPeticiones.MisPeticionesFragment
 import com.glpi.glpi_ministerio_pblico.ui.shared.token
 import com.glpi.glpi_ministerio_pblico.ui.shared.token.Companion.prefer
 import kotlinx.coroutines.launch
@@ -61,6 +58,9 @@ class TicketInfoFragment : Fragment(), RecyclerAdapter.onConversationClickListen
 
     private lateinit var jsonArrayIdRecipient: JSONArray
 
+    var isEditFollowup = false
+    var positionFollowup = -1
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -77,6 +77,7 @@ class TicketInfoFragment : Fragment(), RecyclerAdapter.onConversationClickListen
         //return inflater.inflate(R.layout.fragment_ticket_info, container, false)
         progressBarTicketInfo = binding.progressBarTicketInfo
 
+        getTicketInfo()
         volleyRequestTicketInfo()
         volleyRequestIdRecipient()
 
@@ -88,17 +89,34 @@ class TicketInfoFragment : Fragment(), RecyclerAdapter.onConversationClickListen
         return root
     }
 
+
+    @SuppressLint("SetTextI18n")
     private fun getTicketInfo(){
-        val room  = Room.databaseBuilder(requireContext(), DBTicketInfo::class.java,"ticketInfoBD").build()
+        val room  = Room.databaseBuilder(requireContext(), TicketInfoDB::class.java,"ticketInfoBD").build()
         lifecycleScope.launch{
             val getTicketInfoDB = room.daoTicketInfo().getTicketInfo()
             for (item in getTicketInfoDB) {
                 //descripción del ticket
                 binding.tvTicketInfoId.text = "Petición #${item.ticketSortsID}"
                 when(item.ticketSortsStatus){
-                    "EN CURSO (Asignada)" -> binding.tvTicketInfoStatus.setBackgroundResource(R.drawable.ic_circulo_verde)
-                    "EN ESPERA" -> binding.tvTicketInfoStatus.setBackgroundResource(R.drawable.ic_circulo)
+                    "EN CURSO (Asignada)" -> {
+                        binding.tvTicketInfoStatus.setBackgroundResource(R.drawable.ic_circulo_verde)
+                        binding.tvTicketInfoStatus.tag = "2"
+                    }
+                    "2" -> {
+                        binding.tvTicketInfoStatus.setBackgroundResource(R.drawable.ic_circulo_verde)
+                        binding.tvTicketInfoStatus.tag = "2"
+                    }
+                    "EN ESPERA" -> {
+                        binding.tvTicketInfoStatus.setBackgroundResource(R.drawable.ic_circulo)
+                        binding.tvTicketInfoStatus.tag = "4"
+                    }
+                    "4" -> {
+                        binding.tvTicketInfoStatus.setBackgroundResource(R.drawable.ic_circulo)
+                        binding.tvTicketInfoStatus.tag = "4"
+                    }
                     "CERRADO" -> binding.tvTicketInfoStatus.setBackgroundResource(R.drawable.ic_circulo_negro)
+                    else -> Log.i("mensaje","dato actualizado a: ${item.ticketSortsStatus}")
                 }
                 binding.tvTicketInfoLocation.text = item.ticketSortsLocationRequester
 
@@ -106,7 +124,39 @@ class TicketInfoFragment : Fragment(), RecyclerAdapter.onConversationClickListen
                 binding.includeTicketsHistorico.txtCurrentTime.text = "Fecha de Cración: ${item.ticketSortsCreationDate}"
                 binding.includeTicketsHistorico.txtModificationDate.text = "Ultima modificación: ${item.ticketSortsModificationDate}"
             }
+
         }
+
+        /*when(MainActivity.updateFragmentFlag){
+            true -> {
+                Log.i("mensaje prefersort", prefer.getTicketSortsStatus())
+                when(prefer.getTicketSortsStatus()){
+                    "2" -> binding.tvTicketInfoStatus.setBackgroundResource(R.drawable.ic_circulo_verde)
+                    "4" -> binding.tvTicketInfoStatus.setBackgroundResource(R.drawable.ic_circulo)
+                }
+            }
+            false -> {
+                val room  = Room.databaseBuilder(requireContext(), TicketInfoDB::class.java,"ticketInfoBD").build()
+                lifecycleScope.launch{
+                    val getTicketInfoDB = room.daoTicketInfo().getTicketInfo()
+                    for (item in getTicketInfoDB) {
+                        //descripción del ticket
+                        binding.tvTicketInfoId.text = "Petición #${item.ticketSortsID}"
+                        when(item.ticketSortsStatus){
+                            "EN CURSO (Asignada)" -> binding.tvTicketInfoStatus.setBackgroundResource(R.drawable.ic_circulo_verde)
+                            "EN ESPERA" -> binding.tvTicketInfoStatus.setBackgroundResource(R.drawable.ic_circulo)
+                            "CERRADO" -> binding.tvTicketInfoStatus.setBackgroundResource(R.drawable.ic_circulo_negro)
+                        }
+                        binding.tvTicketInfoLocation.text = item.ticketSortsLocationRequester
+
+                        binding.includeTicketsHistorico.txtDescripcionTicketHistorico.text = item.ticketSortsContent
+                        binding.includeTicketsHistorico.txtCurrentTime.text = "Fecha de Cración: ${item.ticketSortsCreationDate}"
+                        binding.includeTicketsHistorico.txtModificationDate.text = "Ultima modificación: ${item.ticketSortsModificationDate}"
+                    }
+
+                }
+            }
+        }*/
     }
 
     private fun volleyRequestIdRecipient(){
@@ -195,7 +245,6 @@ class TicketInfoFragment : Fragment(), RecyclerAdapter.onConversationClickListen
                             if (ticketInfo.ticketInfoType == "TASK"){
                                 ticketInfo.ticketInfoModificationDate = ticketInfoJson.getString("FECHA_EDICION")
                                 ticketInfo.ticketInfoIdTechnician = ticketInfoJson.getString("TECNICO")
-                                //ticketInfo.ticketInfoNameTechnician = binding.includeTickets.labelAsignadoNombre.text.toString()
                                 ticketInfo.ticketInfoTimeToSolve = ticketInfoJson.getString("DURACION").split(".")[0]
 
                                 ticketInfo.ticketInfoStatus = ticketInfoJson.getString("ESTADO") //pendiente o terminado
@@ -227,7 +276,7 @@ class TicketInfoFragment : Fragment(), RecyclerAdapter.onConversationClickListen
         this?.let {
             context?.let { it1 -> VolleySingleton.getInstance(it1).addToRequestQueue(stringRequestDataTickets) }
         }
-        getTicketInfo()
+
         //getTicketsConversationInfo()
     }
 
@@ -262,7 +311,40 @@ class TicketInfoFragment : Fragment(), RecyclerAdapter.onConversationClickListen
         ticketInfoTimeToSolve: String,
         adapterPosition: Int
     ) {
-        TODO("Not yet implemented")
+        val flagOnEditClick = true
+
+        val intentTasks = (Intent(context,TicketsAgregarTareaActivity::class.java))
+        intentTasks.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+
+        val intentFollowUp = (Intent(context,TicketsAgregarSeguimientoActivity::class.java))
+        intentFollowUp.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+
+        when(ticketInfoType){
+            "TASK" -> {
+                intentTasks.putExtra("ticketInfoContent",ticketInfoContent)
+                intentTasks.putExtra("ticketInfoPrivate",ticketInfoPrivate)
+                intentTasks.putExtra("ticketInfoIdTechnician",ticketInfoIdTechnician)
+                intentTasks.putExtra("ticketInfoStatus",ticketInfoStatus)
+                intentTasks.putExtra("ticketInfoIdTemplate",ticketInfoIdTemplate)
+                intentTasks.putExtra("ticketInfoIdCategory",ticketInfoIdCategory)
+                intentTasks.putExtra("ticketInfoCategory",ticketInfoCategory)
+                intentTasks.putExtra("ticketInfoId",ticketInfoId) //origen del
+                intentTasks.putExtra("ticketInfoTimeToSolve",ticketInfoTimeToSolve)
+                intentTasks.putExtra("flagOnEditClick",flagOnEditClick)
+                startActivity(intentTasks)
+            }
+            "FOLLOWUP" -> {
+                intentFollowUp.putExtra("ticketPrivate",ticketInfoPrivate)
+                intentFollowUp.putExtra("ticketInfoContent",ticketInfoContent)
+                intentFollowUp.putExtra("ticketInfoId",ticketInfoId)
+                intentFollowUp.putExtra("ticketInfoIdSource",ticketInfoIdSource)
+                intentFollowUp.putExtra("ticketInfoSource",ticketInfoSource)
+                intentFollowUp.putExtra("flagOnEditClick",flagOnEditClick)
+                startActivity(intentFollowUp)
+            }
+        }
+        isEditFollowup = true
+        positionFollowup = adapterPosition
     }
 
     override fun onFabClick() {

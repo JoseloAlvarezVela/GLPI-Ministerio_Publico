@@ -22,7 +22,7 @@ import com.glpi.glpi_ministerio_pblico.MainActivity.Companion.decodeHtml
 import com.glpi.glpi_ministerio_pblico.MainActivity.Companion.urlApi_Ticket
 import com.glpi.glpi_ministerio_pblico.MainActivity.Companion.urlApi_TicketSorts
 import com.glpi.glpi_ministerio_pblico.VolleySingleton
-import com.glpi.glpi_ministerio_pblico.data.database.DBTicketInfo
+import com.glpi.glpi_ministerio_pblico.data.database.TicketInfoDB
 import com.glpi.glpi_ministerio_pblico.data.database.TicketInfo_DataBase
 import com.glpi.glpi_ministerio_pblico.databinding.FragmentMisPeticionesBinding
 import com.glpi.glpi_ministerio_pblico.ui.adapter.Data_TaskUsers
@@ -563,7 +563,7 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.onTicketCl
         ticketSortsUrgency: String
     ) {
         val room =
-            Room.databaseBuilder(requireContext(), DBTicketInfo::class.java, "ticketInfoBD").build()
+            Room.databaseBuilder(requireContext(), TicketInfoDB::class.java, "ticketInfoBD").build()
         lifecycleScope.launch {
             room.daoTicketInfo().insertTicketInfo(
                 TicketInfo_DataBase(

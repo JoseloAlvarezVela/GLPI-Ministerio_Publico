@@ -7,6 +7,6 @@ import androidx.room.RoomDatabase
     entities = [TicketInfo_DataBase::class],
     version = 2
 )
-abstract class DBTicketInfo: RoomDatabase(){
+abstract class TicketInfoDB: RoomDatabase(){
     abstract fun daoTicketInfo(): TicketInfoDao
 }

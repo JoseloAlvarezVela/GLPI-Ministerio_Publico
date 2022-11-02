@@ -6,16 +6,15 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.CheckBox
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.glpi.glpi_ministerio_pblico.R
-import com.glpi.glpi_ministerio_pblico.ui.view.BaseViewHolder
-import java.util.concurrent.TimeUnit
+import com.glpi.glpi_ministerio_pblico.ui.shared.token.Companion.prefer
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 class RecyclerAdapter(
     val context: Context,
@@ -58,50 +57,52 @@ class RecyclerAdapter(
         holder.tasksDate.text = dataModelArrayListConversation[position].ticketInfoDate
 
 
-        holder.tasksCreationDate.text =
-            "${dataModelArrayListConversation[position].ticketInfoCreationDate} -> ${dataModelArrayListConversation[position].ticketInfoTimeToSolve}" //sumar a cration el time to solve
 
-        holder.tasksTimeToSolve.text = dataModelArrayListConversation[position].ticketInfoTimeToSolve+" minutos"
+
+
 
         holder.conversationContent.text = dataModelArrayListConversation[position].ticketInfoContent
 
-        /*when(dataModelArrayListConversation[position].ticketInfoIdUser == dataModelArrayListConversation[position].ticketInfoIdTechnician){
+        /*Log.i("mensaje compare","${dataModelArrayListConversation[position].ticketInfoIdUser} = ${dataModelArrayListConversation[position].ticketInfoIdTechnician}")
+        when(dataModelArrayListConversation[position].ticketInfoIdUser == dataModelArrayListConversation[position].ticketInfoIdTechnician){
             true -> {
-                holder.param.setMargins(0, 10, 100, 10)
-                holder.conversationTicketStatus.layoutParams = holder.param
-            }
-            false -> {
                 holder.param.setMargins(100,10,0,10)
                 holder.conversationTicketStatus.layoutParams = holder.param
             }
+            false -> {
+                holder.param.setMargins(0, 10, 100, 10)
+                holder.conversationTicketStatus.layoutParams = holder.param
+            }
         }*/
-
         when(dataModelArrayListConversation[position].ticketInfoType){
             "TASK" -> {
-                val time = dataModelArrayListConversation[position].ticketInfoCreationDate.toString().split(" ")[1]
-                val minutesToAdd: Int = dataModelArrayListConversation[position].ticketInfoTimeToSolve.toString().toInt()
-                val minutesToMillis = minutesToAdd* 60000
-                //CONVERTIR DE HORA A MILISEGUNDOS Y LUEGO VOLVER A HORA
-                //val date = ticketInfo.ticketInfoTimeToSolve.toString().split(" ")
-                //val hour = time
-                val secondsToMs1: Int = time[2].toInt() * 1000
-                val minutesToMs1: Int = time[1].toInt() * 60000
-                val hoursToMs1: Int = time[0].toInt() * 3600000
-                val total1 = secondsToMs1 + minutesToMs1 + hoursToMs1
-                val estimatedTime_: Long = (total1 + (minutesToAdd.toInt()*60000)).toLong()
-                //Log.i("mensaje split: ", "${date[1]}")
-                val milisToHours = String.format(
-                    "%02d:%02d:%02d", TimeUnit.MILLISECONDS.toHours(estimatedTime_),
-                    TimeUnit.MILLISECONDS.toMinutes(estimatedTime_) % TimeUnit.HOURS.toMinutes(1),
-                    TimeUnit.MILLISECONDS.toSeconds(estimatedTime_) % TimeUnit.MINUTES.toSeconds(1)
-                )
+                val time = dataModelArrayListConversation[position].ticketInfoCreationDate.toString().split(" ") //hora de inicio de tarea
+                val minutesToAdd: Int = dataModelArrayListConversation[position].ticketInfoTimeToSolve.toString().toInt()  //tiempo para resolver tarea en minutos
+                val minutesToSecondsAdd = minutesToAdd*60
 
-                Log.i("mensaje split","$$time en milisegundos es $total1")
-                Log.i("mensaje split","$time + $minutesToAdd minutos es $milisToHours")
+                val convertHour = time[1].toString().split(":")
+                //convertimos horas a segundos
+                Log.i("mensaje hora","${time[1]}")
+                Log.i("mensaje hora","${convertHour}")
+                val minutesToSeconds = convertHour[1].toInt()*60
+                val hourToSecond = convertHour[0].toInt()*3600
+                val secondsTotal = hourToSecond+minutesToSeconds+convertHour[2].toInt()+minutesToSecondsAdd
+                Log.i("mensaje hour to seconds","$secondsTotal")
+
+                val hora = (secondsTotal / 3600)
+                val minutos = ((secondsTotal%3600) /60)
+                val segundos = (secondsTotal%60)
+                Log.i("mensaje seconds to Hour","$hora:$minutos:$segundos")
+
+
+                holder.tasksCreationDate.text =
+                    "${dataModelArrayListConversation[position].ticketInfoCreationDate} -> $hora:$minutos:$segundos" //sumar a cration el time to solve
+                holder.tasksTimeToSolve.text = dataModelArrayListConversation[position].ticketInfoTimeToSolve+" minutos"
+
 
                 holder.linearLayoutTasksCarrierName.isVisible = true
                 holder.imgBtnPrivateTask.isVisible = true
-                holder.chkBoxStatus.isVisible = true
+                holder.imgBtnTaskStatus.isVisible = true
                 holder.followUpLinearLayoutTimeToSolve.isVisible = true
 
                 when(dataModelArrayListConversation[position].ticketInfoPrivate){
@@ -110,11 +111,13 @@ class RecyclerAdapter(
                 }
 
                 when(dataModelArrayListConversation[position].ticketInfoStatus){
-                    "PENDIENTE" -> holder.chkBoxStatus.isChecked = false
-                    "TERMINADO" -> holder.chkBoxStatus.isChecked = true
+                    "PENDIENTE" -> holder.imgBtnTaskStatus.setImageResource(R.drawable.ic_task_to_do)
+                    "TERMINADO" -> holder.imgBtnTaskStatus.setImageResource(R.drawable.ic_task_done)
+                    "INFORMACION" -> holder.imgBtnTaskStatus.setImageResource(R.drawable.ic_task_information)
                 }
 
-                holder.ticketInfoNameTechnician.text = dataModelArrayListConversation[position].ticketInfoNameTechnician
+                //holder.ticketInfoNameTechnician.text = dataModelArrayListConversation[position].ticketInfoIdTechnician
+                holder.ticketInfoNameTechnician.text = prefer.getNameUser().toString()
                 holder.param.setMargins(0, 10, 100, 10)
                 holder.conversationTicketStatus.layoutParams = holder.param
                 holder.conversationTicketStatus.setBackgroundResource(R.drawable.esq_redondeada_tasks)
@@ -123,7 +126,7 @@ class RecyclerAdapter(
                 holder.linearLayoutTasksCarrierName.isVisible = false
                 holder.followUpLinearLayoutTimeToSolve.isVisible = false
                 holder.imgBtnPrivateTask.isVisible = false
-                holder.chkBoxStatus.isVisible = false
+                holder.imgBtnTaskStatus.isVisible = false
                 holder.param.setMargins(100,10,0,10)
                 holder.conversationTicketStatus.layoutParams = holder.param
                 holder.conversationTicketStatus.setBackgroundResource(R.drawable.esq_redondeada_followup)
@@ -134,7 +137,7 @@ class RecyclerAdapter(
                 holder.followUpLinearLayoutTimeToSolve.isVisible = false
                 holder.linearLayoutTasksCarrierName.isVisible = false
                 holder.imgBtnPrivateTask.isVisible = false
-                holder.chkBoxStatus.isVisible = false
+                holder.imgBtnTaskStatus.isVisible = false
                 holder.param.setMargins(100,10,0,10)
                 holder.conversationTicketStatus.layoutParams = holder.param
                 holder.conversationTicketStatus.setBackgroundResource(R.drawable.esq_redondeada_solution)
@@ -162,7 +165,7 @@ class RecyclerAdapter(
         var conversationContent: TextView
 
         var imgBtnPrivateTask: ImageButton
-        var chkBoxStatus: CheckBox
+        var imgBtnTaskStatus: ImageButton
 
         var param: ViewGroup.MarginLayoutParams
 
@@ -183,7 +186,7 @@ class RecyclerAdapter(
             conversationContent = itemConversation.findViewById<TextView>(R.id.txt_descripcionTicketHistorico_conversation) as TextView
 
             imgBtnPrivateTask = itemConversation.findViewById<TextView>(R.id.imgBtnPrivateTask) as ImageButton
-            chkBoxStatus = itemConversation.findViewById<TextView>(R.id.chkBoxStatus) as CheckBox
+            imgBtnTaskStatus = itemConversation.findViewById<ImageButton>(R.id.imgBtnTaskStatus) as ImageButton
 
 
             param = itemView.findViewById<LinearLayout>(R.id.ticket_estado_conversation).layoutParams as ViewGroup.MarginLayoutParams

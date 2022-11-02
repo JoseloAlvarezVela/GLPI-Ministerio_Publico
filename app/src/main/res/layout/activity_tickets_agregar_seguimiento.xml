@@ -157,6 +157,7 @@
                 android:background="?android:attr/selectableItemBackground"
                 android:clickable="false"
                 android:padding="15sp"
+                android:visibility="gone"
                 app:srcCompat="@drawable/ic_circulo_verde" />
 
             <ImageView

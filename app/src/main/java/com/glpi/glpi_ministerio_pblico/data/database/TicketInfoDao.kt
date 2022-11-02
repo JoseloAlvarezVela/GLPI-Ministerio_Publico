@@ -17,8 +17,8 @@ interface TicketInfoDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTicketInfo(ticketSortsID: TicketInfo_DataBase)
 
-    /*@Query("UPDATE TicketInfo_DataBase SET ticketSortsType=:ticketSortsType WHERE  ticketSortsID=:ticketSortsID")
-    suspend fun updateTicketInfo(ticketSortsID: String, ticketSortsType: String)*/
+    @Query("UPDATE TicketInfo_DataBase SET ticketSortsStatus=:ticketSortsStatus WHERE  ticketSortsID=:ticketSortsID")
+    suspend fun updateTicketInfo(ticketSortsID: String, ticketSortsStatus: String)
 
     @Query("DELETE FROM TicketInfo_DataBase WHERE ticketSortsID=:ticketSortsID")
     suspend fun deleteTicketInfo(ticketSortsID:String)
