@@ -297,7 +297,7 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.onTicketCl
         ticketsModel.ticketSortsEmailTechnician = technician.getString("CORREO")
         ticketsModel.ticketSortsLocationTechnician = technician.getString("UBICACION")
         ticketsModel.ticketSortsEntityTechnician = technician.getString("ENTIDAD")
-        //MainActivity.idUserTechnician = idTechnician
+        prefer.saveNameTechnicianTask("${technician.getString("NOMBRE")} ${technician.getString("APELLIDO")}")
 
 
         //obtenemos los datos del solicitante

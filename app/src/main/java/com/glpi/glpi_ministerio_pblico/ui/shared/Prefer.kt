@@ -29,7 +29,7 @@ class Prefer(val context: Context) {
     val storage = context.getSharedPreferences(SHARED_DB,0)
     val storageTicketSortsId = context.getSharedPreferences(SHARED_ID,0)
     val storageRecipientId = context.getSharedPreferences(SHARED_ID,0)
-    val storageTicketSortsStatus = context.getSharedPreferences(TICKET_STATUS,0)
+    val storageNameTechnicianTask = context.getSharedPreferences(TICKET_STATUS,0)
     val storageTicketInfo = context.getSharedPreferences(TICKET_INFO,0)
     val storageNameUser = context.getSharedPreferences(SHARED_USER,0)
 
@@ -74,15 +74,16 @@ class Prefer(val context: Context) {
     fun deleteRecipientId(){
         storageRecipientId.edit().clear().apply()
     }
-    //binding.includeFabs.btnFabSeguimiento.setOnClickListener line 166 NavfooterTicketsActivity.kt
-    fun saveTicketSortsStatus(RecipientId: String){
-        storageTicketSortsStatus.edit().putString(TICKET_STATUS,RecipientId).apply()
+
+    //ticketInfo --
+    fun saveNameTechnicianTask(idTechnician: String){
+        storageNameTechnicianTask.edit().putString(TICKET_STATUS,idTechnician).apply()
     }
-    fun getTicketSortsStatus(): String{
-        return storageTicketSortsStatus.getString(TICKET_STATUS,"noTicketSortsStatus")!!
+    fun getNameTechnicianTask(): String{
+        return storageNameTechnicianTask.getString(TICKET_STATUS,"NameTechnicianTask")!!
     }
-    fun deleteTicketSortsStatus(){
-        storageTicketSortsStatus.edit().clear().apply()
+    fun deleteNameTechnicianTask(){
+        storageNameTechnicianTask.edit().clear().apply()
     }
     //TICKETINFO
         //ubicación del solicitante

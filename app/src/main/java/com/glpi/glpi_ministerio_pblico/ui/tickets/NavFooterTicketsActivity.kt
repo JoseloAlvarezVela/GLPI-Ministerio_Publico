@@ -464,7 +464,7 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
         }
         prefer.deleteTicketSortsId()
         prefer.deleteRecipientId()
-        prefer.deleteTicketSortsStatus()
+        prefer.deleteNameTechnicianTask()
 
 
         val intentOnBack = Intent(this, MainActivity::class.java)

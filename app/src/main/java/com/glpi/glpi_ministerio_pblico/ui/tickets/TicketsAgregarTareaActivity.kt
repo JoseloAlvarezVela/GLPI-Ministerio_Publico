@@ -77,6 +77,7 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
         volleyRequestListTechnician()
 
 
+
         val bundle = intent.extras
         Log.i("mensaje flag","${bundle!!.getBoolean("flagOnEditClick")}")
         when(bundle!!.getBoolean("flagOnEditClick")){
@@ -97,6 +98,7 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
     private fun imgBtnTaskStatus(){
         val bundle = intent.extras
 
+        Log.i("mensaje infoSta",bundle!!.getString("ticketInfoStatus").toString())
         when(bundle!!.getString("ticketInfoStatus").toString()){
             "TERMINADO" -> {
                 binding.imgBtnTaskStatus.setImageResource(R.drawable.ic_task_done)
@@ -104,11 +106,11 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
             }
             "INFORMACION" -> {
                 binding.imgBtnTaskStatus.setImageResource(R.drawable.ic_task_information)
-                binding.imgBtnTaskStatus.tag = "3" //informativo
+                binding.imgBtnTaskStatus.tag = "0" //informativo
             }
             "PENDIENTE" -> {
                 binding.imgBtnTaskStatus.setImageResource(R.drawable.ic_task_to_do)
-                binding.imgBtnTaskStatus.tag = "1" //informativo
+                binding.imgBtnTaskStatus.tag = "1" //por hacer
             }
             else -> {
                 binding.imgBtnTaskStatus.setImageResource(R.drawable.ic_task_to_do)
@@ -118,19 +120,21 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
 
 
         binding.imgBtnTaskStatus.setOnClickListener {
+            Log.i("mensaje infoSta",binding.imgBtnTaskStatus.tag.toString())
             when(binding.imgBtnTaskStatus.tag){
                 "0" -> {
                     binding.imgBtnTaskStatus.setImageResource(R.drawable.ic_task_done)
-                    binding.imgBtnTaskStatus.tag = "2" //hecho
+                    binding.imgBtnTaskStatus.tag = "1" //por hacer
                 }
                 "1" -> {
+                    binding.imgBtnTaskStatus.setImageResource(R.drawable.ic_task_to_do)
+                    binding.imgBtnTaskStatus.tag = "2" //hecho
+                }
+                "2" -> {
                     binding.imgBtnTaskStatus.setImageResource(R.drawable.ic_task_information)
                     binding.imgBtnTaskStatus.tag = "0" //informativo
                 }
-                "2" -> {
-                    binding.imgBtnTaskStatus.setImageResource(R.drawable.ic_task_to_do)
-                    binding.imgBtnTaskStatus.tag = "1" //informativo
-                }
+
             }
         }
     }
@@ -185,16 +189,21 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
         }
     }
 
+
     private fun btnTimeToSolveTask(){
+        val bundle = intent.extras
+        val ticketInfoTimeToSolve = bundle!!.getString("ticketInfoTimeToSolve")
+        val flagOnEditClick = bundle!!.getBoolean("flagOnEditClick")
         val arrayHour = arrayListOf<String>("00","01","02","03","04","05","06","07","08","09","10","11","12")
         val arrayMinutes = arrayListOf<String>("05","10","15","20","25","30","35","40","45","50","55")
         var iHour = 0
         var iMinutes = 0
+
+
         binding.btnTimeToSolveTask.setOnClickListener {
             binding.LayoutBackgroudAgregarTarea.isVisible = true
             binding.includeTimeToSolveTask.modalTimeToSolveTask.isVisible = true
-            val timer = 5
-            binding.btnTimeToSolveTask.text = "$timer minutos"
+
 
             binding.includeTimeToSolveTask.hours.text = arrayHour[0]
 
@@ -597,7 +606,7 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
         val ticketInfoId = "tarea será agregada"
 
 
-        Log.i("mensaje flag insert","${flagInsertTask}")
+        //Log.i("mensaje flag insert","${flagInsertTask}")
         //imgBtnTicketStatus(ticketSortsStatus)
         btnAddTasks(flagInsertTask, ticketSortsId,ticketInfoId,ticketSortsIdTechnician,ticketSortsStatus)
 
@@ -605,85 +614,153 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
 
     private fun updateTask(){
         val flagUpdateTask = true
-        Toast.makeText(this, "updateTask", Toast.LENGTH_SHORT).show()
-        val bundle = intent.extras
-        val ticketSortsId = bundle!!.getString("ticketSortsId").toString()
-        val ticketInfoId = bundle!!.getString("ticketInfoId").toString()
-        val ticketInfoIdTechnician = bundle!!.getString("ticketInfoIdTechnician").toString()
-        //val ticketType = bundle!!.getString("ticketType")
 
-        val ticketSortsType = bundle!!.getString("ticketSortsType")//solicitud o incidente
-        val ticketSortsStatus = bundle!!.getString("ticketSortsStatus").toString()
-        val ticketInfoCategory = bundle!!.getString("ticketInfoCategory")
-        val ticketInfoIdCategory = bundle!!.getString("ticketInfoIdCategory")
-        val ticketInfoStatus = bundle!!.getString("ticketInfoStatus")
-        val ticketInfoTimeToSolve = bundle!!.getString("ticketInfoTimeToSolve")
+        val room =
+            Room.databaseBuilder(this, TicketInfoDB::class.java, "ticketInfoBD").build()
+        lifecycleScope.launch {
+            val bundle = intent.extras
+            val ticketInfoId = bundle!!.getString("ticketInfoId").toString()
+            val ticketInfoIdTechnician = bundle!!.getString("ticketInfoIdTechnician").toString()
+            val ticketInfoCategory = bundle!!.getString("ticketInfoCategory")
+            val ticketInfoIdCategory = bundle!!.getString("ticketInfoIdCategory")
+            val ticketInfoStatus = bundle!!.getString("ticketInfoStatus")
+            val ticketInfoTimeToSolve = bundle!!.getString("ticketInfoTimeToSolve")
+            val ticketInfoPrivate = bundle!!.getString("ticketInfoPrivate")
+            val ticketInfoContent = bundle!!.getString("ticketInfoContent")
 
-        val ticketInfoPrivate = bundle!!.getString("ticketInfoPrivate")
-        val ticketInfoContent = bundle!!.getString("ticketInfoContent")
+            val getTicketInfoDB = room.daoTicketInfo().getTicketInfo()
+            for (item in getTicketInfoDB){
+                val ticketSortsId = item.ticketSortsID
+                val ticketSortsType = item.ticketSortsType
+                val ticketSortsStatus = item.ticketSortsStatus
 
-        binding.tvIdTicket.text = "Petición #$ticketSortsId"
-        binding.edtTasksDescription.setText(ticketInfoContent)
-        binding.edtTasksDescription.tag = "0"
-        binding.btnAddCategory.text = ticketInfoCategory
-        binding.btnAddCategory.tag = ticketInfoIdCategory
-        binding.btnTimeToSolveTask.text = "$ticketInfoTimeToSolve minutos"
-        val minutesToSeconds = (ticketInfoTimeToSolve?.toInt()?.times(60))
-        binding.btnTimeToSolveTask.tag = minutesToSeconds.toString()
-        when(ticketSortsType){
-            "SOLICITUD" -> binding.imgBtnTypeTasks.setImageResource(R.drawable.ic_interrogacion)
-            "INCIDENCIA" -> binding.imgBtnTypeTasks.setImageResource(R.drawable.ic_incidencia)
+
+                binding.tvIdTicket.text = "Petición #$ticketSortsId"
+                binding.edtTasksDescription.setText(ticketInfoContent)
+                binding.edtTasksDescription.tag = "0"
+                binding.btnAddCategory.text = ticketInfoCategory
+                binding.btnAddCategory.tag = ticketInfoIdCategory
+
+                binding.btnTimeToSolveTask.text = "00: $ticketInfoTimeToSolve minutos"
+                binding.includeTimeToSolveTask.minutes.text = ticketInfoTimeToSolve
+
+                binding.btnAddTechnician.text = prefer.getNameTechnicianTask()
+                binding.btnAddTechnician.tag = ticketInfoIdTechnician
+
+                val minutesToSeconds = (ticketInfoTimeToSolve?.toInt()?.times(60))
+                binding.btnTimeToSolveTask.tag = minutesToSeconds.toString()
+                when(ticketSortsType){
+                    "SOLICITUD" -> binding.imgBtnTypeTasks.setImageResource(R.drawable.ic_interrogacion)
+                    "INCIDENCIA" -> binding.imgBtnTypeTasks.setImageResource(R.drawable.ic_incidencia)
+                }
+
+                when(ticketInfoStatus){
+                    "TERMINADO" -> {
+                        binding.imgBtnTaskStatus.setImageResource(R.drawable.ic_task_done)
+                        binding.imgBtnTaskStatus.tag = "2" //hecho
+                    }
+                    "PENDIENTE" -> {
+                        binding.imgBtnTaskStatus.setImageResource(R.drawable.ic_task_to_do)
+                        binding.imgBtnTaskStatus.tag = "1" //informativo
+                    }
+                    "INFORMACION" -> {
+                        binding.imgBtnTaskStatus.setImageResource(R.drawable.ic_task_information)
+                        binding.imgBtnTaskStatus.tag = "0" //informativo
+                    }
+                }
+
+                when(ticketSortsStatus){
+                    "EN CURSO (Asignada)" -> {
+                        val imagen = ContextCompat.getDrawable(
+                            applicationContext,
+                            R.drawable.ic_circulo_verde
+                        )
+                        val drawables: Array<Drawable> = binding.btnStatusTask.compoundDrawables
+                        binding.btnStatusTask.setCompoundDrawablesWithIntrinsicBounds(
+                            drawables[0],
+                            drawables[0],
+                            imagen,
+                            drawables[0]
+                        )
+                        binding.btnStatusTask.text = "EN CURSO (Asignada)"
+                        binding.btnStatusTask.tag = "2"
+                        binding.imgBtnStatusTasksHeader.setImageResource(R.drawable.ic_circulo_verde)
+                    }
+                    "2" -> {
+                        val imagen = ContextCompat.getDrawable(
+                            applicationContext,
+                            R.drawable.ic_circulo_verde
+                        )
+                        val drawables: Array<Drawable> = binding.btnStatusTask.compoundDrawables
+                        binding.btnStatusTask.setCompoundDrawablesWithIntrinsicBounds(
+                            drawables[0],
+                            drawables[0],
+                            imagen,
+                            drawables[0]
+                        )
+                        binding.btnStatusTask.text = "EN CURSO (Asignada)"
+                        binding.btnStatusTask.tag = "2"
+                        binding.imgBtnStatusTasksHeader.setImageResource(R.drawable.ic_circulo_verde)
+                    }
+                    "EN ESPERA" -> {
+                        val imagen =
+                            ContextCompat.getDrawable(applicationContext, R.drawable.ic_circulo)
+                        val drawables: Array<Drawable> = binding.btnStatusTask.compoundDrawables
+                        binding.btnStatusTask.setCompoundDrawablesWithIntrinsicBounds(
+                            drawables[0],
+                            drawables[0],
+                            imagen,
+                            drawables[0]
+                        )
+                        binding.btnStatusTask.text = "EN ESPERA"
+                        binding.btnStatusTask.tag = "4"
+                        binding.imgBtnStatusTasksHeader.setImageResource(R.drawable.ic_circulo)
+                    }
+                    "4" -> {
+                        val imagen =
+                            ContextCompat.getDrawable(applicationContext, R.drawable.ic_circulo)
+                        val drawables: Array<Drawable> = binding.btnStatusTask.compoundDrawables
+                        binding.btnStatusTask.setCompoundDrawablesWithIntrinsicBounds(
+                            drawables[0],
+                            drawables[0],
+                            imagen,
+                            drawables[0]
+                        )
+                        binding.btnStatusTask.text = "EN ESPERA"
+                        binding.btnStatusTask.tag = "4"
+                        binding.imgBtnStatusTasksHeader.setImageResource(R.drawable.ic_circulo)
+                    }
+                    "CERRADO" -> {
+                        val imagen = ContextCompat.getDrawable(
+                            applicationContext,
+                            R.drawable.ic_circulo_negro
+                        )
+                        val drawables: Array<Drawable> = binding.btnStatusTask.compoundDrawables
+                        binding.btnStatusTask.setCompoundDrawablesWithIntrinsicBounds(
+                            drawables[0],
+                            drawables[0],
+                            imagen,
+                            drawables[0]
+                        )
+                        binding.imgBtnStatusTasksHeader.setImageResource(R.drawable.ic_circulo_negro)
+                    }
+                }
+
+                when(ticketInfoPrivate){
+                    "SI" -> {
+                        binding.imgBtnPadLockTask.setImageResource(R.drawable.ic_candado_cerrado)
+                        binding.imgBtnPadLockTask.tag = "1"
+                    }
+                    "NO" -> {
+                        binding.imgBtnPadLockTask.setImageResource(R.drawable.ic_candado_abierto)
+                        binding.imgBtnPadLockTask.tag = "0"
+                    }
+                }
+                //Log.i("mensaje flag update","${flagUpdateTask}")
+                btnAddTasks(flagUpdateTask, ticketSortsId,ticketInfoId,ticketInfoIdTechnician,ticketSortsStatus)
+            }
+
         }
-
-        when(ticketInfoStatus){
-            "TERMINADO" -> {
-                binding.chkBoxPadLockTask.isChecked = true
-                binding.imgBtnTaskStatus.tag = "1"
-            }
-            "PENDIENTE" -> {
-                binding.chkBoxPadLockTask.isChecked = false
-                binding.imgBtnTaskStatus.tag = "0"
-            }
-            "INFORMACION" -> {
-                binding.chkBoxPadLockTask.isChecked = false
-                binding.imgBtnTaskStatus.tag = "2"
-            }
-        }
-
-        binding.imgBtnTaskStatus.setOnClickListener {
-            when(binding.chkBoxPadLockTask.isChecked){
-                true -> binding.imgBtnTaskStatus.tag = "1"
-                false -> binding.imgBtnTaskStatus.tag = "0"
-            }
-        }
-
-        when(ticketSortsStatus){
-            "EN CURSO (Asignada)" -> {
-                binding.imgBtnTaskStatus.setImageResource(R.drawable.ic_circulo_verde)
-                binding.imgBtnStatusTasksHeader.setImageResource(R.drawable.ic_circulo_verde)
-                binding.imgBtnTaskStatus.tag = "2"
-            }
-            "EN CURSO (Planificación)" -> {binding.imgBtnTaskStatus.tag = "3"}
-            "EN ESPERA" -> {
-                binding.imgBtnTaskStatus.setImageResource(R.drawable.ic_circulo)
-                binding.imgBtnStatusTasksHeader.setImageResource(R.drawable.ic_circulo)
-                binding.imgBtnTaskStatus.tag = "4"
-            }
-            "SOLUCIONADO" -> {binding.imgBtnTaskStatus.tag = "5"}
-        }
-
-        when(ticketInfoPrivate){
-            "SI" -> {
-                binding.imgBtnPadLockTask.setImageResource(R.drawable.ic_candado_cerrado)
-                binding.imgBtnPadLockTask.tag = "1"
-            }
-            "NO" -> {
-                binding.imgBtnPadLockTask.setImageResource(R.drawable.ic_candado_abierto)
-                binding.imgBtnPadLockTask.tag = "0"
-            }
-        }
-        Log.i("mensaje flag update","${flagUpdateTask}")
-        btnAddTasks(flagUpdateTask, ticketSortsId,ticketInfoId,ticketInfoIdTechnician,ticketSortsStatus)
     }
 
     //INICIO - funcion que abre modal para escoger una tarea
@@ -784,6 +861,26 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
                         ticketStatus,
                         ticketSortsId)
 
+                    val ticketSortsStatus = binding.btnStatusTask.tag.toString()
+                    val room =
+                        Room.databaseBuilder(this, TicketInfoDB::class.java, "ticketInfoBD").build()
+                    Toast.makeText(
+                        this,
+                        "${prefer.getTicketSortsId()} : $ticketSortsStatus",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    lifecycleScope.launch {
+                        room.daoTicketInfo()
+                            .updateTicketInfo(token.prefer.getTicketSortsId(), ticketSortsStatus)
+                        val getTicketInfoDB = room.daoTicketInfo().getTicketInfo()
+                        for (element in getTicketInfoDB) {
+                            Log.i(
+                                "mensaje dbTicketFollow",
+                                "$element\n"
+                            )
+                        }
+                    }
+                    MainActivity.updateFragmentFlag = true
                     onBackPressed()
                 }
 
@@ -824,53 +921,6 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
                     startActivity(intentOnBack)
                 }
             }
-
-
-            /*when(categoryId == null){
-                true -> Toast.makeText(this, "Agregar Categoria", Toast.LENGTH_SHORT).show()
-                else -> {
-                    Log.i("mensaje flag task","${flagUpdateTask}")
-                    when(flagUpdateTask){
-                        true -> {
-                            requestVolleyUpdateTask(
-                                ticketInfoId,
-                                taskDescription,
-                                taskPrivate,
-                                ticketSortsIdTechnician,
-                                taskState,
-                                templateId,
-                                categoryId,
-                                dateEnd,
-                                dateBegin,
-                                ticketStatus,
-                                ticketSortsId)
-
-                            onBackPressed()
-                        }
-                        false -> {
-                            requestVolleyInsertTask(
-                                taskType,
-                                taskDescription,
-                                taskPrivate,
-                                technicianId,
-                                taskState,
-                                templateId,
-                                categoryId,
-                                actionTime,
-                                ticketSortsStatusTag,
-                                ticketSortsId
-                            )
-
-                            onBackPressed()
-                        }
-                    }
-                }
-            }*/
-
-
-
-
-
         }
     }
 

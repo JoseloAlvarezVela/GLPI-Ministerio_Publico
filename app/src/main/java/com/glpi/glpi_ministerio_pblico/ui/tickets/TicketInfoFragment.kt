@@ -159,6 +159,7 @@ class TicketInfoFragment : Fragment(), RecyclerAdapter.onConversationClickListen
         }*/
     }
 
+
     private fun volleyRequestIdRecipient(){
         /*val bundle = intent.extras
         val idRecipient = bundle!!.getString("ticketSortsIdRecipient")*/
@@ -173,6 +174,7 @@ class TicketInfoFragment : Fragment(), RecyclerAdapter.onConversationClickListen
                     val nameId = dataId.getString("NOMBRE")
                     val lastNameId = dataId.getString("APELLIDO")
                     val cellPhone = dataId.getString("TELEFONO")
+
 
                     binding.includeTicketsHistorico.txtNameOperador.text = "$nameId $lastNameId"
                     //binding.includeTickets.txtTasksUserName.text = " - $nameId $lastNameId"
@@ -195,6 +197,32 @@ class TicketInfoFragment : Fragment(), RecyclerAdapter.onConversationClickListen
         VolleySingleton.getInstance(requireContext()).addToRequestQueue(stringRequestDataTickets)
         //FIN volley ------------------------------------------------------------
     }
+
+    /*private fun volleyRequestIdTechnician(){
+        val stringRequestDataTickets = object : StringRequest(Method.POST,
+            MainActivity.urlApi_TasksUsers+ prefer.getId(), Response.Listener { response ->
+                try {
+                    //val jsonArrayTechnicianTask = JSONArray()
+                    val jsonArrayTechnicianTask = JSONArray(response)
+                    val dataTechnician = jsonArrayTechnicianTask.getJSONObject(0)
+                    val nameTechnicianTask = dataTechnician.getString("NOMBRE")
+                    val lastNameTechnicianTask = dataTechnician.getString("APELLIDO")
+                    b
+                    //binding.includeTickets.labelAsignadoNombre.text = "$nameId $lastNameId"
+                }catch (e:Exception){
+                    e.printStackTrace()
+                }
+            }, Response.ErrorListener {
+                Toast.makeText(this, "ERROR CON EL SERVIDOR", Toast.LENGTH_SHORT).show()
+            }){
+            override fun getParams(): Map<String, String>? {
+                val params: MutableMap<String, String> = HashMap()
+                params["session_token"] = token.prefer.getToken()
+                return params
+            }
+        }
+        VolleySingleton.getInstance(this).addToRequestQueue(stringRequestDataTickets)
+    }*/
 
     //consultamos la información de ticket por id del ticket
     private fun volleyRequestTicketInfo() {

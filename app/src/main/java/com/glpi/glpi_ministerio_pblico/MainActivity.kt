@@ -24,19 +24,23 @@ import androidx.core.text.HtmlCompat
 import androidx.core.view.isVisible
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.FragmentTransaction
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import androidx.room.Room
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
+import com.glpi.glpi_ministerio_pblico.data.database.TicketInfoDB
 import com.glpi.glpi_ministerio_pblico.databinding.ActivityMainBinding
 import com.glpi.glpi_ministerio_pblico.ui.misPeticiones.MisPeticionesFragment
 import com.glpi.glpi_ministerio_pblico.ui.shared.token.Companion.prefer
 import com.glpi.glpi_ministerio_pblico.utilities.Utils_Global
 import com.google.android.material.navigation.NavigationView
+import kotlinx.coroutines.launch
 import org.json.JSONArray
 import org.json.JSONObject
 import java.text.SimpleDateFormat
@@ -168,6 +172,20 @@ class MainActivity : AppCompatActivity(){
         when(updateFragmentFlag){
             true -> replaceFragment(MisPeticionesFragment())
             false -> Toast.makeText(this, "no se actualizó el fragment", Toast.LENGTH_SHORT).show()
+        }
+
+        val room  = Room.databaseBuilder(this, TicketInfoDB::class.java,"ticketInfoBD").build()
+        Log.i("mensaje idSort",prefer.getTicketSortsId())
+        when(prefer.getTicketSortsId().isNotEmpty()){
+            true -> {
+                lifecycleScope.launch{
+                    room.daoTicketInfo().deleteTicketInfo(prefer.getTicketSortsId())
+
+                    if (room.daoTicketInfo().getTicketInfo().isEmpty()){
+                        Toast.makeText(applicationContext, "se borró los datos de la base de datos", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
         }
 
         userEntities()

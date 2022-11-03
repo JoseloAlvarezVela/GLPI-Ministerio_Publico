@@ -166,8 +166,8 @@
 
                     <Button
                         android:id="@+id/btnTimeToSolveTask"
-                        android:layout_width="140dp"
-                        android:layout_height="35dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:background="@drawable/esq_redondeada_gris"
                         android:drawableLeft="@drawable/ic_reloj_cronometro"
                         android:fontFamily="@font/averia_sans_libre_light"
