@@ -1,5 +1,8 @@
 package com.glpi.glpi_ministerio_pblico
 
+import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import android.graphics.Color
@@ -20,6 +23,8 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import androidx.core.text.HtmlCompat
 import androidx.core.view.isVisible
 import androidx.drawerlayout.widget.DrawerLayout
@@ -79,6 +84,9 @@ class MainActivity : AppCompatActivity(){
         val urlApi_InsertFollowup: String = "$protocol://$url:$port/api/insert_followups"
         val urlApi_UpdateTasks: String = "$protocol://$url:$port/api/update_tasks/"
         val urlApi_InsertTasks: String = "$protocol://$url:$port/api/insert_tasks/"
+        val urlApi_SolutionTemplate: String = "$protocol://$url:$port/api/solution_templates"
+        val urlApi_SolutionType: String = "$protocol://$url:$port/api/solution_types"
+        val urlApi_InsertSolution: String = "$protocol://$url:$port/api/insert_solutions/"
         val urlApi_GetRequestTypes: String = "$protocol://$url:$port/api/get_request_types"
 
 
@@ -148,6 +156,10 @@ class MainActivity : AppCompatActivity(){
         }
     }
 
+    private val channelId = "channelId"
+    private val channelName = "channelName"
+
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -169,6 +181,17 @@ class MainActivity : AppCompatActivity(){
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
+        //--------------------------
+        /*notificationChannel()
+        val notification = NotificationCompat.Builder(this,channelId).also {
+            it.setContentTitle("Titulo de notificación")
+            it.setContentText("contenido del ticket")
+            it.setSmallIcon(R.drawable.ic_circulo_verde)
+            it.setPriority(NotificationCompat.PRIORITY_HIGH)
+        }.build()
+
+        val notificationManager = NotificationManagerCompat.from(this)*/
+        //--------------------
         when(updateFragmentFlag){
             true -> replaceFragment(MisPeticionesFragment())
             false -> Toast.makeText(this, "no se actualizó el fragment", Toast.LENGTH_SHORT).show()
@@ -500,6 +523,21 @@ class MainActivity : AppCompatActivity(){
             binding.appBarMain.llyBackgroudAbm.isVisible = false
         }
         //FIN - boton filtro de la derecha - activity_filtro_right.xml
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun notificationChannel() {
+        when(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            true -> {
+                val priority = NotificationManager.IMPORTANCE_HIGH
+                val channel = NotificationChannel(channelId,channelName,priority).apply {
+                    lightColor = Color.RED
+                    enableLights(true)
+                }
+                val manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                manager.createNotificationChannel(channel)
+            }
+        }
     }
 
     //nota:eliminar fragment de fondo

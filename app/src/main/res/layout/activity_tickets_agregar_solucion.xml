@@ -57,22 +57,21 @@
                     android:textSize="15sp" />
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/textView17"
-                android:layout_width="1dp"
-                android:layout_height="30dp"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:background="@drawable/ic_interrogacion"
-                app:drawableTint="#FFFFFF" />
+            <ImageButton
+                android:id="@+id/imgBtnTypeSolution"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="?android:attr/selectableItemBackground"
+                android:padding="5sp"
+                app:srcCompat="@drawable/ic_interrogacion" />
 
-            <TextView
-                android:id="@+id/textView18"
-                android:layout_width="1dp"
-                android:layout_height="30dp"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="1"
-                android:background="@drawable/ic_circulo" />
+            <ImageButton
+                android:id="@+id/imgBtnStatusSolutionHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="?android:attr/selectableItemBackground"
+                android:padding="5sp"
+                app:srcCompat="@drawable/ic_circulo_verde" />
 
             <TextView
                 android:id="@+id/textView19"
@@ -92,7 +91,7 @@
                 app:drawableTint="#000000" />
 
             <Button
-                android:id="@+id/btn_addsol_acttaddsol"
+                android:id="@+id/btnAddSolution"
                 android:layout_width="50dp"
                 android:layout_height="match_parent"
                 android:layout_marginStart="20dp"
@@ -116,12 +115,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout3">
 
-        <RadioButton
-            android:id="@+id/radioButton2"
-            android:layout_width="wrap_content"
+        <Button
+            android:id="@+id/btnSolutionType"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            app:buttonTint="#67D392" />
+            android:layout_weight="1"
+            android:padding="5sp"
+            android:text="Tipo de solución"
+            android:textSize="10sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -152,7 +153,7 @@
                 android:text="Descripción" />
 
             <EditText
-                android:id="@+id/editTextTextPersonName3"
+                android:id="@+id/edtSolutionDescription"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
@@ -294,6 +295,38 @@
                     android:src="@drawable/ic_fab_camar"
                     app:backgroundTint="#71A35D" />
             </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/fabSolutionTemplate"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginTop="10sp"
+                android:layout_weight="1"
+                android:gravity="center_vertical|end"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textView533"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="5sp"
+                    android:layout_marginRight="5sp"
+                    android:layout_weight="1"
+                    android:background="@drawable/esq_redondeada_blanco"
+                    android:fontFamily="@font/averia_libre_light"
+                    android:padding="5sp"
+                    android:text="Plantilla de Solución"
+                    android:textColor="#636363"
+                    android:textSize="12sp" />
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/btnFabSolutionTemplate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:src="@drawable/ic_fab_plantilla"
+                    app:backgroundTint="#E4C529" />
+            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
@@ -315,6 +348,26 @@
                 app:backgroundTint="#E68080" />
         </LinearLayout>
     </LinearLayout>
+
+    <include
+        android:id="@+id/includeModalSolutionTemplate"
+        layout="@layout/modal_plantilla_agregar_solucion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/linearLayout3" />
+
+    <include
+        android:id="@+id/includeModalSolutionType"
+        layout="@layout/modal_plantilla_agregar_solucion_type"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/include2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

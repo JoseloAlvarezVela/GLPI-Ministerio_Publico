@@ -2,6 +2,7 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
+    id 'com.google.gms.google-services'
 }
 
 android {
@@ -9,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId "com.glpi.glpi_ministerio_pblico"
-        minSdk 16
+        minSdk 19 //bajar a 16
         targetSdk 32
         versionCode 1
         versionName "1.0"
@@ -49,6 +50,7 @@ dependencies {
     implementation 'com.android.volley:volley:1.2.1'
 
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
+    implementation 'com.google.firebase:firebase-messaging:20.1.0'
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
@@ -59,4 +61,7 @@ dependencies {
     kapt "androidx.room:room-compiler:2.4.3"
     //corutinas
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.5.1'
+
+    implementation platform('com.google.firebase:firebase-bom:31.0.2')
+    implementation 'com.google.firebase:firebase-analytics-ktx'
 }

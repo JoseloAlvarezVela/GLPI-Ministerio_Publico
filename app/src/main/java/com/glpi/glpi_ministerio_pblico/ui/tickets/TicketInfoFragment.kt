@@ -116,8 +116,12 @@ class TicketInfoFragment : Fragment(), RecyclerAdapter.onConversationClickListen
                         binding.tvTicketInfoStatus.tag = "4"
                     }
                     "CERRADO" -> binding.tvTicketInfoStatus.setBackgroundResource(R.drawable.ic_circulo_negro)
-                    else -> Log.i("mensaje","dato actualizado a: ${item.ticketSortsStatus}")
+                    "6" -> {
+                        binding.tvTicketInfoStatus.setBackgroundResource(R.drawable.ic_circulo_negro)
+                        binding.tvTicketInfoStatus.tag = "6"
+                    }
                 }
+
                 binding.tvTicketInfoLocation.text = item.ticketSortsLocationRequester
 
                 binding.includeTicketsHistorico.txtDescripcionTicketHistorico.text = item.ticketSortsContent

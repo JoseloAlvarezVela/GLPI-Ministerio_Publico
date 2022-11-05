@@ -170,12 +170,12 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
             hideFabs()
         }
         binding.includeFabs.btnFabSolucion.setOnClickListener {
-            val bundleIn = intent.extras
-            val ticketSortsId = bundleIn!!.getString("ticketSortsId")
+            progressBarTicketConversation.isVisible = true
+            binding.fragmentTicketInfoLayout.isVisible = false
+
+            val flagOnEditClick = false
             val intentAddSolution = Intent(this, TicketsAgregarSolucionActivity::class.java)
-            val bundle = Bundle()
-            bundle.putString("TicketID", ticketSortsId)
-            intentAddSolution.putExtras(bundle)
+            intentAddSolution.putExtra("flagOnEditClick", flagOnEditClick)
             intentAddSolution.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             startActivity(intentAddSolution)
 
@@ -358,6 +358,10 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
                         binding.includeNavHeaderTickets.txtTicketEstado.tag = "4"
                     }
                     "CERRADO" -> binding.includeNavHeaderTickets.txtTicketEstado.setBackgroundResource(R.drawable.ic_circulo_negro)
+                    "6" -> {
+                        binding.includeNavHeaderTickets.txtTicketEstado.setBackgroundResource(R.drawable.ic_circulo_negro)
+                        binding.includeNavHeaderTickets.txtTicketEstado.tag = "6"
+                    }
                 }
 
                 //descripción del ticket

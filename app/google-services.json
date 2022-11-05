@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "857643050110",
+    "project_id": "pushnotification-11bca",
+    "storage_bucket": "pushnotification-11bca.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:857643050110:android:8f8f642950fc8fe5ba242f",
+        "android_client_info": {
+          "package_name": "com.glpi.glpi_ministerio_pblico"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "857643050110-u2sbkjpf6er3bs5ket8doiesa37qlnrk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDXfxiUoP-Wn3nzw8H_Fv4oPLj59B81hSk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "857643050110-u2sbkjpf6er3bs5ket8doiesa37qlnrk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
