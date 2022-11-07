@@ -70,8 +70,6 @@ class TicketsAgregarSolucionActivity : AppCompatActivity(),
             when{
                 !flagUpdateSolution -> {
                     requestVolleyInsertSolution(solutionDescription,solutionType)
-
-
                     val ticketSortsStatus = "6"
                     val room =
                         Room.databaseBuilder(this, TicketInfoDB::class.java, "ticketInfoBD").build()
@@ -92,7 +90,9 @@ class TicketsAgregarSolucionActivity : AppCompatActivity(),
                         }
                     }
                     MainActivity.updateFragmentFlag = true
+                    val ticketSortsStatusString = "CERRADO"
                     val intentOnBack = Intent(this, NavFooterTicketsActivity::class.java)
+                    intentOnBack.putExtra("ticketSortsStatus",ticketSortsStatusString)
                     intentOnBack.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                     startActivity(intentOnBack)
                 }
@@ -363,5 +363,14 @@ class TicketsAgregarSolucionActivity : AppCompatActivity(),
         binding.includeBackgroundGris.clBackgroundgrisBggris.isVisible = false
 
     }
-    //FIN - fabs que abre modal plantilla,camara del celular y archivos del celular
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        val ticketSortsStatusString = "SIN_CAMBIO_DE_ESTADO"
+        val intentOnBackPressed = Intent(this, NavFooterTicketsActivity::class.java)
+        intentOnBackPressed.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        intentOnBackPressed.putExtra("ticketSortsStatus",ticketSortsStatusString)
+        startActivity(intentOnBackPressed)
+
+    }
 }

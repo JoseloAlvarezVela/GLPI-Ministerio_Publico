@@ -84,13 +84,31 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
             MainActivity.updateFragmentFlag = false
         }
 
+        val intentOnBack = intent.extras
+        when(intentOnBack!!.getString("ticketSortsStatus")){
+            "CERRADO" -> btnFabTicketClosed()
+            else -> btnFabs()
+        }
 
         activityHeader()
         btnPetition()
-        btnFabs()
         toggleButtonFooter()
 
         getTicketsConversationInfo()
+    }
+
+    private fun btnFabTicketClosed(){
+        binding.includeFabs.fabDesplegarOp.isVisible = false
+        /*binding.includeFabs.fabDesplegarOp.setOnClickListener {
+            if (!click_fab){
+                binding.includeFabs.fabReOpenTicket.isVisible = true
+                binding.fabBackground.isVisible = true
+
+                click_fab = true
+            }else{
+                hideFabs()
+            }
+        }*/
     }
 
     //nota:eliminar fragment de fondo
@@ -199,6 +217,7 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
     }
 
     fun hideFabs(){
+        binding.includeFabs.fabReOpenTicket.isVisible = false
         binding.includeFabs.fabSolucion.isVisible = false
         binding.includeFabs.btnFabSolucion.isVisible = false
         binding.includeFabs.fabDocumentos.isVisible = false

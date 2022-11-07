@@ -24,7 +24,7 @@ class FirebaseMessagingServices: FirebaseMessagingService() {
         val intent = Intent(this, MainActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
 
-        var pendingIntent : PendingIntent
+        val pendingIntent : PendingIntent
         //var pendingIntent =   PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {

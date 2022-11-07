@@ -62,6 +62,7 @@
                     android:gravity="center_vertical"
                     android:orientation="vertical"
                     app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/imgBtnPrivateTask"
                     app:layout_constraintStart_toEndOf="@+id/linearLayout9"
                     app:layout_constraintTop_toTopOf="parent">
 
@@ -90,17 +91,20 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:background="?android:attr/selectableItemBackground"
-                    android:paddingTop="5sp"
-                    android:paddingRight="5sp"
+                    android:padding="5sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:srcCompat="@android:drawable/ic_menu_edit" />
+
 
                 <ImageButton
                     android:id="@+id/imgBtnPrivateTask"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:visibility="gone"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:clickable="false"
+                    android:padding="5sp"
+                    android:visibility="visible"
                     app:layout_constraintEnd_toStartOf="@+id/imgBtnTaskStatus"
                     app:layout_constraintTop_toTopOf="parent"
                     app:srcCompat="@drawable/ic_candado_abierto" />
@@ -109,7 +113,10 @@
                     android:id="@+id/imgBtnTaskStatus"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:visibility="gone"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:clickable="false"
+                    android:padding="5sp"
+                    android:visibility="visible"
                     app:layout_constraintEnd_toStartOf="@+id/btn_edit"
                     app:layout_constraintTop_toTopOf="parent"
                     app:srcCompat="@drawable/ic_task_to_do" />
@@ -186,7 +193,7 @@
                     android:id="@+id/txt_estimatedHour"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:drawableLeft="@drawable/ic_calendar_repair"
+                    android:drawableLeft="@drawable/ic_esperando"
                     android:drawablePadding="5sp"
                     android:gravity="center_vertical|end"
                     android:paddingRight="10sp"

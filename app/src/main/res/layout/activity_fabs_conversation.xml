@@ -18,6 +18,38 @@
         app:layout_constraintEnd_toEndOf="parent">
 
         <LinearLayout
+            android:id="@+id/fabReOpenTicket"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10sp"
+            android:clickable="true"
+            android:gravity="center|end"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5sp"
+                android:layout_marginRight="5sp"
+                android:background="@drawable/esq_redondeada_blanco"
+                android:gravity="center"
+                android:padding="5sp"
+                android:text="ReAbrir Ticket"
+                android:textColor="#636363"
+                android:textSize="12sp" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/btnFabReOpenTicket"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:visibility="visible"
+                app:backgroundTint="#CFC8C8"
+                app:srcCompat="@drawable/ic_reopen_ticket" />
+        </LinearLayout>
+
+        <LinearLayout
             android:id="@+id/fab_seguimiento"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"

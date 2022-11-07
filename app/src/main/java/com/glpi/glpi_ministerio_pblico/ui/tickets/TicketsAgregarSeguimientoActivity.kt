@@ -117,7 +117,10 @@ class TicketsAgregarSeguimientoActivity : AppCompatActivity(),
                     }
 
                     MainActivity.updateFragmentFlag = true
+                    val ticketSortsStatusString = "SIN_CAMBIO_DE_ESTADO"
+                    MainActivity.updateFragmentFlag = true
                     val intentOnBack = Intent(this, NavFooterTicketsActivity::class.java)
+                    intentOnBack.putExtra("ticketSortsStatus",ticketSortsStatusString)
                     intentOnBack.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                     startActivity(intentOnBack)
 
@@ -150,7 +153,10 @@ class TicketsAgregarSeguimientoActivity : AppCompatActivity(),
                         }
                     }
                     MainActivity.updateFragmentFlag = true
+                    val ticketSortsStatusString = "SIN_CAMBIO_DE_ESTADO"
+                    MainActivity.updateFragmentFlag = true
                     val intentOnBack = Intent(this, NavFooterTicketsActivity::class.java)
+                    intentOnBack.putExtra("ticketSortsStatus",ticketSortsStatusString)
                     intentOnBack.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                     startActivity(intentOnBack)
                 }
@@ -713,9 +719,11 @@ class TicketsAgregarSeguimientoActivity : AppCompatActivity(),
 
     override fun onBackPressed() {
         super.onBackPressed()
-        val intent = Intent(this, NavFooterTicketsActivity::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        startActivity(intent)
+        val ticketSortsStatusString = "SIN_CAMBIO_DE_ESTADO"
+        val intentOnBackPressed = Intent(this, NavFooterTicketsActivity::class.java)
+        intentOnBackPressed.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        intentOnBackPressed.putExtra("ticketSortsStatus",ticketSortsStatusString)
+        startActivity(intentOnBackPressed)
     }
 
     override fun onFollowupTemplateClick(

@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.glpi.glpi_ministerio_pblico.R
@@ -77,27 +78,42 @@ class RecyclerAdapter(
         when(dataModelArrayListConversation[position].ticketInfoType){
             "TASK" -> {
                 val time = dataModelArrayListConversation[position].ticketInfoCreationDate.toString().split(" ") //hora de inicio de tarea
-                val minutesToAdd: Int = dataModelArrayListConversation[position].ticketInfoTimeToSolve.toString().toInt()  //tiempo para resolver tarea en minutos
+                val minutesToAdd: Long = dataModelArrayListConversation[position].ticketInfoTimeToSolve.toString().toLong()  //tiempo para resolver tarea en minutos
                 val minutesToSecondsAdd = minutesToAdd*60
 
                 val convertHour = time[1].toString().split(":")
                 //convertimos horas a segundos
-                Log.i("mensaje hora","${time[1]}")
-                Log.i("mensaje hora","${convertHour}")
+                //Log.i("mensaje hora","${time[1]}")
+                //Log.i("mensaje hora","${convertHour}")
                 val minutesToSeconds = convertHour[1].toInt()*60
                 val hourToSecond = convertHour[0].toInt()*3600
                 val secondsTotal = hourToSecond+minutesToSeconds+convertHour[2].toInt()+minutesToSecondsAdd
-                Log.i("mensaje hour to seconds","$secondsTotal")
+                //Log.i("mensaje hour to seconds","$secondsTotal")
 
                 val hora = (secondsTotal / 3600)
                 val minutos = ((secondsTotal%3600) /60)
                 val segundos = (secondsTotal%60)
-                Log.i("mensaje seconds to Hour","$hora:$minutos:$segundos")
+                //Log.i("mensaje seconds to Hour","$hora:$minutos:$segundos")
 
 
                 holder.tasksCreationDate.text =
                     "${dataModelArrayListConversation[position].ticketInfoCreationDate} -> $hora:$minutos:$segundos" //sumar a cration el time to solve
-                holder.tasksTimeToSolve.text = dataModelArrayListConversation[position].ticketInfoTimeToSolve+" minutos"
+
+
+                //convertir de minutos a horas
+                val minToHour: Double = (minutesToAdd / 60.0) //obtengo 0.5
+                val resto: Double = minToHour - minToHour.toString().split(".")[0].toLong()
+                val minuts: Long = (resto * 60).toLong()
+                /*Log.i("mensaje minTohour1","${dataModelArrayListConversation[position].ticketInfoTimeToSolve}")
+                Log.i("mensaje minTohour2","$minToHour")
+                Log.i("mensaje minTohour3","$resto")
+                Log.i("mensaje minTohour4","$minuts")*/
+                val min = minToHour.toString().split(".")
+                when(dataModelArrayListConversation[position].ticketInfoTimeToSolve!!.toInt() < 60){
+                    true -> holder.tasksTimeToSolve.text = dataModelArrayListConversation[position].ticketInfoTimeToSolve+" minutos"
+                    false -> holder.tasksTimeToSolve.text = "${minToHour.toString().split(".")[0]} horas y $minuts minutos "
+                }
+
 
 
                 holder.linearLayoutTasksCarrierName.isVisible = true
@@ -125,11 +141,15 @@ class RecyclerAdapter(
             "FOLLOWUP" -> {
                 holder.linearLayoutTasksCarrierName.isVisible = false
                 holder.followUpLinearLayoutTimeToSolve.isVisible = false
-                holder.imgBtnPrivateTask.isVisible = false
+                holder.imgBtnPrivateTask.isVisible = true
                 holder.imgBtnTaskStatus.isVisible = false
                 holder.param.setMargins(100,10,0,10)
                 holder.conversationTicketStatus.layoutParams = holder.param
                 holder.conversationTicketStatus.setBackgroundResource(R.drawable.esq_redondeada_followup)
+                when(dataModelArrayListConversation[position].ticketInfoPrivate){
+                    "SI" -> holder.imgBtnPrivateTask.setImageResource(R.drawable.ic_candado_cerrado)
+                    "NO" -> holder.imgBtnPrivateTask.setImageResource(R.drawable.ic_candado_abierto)
+                }
             }
             "SOLUTION" -> {
                 holder.conversationStatus.isVisible = true

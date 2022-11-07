@@ -44,7 +44,9 @@ import com.glpi.glpi_ministerio_pblico.databinding.ActivityMainBinding
 import com.glpi.glpi_ministerio_pblico.ui.misPeticiones.MisPeticionesFragment
 import com.glpi.glpi_ministerio_pblico.ui.shared.token.Companion.prefer
 import com.glpi.glpi_ministerio_pblico.utilities.Utils_Global
+import com.google.android.gms.tasks.Task
 import com.google.android.material.navigation.NavigationView
+import com.google.firebase.messaging.FirebaseMessaging
 import kotlinx.coroutines.launch
 import org.json.JSONArray
 import org.json.JSONObject
@@ -181,6 +183,14 @@ class MainActivity : AppCompatActivity(){
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
+        FirebaseMessaging.getInstance().token.addOnCompleteListener {
+            task: Task<String> ->
+                when{
+                    !task.isSuccessful -> return@addOnCompleteListener
+                }
+            val token  = task.result
+            Log.i("mensaje tokenCel",token)
+        }
         //--------------------------
         /*notificationChannel()
         val notification = NotificationCompat.Builder(this,channelId).also {

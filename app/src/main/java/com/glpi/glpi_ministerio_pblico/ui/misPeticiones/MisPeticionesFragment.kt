@@ -562,6 +562,7 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.onTicketCl
         ticketSortsSource: String,
         ticketSortsUrgency: String
     ) {
+        val flagTicketClosed = false
         val room =
             Room.databaseBuilder(requireContext(), TicketInfoDB::class.java, "ticketInfoBD").build()
         lifecycleScope.launch {
@@ -592,7 +593,7 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.onTicketCl
 
                     ticketSortsCategory,
                     ticketSortsSource,
-                    ticketSortsUrgency,
+                    ticketSortsUrgency
                 )
             )
 
@@ -607,6 +608,8 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.onTicketCl
         prefer.saveTicketSortsId(ticketSortsId)
         prefer.saveRecipientId(ticketSortsIdRecipient)
         val intent = Intent(context, NavFooterTicketsActivity::class.java)
+        Log.i("mensaje status",ticketSortsStatus)
+        intent.putExtra("ticketSortsStatus",ticketSortsStatus)
         startActivity(intent)
     }
 }

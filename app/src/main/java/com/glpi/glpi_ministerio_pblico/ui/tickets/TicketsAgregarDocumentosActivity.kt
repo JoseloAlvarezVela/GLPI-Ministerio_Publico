@@ -86,5 +86,14 @@ class TicketsAgregarDocumentosActivity : AppCompatActivity() {
             click_desplegar = false
         }
     }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        val ticketSortsStatusString = "SIN_CAMBIO_DE_ESTADO"
+        val intentOnBackPressed = Intent(this, NavFooterTicketsActivity::class.java)
+        intentOnBackPressed.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        intentOnBackPressed.putExtra("ticketSortsStatus",ticketSortsStatusString)
+        startActivity(intentOnBackPressed)
+    }
     //FIN - fabs que abre modal plantilla,camara del celular y archivos del celular
 }

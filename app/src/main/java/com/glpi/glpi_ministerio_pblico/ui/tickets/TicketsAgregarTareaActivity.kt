@@ -124,15 +124,18 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
             when(binding.imgBtnTaskStatus.tag){
                 "0" -> {
                     binding.imgBtnTaskStatus.setImageResource(R.drawable.ic_task_done)
-                    binding.imgBtnTaskStatus.tag = "1" //por hacer
+                    binding.imgBtnTaskStatus.tag = "2" //por hacer
+                    Toast.makeText(this, binding.imgBtnTaskStatus.tag.toString(), Toast.LENGTH_SHORT).show()
                 }
                 "1" -> {
                     binding.imgBtnTaskStatus.setImageResource(R.drawable.ic_task_to_do)
-                    binding.imgBtnTaskStatus.tag = "2" //hecho
+                    binding.imgBtnTaskStatus.tag = "1" //hecho
+                    Toast.makeText(this, binding.imgBtnTaskStatus.tag.toString(), Toast.LENGTH_SHORT).show()
                 }
                 "2" -> {
                     binding.imgBtnTaskStatus.setImageResource(R.drawable.ic_task_information)
                     binding.imgBtnTaskStatus.tag = "0" //informativo
+                    Toast.makeText(this, binding.imgBtnTaskStatus.tag.toString(), Toast.LENGTH_SHORT).show()
                 }
 
             }
@@ -508,9 +511,7 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
 
                 //-------------
                 binding.imgBtnTaskStatus.setImageResource(R.drawable.ic_task_to_do)
-                binding.imgBtnTaskStatus.tag = "0" // estado de la tarea: hecho, por hacer, informativo
-                //binding.imgBtnTaskStatus.tag = "1"//hecho
-                //binding.imgBtnTaskStatus.tag = "3"//informativo
+                binding.imgBtnTaskStatus.tag = "1" // estado de la tarea: hecho, por hacer, informativo
                 //-------------
 
                 binding.btnTimeToSolveTask.text = "30 minutos"
@@ -881,7 +882,12 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
                         }
                     }
                     MainActivity.updateFragmentFlag = true
-                    onBackPressed()
+                    val ticketSortsStatusString = "SIN_CAMBIO_DE_ESTADO"
+                    MainActivity.updateFragmentFlag = true
+                    val intentOnBack = Intent(this, NavFooterTicketsActivity::class.java)
+                    intentOnBack.putExtra("ticketSortsStatus",ticketSortsStatusString)
+                    intentOnBack.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                    startActivity(intentOnBack)
                 }
 
                 !flagUpdateTask -> {
@@ -915,8 +921,10 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
                             )
                         }
                     }
+                    val ticketSortsStatusString = "SIN_CAMBIO_DE_ESTADO"
                     MainActivity.updateFragmentFlag = true
                     val intentOnBack = Intent(this, NavFooterTicketsActivity::class.java)
+                    intentOnBack.putExtra("ticketSortsStatus",ticketSortsStatusString)
                     intentOnBack.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                     startActivity(intentOnBack)
                 }
@@ -1191,9 +1199,11 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
 
     override fun onBackPressed() {
         super.onBackPressed()
-        val intent = Intent(this, NavFooterTicketsActivity::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        startActivity(intent)
+        val ticketSortsStatusString = "SIN_CAMBIO_DE_ESTADO"
+        val intentOnBackPressed = Intent(this, NavFooterTicketsActivity::class.java)
+        intentOnBackPressed.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        intentOnBackPressed.putExtra("ticketSortsStatus",ticketSortsStatusString)
+        startActivity(intentOnBackPressed)
     }
 
     override fun onTasksTemplateClick(
