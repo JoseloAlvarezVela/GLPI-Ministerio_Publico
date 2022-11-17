@@ -1,6 +1,5 @@
 package com.glpi.glpi_ministerio_pblico.utilities
 
-import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.android.volley.Response
@@ -9,14 +8,15 @@ import com.glpi.glpi_ministerio_pblico.MainActivity
 import com.glpi.glpi_ministerio_pblico.MainActivity.Companion.jsonArrayResponse
 import com.glpi.glpi_ministerio_pblico.MainActivity.Companion.jsonObjectResponse
 import com.glpi.glpi_ministerio_pblico.VolleySingleton
-import com.glpi.glpi_ministerio_pblico.databinding.ActivityNavFooterTicketsBinding
 import com.glpi.glpi_ministerio_pblico.ui.shared.token
 import org.json.JSONArray
 import org.json.JSONObject
-import java.util.HashMap
+import java.text.DateFormat
+import java.util.*
+import kotlin.collections.HashMap
 
 class Utils_Global: AppCompatActivity() {
-
+    private val FORMAT = "%02d:%02d:%02d"
     companion object{
         fun volleyRequestID(context: MainActivity, urlApi: String){
             val stringRequestDataTickets = object : StringRequest(Method.POST,urlApi, Response.Listener { response ->
@@ -40,6 +40,18 @@ class Utils_Global: AppCompatActivity() {
             }
             VolleySingleton.getInstance(context).addToRequestQueue(stringRequestDataTickets)
             //FIN volley ------------------------------------------------------------
+        }
+
+        fun convertMinutesToTimeFormat(minutesToConvert: String): String{
+            val hour = minutesToConvert.toInt()/60
+            val minutes = minutesToConvert.toInt()%60
+            val format = "%02d:%02d"
+
+            return String.format(format,hour,minutes)
+            /*return when(hour){
+                0 -> "$minutes minutos"
+                else -> String.format(format,hour,minutes)
+            }*/
         }
     }
 }

@@ -11,9 +11,13 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.view.isVisible
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
+import androidx.room.Room
 import com.glpi.glpi_ministerio_pblico.R
+import com.glpi.glpi_ministerio_pblico.data.database.TicketInfoDB
 import com.glpi.glpi_ministerio_pblico.ui.shared.token.Companion.prefer
+import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -57,11 +61,6 @@ class RecyclerAdapter(
 
         holder.tasksDate.text = dataModelArrayListConversation[position].ticketInfoDate
 
-
-
-
-
-
         holder.conversationContent.text = dataModelArrayListConversation[position].ticketInfoContent
 
         /*Log.i("mensaje compare","${dataModelArrayListConversation[position].ticketInfoIdUser} = ${dataModelArrayListConversation[position].ticketInfoIdTechnician}")
@@ -75,92 +74,196 @@ class RecyclerAdapter(
                 holder.conversationTicketStatus.layoutParams = holder.param
             }
         }*/
-        when(dataModelArrayListConversation[position].ticketInfoType){
-            "TASK" -> {
-                val time = dataModelArrayListConversation[position].ticketInfoCreationDate.toString().split(" ") //hora de inicio de tarea
-                val minutesToAdd: Long = dataModelArrayListConversation[position].ticketInfoTimeToSolve.toString().toLong()  //tiempo para resolver tarea en minutos
-                val minutesToSecondsAdd = minutesToAdd*60
+        /*when(dataModelArrayListConversation[position].ticketInfoType!!.contains("SOLUTION")){
+            true -> Log.i("mensaje","si existe solución")
+            false -> Log.i("mensaje","si existe solución")
+        }*/
+        when(prefer.getTicketSortsStatus()){
+            "CERRADO" -> {
+                when(dataModelArrayListConversation[position].ticketInfoType){
+                    "TASK" -> {
+                        val time = dataModelArrayListConversation[position].ticketInfoCreationDate.toString().split(" ") //hora de inicio de tarea
+                        val minutesToAdd: Long = dataModelArrayListConversation[position].ticketInfoTimeToSolve.toString().toLong()  //tiempo para resolver tarea en minutos
+                        val minutesToSecondsAdd = minutesToAdd*60
 
-                val convertHour = time[1].toString().split(":")
-                //convertimos horas a segundos
-                //Log.i("mensaje hora","${time[1]}")
-                //Log.i("mensaje hora","${convertHour}")
-                val minutesToSeconds = convertHour[1].toInt()*60
-                val hourToSecond = convertHour[0].toInt()*3600
-                val secondsTotal = hourToSecond+minutesToSeconds+convertHour[2].toInt()+minutesToSecondsAdd
-                //Log.i("mensaje hour to seconds","$secondsTotal")
+                        val convertHour = time[1].toString().split(":")
+                        //convertimos horas a segundos
+                        //Log.i("mensaje hora","${time[1]}")
+                        //Log.i("mensaje hora","${convertHour}")
+                        val minutesToSeconds = convertHour[1].toInt()*60
+                        val hourToSecond = convertHour[0].toInt()*3600
+                        val secondsTotal = hourToSecond+minutesToSeconds+convertHour[2].toInt()+minutesToSecondsAdd
+                        //Log.i("mensaje hour to seconds","$secondsTotal")
 
-                val hora = (secondsTotal / 3600)
-                val minutos = ((secondsTotal%3600) /60)
-                val segundos = (secondsTotal%60)
-                //Log.i("mensaje seconds to Hour","$hora:$minutos:$segundos")
-
-
-                holder.tasksCreationDate.text =
-                    "${dataModelArrayListConversation[position].ticketInfoCreationDate} -> $hora:$minutos:$segundos" //sumar a cration el time to solve
+                        val hora = (secondsTotal / 3600)
+                        val minutos = ((secondsTotal%3600) /60)
+                        val segundos = (secondsTotal%60)
+                        //Log.i("mensaje seconds to Hour","$hora:$minutos:$segundos")
 
 
-                //convertir de minutos a horas
-                val minToHour: Double = (minutesToAdd / 60.0) //obtengo 0.5
-                val resto: Double = minToHour - minToHour.toString().split(".")[0].toLong()
-                val minuts: Long = (resto * 60).toLong()
-                /*Log.i("mensaje minTohour1","${dataModelArrayListConversation[position].ticketInfoTimeToSolve}")
-                Log.i("mensaje minTohour2","$minToHour")
-                Log.i("mensaje minTohour3","$resto")
-                Log.i("mensaje minTohour4","$minuts")*/
-                val min = minToHour.toString().split(".")
-                when(dataModelArrayListConversation[position].ticketInfoTimeToSolve!!.toInt() < 60){
-                    true -> holder.tasksTimeToSolve.text = dataModelArrayListConversation[position].ticketInfoTimeToSolve+" minutos"
-                    false -> holder.tasksTimeToSolve.text = "${minToHour.toString().split(".")[0]} horas y $minuts minutos "
+                        holder.tasksCreationDate.text =
+                            "${dataModelArrayListConversation[position].ticketInfoCreationDate} -> $hora:$minutos:$segundos" //sumar a cration el time to solve
+
+
+                        //convertir de minutos a horas
+                        val minToHour: Double = (minutesToAdd / 60.0) //obtengo 0.5
+                        val resto: Double = minToHour - minToHour.toString().split(".")[0].toLong()
+                        val minuts: Long = (resto * 60).toLong()
+                        /*Log.i("mensaje minTohour1","${dataModelArrayListConversation[position].ticketInfoTimeToSolve}")
+                        Log.i("mensaje minTohour2","$minToHour")
+                        Log.i("mensaje minTohour3","$resto")
+                        Log.i("mensaje minTohour4","$minuts")*/
+                        val min = minToHour.toString().split(".")
+                        when(dataModelArrayListConversation[position].ticketInfoTimeToSolve!!.toInt() < 60){
+                            true -> holder.tasksTimeToSolve.text = dataModelArrayListConversation[position].ticketInfoTimeToSolve+" minutos"
+                            false -> holder.tasksTimeToSolve.text = "${minToHour.toString().split(".")[0]} horas y $minuts minutos "
+                        }
+
+
+
+                        holder.linearLayoutTasksCarrierName.isVisible = true
+                        holder.solutionImageButtonEdit.isVisible = false
+                        holder.imgBtnPrivateTask.isVisible = true
+                        holder.imgBtnTaskStatus.isVisible = true
+                        holder.followUpLinearLayoutTimeToSolve.isVisible = true
+
+                        when(dataModelArrayListConversation[position].ticketInfoPrivate){
+                            "SI" -> holder.imgBtnPrivateTask.setImageResource(R.drawable.ic_candado_cerrado)
+                            "NO" -> holder.imgBtnPrivateTask.setImageResource(R.drawable.ic_candado_abierto)
+                        }
+
+                        when(dataModelArrayListConversation[position].ticketInfoStatus){
+                            "PENDIENTE" -> holder.imgBtnTaskStatus.setImageResource(R.drawable.ic_task_to_do)
+                            "TERMINADO" -> holder.imgBtnTaskStatus.setImageResource(R.drawable.ic_task_done)
+                            "INFORMACION" -> holder.imgBtnTaskStatus.setImageResource(R.drawable.ic_task_information)
+                        }
+
+                        //holder.ticketInfoNameTechnician.text = dataModelArrayListConversation[position].ticketInfoIdTechnician
+                        holder.ticketInfoNameTechnician.text = prefer.getNameUser().toString()
+                        holder.param.setMargins(0, 10, 100, 10)
+                        holder.conversationTicketStatus.layoutParams = holder.param
+                        holder.conversationTicketStatus.setBackgroundResource(R.drawable.esq_redondeada_tasks)
+                    }
+                    "FOLLOWUP" -> {
+                        holder.solutionImageButtonEdit.isVisible = false
+                        holder.linearLayoutTasksCarrierName.isVisible = false
+                        holder.followUpLinearLayoutTimeToSolve.isVisible = false
+                        holder.imgBtnPrivateTask.isVisible = true
+                        holder.imgBtnTaskStatus.isVisible = false
+                        holder.param.setMargins(100,10,0,10)
+                        holder.conversationTicketStatus.layoutParams = holder.param
+                        holder.conversationTicketStatus.setBackgroundResource(R.drawable.esq_redondeada_followup)
+                        when(dataModelArrayListConversation[position].ticketInfoPrivate){
+                            "SI" -> holder.imgBtnPrivateTask.setImageResource(R.drawable.ic_candado_cerrado)
+                            "NO" -> holder.imgBtnPrivateTask.setImageResource(R.drawable.ic_candado_abierto)
+                        }
+                    }
+                    "SOLUTION" -> {
+                        holder.conversationStatus.isVisible = true
+                        holder.solutionImageButtonEdit.isVisible = false
+                        holder.followUpLinearLayoutTimeToSolve.isVisible = false
+                        holder.linearLayoutTasksCarrierName.isVisible = false
+                        holder.imgBtnPrivateTask.isVisible = false
+                        holder.imgBtnTaskStatus.isVisible = false
+                        holder.param.setMargins(100,10,0,10)
+                        holder.conversationTicketStatus.layoutParams = holder.param
+                        holder.conversationTicketStatus.setBackgroundResource(R.drawable.esq_redondeada_solution)
+                    }
                 }
-
-
-
-                holder.linearLayoutTasksCarrierName.isVisible = true
-                holder.imgBtnPrivateTask.isVisible = true
-                holder.imgBtnTaskStatus.isVisible = true
-                holder.followUpLinearLayoutTimeToSolve.isVisible = true
-
-                when(dataModelArrayListConversation[position].ticketInfoPrivate){
-                    "SI" -> holder.imgBtnPrivateTask.setImageResource(R.drawable.ic_candado_cerrado)
-                    "NO" -> holder.imgBtnPrivateTask.setImageResource(R.drawable.ic_candado_abierto)
-                }
-
-                when(dataModelArrayListConversation[position].ticketInfoStatus){
-                    "PENDIENTE" -> holder.imgBtnTaskStatus.setImageResource(R.drawable.ic_task_to_do)
-                    "TERMINADO" -> holder.imgBtnTaskStatus.setImageResource(R.drawable.ic_task_done)
-                    "INFORMACION" -> holder.imgBtnTaskStatus.setImageResource(R.drawable.ic_task_information)
-                }
-
-                //holder.ticketInfoNameTechnician.text = dataModelArrayListConversation[position].ticketInfoIdTechnician
-                holder.ticketInfoNameTechnician.text = prefer.getNameUser().toString()
-                holder.param.setMargins(0, 10, 100, 10)
-                holder.conversationTicketStatus.layoutParams = holder.param
-                holder.conversationTicketStatus.setBackgroundResource(R.drawable.esq_redondeada_tasks)
             }
-            "FOLLOWUP" -> {
-                holder.linearLayoutTasksCarrierName.isVisible = false
-                holder.followUpLinearLayoutTimeToSolve.isVisible = false
-                holder.imgBtnPrivateTask.isVisible = true
-                holder.imgBtnTaskStatus.isVisible = false
-                holder.param.setMargins(100,10,0,10)
-                holder.conversationTicketStatus.layoutParams = holder.param
-                holder.conversationTicketStatus.setBackgroundResource(R.drawable.esq_redondeada_followup)
-                when(dataModelArrayListConversation[position].ticketInfoPrivate){
-                    "SI" -> holder.imgBtnPrivateTask.setImageResource(R.drawable.ic_candado_cerrado)
-                    "NO" -> holder.imgBtnPrivateTask.setImageResource(R.drawable.ic_candado_abierto)
+            else -> {
+                when(dataModelArrayListConversation[position].ticketInfoType){
+                    "TASK" -> {
+                        val time = dataModelArrayListConversation[position].ticketInfoCreationDate.toString().split(" ") //hora de inicio de tarea
+                        val minutesToAdd: Long = dataModelArrayListConversation[position].ticketInfoTimeToSolve.toString().toLong()  //tiempo para resolver tarea en minutos
+                        val minutesToSecondsAdd = minutesToAdd*60
+
+                        val convertHour = time[1].toString().split(":")
+                        //convertimos horas a segundos
+                        //Log.i("mensaje hora","${time[1]}")
+                        //Log.i("mensaje hora","${convertHour}")
+                        val minutesToSeconds = convertHour[1].toInt()*60
+                        val hourToSecond = convertHour[0].toInt()*3600
+                        val secondsTotal = hourToSecond+minutesToSeconds+convertHour[2].toInt()+minutesToSecondsAdd
+                        //Log.i("mensaje hour to seconds","$secondsTotal")
+
+                        val hora = (secondsTotal / 3600)
+                        val minutos = ((secondsTotal%3600) /60)
+                        val segundos = (secondsTotal%60)
+                        //Log.i("mensaje seconds to Hour","$hora:$minutos:$segundos")
+
+
+                        holder.tasksCreationDate.text =
+                            "${dataModelArrayListConversation[position].ticketInfoCreationDate} -> $hora:$minutos:$segundos" //sumar a cration el time to solve
+
+
+                        //convertir de minutos a horas
+                        val minToHour: Double = (minutesToAdd / 60.0) //obtengo 0.5
+                        val resto: Double = minToHour - minToHour.toString().split(".")[0].toLong()
+                        val minuts: Long = (resto * 60).toLong()
+                        /*Log.i("mensaje minTohour1","${dataModelArrayListConversation[position].ticketInfoTimeToSolve}")
+                        Log.i("mensaje minTohour2","$minToHour")
+                        Log.i("mensaje minTohour3","$resto")
+                        Log.i("mensaje minTohour4","$minuts")*/
+                        val min = minToHour.toString().split(".")
+                        when(dataModelArrayListConversation[position].ticketInfoTimeToSolve!!.toInt() < 60){
+                            true -> holder.tasksTimeToSolve.text = dataModelArrayListConversation[position].ticketInfoTimeToSolve+" minutos"
+                            false -> holder.tasksTimeToSolve.text = "${minToHour.toString().split(".")[0]} horas y $minuts minutos "
+                        }
+
+
+
+                        holder.conversationStatus.isVisible = false
+                        holder.linearLayoutTasksCarrierName.isVisible = true
+                        holder.solutionImageButtonEdit.isVisible = true
+                        holder.imgBtnPrivateTask.isVisible = true
+                        holder.imgBtnTaskStatus.isVisible = true
+                        holder.followUpLinearLayoutTimeToSolve.isVisible = true
+
+                        when(dataModelArrayListConversation[position].ticketInfoPrivate){
+                            "SI" -> holder.imgBtnPrivateTask.setImageResource(R.drawable.ic_candado_cerrado)
+                            "NO" -> holder.imgBtnPrivateTask.setImageResource(R.drawable.ic_candado_abierto)
+                        }
+
+                        when(dataModelArrayListConversation[position].ticketInfoStatus){
+                            "PENDIENTE" -> holder.imgBtnTaskStatus.setImageResource(R.drawable.ic_task_to_do)
+                            "TERMINADO" -> holder.imgBtnTaskStatus.setImageResource(R.drawable.ic_task_done)
+                            "INFORMACION" -> holder.imgBtnTaskStatus.setImageResource(R.drawable.ic_task_information)
+                        }
+
+                        //holder.ticketInfoNameTechnician.text = dataModelArrayListConversation[position].ticketInfoIdTechnician
+                        holder.ticketInfoNameTechnician.text = prefer.getNameUser().toString()
+                        holder.param.setMargins(0, 10, 100, 10)
+                        holder.conversationTicketStatus.layoutParams = holder.param
+                        holder.conversationTicketStatus.setBackgroundResource(R.drawable.esq_redondeada_tasks)
+                    }
+                    "FOLLOWUP" -> {
+                        holder.conversationStatus.isVisible = false
+                        holder.solutionImageButtonEdit.isVisible = true
+                        holder.linearLayoutTasksCarrierName.isVisible = false
+                        holder.followUpLinearLayoutTimeToSolve.isVisible = false
+                        holder.imgBtnPrivateTask.isVisible = true
+                        holder.imgBtnTaskStatus.isVisible = false
+                        holder.param.setMargins(100,10,0,10)
+                        holder.conversationTicketStatus.layoutParams = holder.param
+                        holder.conversationTicketStatus.setBackgroundResource(R.drawable.esq_redondeada_followup)
+                        when(dataModelArrayListConversation[position].ticketInfoPrivate){
+                            "SI" -> holder.imgBtnPrivateTask.setImageResource(R.drawable.ic_candado_cerrado)
+                            "NO" -> holder.imgBtnPrivateTask.setImageResource(R.drawable.ic_candado_abierto)
+                        }
+                    }
+                    "SOLUTION" -> {
+                        holder.conversationStatus.isVisible = true
+                        holder.solutionImageButtonEdit.isVisible = false
+                        holder.followUpLinearLayoutTimeToSolve.isVisible = false
+                        holder.linearLayoutTasksCarrierName.isVisible = false
+                        holder.imgBtnPrivateTask.isVisible = false
+                        holder.imgBtnTaskStatus.isVisible = false
+                        holder.param.setMargins(100,10,0,10)
+                        holder.conversationTicketStatus.layoutParams = holder.param
+                        holder.conversationTicketStatus.setBackgroundResource(R.drawable.esq_redondeada_solution)
+                    }
                 }
-            }
-            "SOLUTION" -> {
-                holder.conversationStatus.isVisible = true
-                holder.solutionImageButtonEdit.isVisible = false
-                holder.followUpLinearLayoutTimeToSolve.isVisible = false
-                holder.linearLayoutTasksCarrierName.isVisible = false
-                holder.imgBtnPrivateTask.isVisible = false
-                holder.imgBtnTaskStatus.isVisible = false
-                holder.param.setMargins(100,10,0,10)
-                holder.conversationTicketStatus.layoutParams = holder.param
-                holder.conversationTicketStatus.setBackgroundResource(R.drawable.esq_redondeada_solution)
             }
         }
     }

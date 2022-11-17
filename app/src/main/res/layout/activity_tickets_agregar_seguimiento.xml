@@ -164,6 +164,7 @@
                 android:id="@+id/imgView_padLock"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="@drawable/esq_redondeada_gris"
                 android:padding="15sp"
                 android:tag="0"
                 app:srcCompat="@drawable/ic_candado_abierto" />
@@ -171,14 +172,13 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:orientation="horizontal"
                 android:padding="5sp">
 
@@ -188,7 +188,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:padding="5sp"
-                    android:text="estado del ticket" />
+                    android:text="Estado del ticket"
+                    android:textAllCaps="false" />
 
             </LinearLayout>
 

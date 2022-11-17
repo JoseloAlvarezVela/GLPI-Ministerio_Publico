@@ -144,6 +144,7 @@
                     android:background="#FFFFFF"
                     android:fontFamily="@font/averia_sans_libre_light"
                     android:hint="Usuario"
+                    android:inputType="textPersonName"
                     android:text="mdios_usuario3"
                     android:textColor="#000000" />
             </com.google.android.material.textfield.TextInputLayout>

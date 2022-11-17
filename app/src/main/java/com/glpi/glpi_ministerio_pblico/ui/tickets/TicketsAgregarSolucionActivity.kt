@@ -19,6 +19,7 @@ import com.glpi.glpi_ministerio_pblico.data.database.TicketInfoDB
 import com.glpi.glpi_ministerio_pblico.databinding.ActivityTicketsAgregarSolucionBinding
 import com.glpi.glpi_ministerio_pblico.ui.adapter.*
 import com.glpi.glpi_ministerio_pblico.ui.shared.token
+import com.glpi.glpi_ministerio_pblico.ui.shared.token.Companion.prefer
 import kotlinx.coroutines.launch
 import org.json.JSONArray
 import org.json.JSONObject
@@ -64,10 +65,27 @@ class TicketsAgregarSolucionActivity : AppCompatActivity(),
 
     private fun btnAddSolution(flagUpdateSolution: Boolean, ticketSortsId: String, ticketInfoId: String) {
         binding.btnAddSolution.setOnClickListener {
+            prefer.deleteTicketSortsStatus()
             val solutionDescription = binding.edtSolutionDescription.text.toString()
-            val solutionType = binding.btnSolutionType.tag.toString()
+            Log.i("mensaje","${binding.btnSolutionType.tag.toString()}")
+            var solutionType = binding.btnSolutionType.tag.toString()
             Toast.makeText(this, flagUpdateSolution.toString(), Toast.LENGTH_SHORT).show()
             when{
+                solutionDescription.isBlank() -> {
+                    Toast.makeText(
+                        this,
+                        "Agregar decripción",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+                solutionType.isBlank()-> {
+                    Toast.makeText(
+                        this,
+                        "Agregar tipo de solución",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+
                 !flagUpdateSolution -> {
                     requestVolleyInsertSolution(solutionDescription,solutionType)
                     val ticketSortsStatus = "6"
@@ -91,6 +109,7 @@ class TicketsAgregarSolucionActivity : AppCompatActivity(),
                     }
                     MainActivity.updateFragmentFlag = true
                     val ticketSortsStatusString = "CERRADO"
+                    prefer.saveTicketSortsStatus(ticketSortsStatusString)
                     val intentOnBack = Intent(this, NavFooterTicketsActivity::class.java)
                     intentOnBack.putExtra("ticketSortsStatus",ticketSortsStatusString)
                     intentOnBack.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
@@ -116,6 +135,7 @@ class TicketsAgregarSolucionActivity : AppCompatActivity(),
                 ticketSortsType = item.ticketSortsType
                 ticketSortsStatus = item.ticketSortsStatus
                 binding.edtSolutionDescription.tag = "0"
+                binding.btnSolutionType.tag = ""
                 //ticketPrivate = binding.imgViewPadLock.tag.toString()
 
                 binding.btnSolutionType.setOnClickListener {

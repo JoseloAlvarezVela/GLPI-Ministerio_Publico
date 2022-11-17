@@ -481,13 +481,14 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
         lifecycleScope.launch{
             room.daoTicketInfo().deleteTicketInfo(prefer.getTicketSortsId())
 
-            if (room.daoTicketInfo().getTicketInfo().isEmpty()){
+            /*if (room.daoTicketInfo().getTicketInfo().isEmpty()){
                 Toast.makeText(applicationContext, "se borró los datos de la base de datos", Toast.LENGTH_SHORT).show()
-            }
+            }*/
         }
         prefer.deleteTicketSortsId()
         prefer.deleteRecipientId()
         prefer.deleteNameTechnicianTask()
+        prefer.deleteTicketSortsStatus()
 
 
         val intentOnBack = Intent(this, MainActivity::class.java)

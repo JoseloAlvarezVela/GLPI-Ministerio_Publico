@@ -5,10 +5,12 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Build
 import android.os.Bundle
+import android.telephony.TelephonyManager
 import android.text.Editable
 import android.text.Html
 import android.text.Spanned
@@ -23,8 +25,10 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.content.ContextCompat
 import androidx.core.text.HtmlCompat
 import androidx.core.view.isVisible
 import androidx.drawerlayout.widget.DrawerLayout
@@ -42,6 +46,7 @@ import com.android.volley.toolbox.StringRequest
 import com.glpi.glpi_ministerio_pblico.data.database.TicketInfoDB
 import com.glpi.glpi_ministerio_pblico.databinding.ActivityMainBinding
 import com.glpi.glpi_ministerio_pblico.ui.misPeticiones.MisPeticionesFragment
+import com.glpi.glpi_ministerio_pblico.ui.shared.token
 import com.glpi.glpi_ministerio_pblico.ui.shared.token.Companion.prefer
 import com.glpi.glpi_ministerio_pblico.utilities.Utils_Global
 import com.google.android.gms.tasks.Task
@@ -89,6 +94,8 @@ class MainActivity : AppCompatActivity(){
         val urlApi_SolutionTemplate: String = "$protocol://$url:$port/api/solution_templates"
         val urlApi_SolutionType: String = "$protocol://$url:$port/api/solution_types"
         val urlApi_InsertSolution: String = "$protocol://$url:$port/api/insert_solutions/"
+        val urlApi_SendTokens: String = "$protocol://$url:$port/api/device_token"
+        val urlApi_UserInfo: String = "$protocol://$url:$port/api/user_info"
         val urlApi_GetRequestTypes: String = "$protocol://$url:$port/api/get_request_types"
 
 
@@ -122,6 +129,8 @@ class MainActivity : AppCompatActivity(){
         lateinit var requesterSearch: Editable
         var flag_requesterSearch = false
 
+        //variable para id del usuario logeado
+        private lateinit var idUserLogin: String
 
         //variables para filtrar tickets
         var flagFilterState = false
@@ -183,14 +192,17 @@ class MainActivity : AppCompatActivity(){
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
-        FirebaseMessaging.getInstance().token.addOnCompleteListener {
+        getImeiPhone()
+
+        /*FirebaseMessaging.getInstance().token.addOnCompleteListener {
             task: Task<String> ->
                 when{
                     !task.isSuccessful -> return@addOnCompleteListener
                 }
-            val token  = task.result
-            Log.i("mensaje tokenCel",token)
-        }
+            val tokenFirebase  = task.result
+            requestVolleyTokens(tokenFirebase, idUserLogin)
+            Log.i("mensaje tokenCel",tokenFirebase)
+        }*/
         //--------------------------
         /*notificationChannel()
         val notification = NotificationCompat.Builder(this,channelId).also {
@@ -204,7 +216,7 @@ class MainActivity : AppCompatActivity(){
         //--------------------
         when(updateFragmentFlag){
             true -> replaceFragment(MisPeticionesFragment())
-            false -> Toast.makeText(this, "no se actualizó el fragment", Toast.LENGTH_SHORT).show()
+            false -> "no se actualizó"
         }
 
         val room  = Room.databaseBuilder(this, TicketInfoDB::class.java,"ticketInfoBD").build()
@@ -214,17 +226,15 @@ class MainActivity : AppCompatActivity(){
                 lifecycleScope.launch{
                     room.daoTicketInfo().deleteTicketInfo(prefer.getTicketSortsId())
 
-                    if (room.daoTicketInfo().getTicketInfo().isEmpty()){
+                    /*if (room.daoTicketInfo().getTicketInfo().isEmpty()){
                         Toast.makeText(applicationContext, "se borró los datos de la base de datos", Toast.LENGTH_SHORT).show()
-                    }
+                    }*/
                 }
             }
         }
-
         userEntities()
 
         userProfiles()
-
 
         //INICIO - boton filtro de la derecha - activity_filtro_right.xml
         binding.appBarMain.btnFiltroRight.setOnClickListener {
@@ -534,6 +544,120 @@ class MainActivity : AppCompatActivity(){
         }
         //FIN - boton filtro de la derecha - activity_filtro_right.xml
     }
+
+    private fun requestVolleyTokens(tokenFirebase: String, idUserLogin: String, IMEI: String) {
+        val stringRequestDataTickets = object : StringRequest(Method.POST,
+            MainActivity.urlApi_SendTokens, Response.Listener { response ->
+                try {
+                    //val dataAddFollowup = JSONObject(response) //obtenemos el objeto json
+
+                    Log.i("mensaje json","CORRECTO")
+
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    Toast.makeText(this, "token expirado_-----------------: $e", Toast.LENGTH_LONG).show()
+                }
+            }, Response.ErrorListener {
+                Toast.makeText(this, "ERROR CON EL SERVIDOR -------------", Toast.LENGTH_LONG).show()
+            }) {
+            override fun getParams(): Map<String, String>? {
+                val params: MutableMap<String, String> = java.util.HashMap()
+                params["id_user"] = idUserLogin
+                params["token_firebase"] = tokenFirebase
+                params["imei"] = IMEI
+
+                Log.i("mensaje pAAam","$params")
+                return params
+            }
+        }
+        this?.let { VolleySingleton.getInstance(this).addToRequestQueue(stringRequestDataTickets) }
+        //FIN obtenemos perfil de usuario
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun getImeiPhone(){
+
+        var myIMEI: String? = null
+        try
+        {
+            val tm = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+            val IMEI = tm.imei
+            if (IMEI != null)
+            {
+                requestVolleyUserInfo(IMEI)
+                Log.i("mensaje imei",IMEI)
+                /*myIMEI = IMEI
+                show_IMEI.setText(myIMEI)
+                show_IMEI.setOnClickListener{
+
+                    Toast.makeText(this, myIMEI,Toast.LENGTH_SHORT ).show()
+
+                }*/
+            }
+        }
+        catch (ex:Exception)
+        {
+            Toast.makeText(this, ex.toString(),Toast.LENGTH_SHORT ).show()
+
+        }
+
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission. READ_PHONE_STATE) !=
+            PackageManager.PERMISSION_GRANTED)
+        {
+            if (ActivityCompat. shouldShowRequestPermissionRationale(this, android.Manifest.permission. READ_PHONE_STATE))
+            {
+
+            }
+            else
+            {
+                ActivityCompat. requestPermissions(this, arrayOf(android.Manifest. permission.READ_PHONE_STATE), 2)
+
+            }
+        }
+    }
+
+    private fun requestVolleyUserInfo(IMEI: String) {
+        val stringRequestDataTickets = object : StringRequest(Method.POST,
+            urlApi_UserInfo, Response.Listener { response ->
+                try {
+
+                    val dataAddFollowup = JSONArray(response) //obtenemos el objeto json
+
+                    for (i in 0 until dataAddFollowup.length()){
+                        var _idUserLogin = dataAddFollowup.getJSONObject(i)
+                        idUserLogin = _idUserLogin.getString("ID_USER")
+                    }
+
+                    FirebaseMessaging.getInstance().token.addOnCompleteListener {
+                            task: Task<String> ->
+                        when{
+                            !task.isSuccessful -> return@addOnCompleteListener
+                        }
+                        val tokenFirebase  = task.result
+                        requestVolleyTokens(tokenFirebase, idUserLogin, IMEI)
+                        Log.i("mensaje tokenCel",tokenFirebase)
+                    }
+                    Log.i("mensaje","$dataAddFollowup")
+
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    Toast.makeText(applicationContext, "no se pudo obtener ...: $e", Toast.LENGTH_LONG).show()
+                }
+            }, Response.ErrorListener {
+                Toast.makeText(applicationContext, "ERROR CON EL SERVIDOR obetener", Toast.LENGTH_SHORT).show()
+            }) {
+            override fun getParams(): Map<String, String>? {
+                val params: MutableMap<String, String> = HashMap()
+                params["session_token"] = prefer.getToken()
+
+                //Log.i("mensaje params","$params")
+                return params
+            }
+        }
+        VolleySingleton.getInstance(applicationContext).addToRequestQueue(stringRequestDataTickets)
+    }
+
+
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun notificationChannel() {

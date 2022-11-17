@@ -1,5 +1,6 @@
 package com.glpi.glpi_ministerio_pblico.ui.tickets
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.Drawable
@@ -27,6 +28,7 @@ import com.glpi.glpi_ministerio_pblico.databinding.ActivityTicketsAgregarTareaBi
 import com.glpi.glpi_ministerio_pblico.ui.adapter.*
 import com.glpi.glpi_ministerio_pblico.ui.shared.token
 import com.glpi.glpi_ministerio_pblico.ui.shared.token.Companion.prefer
+import com.glpi.glpi_ministerio_pblico.utilities.Utils_Global
 import kotlinx.coroutines.launch
 import org.json.JSONArray
 import org.json.JSONObject
@@ -55,6 +57,8 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
     private var recyclerView_Adapter_TasksCategory: RecycleView_Adapter_TasksCategory? = null
     private var recyclerView_Adapter_ListTechnician: RecycleView_Adapter_ListTechnician? = null
     private var recyclerView_Adapter_ListStatusAllowed: RecycleViw_Adapter_ListStatusAllowed? = null
+
+    private var onSelectTemplateTask = false
 
     //para obetener id despues de cargar
     /*companion object{
@@ -112,30 +116,26 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
                 binding.imgBtnTaskStatus.setImageResource(R.drawable.ic_task_to_do)
                 binding.imgBtnTaskStatus.tag = "1" //por hacer
             }
-            else -> {
-                binding.imgBtnTaskStatus.setImageResource(R.drawable.ic_task_to_do)
-                binding.imgBtnTaskStatus.tag = "1" //por hacer
-            }
         }
 
 
         binding.imgBtnTaskStatus.setOnClickListener {
             Log.i("mensaje infoSta",binding.imgBtnTaskStatus.tag.toString())
             when(binding.imgBtnTaskStatus.tag){
-                "0" -> {
+                "1" -> {
                     binding.imgBtnTaskStatus.setImageResource(R.drawable.ic_task_done)
                     binding.imgBtnTaskStatus.tag = "2" //por hacer
-                    Toast.makeText(this, binding.imgBtnTaskStatus.tag.toString(), Toast.LENGTH_SHORT).show()
+                    //Toast.makeText(this, binding.imgBtnTaskStatus.tag.toString(), Toast.LENGTH_SHORT).show()
                 }
-                "1" -> {
+                "0" -> {
                     binding.imgBtnTaskStatus.setImageResource(R.drawable.ic_task_to_do)
                     binding.imgBtnTaskStatus.tag = "1" //hecho
-                    Toast.makeText(this, binding.imgBtnTaskStatus.tag.toString(), Toast.LENGTH_SHORT).show()
+                    //Toast.makeText(this, binding.imgBtnTaskStatus.tag.toString(), Toast.LENGTH_SHORT).show()
                 }
                 "2" -> {
                     binding.imgBtnTaskStatus.setImageResource(R.drawable.ic_task_information)
                     binding.imgBtnTaskStatus.tag = "0" //informativo
-                    Toast.makeText(this, binding.imgBtnTaskStatus.tag.toString(), Toast.LENGTH_SHORT).show()
+                    //Toast.makeText(this, binding.imgBtnTaskStatus.tag.toString(), Toast.LENGTH_SHORT).show()
                 }
 
             }
@@ -181,7 +181,7 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
         var flagBtnShowDocuments = false
         binding.includeDocumentsTaks.btnShowDocuments.setOnClickListener {
             if (!flagBtnShowDocuments){
-                Toast.makeText(this, "$flagBtnShowDocuments", Toast.LENGTH_SHORT).show()
+                //Toast.makeText(this, "$flagBtnShowDocuments", Toast.LENGTH_SHORT).show()
                 binding.includeDocumentsTaks.contentDocuments.isVisible = true
                 flagBtnShowDocuments = true
             }else{
@@ -193,50 +193,139 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
     }
 
 
+    @SuppressLint("SetTextI18n")
     private fun btnTimeToSolveTask(){
         val bundle = intent.extras
         val ticketInfoTimeToSolve = bundle!!.getString("ticketInfoTimeToSolve")
         val flagOnEditClick = bundle!!.getBoolean("flagOnEditClick")
         val arrayHour = arrayListOf<String>("00","01","02","03","04","05","06","07","08","09","10","11","12")
-        val arrayMinutes = arrayListOf<String>("05","10","15","20","25","30","35","40","45","50","55")
+        val arrayMinutes = arrayListOf<String>("00","05","10","15","20","25","30","35","40","45","50","55")
         var iHour = 0
-        var iMinutes = 0
+        var iMinutes = 5
+
+        val minutesToSolve = Utils_Global.convertMinutesToTimeFormat(ticketInfoTimeToSolve.toString()).split(":")[1]
+        val hoursToSolve = Utils_Global.convertMinutesToTimeFormat(ticketInfoTimeToSolve.toString()).split(":")[0]
+        Log.i("mensaje index",arrayHour.indexOf(hoursToSolve).toString())
+        var positionIndex: Int
+        var positionIndexHour = arrayHour.indexOf(hoursToSolve)
+        when(arrayMinutes.indexOf(minutesToSolve)){
+            -1 -> {
+                positionIndex = 0
+            }
+            else -> {
+                positionIndex = arrayMinutes.indexOf(minutesToSolve)
+            }
+        }
+
+        when (flagOnEditClick){
+            true -> {
+                binding.btnTimeToSolveTask.text = Utils_Global.convertMinutesToTimeFormat(ticketInfoTimeToSolve.toString()) + "horas"
 
 
-        binding.btnTimeToSolveTask.setOnClickListener {
-            binding.LayoutBackgroudAgregarTarea.isVisible = true
-            binding.includeTimeToSolveTask.modalTimeToSolveTask.isVisible = true
+                binding.btnTimeToSolveTask.setOnClickListener {
+                    binding.LayoutBackgroudAgregarTarea.isVisible = true
+                    binding.includeTimeToSolveTask.modalTimeToSolveTask.isVisible = true
+
+                    binding.includeTimeToSolveTask.hours.text = arrayHour[positionIndexHour]
+                    binding.includeTimeToSolveTask.minutes.text = arrayMinutes[positionIndex]
+
+                    binding.includeTimeToSolveTask.imgBtnUpHour.setOnClickListener {
+                        if (positionIndexHour < arrayHour.size-1){
+                            positionIndexHour++
+                            binding.includeTimeToSolveTask.hours.text = arrayHour[positionIndexHour]
+                        }
+                    }
+                    binding.includeTimeToSolveTask.imgBtnDownHour.setOnClickListener {
+                        if (positionIndexHour>0){
+                            positionIndexHour--
+                            binding.includeTimeToSolveTask.hours.text = arrayHour[positionIndexHour]
+                        }
+                    }
 
 
-            binding.includeTimeToSolveTask.hours.text = arrayHour[0]
+                    binding.includeTimeToSolveTask.imgBtnUpMinutes.setOnClickListener {
+                        positionIndex++
+                        if (positionIndex < arrayMinutes.size-1){
+                            binding.includeTimeToSolveTask.minutes.text = arrayMinutes[positionIndex]
+                        }else{
+                            positionIndex = 0
+                            binding.includeTimeToSolveTask.minutes.text = arrayMinutes[positionIndex]
+                        }
+                    }
+                    binding.includeTimeToSolveTask.imgBtnDownMinutes.setOnClickListener {
+                        positionIndex--
+                        if (positionIndex>0){
 
-            binding.includeTimeToSolveTask.imgBtnUpHour.setOnClickListener {
-                if (iHour < arrayHour.size-1){
-                    iHour++
-                    binding.includeTimeToSolveTask.hours.text = arrayHour[iHour]
+                            binding.includeTimeToSolveTask.minutes.text = arrayMinutes[positionIndex]
+                        }else{
+                            positionIndex = arrayMinutes.size-1
+                            binding.includeTimeToSolveTask.minutes.text = arrayMinutes[positionIndex]
+                        }
+                    }
                 }
             }
-            binding.includeTimeToSolveTask.imgBtnDownHour.setOnClickListener {
-                if (iHour>0){
-                    iHour--
-                    binding.includeTimeToSolveTask.hours.text = arrayHour[iHour]
-                }
-            }
+            false -> {
+
+                binding.btnTimeToSolveTask.setOnClickListener {
+                    when(onSelectTemplateTask)
+                    {
+                        true -> {
+                            binding.includeTimeToSolveTask.minutes.text = //arrayMinutes[iMinutes]
+                                binding.btnTimeToSolveTask.text.split(" ")[0]
+                            iMinutes = arrayMinutes.indexOf(binding.btnTimeToSolveTask.text.split(" ")[0])
+                            onSelectTemplateTask = false
+                        }
+                        false -> {
+                            binding.includeTimeToSolveTask.minutes.text = arrayMinutes[iMinutes]
+                        }
+                    }
+                    //binding.includeTimeToSolveTask.minutes.text = arrayMinutes[iMinutes]
+
+                    binding.LayoutBackgroudAgregarTarea.isVisible = true
+                    binding.includeTimeToSolveTask.modalTimeToSolveTask.isVisible = true
 
 
-            binding.includeTimeToSolveTask.imgBtnUpMinutes.setOnClickListener {
-                if (iMinutes < arrayMinutes.size-1){
-                    iMinutes++
-                    binding.includeTimeToSolveTask.minutes.text = arrayMinutes[iMinutes]
-                }
-            }
-            binding.includeTimeToSolveTask.imgBtnDownMinutes.setOnClickListener {
-                if (iMinutes>0){
-                    iMinutes--
-                    binding.includeTimeToSolveTask.minutes.text = arrayMinutes[iMinutes]
+                    binding.includeTimeToSolveTask.hours.text = arrayHour[0]
+
+
+                    binding.includeTimeToSolveTask.imgBtnUpHour.setOnClickListener {
+                        if (positionIndexHour < arrayHour.size-1){
+                            positionIndexHour++
+                            binding.includeTimeToSolveTask.hours.text = arrayHour[positionIndexHour]
+                        }
+                    }
+                    binding.includeTimeToSolveTask.imgBtnDownHour.setOnClickListener {
+                        if (positionIndexHour>0){
+                            positionIndexHour--
+                            binding.includeTimeToSolveTask.hours.text = arrayHour[positionIndexHour]
+                        }
+                    }
+
+
+                    binding.includeTimeToSolveTask.imgBtnUpMinutes.setOnClickListener {
+                        iMinutes++
+                        if (iMinutes < arrayMinutes.size-1){
+                            binding.includeTimeToSolveTask.minutes.text = arrayMinutes[iMinutes]
+                        }else{
+                            iMinutes = 0
+                            binding.includeTimeToSolveTask.minutes.text = arrayMinutes[iMinutes]
+                        }
+                    }
+                    binding.includeTimeToSolveTask.imgBtnDownMinutes.setOnClickListener {
+                        iMinutes--
+                        if (iMinutes>0){
+
+                            binding.includeTimeToSolveTask.minutes.text = arrayMinutes[iMinutes]
+                        }else{
+                            iMinutes = arrayMinutes.size-1
+                            binding.includeTimeToSolveTask.minutes.text = arrayMinutes[iMinutes]
+                        }
+                    }
                 }
             }
         }
+
+        
 
         var getHour = ""
         var getMinutes = ""
@@ -245,13 +334,20 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
             getMinutes = binding.includeTimeToSolveTask.minutes.text.toString()
             val hourToMinutes = (getHour.toInt()*60)
             val minutesToSeconds = (hourToMinutes+getMinutes.toInt())*60
-            Toast.makeText(this, "$minutesToSeconds para resolver tarea", Toast.LENGTH_SHORT).show()
-            binding.btnTimeToSolveTask.text = "$getHour : $getMinutes minutos"
+            Log.i("mensaje minutesToSec",minutesToSeconds.toString())
+            //Toast.makeText(this, "$minutesToSeconds para resolver tarea", Toast.LENGTH_SHORT).show()
+
+            when(getHour){
+                "0" -> binding.btnTimeToSolveTask.text = "$getMinutes minutos"
+                else -> binding.btnTimeToSolveTask.text = "$getHour : $getMinutes minutos"
+            }
+
             binding.btnTimeToSolveTask.tag = minutesToSeconds
             binding.includeTimeToSolveTask.modalTimeToSolveTask.isVisible = false
             binding.LayoutBackgroudAgregarTarea.isVisible = false
             binding.includeTimeToSolveTask.hours.text = arrayHour[0]
-            binding.includeTimeToSolveTask.minutes.text = arrayMinutes[0]
+            //Log.i("mensaje","${binding.btnTimeToSolveTask.tag}")
+            //binding.includeTimeToSolveTask.minutes.text = arrayMinutes[positionIndex]
         }
 
         binding.includeTimeToSolveTask.btnCloseUnderModalTimeToSolveTask.setOnClickListener {
@@ -339,7 +435,7 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
             binding.imgBtnPadLockTask.setOnClickListener {
                 if(flagImgViewPadLock){
                     binding.imgBtnPadLockTask.setImageResource(R.drawable.ic_candado_cerrado)
-                    Toast.makeText(this, "Segumiento Privado", Toast.LENGTH_SHORT).show()
+                    //Toast.makeText(this, "Segumiento Privado", Toast.LENGTH_SHORT).show()
                     binding.imgBtnPadLockTask.tag = "1"
                     newTicketPrivate = "NO"
                     flagImgViewPadLock = false
@@ -642,8 +738,12 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
                 binding.btnAddCategory.text = ticketInfoCategory
                 binding.btnAddCategory.tag = ticketInfoIdCategory
 
-                binding.btnTimeToSolveTask.text = "00: $ticketInfoTimeToSolve minutos"
-                binding.includeTimeToSolveTask.minutes.text = ticketInfoTimeToSolve
+                //binding.btnTimeToSolveTask.text = "00: $ticketInfoTimeToSolve minutos"
+                val splitTimeToSolve = Utils_Global.convertMinutesToTimeFormat(ticketInfoTimeToSolve.toString())
+                binding.btnTimeToSolveTask.text = Utils_Global.convertMinutesToTimeFormat(ticketInfoTimeToSolve.toString()) + " horas"
+                Log.i("mensaje horas",splitTimeToSolve.split(":")[0])
+                binding.includeTimeToSolveTask.minutes.text = splitTimeToSolve.split(":")[1]
+                binding.includeTimeToSolveTask.hours.text = splitTimeToSolve.split(":")[0]
 
                 binding.btnAddTechnician.text = prefer.getNameTechnicianTask()
                 binding.btnAddTechnician.tag = ticketInfoIdTechnician
@@ -816,8 +916,10 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
 
             val dateEnd = ""
             val dateBegin = ""
+            val date = "2022-11-14 11:49:00"
             val technicianId = binding.btnAddTechnician.tag.toString()
             val actionTime = binding.btnTimeToSolveTask.tag.toString()
+            Log.i("mensaje action",actionTime)
             val ticketSortsStatusTag = binding.btnStatusTask.tag.toString()
 
             Log.i("mensaje insert","\ntaskType: $taskType\ntaskDescription: $taskDescription\n" +
@@ -857,19 +959,19 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
                         taskState,
                         templateId,
                         categoryId,
-                        dateEnd,
-                        dateBegin,
+                        date,
+                        actionTime,
                         ticketStatus,
                         ticketSortsId)
 
                     val ticketSortsStatus = binding.btnStatusTask.tag.toString()
                     val room =
                         Room.databaseBuilder(this, TicketInfoDB::class.java, "ticketInfoBD").build()
-                    Toast.makeText(
+                    /*Toast.makeText(
                         this,
                         "${prefer.getTicketSortsId()} : $ticketSortsStatus",
                         Toast.LENGTH_SHORT
-                    ).show()
+                    ).show()*/
                     lifecycleScope.launch {
                         room.daoTicketInfo()
                             .updateTicketInfo(token.prefer.getTicketSortsId(), ticketSortsStatus)
@@ -905,11 +1007,11 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
                     val ticketSortsStatus = binding.btnStatusTask.tag.toString()
                     val room =
                         Room.databaseBuilder(this, TicketInfoDB::class.java, "ticketInfoBD").build()
-                    Toast.makeText(
+                    /*Toast.makeText(
                         this,
                         "${prefer.getTicketSortsId()} : $ticketSortsStatus",
                         Toast.LENGTH_SHORT
-                    ).show()
+                    ).show()*/
                     lifecycleScope.launch {
                         room.daoTicketInfo()
                             .updateTicketInfo(token.prefer.getTicketSortsId(), ticketSortsStatus)
@@ -940,8 +1042,8 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
         taskState: String,
         templateId: String,
         categoryId: String,
-        dateEnd: String,
-        dateBegin: String,
+        date: String,
+        action_Time: String,
         ticketStatus: String,
         ticketSortsId: String
     ) {
@@ -965,13 +1067,14 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
                 val params: MutableMap<String, String> = HashMap()
                 params["session_token"] = token.prefer.getToken()
                 params["content"] = taskDescription
+                params["type"] = "1"
                 params["private"] = taskPrivate
                 params["user_tech"] = taskIdTech
                 params["task_state"] = taskState
                 params["template_id"] = templateId
                 params["categories_id"] = categoryId
-                params["date_end"] = dateEnd
-                params["date_begin"] = dateBegin
+                params["date"] = date
+                params["action_time"] = action_Time
                 params["ticket_state"] = ticketStatus
                 params["ticket_id"] = ticketSortsId
                 Log.i("mensaje params","$params")
@@ -1227,7 +1330,16 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
         binding.edtTasksDescription.tag = idTasksTemplates
         binding.btnAddCategory.text = categoryTasksTemplates
         binding.btnAddCategory.tag = idCategoryTasksTemplates
-        binding.btnTimeToSolveTask.text = timeTasksTemplates.split(".")[0] +" minutos"
+        //binding.btnTimeToSolveTask.text = timeTasksTemplates.split(".")[0] +" minutos"
+
+        val minutesToSeconds = timeTasksTemplates.split(".")[0]
+        Log.i("mensaje minutos",minutesToSeconds)
+        binding.btnTimeToSolveTask.text = Utils_Global.convertMinutesToTimeFormat(minutesToSeconds) +"horas"
+        //Toast.makeText(this, "$minutesToSeconds para resolver tarea", Toast.LENGTH_SHORT).show()
+        binding.btnTimeToSolveTask.tag = minutesToSeconds.toInt()*60
+        onSelectTemplateTask = true
+        //binding.includeTimeToSolveTask.minutes.text = timeTasksTemplates.split(".")[0]
+        //Log.i("mensaje minTemplate","${ timeTasksTemplates.split(".")[0] +" minutos"} -> $minutesToSeconds")
         //binding.idTemplate.text = idTasksTemplates
         /*val fullHtml = "<h2 style=\"text-align: center;\"><span style=\"color: #0000ff;\">ACOMPAÑAMIENTO</span></h2><h4><span style=\"color: #0000ff;\"><span style=\"color: #ff0000;\">Evento:</span> </span></h4><h4><span style=\"color: #0000ff;\"><span style=\"color: #ff0000;\">Modalidad (pres./rem.):</span> </span></h4>"
         val decodeFullhtml = fullHtml.split("</span>") as ArrayList

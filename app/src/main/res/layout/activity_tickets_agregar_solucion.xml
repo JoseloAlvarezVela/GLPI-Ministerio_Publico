@@ -9,9 +9,11 @@
     <LinearLayout
         android:id="@+id/linearLayout3"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="0dp"
         android:background="@drawable/degradado_azul"
         android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
@@ -24,6 +26,7 @@
                 android:id="@+id/btn_atras_acttaddsol"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_weight="1"
                 android:background="?android:attr/selectableItemBackground"
                 android:padding="15sp"
                 app:srcCompat="@drawable/ic_atras" />
@@ -32,6 +35,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="start|center_vertical"
+                android:layout_weight="1"
                 android:gravity="center_vertical"
                 android:orientation="vertical"
                 android:padding="5sp">
@@ -60,6 +64,7 @@
                 android:id="@+id/imgBtnTypeSolution"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:background="?android:attr/selectableItemBackground"
                 android:padding="5sp"
                 app:srcCompat="@drawable/ic_interrogacion" />
@@ -68,6 +73,7 @@
                 android:id="@+id/imgBtnStatusSolutionHeader"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:background="?android:attr/selectableItemBackground"
                 android:padding="5sp"
                 app:srcCompat="@drawable/ic_circulo_verde" />
@@ -77,6 +83,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
+                android:layout_weight="1"
                 android:background="@drawable/ic_derecha"
                 android:padding="5sp" />
 
@@ -84,25 +91,26 @@
                 android:id="@+id/imgBtnStatusClosedHeader"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:background="?android:attr/selectableItemBackground"
                 android:padding="5sp"
                 app:srcCompat="@drawable/ic_circulo_negro" />
 
-            <Button
+            <ImageButton
                 android:id="@+id/btnAddSolution"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_weight="1"
                 android:background="?android:attr/selectableItemBackground"
                 android:padding="15sp"
-                app:icon="@drawable/ic_enviar"
-                app:iconGravity="textStart" />
+                app:srcCompat="@drawable/ic_enviar" />
 
         </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/linearLayout2"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="#FFFBFB"
         android:gravity="center"
@@ -115,9 +123,9 @@
             android:id="@+id/btnSolutionType"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:padding="5sp"
             android:text="Tipo de solución"
+            android:textAllCaps="false"
             android:textSize="10sp" />
     </LinearLayout>
 

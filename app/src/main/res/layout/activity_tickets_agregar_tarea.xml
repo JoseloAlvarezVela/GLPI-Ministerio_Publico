@@ -146,6 +146,8 @@
                         android:id="@+id/imgBtnTaskStatus"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:background="@drawable/esq_redondeada_gris"
+                        android:padding="5sp"
                         app:srcCompat="@drawable/ic_task_to_do" />
 
                     <CheckBox
@@ -189,6 +191,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:background="@drawable/esq_redondeada_gris"
+                        android:padding="5sp"
                         app:srcCompat="@drawable/ic_candado_abierto" />
                 </LinearLayout>
 
@@ -214,16 +218,15 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center"
-                    android:orientation="horizontal"
-                    android:padding="5sp">
+                    android:orientation="horizontal">
 
                     <Button
                         android:id="@+id/btnStatusTask"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
                         android:padding="5sp"
-                        android:text="estado del ticket"
+                        android:text="Estado del ticket"
+                        android:textAllCaps="false"
                         android:textSize="10sp" />
 
                 </LinearLayout>
@@ -232,23 +235,21 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center"
-                    android:orientation="horizontal"
-                    android:padding="5sp">
+                    android:orientation="horizontal">
 
                     <Button
                         android:id="@+id/btnAddCategory"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:drawableLeft="@drawable/ic_etiqueta"
-                        android:drawablePadding="5sp"
                         android:fontFamily="@font/averia_sans_libre_light"
                         android:gravity="left|center_vertical"
                         android:padding="10sp"
                         android:text="Agregar Categoria"
+                        android:textAllCaps="false"
                         android:textColor="#5E5959"
                         android:textSize="10sp"
-                        app:backgroundTint="#ECECEC"
-                        app:iconPadding="5sp" />
+                        app:backgroundTint="#ECECEC" />
 
                     <Button
                         android:id="@+id/button8"
@@ -268,22 +269,21 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center"
-                    android:orientation="horizontal"
-                    android:padding="5sp">
+                    android:orientation="horizontal">
 
                     <Button
                         android:id="@+id/btnAddTechnician"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:drawableLeft="@drawable/ic_tecnico"
                         android:fontFamily="@font/averia_sans_libre_light"
                         android:gravity="left|center_vertical"
                         android:padding="10sp"
                         android:text="Asignar Técnico"
+                        android:textAllCaps="false"
                         android:textColor="#5E5959"
                         android:textSize="10sp"
-                        app:backgroundTint="#ECECEC"
-                        app:iconPadding="5sp" />
+                        app:backgroundTint="#ECECEC" />
 
                     <Button
                         android:id="@+id/button89"

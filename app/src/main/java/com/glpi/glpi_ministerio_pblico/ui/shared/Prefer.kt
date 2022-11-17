@@ -16,6 +16,7 @@ class Prefer(val context: Context) {
     val TICKET_INFO = "noTICKET_INFO"
     val TICKET_LOCATION = "noTICKET_INFO"
     val TICKET_CONTENT = "noTICKET_INFO"
+    val TICKET_SORTS_CONTENT = "noTICKET_SORT"
     val RECIPIENT_ID = "noRecipiend"
 
     //---
@@ -31,6 +32,7 @@ class Prefer(val context: Context) {
     val storageRecipientId = context.getSharedPreferences(SHARED_ID,0)
     val storageNameTechnicianTask = context.getSharedPreferences(TICKET_STATUS,0)
     val storageTicketInfo = context.getSharedPreferences(TICKET_INFO,0)
+    val storageTicketSortStatus = context.getSharedPreferences(TICKET_SORTS_CONTENT,0)
     val storageNameUser = context.getSharedPreferences(SHARED_USER,0)
 
 
@@ -64,6 +66,17 @@ class Prefer(val context: Context) {
     fun deleteTicketSortsId(){
         storageTicketSortsId.edit().clear().apply()
     }
+
+    fun saveTicketSortsStatus(ticketSortsStatus: String){
+        storageTicketSortStatus.edit().putString(TICKET_SORTS_CONTENT,ticketSortsStatus).apply()
+    }
+    fun getTicketSortsStatus(): String{
+        return storageTicketSortStatus.getString(TICKET_SORTS_CONTENT,"noTicketSortsContent")!!
+    }
+    fun deleteTicketSortsStatus(){
+        storageTicketSortStatus.edit().clear().apply()
+    }
+
         //volleyRequestIdRecipient()
     fun saveRecipientId(RecipientId: String){
         storageRecipientId.edit().putString(RECIPIENT_ID,RecipientId).apply()
@@ -97,15 +110,7 @@ class Prefer(val context: Context) {
         storageTicketInfo.edit().clear().apply()
     }
         //descripcion completa del ticket
-    fun saveTicketSortsContent(ticketSortsContent: String){
-        storageTicketInfo.edit().putString(TICKET_CONTENT,ticketSortsContent).apply()
-    }
-    fun getTicketSortsContent(): String{
-        return storageTicketInfo.getString(TICKET_CONTENT,"noTicketSortsContent")!!
-    }
-    fun deleteTicketSortsContent(){
-        storageTicketInfo.edit().clear().apply()
-    }
+
 
 
     //metodo que guarda toke de usuario
