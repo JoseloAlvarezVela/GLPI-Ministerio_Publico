@@ -1,15 +1,20 @@
 package com.glpi.glpi_ministerio_pblico.ui.tickets
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.Drawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.KeyEvent
+import android.view.View
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
+import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -75,6 +80,7 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
         recyclerViewListTechnician = binding.includeModalListTechnician.recyclerListTechnician
         recyclerViewListStatusAllowed = binding.includeListStatusAllowed.recyclerFollowupListAllowed
 
+
         volleyRequestListStatusAllowed()
         volleyRequestDataTasksTemplate()
         volleyRequestDataTasksCategory()
@@ -88,6 +94,7 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
             true -> updateTask()
             false -> insertTask()
         }
+
         btn_fabs()
         btn_atras()
         btn_agregarCat()
@@ -97,6 +104,41 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
         imgBtnPadLockTask()
         imgBtnTaskStatus()
         imgBtnTicketStatus()
+
+        filterTemplateTask()
+        filterTemplateCategory()
+        filterListTechnician()
+
+    }
+
+    private fun filterTemplateTask(){
+        //nota: se cambió el adapte de arraylist to list
+        binding.includeModalPlantillaTarea.edtFilterTemplateTask.addTextChangedListener { taskTemplateFilter ->
+            val filterTemplateTask = dataModelArrayListTasksTemplate.filter { taskTemplate -> taskTemplate.nameTasksTemplate!!.lowercase().contains(taskTemplateFilter.toString().lowercase()) }
+            recyclerView_Adapter_TasksTemplate?.updateTaskTemplate(filterTemplateTask)
+            //Log.i("mensaje filter",taskTemplateFilter.toString())
+            /*val filterTemplateTask = dataModelArrayListTasksTemplate.filter { taskTemplate -> taskTemplate.nameTasksTemplate}
+            recyclerView_Adapter_TasksTemplate?.updateTaskTemplate(filterTemplateTask)*/
+        }
+    }
+
+    private fun filterTemplateCategory(){
+        //nota: se cambió el adapte de arraylist to list
+        binding.includeModalPlantillaAgregarCategoria.edtFilterCategoryTask.addTextChangedListener { taskTemplateCategory ->
+            val filterTemplateCategory = dataModelArrayListTasksCategory.filter { taskFilterCategory -> taskFilterCategory.nameTasksCategory!!.lowercase().contains(taskTemplateCategory.toString().lowercase()) }
+            recyclerView_Adapter_TasksCategory?.updateTaskCategory(filterTemplateCategory)
+        }
+    }
+
+    private fun filterListTechnician(){
+        //nota: se cambió el adapte de arraylist to list
+        binding.includeModalListTechnician.edtFilterListTechnician.addTextChangedListener { taskListTechnician ->
+            val filterListTechnician = dataModelArrayListTasksTechnician.filter { taskFilterListTechnician -> taskFilterListTechnician.listTechnicianName!!.lowercase().contains(taskListTechnician.toString().lowercase()) }
+            recyclerView_Adapter_ListTechnician?.updateListTechnician(filterListTechnician)
+            //Log.i("mensaje filter",taskTemplateFilter.toString())
+            /*val filterTemplateTask = dataModelArrayListTasksTemplate.filter { taskTemplate -> taskTemplate.nameTasksTemplate}
+            recyclerView_Adapter_TasksTemplate?.updateTaskTemplate(filterTemplateTask)*/
+        }
     }
 
     private fun imgBtnTaskStatus(){
@@ -201,24 +243,25 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
         val arrayHour = arrayListOf<String>("00","01","02","03","04","05","06","07","08","09","10","11","12")
         val arrayMinutes = arrayListOf<String>("00","05","10","15","20","25","30","35","40","45","50","55")
         var iHour = 0
-        var iMinutes = 5
 
-        val minutesToSolve = Utils_Global.convertMinutesToTimeFormat(ticketInfoTimeToSolve.toString()).split(":")[1]
-        val hoursToSolve = Utils_Global.convertMinutesToTimeFormat(ticketInfoTimeToSolve.toString()).split(":")[0]
-        Log.i("mensaje index",arrayHour.indexOf(hoursToSolve).toString())
-        var positionIndex: Int
-        var positionIndexHour = arrayHour.indexOf(hoursToSolve)
-        when(arrayMinutes.indexOf(minutesToSolve)){
-            -1 -> {
-                positionIndex = 0
-            }
-            else -> {
-                positionIndex = arrayMinutes.indexOf(minutesToSolve)
-            }
-        }
+
+
 
         when (flagOnEditClick){
             true -> {
+                val minutesToSolve = Utils_Global.convertMinutesToTimeFormat(ticketInfoTimeToSolve.toString()).split(":")[1]
+                val hoursToSolve = Utils_Global.convertMinutesToTimeFormat(ticketInfoTimeToSolve.toString()).split(":")[0]
+                //Log.i("mensaje index",arrayHour.indexOf(hoursToSolve).toString())
+                var positionIndex: Int
+                var positionIndexHour = arrayHour.indexOf(hoursToSolve)
+                when(arrayMinutes.indexOf(minutesToSolve)){
+                    -1 -> {
+                        positionIndex = 0
+                    }
+                    else -> {
+                        positionIndex = arrayMinutes.indexOf(minutesToSolve)
+                    }
+                }
                 binding.btnTimeToSolveTask.text = Utils_Global.convertMinutesToTimeFormat(ticketInfoTimeToSolve.toString()) + "horas"
 
 
@@ -266,6 +309,9 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
             }
             false -> {
 
+                var positionIndex = 0
+                var iMinutes = 6
+                var positionIndexHour = 0
                 binding.btnTimeToSolveTask.setOnClickListener {
                     when(onSelectTemplateTask)
                     {
@@ -339,7 +385,7 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
 
             when(getHour){
                 "0" -> binding.btnTimeToSolveTask.text = "$getMinutes minutos"
-                else -> binding.btnTimeToSolveTask.text = "$getHour : $getMinutes minutos"
+                else -> binding.btnTimeToSolveTask.text = "$getHour : $getMinutes horas"
             }
 
             binding.btnTimeToSolveTask.tag = minutesToSeconds
@@ -492,12 +538,12 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
 
     private fun setupRecycler() {
         val layoutManager =
-            LinearLayoutManager(this, LinearLayoutManager.VERTICAL, true,)
+            LinearLayoutManager(this@TicketsAgregarTareaActivity, LinearLayoutManager.VERTICAL, true,)
         layoutManager.stackFromEnd = true
 
         recyclerView!!.layoutManager = layoutManager
         recyclerView_Adapter_TasksTemplate =
-            RecycleView_Adapter_TasksTemplate(this,dataModelArrayListTasksTemplate,this)
+            RecycleView_Adapter_TasksTemplate(this@TicketsAgregarTareaActivity,dataModelArrayListTasksTemplate,this@TicketsAgregarTareaActivity)
         recyclerView!!.adapter = recyclerView_Adapter_TasksTemplate
     }
 
@@ -868,7 +914,7 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
     private fun btn_agregarCat() {
         //INICO - boton que abre modal_agregar_cat_tickets.xml
         binding.btnAddCategory.setOnClickListener {
-
+            openSoftKeyboard(this,binding.includeModalPlantillaAgregarCategoria.edtFilterCategoryTask)
             binding.LayoutBackgroudAgregarTarea.isVisible = true //fondo gris casi transparente
             //binding.includeModalPlantillaAddcat.modalPlantillaAgregarCategoria.isVisible = true //modal
             binding.includeModalPlantillaAgregarCategoria.modalPlantillaAgregarTarea.isVisible = true
@@ -890,16 +936,19 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
         }
 
         //INICIO - boton que cierra modal_agregar_cat_tickets.xml
-        binding.includeModalListTechnician.btnCloseModalListTechnician.setOnClickListener {
+        /*binding.includeModalListTechnician.btnCloseModalListTechnician.setOnClickListener {
             binding.includeModalPlantillaAgregarCategoria.modalPlantillaAgregarTarea.isVisible = false
             binding.LayoutBackgroudAgregarTarea.isVisible = false
-        }
+        }*/
     }
 
     //INICIO - función que añade la tarea y te devuelve al menu principal
     private fun btnAddTasks(flagUpdateTask: Boolean,ticketSortsId: String, ticketInfoId: String, ticketSortsIdTechnician: String, ticketSortsStatus: String) {
         Log.i("mensaje flag taskOut","${flagUpdateTask}")
         binding.btnAddTasks.setOnClickListener {
+
+            MainActivity.list.clear()
+            Log.i("mensaje clear", MainActivity.list.toString())
             Toast.makeText(this, "Tarea añadida", Toast.LENGTH_LONG).show()
 
 
@@ -951,6 +1000,7 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
                 }
 
                 flagUpdateTask -> {
+
                     requestVolleyUpdateTask(
                         ticketInfoId,
                         taskDescription,
@@ -983,9 +1033,9 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
                             )
                         }
                     }
+
                     MainActivity.updateFragmentFlag = true
                     val ticketSortsStatusString = "SIN_CAMBIO_DE_ESTADO"
-                    MainActivity.updateFragmentFlag = true
                     val intentOnBack = Intent(this, NavFooterTicketsActivity::class.java)
                     intentOnBack.putExtra("ticketSortsStatus",ticketSortsStatusString)
                     intentOnBack.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
@@ -993,6 +1043,7 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
                 }
 
                 !flagUpdateTask -> {
+                    Toast.makeText(this, "!flagUpdateTask", Toast.LENGTH_LONG).show()
                     requestVolleyInsertTask(
                         taskType,
                         taskDescription,
@@ -1023,6 +1074,7 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
                             )
                         }
                     }
+
                     val ticketSortsStatusString = "SIN_CAMBIO_DE_ESTADO"
                     MainActivity.updateFragmentFlag = true
                     val intentOnBack = Intent(this, NavFooterTicketsActivity::class.java)
@@ -1047,12 +1099,14 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
         ticketStatus: String,
         ticketSortsId: String
     ) {
+
         //metodo que nos devuelve los datos para los tickets
         val stringRequestDataTickets = object : StringRequest(Method.POST,
             MainActivity.urlApi_UpdateTasks+ticketInfoId, Response.Listener { response ->
                 try {
                     val dataAddFollowup = JSONObject(response) //obtenemos el objeto json
-
+                    //MainActivity.list.clear()
+                    Log.i("mensaje listClear","${MainActivity.list.toString()}")
                     Log.i("mensaje","$dataAddFollowup")
 
                 } catch (e: Exception) {
@@ -1143,12 +1197,71 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
 
     //INICIO - funcion que regresa a la vista anterior: activity_nav_footer_tickets.xml
     private fun btn_atras() {
+        binding.includeModalPlantillaTarea.btnCloseModalTasksTemplate.setOnClickListener {
+            binding.includeModalPlantillaTarea.modalPlantillaAgregarTarea.isVisible = false
+            binding.includeModalPlantillaTarea.edtFilterTemplateTask.hideKeyboard()
+            binding.includeModalPlantillaTarea.edtFilterTemplateTask.setText("")
+            closeViews()
+        }
        binding.btnAtrasActtaddt.setOnClickListener {
            onBackPressed()
-           /*val intent_atras = Intent(this, NavFooterTicketsActivity::class.java)
-           intent_atras.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-           startActivity(intent_atras)*/
+
        }
+        binding.includeModalPlantillaAgregarCategoria.btnCloseModalTemplateCategory.setOnClickListener {
+            binding.includeModalPlantillaAgregarCategoria.modalPlantillaAgregarTarea.isVisible = false
+            binding.includeModalPlantillaAgregarCategoria.edtFilterCategoryTask.hideKeyboard()
+            binding.includeModalPlantillaAgregarCategoria.edtFilterCategoryTask.setText("")
+            closeViews()
+        }
+        binding.includeModalPlantillaAgregarCategoria.btnCloseModalPlantillaAgregarCategoria.setOnClickListener {
+            binding.includeModalPlantillaAgregarCategoria.modalPlantillaAgregarTarea.isVisible = false
+            binding.includeModalPlantillaAgregarCategoria.edtFilterCategoryTask.hideKeyboard()
+            binding.includeModalPlantillaAgregarCategoria.edtFilterCategoryTask.setText("")
+            closeViews()
+        }
+
+        binding.includeModalListTechnician.btnCloseModalListTech.setOnClickListener {
+            binding.includeModalListTechnician.modalListTechnician.isVisible = false
+            binding.includeModalListTechnician.edtFilterListTechnician.hideKeyboard()
+            binding.includeModalListTechnician.edtFilterListTechnician.setText("")
+            closeViews()
+        }
+        binding.includeModalListTechnician.btnCloseModalListTechnician.setOnClickListener {
+            binding.includeModalListTechnician.modalListTechnician.isVisible = false
+            binding.includeModalListTechnician.edtFilterListTechnician.hideKeyboard()
+            binding.includeModalListTechnician.edtFilterListTechnician.setText("")
+            closeViews()
+        }
+
+        binding.includeListStatusAllowed.btnCloseModalListStatusAllowed.setOnClickListener {
+            binding.includeListStatusAllowed.modalListStatusAllowed.isVisible = false
+            closeViews()
+        }
+        binding.includeListStatusAllowed.btnCloseFollowupListAllowed.setOnClickListener {
+            binding.includeListStatusAllowed.modalListStatusAllowed.isVisible = false
+            closeViews()
+        }
+    }
+
+    private fun closeViews(){
+        binding.LayoutBackgroudAgregarTarea.isVisible = false
+        binding.fabPlantilla.isVisible = false
+        binding.fabFoto.isVisible = false
+        binding.fabArchivo.isVisible = false
+        click = false
+        binding.LayoutFabAgregarTarea.isVisible = true
+    }
+
+    fun View.hideKeyboard() {
+        val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(windowToken, 0)
+    }
+
+    fun openSoftKeyboard(context: Context, view: View) {
+        view.requestFocus()
+        // open the soft keyboard
+        val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT)
     }
 
     //INICIO - funcion que despliega los FAB's
@@ -1172,8 +1285,8 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
         desplegar_fabs.setOnClickListener {
             if (click == false){
                 layout_plantilla.isVisible = true
-                layout_camara.isVisible = true
-                layout_archivo.isVisible = true
+                //layout_camara.isVisible = true
+                //layout_archivo.isVisible = true
                 backGround.isVisible = true
                 click = true
             }else{
@@ -1189,6 +1302,7 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
         //INICIO - evento de click que abre modal_plantilla_agreegar_tarea.xml
         abrir_plantilla.setOnClickListener {
             binding.includeModalPlantillaTarea.modalPlantillaAgregarTarea.isVisible = true
+            openSoftKeyboard(this,binding.includeModalPlantillaTarea.edtFilterTemplateTask)
             hide_fab.isVisible = false
         }
 
@@ -1202,6 +1316,8 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
             backGround.isVisible = false
             binding.LayoutFabAgregarTarea.isVisible = true
             click = false
+            binding.includeModalPlantillaAgregarCategoria.edtFilterCategoryTask.hideKeyboard()
+            binding.includeModalPlantillaAgregarCategoria.edtFilterCategoryTask.setText("")
         }
 
         //INICIO - evento de click que abre camara del celular
@@ -1216,6 +1332,10 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
 
         //INICIO - evento click que cierra modals
         backGround.setOnClickListener {
+            binding.includeModalPlantillaTarea.edtFilterTemplateTask.hideKeyboard()
+            binding.includeModalPlantillaTarea.edtFilterTemplateTask.setText("")
+            binding.includeModalPlantillaAgregarCategoria.edtFilterCategoryTask.hideKeyboard()
+            binding.includeModalPlantillaAgregarCategoria.edtFilterCategoryTask.setText("")
             binding.includeModalPlantillaTarea.modalPlantillaAgregarTarea.isVisible = false
             //binding.includeModalPlantillaAddcat.modalPlantillaAgregarCategoria.isVisible = false
             binding.includeModalPlantillaAgregarCategoria.modalPlantillaAgregarTarea.isVisible = false
@@ -1302,12 +1422,18 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
 
     override fun onBackPressed() {
         super.onBackPressed()
-        val ticketSortsStatusString = "SIN_CAMBIO_DE_ESTADO"
-        val intentOnBackPressed = Intent(this, NavFooterTicketsActivity::class.java)
-        intentOnBackPressed.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        intentOnBackPressed.putExtra("ticketSortsStatus",ticketSortsStatusString)
-        startActivity(intentOnBackPressed)
+        if(binding.includeModalPlantillaTarea.modalPlantillaAgregarTarea.isVisible){
+            binding.includeModalPlantillaTarea.modalPlantillaAgregarTarea.isVisible = false
+        }
+        else{
+            val ticketSortsStatusString = "SIN_CAMBIO_DE_ESTADO"
+            val intentOnBackPressed = Intent(this, NavFooterTicketsActivity::class.java)
+            intentOnBackPressed.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            intentOnBackPressed.putExtra("ticketSortsStatus",ticketSortsStatusString)
+            startActivity(intentOnBackPressed)
+        }
     }
+
 
     override fun onTasksTemplateClick(
         nameTasksTemplate: String,
@@ -1325,6 +1451,8 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
         binding.fabArchivo.isVisible = false
         click = false
         binding.LayoutFabAgregarTarea.isVisible = true
+        binding.includeModalPlantillaTarea.edtFilterTemplateTask.hideKeyboard()
+        binding.includeModalPlantillaTarea.edtFilterTemplateTask.setText("")
         binding.edtTasksDescription.setText(decodeHtml(contentTasksTemplate))
         binding.edtTasksDescription.setTextColor(Color.parseColor("#1D20DD"))
         binding.edtTasksDescription.tag = idTasksTemplates
@@ -1361,6 +1489,8 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
         binding.fabArchivo.isVisible = false
         click = false
         binding.LayoutFabAgregarTarea.isVisible = true
+        binding.includeModalPlantillaAgregarCategoria.edtFilterCategoryTask.hideKeyboard()
+        binding.includeModalPlantillaAgregarCategoria.edtFilterCategoryTask.setText("")
 
         //Toast.makeText(this, "$nameTasksCategory, Id: $idTasksCategories", Toast.LENGTH_SHORT).show()
 
@@ -1376,6 +1506,9 @@ class TicketsAgregarTareaActivity : AppCompatActivity(),
     ) {
         binding.btnAddTechnician.text = "$listStatusAllowedName $listTechnicianLastName"
         binding.btnAddTechnician.tag = "$listStatusAllowedId"
+        binding.includeModalListTechnician.edtFilterListTechnician.hideKeyboard()
+        binding.includeModalListTechnician.edtFilterListTechnician.setText("")
+
 
         binding.includeModalListTechnician.modalListTechnician.isVisible = false
         binding.LayoutBackgroudAgregarTarea.isVisible = false

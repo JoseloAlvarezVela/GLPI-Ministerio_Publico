@@ -13,6 +13,7 @@ class Prefer(val context: Context) {
     //---
     val TICKET_ID = "noTicket"
     val TICKET_STATUS = "noTICKET_STATUS"
+    val TICKET_NOTIFICATION = "noTICKET_NOTIFICATION"
     val TICKET_INFO = "noTICKET_INFO"
     val TICKET_LOCATION = "noTICKET_INFO"
     val TICKET_CONTENT = "noTICKET_INFO"
@@ -31,6 +32,7 @@ class Prefer(val context: Context) {
     val storageTicketSortsId = context.getSharedPreferences(SHARED_ID,0)
     val storageRecipientId = context.getSharedPreferences(SHARED_ID,0)
     val storageNameTechnicianTask = context.getSharedPreferences(TICKET_STATUS,0)
+    val storageNotificationTicketId = context.getSharedPreferences(TICKET_NOTIFICATION,0)
     val storageTicketInfo = context.getSharedPreferences(TICKET_INFO,0)
     val storageTicketSortStatus = context.getSharedPreferences(TICKET_SORTS_CONTENT,0)
     val storageNameUser = context.getSharedPreferences(SHARED_USER,0)
@@ -50,10 +52,16 @@ class Prefer(val context: Context) {
         storageNameUser.edit().clear().apply()
     }
 
-    //metodo que guarda el nombre del usuario
-    /*fun setUserName(name: String){
-        storage.edit().putString(USER_NAME,name)
-    }*/
+    //PUSH NOTIFICATION
+    fun saveNotificationTicketId(NotificationTicketId_: String){
+        storageNotificationTicketId.edit().putString(TICKET_NOTIFICATION,NotificationTicketId_).apply()
+    }
+    fun getNotificationTicketId(): String{
+        return storageNotificationTicketId.getString(TICKET_NOTIFICATION,"noTICKET_NOTIFICATION")!!
+    }
+    fun deleteNotificationTicketId(){
+        storageNotificationTicketId.edit().clear().apply()
+    }
 
 
     //guardamos ids

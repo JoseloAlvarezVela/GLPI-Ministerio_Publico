@@ -1,16 +1,18 @@
 package com.glpi.glpi_ministerio_pblico.ui.tickets
 
+//import java.util.ArrayList
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -18,7 +20,6 @@ import androidx.room.Room
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.glpi.glpi_ministerio_pblico.MainActivity
-
 import com.glpi.glpi_ministerio_pblico.R
 import com.glpi.glpi_ministerio_pblico.VolleySingleton
 import com.glpi.glpi_ministerio_pblico.data.database.TicketInfoDB
@@ -30,8 +31,6 @@ import com.glpi.glpi_ministerio_pblico.ui.shared.token.Companion.prefer
 import kotlinx.coroutines.launch
 import org.json.JSONArray
 import org.json.JSONObject
-import java.util.ArrayList
-import java.util.HashMap
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -61,6 +60,8 @@ class TicketInfoFragment : Fragment(), RecyclerAdapter.onConversationClickListen
     var isEditFollowup = false
     var positionFollowup = -1
 
+    var contandoPeticion = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -77,6 +78,8 @@ class TicketInfoFragment : Fragment(), RecyclerAdapter.onConversationClickListen
         //return inflater.inflate(R.layout.fragment_ticket_info, container, false)
         progressBarTicketInfo = binding.progressBarTicketInfo
 
+        MainActivity.list.clear()
+
         getTicketInfo()
         volleyRequestTicketInfo()
         volleyRequestIdRecipient()
@@ -84,10 +87,10 @@ class TicketInfoFragment : Fragment(), RecyclerAdapter.onConversationClickListen
 
 
 
-
         val root = binding.root
         return root
     }
+
 
 
     @SuppressLint("SetTextI18n")
@@ -168,7 +171,7 @@ class TicketInfoFragment : Fragment(), RecyclerAdapter.onConversationClickListen
         /*val bundle = intent.extras
         val idRecipient = bundle!!.getString("ticketSortsIdRecipient")*/
 
-        Log.i("mensaje prefer","${MainActivity.urlApi_TasksUsers}${prefer.getRecipientId()} ")
+        Log.i("mensaje prefer1","${MainActivity.urlApi_TasksUsers}${prefer.getRecipientId()} ")
         val stringRequestDataTickets = object : StringRequest(Method.POST,
             MainActivity.urlApi_TasksUsers +prefer.getRecipientId(), Response.Listener { response ->
                 try {
@@ -232,17 +235,23 @@ class TicketInfoFragment : Fragment(), RecyclerAdapter.onConversationClickListen
     private fun volleyRequestTicketInfo() {
         /*val bundle = intent.extras
         val ticketSortsId = bundle!!.getString("ticketSortsId")*/
-
+        //var list = ArrayList<String>()
+        //list = ArrayList()
+        //MainActivity.list.clear()
+        Log.i("mensaje idPush2: ",MainActivity.list.toString())
+        Log.i("mensaje link: ",MainActivity.urlApi_TicketID+prefer.getTicketSortsId())
         jsonObjectResponse = JSONObject()
 
-        Log.i("mensaje prefer","${MainActivity.urlApi_TicketID}${223866}")
+
         val stringRequestDataTickets = object : StringRequest(Method.POST,
             MainActivity.urlApi_TicketID+prefer.getTicketSortsId(), Response.Listener { response ->
                 try {
-
+                    MainActivity.list.clear()
                     dataModelArrayListTicketInfo = ArrayList()
                     jsonObjectResponse = JSONObject(response)
                     var ticketInfoJson: JSONObject
+
+                    contandoPeticion++
                     for (i in  0 until jsonObjectResponse.length()){
                         val ticketInfo = Data_TicketInfo()
                         if (jsonObjectResponse.getString(i.toString())[2] == 'T'){
@@ -280,19 +289,26 @@ class TicketInfoFragment : Fragment(), RecyclerAdapter.onConversationClickListen
                                 ticketInfo.ticketInfoTimeToSolve = ticketInfoJson.getString("DURACION").split(".")[0]
 
                                 ticketInfo.ticketInfoStatus = ticketInfoJson.getString("ESTADO") //pendiente o terminado
+                                //MainActivity.list = arrayListOf(ticketInfoJson.getString("ESTADO"))
+                                MainActivity.list.add(ticketInfoJson.getString("ESTADO"))
+
 
                                 ticketInfo.ticketInfoIdCategory = ticketInfoJson.getString("ID_CATEGORIA")
                                 ticketInfo.ticketInfoCategory = ticketInfoJson.getString("CATEGORIA")
 
                             }
                             dataModelArrayListTicketInfo.add(ticketInfo)
+
                         }
                     }
+
                     progressBarTicketInfo.isVisible = false
                     binding.includeTicketsHistorico.layoutHistorico.isVisible = true
+                    //Log.i("mensaje content1",MainActivity.list.toString())
                     setupRecycler()
                 } catch (e: Exception) {
-                    e.printStackTrace()
+                    Log.i("mensaje Exception info",""+e.printStackTrace())
+
                     //Toast.makeText(context, "sin valor para ...: $e", Toast.LENGTH_LONG).show()
                     //Log.i("mensaje entitis dentroE",""+response.get(0))
                 }
@@ -319,7 +335,8 @@ class TicketInfoFragment : Fragment(), RecyclerAdapter.onConversationClickListen
         val layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
         //layoutManager.stackFromEnd = true
 
-        dataModelArrayListTicketInfo.sortByDescending { it.ticketInfoDate}
+        //dataModelArrayListTicketInfo.sortByDescending { it.ticketInfoCreationDate}
+        dataModelArrayListTicketInfo.sortByDescending {it.ticketInfoDate}
         recyclerView!!.layoutManager = layoutManager
         recycleViewAdapterTicketsInfo = RecyclerAdapter(requireContext(),dataModelArrayListTicketInfo,this)
         recyclerView!!.adapter = recycleViewAdapterTicketsInfo
@@ -363,7 +380,9 @@ class TicketInfoFragment : Fragment(), RecyclerAdapter.onConversationClickListen
                 intentTasks.putExtra("ticketInfoId",ticketInfoId) //origen del
                 intentTasks.putExtra("ticketInfoTimeToSolve",ticketInfoTimeToSolve)
                 intentTasks.putExtra("flagOnEditClick",flagOnEditClick)
+                //requireActivity().finish()
                 startActivity(intentTasks)
+                //activity?.finish()
             }
             "FOLLOWUP" -> {
                 intentFollowUp.putExtra("ticketPrivate",ticketInfoPrivate)
@@ -372,7 +391,9 @@ class TicketInfoFragment : Fragment(), RecyclerAdapter.onConversationClickListen
                 intentFollowUp.putExtra("ticketInfoIdSource",ticketInfoIdSource)
                 intentFollowUp.putExtra("ticketInfoSource",ticketInfoSource)
                 intentFollowUp.putExtra("flagOnEditClick",flagOnEditClick)
+
                 startActivity(intentFollowUp)
+                //activity?.finish()
             }
         }
         isEditFollowup = true

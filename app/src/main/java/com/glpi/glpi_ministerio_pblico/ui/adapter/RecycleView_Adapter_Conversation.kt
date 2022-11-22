@@ -176,7 +176,7 @@ class RecyclerAdapter(
                     "TASK" -> {
                         val time = dataModelArrayListConversation[position].ticketInfoCreationDate.toString().split(" ") //hora de inicio de tarea
                         val minutesToAdd: Long = dataModelArrayListConversation[position].ticketInfoTimeToSolve.toString().toLong()  //tiempo para resolver tarea en minutos
-                        val minutesToSecondsAdd = minutesToAdd*60
+                        val minutesToSecondsAdd = minutesToAdd*60 //de minutos a segundos
 
                         val convertHour = time[1].toString().split(":")
                         //convertimos horas a segundos
@@ -188,8 +188,11 @@ class RecyclerAdapter(
                         //Log.i("mensaje hour to seconds","$secondsTotal")
 
                         val hora = (secondsTotal / 3600)
+                        //Log.i("mensaje timeH",hora.toString())
                         val minutos = ((secondsTotal%3600) /60)
+                        //Log.i("mensaje timeM",minutos.toString())
                         val segundos = (secondsTotal%60)
+                        //Log.i("mensaje timeS",segundos.toString())
                         //Log.i("mensaje seconds to Hour","$hora:$minutos:$segundos")
 
 

@@ -16,6 +16,9 @@ import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.glpi.glpi_ministerio_pblico.ui.shared.token.Companion.prefer
+import com.glpi.glpi_ministerio_pblico.ui.tickets.NavFooterTicketsActivity
+import com.glpi.glpi_ministerio_pblico.ui.tickets.TicketsAgregarTareaActivity
+import com.glpi.glpi_ministerio_pblico.utilities.NFMbyPass
 import org.json.JSONObject
 
 
@@ -27,9 +30,29 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
+        prefer.deleteTicketSortsId()
+
+        val data = intent.extras
+        if (data != null) {
+            //Aqui puedes obtener tus datos
+            val ticketId = data.getString("ticketId")
+            prefer.saveTicketSortsId(ticketId.toString())
+            //getIntent().removeExtra("ticketId")
+            Log.i("mensaje ticket_id push", ticketId.toString())
+            checkUserLogin(ticketId.toString())
+            //prefer.saveNotificationTicketId(ticketId.toString())
+
+        /*}else if (prefer.getTicketSortsId() != "noTicket"){
+            Log.i("mensaje ticket_idPref", prefer.getTicketSortsId())
+            checkUserLogin(prefer.getTicketSortsId())*/
+        }else{
+            Log.i("mensaje ticket_nulo", prefer.getTicketSortsId())
+            checkUserLogin("null")
+        }
+
         queue = Volley.newRequestQueue(this@LoginActivity)
         val TIMEOUT = 10000
-        checkUserLogin()
+
 
         val loginUserName = findViewById<EditText>(R.id.login_user)
         val loginUserPassword = findViewById<EditText>(R.id.login_password)
@@ -81,7 +104,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     //verificamos si tenemos guardado el token
-    private fun checkUserLogin() {
+    private fun checkUserLogin(ticketId: String) {
 
         progressBarAction_ = findViewById(R.id.progressBarAction)
 
@@ -89,12 +112,27 @@ class LoginActivity : AppCompatActivity() {
         val stringRequest = object : StringRequest(Request.Method.POST,
             url, Response.Listener { response ->
                 try {
-
                     val jsonObject = JSONObject(response)
                     val token_ = jsonObject.getString("myentities")
                     Log.i("mensajeT tokenValidate:",""+ prefer.getToken()+" : "+token_)
-                    if(prefer.getToken() != "noToken" ){
-                        startActivity(Intent(this,MainActivity::class.java))
+                    Log.i("mensajeT idPush: ",""+ prefer.getTicketSortsId())
+                    if(prefer.getToken() != "noToken" && ticketId != "null"){
+
+                        val intent = Intent(this, NFMbyPass::class.java)
+                        //intent.putExtra("flagNotificationPush",true)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                        startActivity(intent)
+
+
+                        //intent.putExtra("flagNotificationPush",true)
+                        //startActivity(Intent(this,NavFooterTicketsActivity::class.java))
+                    }else if(prefer.getToken() != "noToken"){
+                        Toast.makeText(this, "no se capturó ticket id", Toast.LENGTH_SHORT).show()
+                        Log.i("mensajeT idPushPref: ",""+ prefer.getNotificationTicketId())
+                        val intent = Intent(this, MainActivity::class.java)
+                        intent.putExtra("flagNotificationPush",false)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                        startActivity(intent)
                     }
 
 

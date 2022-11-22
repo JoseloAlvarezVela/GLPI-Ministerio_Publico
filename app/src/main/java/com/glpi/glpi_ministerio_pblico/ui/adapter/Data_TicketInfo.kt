@@ -30,4 +30,5 @@ class Data_TicketInfo {
     var ticketInfoCompleteNameRequester: String? = null
 
     var ticketInfoCompleteNameRecipient: String? = null
+    var ticketInfoTaskStatus: String? = null
 }

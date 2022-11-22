@@ -10,7 +10,7 @@ import com.glpi.glpi_ministerio_pblico.R
 
 class RecycleView_Adapter_ListTechnician(
     context: Context,
-    private val dataModelArrayListTechnician: ArrayList<Data_ListTechnician>,
+    private var dataModelArrayListTechnician: List<Data_ListTechnician>,
     private val itemClickListener: onListTechnicianClickListener
 ):RecyclerView.Adapter<RecycleView_Adapter_ListTechnician.MyViewListTechnicianHolder>() {
 
@@ -45,6 +45,11 @@ class RecycleView_Adapter_ListTechnician(
 
     override fun getItemCount(): Int {
         return dataModelArrayListTechnician.size
+    }
+
+    fun updateListTechnician(dataModelArrayListTechnician: List<Data_ListTechnician>){
+        this.dataModelArrayListTechnician = dataModelArrayListTechnician
+        notifyDataSetChanged()
     }
 
     inner class MyViewListTechnicianHolder(itemListTechnician: View):RecyclerView.ViewHolder(itemListTechnician){

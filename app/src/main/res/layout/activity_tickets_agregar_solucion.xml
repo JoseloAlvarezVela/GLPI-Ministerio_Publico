@@ -245,7 +245,8 @@
                 android:layout_marginTop="10sp"
                 android:clickable="true"
                 android:gravity="center_vertical|end"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:visibility="gone">
 
                 <TextView
                     android:id="@+id/textView59"
@@ -276,7 +277,8 @@
                 android:layout_marginTop="10sp"
                 android:clickable="true"
                 android:gravity="center_vertical|end"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:visibility="gone">
 
                 <TextView
                     android:id="@+id/textView60"

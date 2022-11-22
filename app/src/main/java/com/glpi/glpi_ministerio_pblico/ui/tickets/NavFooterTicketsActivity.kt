@@ -56,6 +56,7 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
     lateinit var ticketOrigin: String
 
     lateinit var adapter: RecyclerAdapter
+    //var flagTasksFinished: String = "false"
 
     //INICIO toogle buton tickets
     var clickTickets: Boolean = false
@@ -71,23 +72,24 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
         binding = ActivityNavFooterTicketsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
-
         progressBarTicketConversation = binding.progressBarTicketConversation
 
-        volleyRequestIdRecipient() //datos del operador
+        //volleyRequestIdRecipient() //datos del operador
         //volleyRequestTicketInfo(urlApi_TicketID)
 
         if(MainActivity.updateFragmentFlag){
-            Log.i("mensaje replace","fragemn ")
+            Log.i("mensaje replace","yes ")
             replaceFragment(TicketInfoFragment())
             MainActivity.updateFragmentFlag = false
         }
 
+
         val intentOnBack = intent.extras
-        when(intentOnBack!!.getString("ticketSortsStatus")){
-            "CERRADO" -> btnFabTicketClosed()
-            else -> btnFabs()
+        if(intent.extras != null){
+            when(intentOnBack!!.getString("ticketSortsStatus")){
+                "CERRADO" -> btnFabTicketClosed()
+                else -> btnFabs()
+            }
         }
 
         activityHeader()
@@ -112,12 +114,14 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
     }
 
     //nota:eliminar fragment de fondo
-    private fun replaceFragment(ticketInfoFragment: TicketInfoFragment) {
+    fun replaceFragment(ticketInfoFragment: TicketInfoFragment) {
         val f2 = ticketInfoFragment
         val transaction: FragmentTransaction = supportFragmentManager.beginTransaction()
         transaction.replace(R.id.ticketInfoFragment, f2)
+        MainActivity.list.clear()
         transaction.addToBackStack(null)
         transaction.commit()
+
 
         /*val fragmentManager = supportFragmentManager
         val fragmentTransaction = fragmentManager.beginTransaction()
@@ -129,10 +133,28 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
         //INICIO fab_opciones de layout activity_tickets_historico.xml
         binding.includeFabs.fabDesplegarOp.setOnClickListener {
             if (!click_fab){
-                binding.includeFabs.fabSolucion.isVisible = true
+
+                var contador = 0
+                Log.i("mensaje list", MainActivity.list.toString())
+                for (i in MainActivity.list){
+                    when(i == "PENDIENTE"){
+                        true -> {
+                            contador++
+                            if (contador != 0){
+                                binding.includeFabs.fabSolucion.isVisible = false
+                            }
+                        }
+                        else -> {
+                            if (contador == 0){
+                                binding.includeFabs.fabSolucion.isVisible = true
+                            }
+                        }
+                    }
+                }
+                Log.i("mensaje navContador", contador.toString())
                 binding.includeFabs.btnFabSolucion.isVisible = true
-                binding.includeFabs.fabDocumentos.isVisible = true
-                binding.includeFabs.btnFabDocumentos.isVisible = true
+                //binding.includeFabs.fabDocumentos.isVisible = true
+                //binding.includeFabs.btnFabDocumentos.isVisible = true
                 binding.includeFabs.fabTareas.isVisible = true
                 binding.includeFabs.btnFabTareas.isVisible = true
                 binding.includeFabs.fabSeguimiento.isVisible = true
@@ -140,6 +162,7 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
                 binding.fabBackground.isVisible = true
 
                 click_fab = true
+                Log.i("mensaje array",MainActivity.list.size.toString())
             }else{
                 hideFabs()
             }
@@ -272,6 +295,7 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
     private fun activityHeader(){
         //boton atras - include de nav_header_tickets.xml
         binding.includeNavHeaderTickets.btnAtrasTickets.setOnClickListener {
+
             onBackPressed()
         }
     }
@@ -435,6 +459,8 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
                 binding.includeTickets.labelAsignadoNombre.text = "${item.ticketSortsNameTechnician} ${item.ticketSortsLastNameTechnician}"
             }
         }
+
+        prefer.deleteTicketSortsId()
     }
 
     private fun volleyRequestIdRecipient(){
@@ -476,7 +502,7 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
 
     override fun onBackPressed() {
         super.onBackPressed()
-
+        MainActivity.list.clear()
         val room  = Room.databaseBuilder(this, TicketInfoDB::class.java,"ticketInfoBD").build()
         lifecycleScope.launch{
             room.daoTicketInfo().deleteTicketInfo(prefer.getTicketSortsId())
@@ -511,6 +537,7 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
         ticketInfoTimeToSolve: String,
         adapterPosition: Int
     ) {
+        MainActivity.list.clear()
         val flagOnEditClick = true
         //recuperamos el id del ticket
         val bundle = intent.extras
@@ -541,6 +568,7 @@ class NavFooterTicketsActivity : AppCompatActivity(),RecyclerAdapter.onConversat
             intentTasks.putExtra("ticketInfoTimeToSolve",ticketInfoTimeToSolve)
             intentTasks.putExtra("ticketSortsType",ticketSortsType)
             intentTasks.putExtra("flagOnEditClick",flagOnEditClick)
+
             startActivity(intentTasks)
         }else{
             intentFollowUp.putExtra("ticketSortsId",ticketSortsId)

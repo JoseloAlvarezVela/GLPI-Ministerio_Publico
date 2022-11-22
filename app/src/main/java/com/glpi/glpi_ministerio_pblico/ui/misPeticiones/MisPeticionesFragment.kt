@@ -75,9 +75,6 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.onTicketCl
         _binding = FragmentMisPeticionesBinding.inflate(inflater, container, false)
 
 
-
-
-
         progressBarMyPetitions = binding.progressBarMisPeticiones
         //requestVolleyTokens()
         if (MainActivity.flag_edtFindTicketID) {//si el EditText de Ticket por Id tiene contenido
@@ -89,7 +86,7 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.onTicketCl
             requestVolleySortByRequester(MainActivity.urlApi_SortByRequester)
         } else {
             if (MainActivity.flagTicketSort) {
-                requestVolleyTicketSorts(urlApi_Ticket)
+                requestVolleyTicketSorts()
             } else if (MainActivity.flagFilterState) {
 
                 volleyRequestSortByStatus(
@@ -209,7 +206,7 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.onTicketCl
         //FIN obtenemos perfil de usuario
     }
 
-    private fun volleyRequestSortByTicketId(
+    fun volleyRequestSortByTicketId(
         urlApi_SortByTicketId: String,
         edtFindTicketID: String
     ) {
@@ -226,7 +223,7 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.onTicketCl
                             "Id de Ticket No Existe: " + dataTicketsJson.toString(),
                             Toast.LENGTH_LONG
                         ).show()
-                        requestVolleyTicketSorts(urlApi_Ticket)
+                        requestVolleyTicketSorts()
                         MainActivity.flag_edtFindTicketID = false
                     } else {
                         dataModelArrayList = ArrayList()
@@ -265,11 +262,11 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.onTicketCl
         //FIN obtenemos perfil de usuario
     }
 
-    private fun requestVolleyTicketSorts(urlApi_TicketSort: String) {
+    private fun requestVolleyTicketSorts() {
         Log.i("mensajeFlag", "$urlApi_Ticket == GENERAL")
         //metodo que nos devuelve los datos para los tickets
         val stringRequestDataTickets = object : StringRequest(Request.Method.POST,
-            urlApi_TicketSort, Response.Listener { response ->
+            urlApi_Ticket, Response.Listener { response ->
                 try {
                     val dataTicketsJson = JSONObject(response) //obtenemos el objeto json
 
@@ -654,6 +651,7 @@ class MisPeticionesFragment : Fragment(), RecycleView_Adapter_Tickets.onTicketCl
                 )
             }
         }
+
         prefer.saveTicketSortsId(ticketSortsId)
         prefer.saveRecipientId(ticketSortsIdRecipient)
         prefer.saveTicketSortsStatus(ticketSortsStatus)

@@ -10,7 +10,8 @@ import com.glpi.glpi_ministerio_pblico.R
 
 class RecycleView_Adapter_TasksTemplate(
     context: Context,
-    private val dataModalArrayListTasksTemplate: ArrayList<Data_TasksTemplate>,
+    //private var dataModalArrayListTasksTemplate: List<Data_TasksTemplate>,
+    private var dataModalArrayListTasksTemplate: List<Data_TasksTemplate>,
     private val itemTasksTemplateClickListener: onTasksTemplateClickListener
     ):RecyclerView.Adapter<RecycleView_Adapter_TasksTemplate.MyViewTasksTemplateHolder>() {
 
@@ -51,6 +52,11 @@ class RecycleView_Adapter_TasksTemplate(
     override fun getItemCount(): Int {
 
         return dataModalArrayListTasksTemplate.size
+    }
+
+    fun updateTaskTemplate(dataModalArrayListTasksTemplate: List<Data_TasksTemplate>){
+        this.dataModalArrayListTasksTemplate = dataModalArrayListTasksTemplate
+        notifyDataSetChanged()
     }
 
     inner class MyViewTasksTemplateHolder(itemTasksTemplate: View): RecyclerView.ViewHolder(itemTasksTemplate){
